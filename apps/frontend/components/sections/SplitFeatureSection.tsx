@@ -1,4 +1,5 @@
 import React from "react";
+import { PiStarFourFill } from "react-icons/pi";
 
 type FeatureItem = {
   text: string;
@@ -12,6 +13,7 @@ type SplitFeatureSectionProps = {
   image: { src: string; alt: string };
   features: FeatureItem[];
   accentClassName?: string;
+  iconClassName?: string;
   orientation?: "row" | "row-reverse";
 };
 
@@ -25,13 +27,12 @@ const SplitFeatureSection: React.FC<SplitFeatureSectionProps> = ({
   image,
   features,
   accentClassName = "text-purple-600",
+  iconClassName = "text-purple-600",
+
   orientation = "row",
 }) => {
   const containerDirectionClass =
     orientation === "row-reverse" ? "lg:flex-row-reverse" : "lg:flex-row";
-  const iconFillClass = accentClassName.includes("text-")
-    ? accentClassName.replace("text-", "fill-")
-    : "fill-purple-500";
 
   return (
     <div>
@@ -48,23 +49,24 @@ const SplitFeatureSection: React.FC<SplitFeatureSectionProps> = ({
           </div>
 
           <div className="flex flex-col space-y-8 max-w-md">
-            <h2 className={`font-bold ${accentClassName} mb-8`}>{title}</h2>
+            <h1
+              className={`font-bold text-5xl sm:text-6xl md:text-7xl lg:text-8xl ${accentClassName} mb-8 leading-tight`}
+            >
+              {title}
+            </h1>
 
-            <div className="space-y-6">
+            <div className="space-y-8">
               {features.map((feature, index) => (
                 <div
-                  className="flex items-start gap-4"
+                  className="flex items-start gap-6"
                   key={`${index}-${feature.text}`}
                 >
-                  <div className="flex-shrink-0 w-6 h-6 mt-1">
-                    <svg
-                      viewBox="0 0 24 24"
-                      className={`w-full h-full ${iconFillClass}`}
-                    >
-                      <path d={feature.iconSvgPath || defaultStarPath} />
-                    </svg>
+                  <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10  mt-1">
+                    <PiStarFourFill
+                      className={`size-4 ${iconClassName} md:size-6 lg:size-8`}
+                    />
                   </div>
-                  <p className="">{feature.text}</p>
+                  <p className="text-lg sm:text-xl ">{feature.text}</p>
                 </div>
               ))}
             </div>

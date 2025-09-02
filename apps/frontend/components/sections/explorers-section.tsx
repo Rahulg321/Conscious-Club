@@ -4,6 +4,13 @@ import SplitFeatureSection from "./SplitFeatureSection";
 const ExplorersSections = () => {
   return (
     <div>
+      <div className="flex flex-col items-center justify-center text-center my-12">
+        <h2 className=" font-bold mb-2">Who is this for?</h2>
+        <p className="text-lg text-muted-foreground">
+          For all those who have a zest for life
+        </p>
+      </div>
+
       <SplitFeatureSection
         eyebrow="Who is this for?"
         title="Explorers"
@@ -16,7 +23,8 @@ const ExplorersSections = () => {
           { text: "Win rewards while learning new things" },
           { text: "Discover exciting ideas and trends" },
         ]}
-        accentClassName="text-purple-600"
+        accentClassName="text-[rgba(81,74,219,1)]"
+        iconClassName="text-purple-600"
         orientation="row"
       />
 
@@ -32,7 +40,8 @@ const ExplorersSections = () => {
           { text: "Participate in campaigns and challenges" },
           { text: "Earn money, gigs and build your portfolio" },
         ]}
-        accentClassName="text-purple-600"
+        accentClassName="text-[rgba(234,89,31,1)]"
+        iconClassName="text-[rgba(224,30,90,1)]"
         orientation="row-reverse"
       />
 
@@ -49,6 +58,7 @@ const ExplorersSections = () => {
           { text: "Connect with a vibrant creative community" },
         ]}
         accentClassName="text-purple-600"
+        iconClassName="text-[rgba(255,153,0,1)]"
         orientation="row"
       />
     </div>

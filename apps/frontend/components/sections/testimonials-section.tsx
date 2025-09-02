@@ -70,10 +70,12 @@ const testimonials = [
 
 export default function TestimonialsSection() {
   return (
-    <div className="container mx-auto px-4 block-space">
-      <div>
-        <h3>Club Chatter</h3>
-        <p>The buzz from our creators & explorers</p>
+    <div className="container mx-auto px-4 block-space flex flex-col items-center justify-center">
+      <div className="flex flex-col items-center justify-center mb-8">
+        <h3 className="text-3xl font-bold text-center mb-2">Club Chatter</h3>
+        <p className="text-lg text-muted-foreground text-center">
+          The buzz from our creators & explorers
+        </p>
       </div>
 
       <div className="w-full">

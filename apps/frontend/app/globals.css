@@ -121,26 +121,22 @@
   }
 
   h1 {
-    @apply scroll-m-20 text-3xl font-extrabold tracking-tight lg:text-4xl;
+    @apply scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl;
   }
 
   h2 {
-    @apply scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0;
+    @apply scroll-m-20 text-4xl font-semibold tracking-tight first:mt-0;
   }
   h3 {
-    @apply scroll-m-20 text-2xl font-semibold tracking-tight;
+    @apply scroll-m-20 text-3xl font-semibold tracking-tight;
   }
 
   h4 {
-    @apply scroll-m-20 text-xl font-semibold tracking-tight;
+    @apply scroll-m-20 text-2xl font-semibold tracking-tight;
   }
 
   p {
-    @apply leading-7;
-  }
-
-  .lead {
-    @apply text-xl text-muted-foreground;
+    @apply leading-8;
   }
 }
 
@@ -174,4 +170,22 @@
 
 .block-space-mini {
   padding-block: min(3vh, 6rem);
+}
+
+.cta {
+  position: relative;
+  overflow: hidden;
+}
+
+.cta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("/rectangle.png");
+  background-position: 0% 0%;
+  background-size: 67.138671875px 67.138671875px;
+  background-repeat: repeat;
+  mix-blend-mode: overlay;
+  z-index: 0;
 }

@@ -8,12 +8,13 @@ import CommunityBanner from "./community-banner";
 const JoinPlatform = () => {
   return (
     <div>
-      <div>
-        <h3>Why Join Our Platform?</h3>
-        <p>
+      <div className="flex flex-col items-center justify-center text-center my-12">
+        <h3 className="text-3xl font-bold mb-4">Why Join Our Platform?</h3>
+        <p className="text-lg text-muted-foreground max-w-2xl">
           Because loyalty and creativity should feel like pleasure and comfort,
-          not work. CC gives you a space to explore, create, and
-          collaborate.{" "}
+          not work.
+          <br />
+          CC gives you a space to explore, create, and collaborate.
         </p>
       </div>
 
