@@ -1,14 +1,12 @@
+"use client";
+
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarGroup,
   SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { User } from "lucide-react";
+import { SidebarNavLinks } from "@/components/sidebar-nav-links";
 
 export function AppSidebar() {
   return (
@@ -28,33 +26,7 @@ export function AppSidebar() {
         <div className="text-[#666a6e] text-xs font-medium mb-4 tracking-wide">
           MENU
         </div>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              isActive
-              className="bg-[#fedada] text-[#cf5b8d] hover:bg-[#fedada]"
-            >
-              <User className="w-4 h-4" />
-              <span>Profile</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton className="text-[#666a6e] hover:bg-[#f9fafb]">
-              <div className="w-4 h-4 bg-[#ffeccc] rounded-full flex items-center justify-center">
-                <div className="w-2 h-2 bg-[#e7aa63] rounded-full"></div>
-              </div>
-              <span>Discover</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton className="text-[#666a6e] hover:bg-[#f9fafb]">
-              <div className="w-4 h-4 bg-[#d7e9ff] rounded-full flex items-center justify-center">
-                <div className="w-2 h-2 bg-[#4d83c9] rounded-full"></div>
-              </div>
-              <span>Support and FAQ</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
+        <SidebarNavLinks />
       </SidebarContent>
 
       <SidebarFooter className="p-4 border-t border-[#e2e3e6]">

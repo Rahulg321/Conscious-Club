@@ -7,7 +7,7 @@ const ProfilePage = () => {
     <div>
       <div className="relative h-32 md:h-48 bg-gradient-to-r from-[#4d83c9] to-[#42354a] overflow-hidden">
         <img
-          src="/mountain-landscape-with-tree-silhouette-at-sunset.png"
+          src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           alt="Profile banner"
           className="w-full h-full object-cover"
         />
@@ -24,7 +24,7 @@ const ProfilePage = () => {
             <div className="relative self-center md:self-start">
               <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-4 border-white shadow-lg -mt-8 md:-mt-12">
                 <img
-                  src="/professional-woman-portrait-with-red-rose.png"
+                  src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                   alt="Raunak Das"
                   className="w-full h-full object-cover"
                 />
@@ -59,7 +59,6 @@ const ProfilePage = () => {
           </Button>
         </div>
 
-        {/* About Section */}
         <div className="mb-8">
           <h3 className="text-lg font-semibold text-[#171c21] mb-3">About</h3>
           <p className="text-[#667085] leading-relaxed">
@@ -73,12 +72,11 @@ const ProfilePage = () => {
             Profile picture theme
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-2xl">
-            {/* Conscious Club Theme */}
             <div className="text-center">
               <div className="relative mb-3">
                 <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden mx-auto border-2 border-[#cf5b8d]">
                   <img
-                    src="/professional-woman-portrait-with-red-rose.png"
+                    src="https://images.unsplash.com/photo-1604382354696-e1ded9e5c2cb?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                     alt="Conscious Club theme"
                     className="w-full h-full object-cover"
                   />
@@ -95,12 +93,11 @@ const ProfilePage = () => {
               </div>
             </div>
 
-            {/* Creative Theme */}
             <div className="text-center">
               <div className="relative mb-3">
                 <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden mx-auto">
                   <img
-                    src="/professional-woman-portrait-with-red-rose.png"
+                    src="https://images.unsplash.com/photo-1604382354696-e1ded9e5c2cb?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                     alt="Creative theme"
                     className="w-full h-full object-cover"
                   />
@@ -115,12 +112,11 @@ const ProfilePage = () => {
               <div className="text-sm text-[#a9acb4]">Creative theme</div>
             </div>
 
-            {/* Standard */}
             <div className="text-center">
               <div className="relative mb-3">
                 <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden mx-auto">
                   <img
-                    src="/professional-woman-portrait-with-red-rose.png"
+                    src="https://images.unsplash.com/photo-1533473359331-0135ef168bfd?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                     alt="Standard"
                     className="w-full h-full object-cover"
                   />
