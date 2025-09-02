@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "../globals.css";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/app-sidebar";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -20,10 +23,23 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} antialiased`}>
-        <main>
-          <div>Sidebar</div>
-          {children}
-        </main>
+        <SidebarProvider>
+          <div className="flex min-h-screen w-full ">
+            <AppSidebar />
+
+            <main className="flex-1 min-w-0">
+              <SidebarInset className="">
+                <div className="bg-white border-b border-[#e2e3e6] px-4 md:px-8 py-4 md:py-6 flex items-center gap-4">
+                  <SidebarTrigger className="md:hidden" />
+                  <h1 className="text-xl md:text-2xl font-semibold text-[#171c21]">
+                    Profile
+                  </h1>
+                </div>
+                {children}
+              </SidebarInset>
+            </main>
+          </div>
+        </SidebarProvider>
       </body>
     </html>
   );
