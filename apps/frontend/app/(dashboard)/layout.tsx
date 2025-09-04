@@ -4,6 +4,7 @@ import "../globals.css";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
+import { SessionProvider } from "next-auth/react";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -23,23 +24,25 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} antialiased`}>
-        <SidebarProvider>
-          <div className="flex min-h-screen w-full ">
-            <AppSidebar />
+        <SessionProvider>
+          <SidebarProvider>
+            <div className="flex min-h-screen w-full ">
+              <AppSidebar />
 
-            <main className="flex-1 min-w-0">
-              <SidebarInset className="">
-                <div className="bg-white border-b border-[#e2e3e6] px-4 md:px-8 py-4 md:py-6 flex items-center gap-4">
-                  <SidebarTrigger className="md:hidden" />
-                  <h1 className="text-xl md:text-2xl font-semibold text-[#171c21]">
-                    Profile
-                  </h1>
-                </div>
-                {children}
-              </SidebarInset>
-            </main>
-          </div>
-        </SidebarProvider>
+              <main className="flex-1 min-w-0">
+                <SidebarInset className="">
+                  <div className="bg-white border-b border-[#e2e3e6] px-4 md:px-8 py-4 md:py-6 flex items-center gap-4">
+                    <SidebarTrigger className="md:hidden" />
+                    <h1 className="text-xl md:text-2xl font-semibold text-[#171c21]">
+                      Profile
+                    </h1>
+                  </div>
+                  {children}
+                </SidebarInset>
+              </main>
+            </div>
+          </SidebarProvider>
+        </SessionProvider>
       </body>
     </html>
   );

@@ -8,6 +8,20 @@
       "when": 1756796430973,
       "tag": "0000_mute_deathstrike",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1756996797662,
+      "tag": "0001_windy_stryfe",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1756997475039,
+      "tag": "0002_blue_peter_quill",
+      "breakpoints": true
     }
   ]
 }

@@ -4,6 +4,8 @@ import "../globals.css";
 import { Footer } from "@/components/footer";
 import Header from "@/components/header";
 
+import { SessionProvider } from "next-auth/react";
+
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
@@ -22,9 +24,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} antialiased`}>
-        <Header />
-        {children}
-        <Footer />
+        <SessionProvider>
+          <Header />
+          {children}
+          <Footer />
+        </SessionProvider>
       </body>
     </html>
   );

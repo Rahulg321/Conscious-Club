@@ -7,9 +7,7 @@ import {
   uuid,
   text,
   primaryKey,
-  foreignKey,
   boolean,
-  pgEnum,
   integer,
   uniqueIndex,
 } from "drizzle-orm/pg-core";
@@ -22,7 +20,6 @@ export const user = pgTable("user", {
   password: varchar("password", { length: 64 }),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
-  facebookUrl: text("facebookUrl"),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt").notNull().defaultNow(),
 });
@@ -161,3 +158,12 @@ export const verificationToken = pgTable(
 );
 
 export type VerificationToken = InferSelectModel<typeof verificationToken>;
+
+export const company = pgTable("company", {
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
+  name: text("name").notNull(),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+});
+
+export type Company = InferSelectModel<typeof company>;

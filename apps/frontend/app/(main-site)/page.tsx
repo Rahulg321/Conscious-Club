@@ -7,13 +7,18 @@ import AheadSection from "@/components/sections/ahead-section";
 import TestimonialsSection from "@/components/sections/testimonials-section";
 import JoinPlatform from "@/components/sections/join-platform";
 import HeroSection from "@/components/sections/hero-section";
+import { auth } from "@/auth";
 
 export const metadata: Metadata = {
   title: "ConsciousClub",
   description: "ConsciousClub",
 };
 
-const page = () => {
+const HomePage = async () => {
+  const userSession = await auth();
+
+  console.log(userSession);
+
   return (
     <div>
       <HeroSection />
@@ -27,4 +32,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default HomePage;

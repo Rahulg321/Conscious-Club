@@ -1,10 +1,25 @@
 "use client";
 
 import { Crown, Menu, X } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Button } from "./ui/button";
 
 export default function Header() {
+  const router = useRouter();
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const navLinks = [
+    { label: "Benefits", href: "#" },
+    { label: "Who is this for?", href: "#" },
+    { label: "Join as a Brand", href: "#", icon: Crown },
+  ] satisfies ReadonlyArray<{
+    label: string;
+    href: string;
+    icon?: typeof Crown;
+  }>;
 
   return (
     <header className="w-full bg-white border-b border-gray-100">
@@ -24,38 +39,34 @@ export default function Header() {
 
           {/* Desktop Navigation Menu */}
           <nav className="hidden md:flex items-center gap-8">
-            <a
-              href="#"
-              className="text-[#3e4a5b] hover:text-[#cf5b8d] transition-colors"
-            >
-              Benefits
-            </a>
-            <a
-              href="#"
-              className="text-[#3e4a5b] hover:text-[#cf5b8d] transition-colors"
-            >
-              Who is this for?
-            </a>
-            <a
-              href="#"
-              className="text-[#3e4a5b] hover:text-[#cf5b8d] transition-colors flex items-center gap-2"
-            >
-              <Crown className="w-4 h-4 text-[#e01e5a]" />
-              Join as a Brand
-            </a>
+            {navLinks.map(({ label, href, icon: Icon }) => (
+              <Link
+                key={label}
+                href={href}
+                className={`text-[#3e4a5b] hover:text-[#cf5b8d] transition-colors${Icon ? " flex items-center gap-2" : ""}`}
+              >
+                {Icon ? <Icon className="w-4 h-4 text-[#e01e5a]" /> : null}
+                {label}
+              </Link>
+            ))}
           </nav>
 
           {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center gap-6">
             <a
-              href="#"
+              href="/login"
               className="text-[#3e4a5b] hover:text-[#cf5b8d] transition-colors"
             >
               Login
             </a>
-            <button className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-colors">
+            <Button
+              onClick={() => {
+                router.push("/login");
+              }}
+              className=""
+            >
               Sign-up
-            </button>
+            </Button>
           </div>
 
           <button
@@ -101,32 +112,19 @@ export default function Header() {
               </button>
             </div>
 
-            {/* Mobile navigation links */}
             <nav className="flex flex-col gap-6">
-              <a
-                href="#"
-                className="text-[#3e4a5b] hover:text-[#cf5b8d] transition-colors text-lg py-2"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Benefits
-              </a>
-              <a
-                href="#"
-                className="text-[#3e4a5b] hover:text-[#cf5b8d] transition-colors text-lg py-2"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Who is this for?
-              </a>
-              <a
-                href="#"
-                className="text-[#3e4a5b] hover:text-[#cf5b8d] transition-colors text-lg py-2 flex items-center gap-2"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <Crown className="w-4 h-4 text-[#e01e5a]" />
-                Join as a Brand
-              </a>
+              {navLinks.map(({ label, href, icon: Icon }) => (
+                <Link
+                  key={`mobile-${label}`}
+                  href={href}
+                  className={`text-[#3e4a5b] hover:text-[#cf5b8d] transition-colors text-lg py-2${Icon ? " flex items-center gap-2" : ""}`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {Icon ? <Icon className="w-4 h-4 text-[#e01e5a]" /> : null}
+                  {label}
+                </Link>
+              ))}
 
-              {/* Mobile auth buttons */}
               <div className="flex flex-col gap-4 mt-8 pt-8 border-t border-gray-100">
                 <a
                   href="#"
