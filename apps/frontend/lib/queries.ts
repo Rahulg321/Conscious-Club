@@ -30,3 +30,29 @@ export async function getUserByEmail(email: string) {
     return null;
   }
 }
+
+/**
+ * Update user email verification status
+ * @param userId - The id of the user
+ * @param emailVerified - The verification timestamp (null to unverify, Date to verify)
+ * @returns The updated user
+ */
+export async function updateUserEmailVerification(
+  userId: string,
+  emailVerified: Date | null
+) {
+  try {
+    const [updatedUser] = await db
+      .update(user)
+      .set({
+        emailVerified,
+        updatedAt: new Date(),
+      })
+      .where(eq(user.id, userId))
+      .returning();
+    return updatedUser;
+  } catch (error) {
+    console.error("Error updating user email verification", error);
+    return null;
+  }
+}

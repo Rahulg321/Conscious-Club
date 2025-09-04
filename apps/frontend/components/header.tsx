@@ -1,12 +1,33 @@
 "use client";
 
-import { Crown, Menu, X } from "lucide-react";
+import { ChevronDown, Crown, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "./ui/button";
+import {
+  FiPlus,
+  FiList,
+  FiCheckSquare,
+  FiEdit,
+  FiTrendingUp,
+  FiSearch,
+} from "react-icons/fi";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Session } from "next-auth";
+import { signOut } from "next-auth/react";
 
-export default function Header() {
+export default function Header({
+  userSession,
+}: {
+  userSession: Session | null;
+}) {
   const router = useRouter();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -53,20 +74,26 @@ export default function Header() {
 
           {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center gap-6">
-            <a
-              href="/login"
-              className="text-[#3e4a5b] hover:text-[#cf5b8d] transition-colors"
-            >
-              Login
-            </a>
-            <Button
-              onClick={() => {
-                router.push("/login");
-              }}
-              className=""
-            >
-              Sign-up
-            </Button>
+            {userSession ? (
+              <ProfileMenu session={userSession} />
+            ) : (
+              <>
+                <a
+                  href="/login"
+                  className="text-[#3e4a5b] hover:text-[#cf5b8d] transition-colors"
+                >
+                  Login
+                </a>
+                <Button
+                  onClick={() => {
+                    router.push("/login");
+                  }}
+                  className=""
+                >
+                  Sign-up
+                </Button>
+              </>
+            )}
           </div>
 
           <button
@@ -125,25 +152,111 @@ export default function Header() {
                 </Link>
               ))}
 
+              {/* Mobile Auth Section */}
               <div className="flex flex-col gap-4 mt-8 pt-8 border-t border-gray-100">
-                <a
-                  href="#"
-                  className="text-[#3e4a5b] hover:text-[#cf5b8d] transition-colors text-lg py-2"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Login
-                </a>
-                <button
-                  className="bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors text-lg"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Sign-up
-                </button>
+                {userSession ? (
+                  <div className="flex flex-col gap-4">
+                    <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                      <Avatar className="w-8 h-8">
+                        <AvatarImage
+                          src={
+                            userSession.user?.image ||
+                            "https://github.com/shadcn.png"
+                          }
+                          alt="@shadcn"
+                        />
+                        <AvatarFallback>CN</AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col">
+                        <span className="text-sm font-medium text-[#3e4a5b]">
+                          {userSession.user?.name || "User"}
+                        </span>
+                        <span className="text-xs text-gray-500">
+                          {userSession.user?.email}
+                        </span>
+                      </div>
+                    </div>
+                    <button
+                      className="text-left text-[#3e4a5b] hover:text-[#cf5b8d] transition-colors text-lg py-2"
+                      onClick={() => {
+                        router.push(`/profile/${userSession.user?.id}`);
+                        setIsMobileMenuOpen(false);
+                      }}
+                    >
+                      Profile
+                    </button>
+                    <button
+                      className="text-left text-[#3e4a5b] hover:text-[#cf5b8d] transition-colors text-lg py-2"
+                      onClick={() => {
+                        signOut();
+                        setIsMobileMenuOpen(false);
+                      }}
+                    >
+                      Logout
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <a
+                      href="/login"
+                      className="text-[#3e4a5b] hover:text-[#cf5b8d] transition-colors text-lg py-2"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      Login
+                    </a>
+                    <button
+                      className="bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors text-lg"
+                      onClick={() => {
+                        router.push("/login");
+                        setIsMobileMenuOpen(false);
+                      }}
+                    >
+                      Sign-up
+                    </button>
+                  </>
+                )}
               </div>
             </nav>
           </div>
         </div>
       </div>
     </header>
+  );
+}
+
+function ProfileMenu({ session }: { session: Session }) {
+  const router = useRouter();
+  console.log("session", session);
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger className="flex items-center gap-2">
+        <Avatar>
+          <AvatarImage
+            src={session.user?.image || "https://github.com/shadcn.png"}
+            alt="@shadcn"
+          />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+        <span className="text-base flex items-center font-medium">
+          Account <ChevronDown />
+        </span>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem
+          onClick={() => {
+            router.push(`/profile/${session.user?.id}`);
+          }}
+        >
+          Profile
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => {
+            signOut();
+          }}
+        >
+          Logout
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

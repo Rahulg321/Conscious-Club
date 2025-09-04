@@ -37,6 +37,7 @@ export const PROTECTED_BASE_ROUTES = ["/dashboard", "/admin"];
  *@type{string}
  */
 export const DEFAULT_LOGIN_REDIRECT = "/";
+export const FIRST_LOGIN_REDIRECT = "/onboarding";
 
 export const PUBLIC_ROUTES = ["/", "/new-password", "/new-verification"];
 

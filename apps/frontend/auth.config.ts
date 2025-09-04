@@ -5,7 +5,11 @@ import { db } from "@repo/db";
 import bcrypt from "bcryptjs";
 import { sign } from "jsonwebtoken";
 
-import { getUserByEmail, getUserById } from "./lib/queries";
+import {
+  getUserByEmail,
+  getUserById,
+  updateUserEmailVerification,
+} from "./lib/queries";
 
 export const authConfig = {
   session: { strategy: "jwt" },
@@ -53,6 +57,7 @@ export const authConfig = {
           console.log("inside oauth signin");
           // For OAuth providers, allow sign-in and let the adapter handle user creation
           // The DrizzleAdapter will automatically create the user if they don't exist
+          // Email verification will be handled in the linkAccount event
           return true;
         }
 
@@ -122,6 +127,20 @@ export const authConfig = {
         }
       }
       return session;
+    },
+  },
+
+  events: {
+    linkAccount: async ({ user, account }) => {
+      // Automatically verify email for OAuth users since the provider has already verified it
+      if (account?.provider !== "credentials" && user.id) {
+        try {
+          await updateUserEmailVerification(user.id as string, new Date());
+          console.log("OAuth user email automatically verified:", user.email);
+        } catch (error) {
+          console.error("Error verifying OAuth user email:", error);
+        }
+      }
     },
   },
 } satisfies NextAuthConfig;
