@@ -1,7 +1,14 @@
+import { auth } from "@/auth";
 import { LoginForm } from "@/components/forms/login-form";
+import { ProviderButtons } from "@/components/provider-buttons";
 import { TestimonialPanel } from "@/components/testimonial-panel";
+import { redirect } from "next/navigation";
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  const userSession = await auth();
+
+  if (userSession) redirect("/");
+
   return (
     <main className="min-h-screen grid grid-cols-1 md:grid-cols-2">
       {/* Left: Auth panel with soft light gradient */}
@@ -18,6 +25,7 @@ export default function LoginPage() {
             </p>
           </div>
 
+          <ProviderButtons />
           <LoginForm />
         </div>
       </section>

@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import "../globals.css";
 import { Footer } from "@/components/footer";
 import Header from "@/components/header";
-
+import { Toaster } from "@/components/ui/sonner";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 
@@ -23,6 +23,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const userSession = await auth();
+  console.log("userSession inside layout", userSession);
 
   return (
     <html lang="en">
@@ -32,6 +33,7 @@ export default async function RootLayout({
           {children}
           <Footer />
         </SessionProvider>
+        <Toaster />
       </body>
     </html>
   );

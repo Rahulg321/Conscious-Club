@@ -62,9 +62,11 @@ export const authConfig = {
         }
 
         // For credentials provider, check if user exists and is verified
-        if (user.id) {
-          const existingUser = await getUserById(user.id as string);
-          if (!existingUser?.emailVerified) {
+        // The user object from authorize contains the database user data
+        if (user.email) {
+          const existingUser = await getUserByEmail(user.email as string);
+          const dbUser = existingUser?.[0];
+          if (!dbUser?.emailVerified) {
             console.log("User email not verified");
             return false;
           }
