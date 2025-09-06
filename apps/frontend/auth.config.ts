@@ -93,11 +93,24 @@ export const authConfig = {
       return true;
     },
 
-    jwt({ token, user, account }) {
+    jwt: async ({ token, user }) => {
       // Always set token.id from user.id if user is present (on sign-in)
       if (user) {
         token.id = user.id;
         token.type = (user as any).type || "oauth";
+      }
+
+      // Fetch fresh name and image from database
+      if (token.id) {
+        try {
+          const dbUser = await getUserById(token.id as string);
+          if (dbUser) {
+            token.name = dbUser.name;
+            token.image = dbUser.image;
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
       }
 
       // Create access token only once when user signs in
@@ -108,8 +121,7 @@ export const authConfig = {
             type: token.type,
             email: user.email,
           },
-          process.env.AUTH_SECRET as string,
-          { expiresIn: "7d" } // Add expiration for security
+          process.env.AUTH_SECRET as string
         );
         token.accessToken = accessToken;
         console.log("Created access token for user:", user.email);
@@ -119,14 +131,12 @@ export const authConfig = {
     },
 
     session({ session, token }) {
-      if (session.user) {
+      if (session.user && token) {
         session.user.id = token.id as string;
-        if (token.accessToken) {
-          (session.user as any).accessToken = token.accessToken;
-        }
-        if (token.type) {
-          (session.user as any).type = token.type;
-        }
+        session.user.name = token.name as string;
+        session.user.image = token.image as string;
+        (session.user as any).accessToken = token.accessToken;
+        (session.user as any).type = token.type;
       }
       return session;
     },
