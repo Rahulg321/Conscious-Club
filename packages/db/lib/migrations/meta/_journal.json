@@ -36,6 +36,13 @@
       "when": 1757148296155,
       "tag": "0004_kind_goblin_queen",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1757161368122,
+      "tag": "0005_flat_richard_fisk",
+      "breakpoints": true
     }
   ]
 }

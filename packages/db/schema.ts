@@ -39,7 +39,9 @@ export const user = pgTable("user", {
   gender: genderType("gender"),
   socialUrl: text("socialUrl"),
   location: text("location"),
+  discipline: text("discipline"),
   role: text("role"),
+  fun: text("fun"),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt").notNull().defaultNow(),
 });

@@ -24,10 +24,15 @@ export function OnboardingForm() {
     submitOnboarding,
     isSubmitting,
     submitError,
+    stepErrors,
   } = useOnboardingForm();
 
   const steps = getStepsForRole(formData.userRole as any);
   const currentStepData = steps.find((step) => step.id === currentStep);
+
+  // Check if current step has validation errors
+  const hasStepErrors =
+    stepErrors[currentStep] && stepErrors[currentStep].length > 0;
 
   return (
     <div className="space-y-6">
@@ -43,6 +48,20 @@ export function OnboardingForm() {
       {submitError && (
         <div className="rounded-md bg-red-50 p-4">
           <div className="text-sm text-red-700">{submitError}</div>
+        </div>
+      )}
+
+      {/* Step validation errors */}
+      {stepErrors[currentStep] && stepErrors[currentStep].length > 0 && (
+        <div className="rounded-md bg-red-50 p-4">
+          <div className="text-sm text-red-700">
+            <p className="font-medium mb-2">Please fix the following errors:</p>
+            <ul className="list-disc list-inside space-y-1">
+              {stepErrors[currentStep].map((error, index) => (
+                <li key={index}>{error}</li>
+              ))}
+            </ul>
+          </div>
         </div>
       )}
 
@@ -98,7 +117,8 @@ export function OnboardingForm() {
         {currentStep < steps.length ? (
           <Button
             onClick={() => nextStep(steps.length)}
-            className="flex items-center gap-2"
+            disabled={hasStepErrors}
+            className="flex items-center gap-2 disabled:opacity-50"
           >
             {currentStep === steps.length - 1 ? "Complete Setup" : "Next"}
             {currentStep < steps.length - 1 && (

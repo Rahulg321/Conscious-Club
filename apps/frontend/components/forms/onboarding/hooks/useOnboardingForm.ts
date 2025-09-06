@@ -23,17 +23,111 @@ export const useOnboardingForm = () => {
   const [formData, setFormData] = useState<OnboardingFormData>(initialFormData);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [stepErrors, setStepErrors] = useState<Record<number, string[]>>({});
 
   const updateFormData = (
     field: keyof OnboardingFormData,
     value: string | boolean | File | null
   ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+    // Clear step errors when user updates form data
+    if (stepErrors[currentStep]) {
+      setStepErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[currentStep];
+        return newErrors;
+      });
+    }
+  };
+
+  // Validation functions for each step
+  const validateStep1 = (data: OnboardingFormData): string[] => {
+    const errors: string[] = [];
+    if (!data.userRole) {
+      errors.push("Please select a role");
+    }
+    return errors;
+  };
+
+  const validateStep2 = (data: OnboardingFormData): string[] => {
+    const errors: string[] = [];
+    if (!data.name.trim()) {
+      errors.push("Full name is required");
+    }
+    if (!data.gender) {
+      errors.push("Please select your gender");
+    }
+    if (!data.location.trim()) {
+      errors.push("Location is required");
+    }
+    if (!data.dateOfBirth) {
+      errors.push("Date of birth is required");
+    }
+    return errors;
+  };
+
+  const validateStep3 = (
+    data: OnboardingFormData,
+    userRole: string
+  ): string[] => {
+    const errors: string[] = [];
+    if (userRole === "explorer") {
+      if (!data.fun.trim()) {
+        errors.push("Please tell us what interests you most");
+      }
+    } else {
+      if (!data.discipline) {
+        errors.push("Please select a discipline");
+      }
+      if (!data.role.trim()) {
+        errors.push("Please enter your role");
+      }
+    }
+    return errors;
+  };
+
+  const validateStep4 = (data: OnboardingFormData): string[] => {
+    // Step 4 is optional for project upload, so no validation needed
+    return [];
+  };
+
+  const validateCurrentStep = (): boolean => {
+    const errors: string[] = [];
+
+    switch (currentStep) {
+      case 1:
+        errors.push(...validateStep1(formData));
+        break;
+      case 2:
+        errors.push(...validateStep2(formData));
+        break;
+      case 3:
+        errors.push(...validateStep3(formData, formData.userRole));
+        break;
+      case 4:
+        errors.push(...validateStep4(formData));
+        break;
+    }
+
+    if (errors.length > 0) {
+      setStepErrors((prev) => ({ ...prev, [currentStep]: errors }));
+      return false;
+    } else {
+      setStepErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[currentStep];
+        return newErrors;
+      });
+      return true;
+    }
   };
 
   const nextStep = (maxSteps: number) => {
     if (currentStep < maxSteps) {
-      setCurrentStep(currentStep + 1);
+      // Validate current step before proceeding
+      if (validateCurrentStep()) {
+        setCurrentStep(currentStep + 1);
+      }
     }
   };
 
@@ -118,6 +212,7 @@ export const useOnboardingForm = () => {
     submitOnboarding,
     isSubmitting,
     submitError,
+    stepErrors,
     resetForm,
   };
 };

@@ -1,12 +1,18 @@
+import { auth } from "@/auth";
 import { OnboardingForm } from "@/components/forms/onboarding-form";
 import { TestimonialPanel } from "@/components/testimonial-panel";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
-export default function OnboardingPage() {
+export default async function OnboardingPage() {
+  const userSession = await auth();
+
+  if (!userSession) redirect("/login");
+
   return (
     <main className="h-screen grid grid-cols-1 md:grid-cols-2 overflow-hidden">
-      <section className="overflow-y-auto px-4 py-8">
+      <section className="overflow-y-auto px-4 md:px-8 lg:px-12 py-8">
         <OnboardingForm />
       </section>
 
