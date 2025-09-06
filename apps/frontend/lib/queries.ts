@@ -1,5 +1,10 @@
 import { db } from "@repo/db";
-import { passwordResetToken, user, verificationToken } from "@repo/db/schema";
+import {
+  passwordResetToken,
+  project,
+  user,
+  verificationToken,
+} from "@repo/db/schema";
 import { eq } from "drizzle-orm";
 import { generateHashedPassword } from "./utils";
 
@@ -156,6 +161,34 @@ export async function getPasswordResetTokenByToken(token: string) {
       "An error occured trying to get password reset token by token",
       error
     );
+    return null;
+  }
+}
+
+/**
+ * Get a project by id
+ * @param projectId - The id of the project
+ * @returns The project
+ */
+export async function getProjectById(projectId: string) {
+  try {
+    return await db.select().from(project).where(eq(project.id, projectId));
+  } catch (error) {
+    console.log("An error occured trying to get project by id", error);
+    return null;
+  }
+}
+
+/**
+ * Get a user's projects
+ * @param userId - The id of the user
+ * @returns The user's projects
+ */
+export async function getUserProjects(userId: string) {
+  try {
+    return await db.select().from(project).where(eq(project.userId, userId));
+  } catch (error) {
+    console.log("An error occured trying to get user projects", error);
     return null;
   }
 }

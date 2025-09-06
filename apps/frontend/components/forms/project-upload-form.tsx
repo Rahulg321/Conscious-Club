@@ -43,7 +43,7 @@ function ProjectUploadForm({ className }: React.ComponentProps<"form">) {
         formData.append("projectDescription", data.projectDescription);
         formData.append("projectLink", data.projectLink);
 
-        const response = await fetch("/api/upload", {
+        const response = await fetch("/api/upload-project", {
           method: "POST",
           body: formData,
         });
