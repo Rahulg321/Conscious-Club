@@ -3,8 +3,7 @@ import { Star } from "lucide-react";
 
 export function TestimonialPanel({ imageUrl }: { imageUrl: string }) {
   return (
-    <div className="relative h-full min-h-screen w-full">
-      {/* Background image */}
+    <div className="relative h-full w-full">
       <Image
         src={
           imageUrl ||
