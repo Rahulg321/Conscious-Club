@@ -10,8 +10,21 @@ import {
   boolean,
   integer,
   uniqueIndex,
+  pgEnum,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "next-auth/adapters";
+
+export const userType = pgEnum("userType", [
+  "explorer",
+  "creator",
+  "organizer",
+]);
+
+export const genderType = pgEnum("gender", [
+  "male",
+  "female",
+  "prefer_not_to_say",
+]);
 
 export const user = pgTable("user", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),
@@ -20,6 +33,12 @@ export const user = pgTable("user", {
   password: varchar("password", { length: 64 }),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
+  type: userType("type"),
+  dateOfBirth: timestamp("dateOfBirth", { mode: "date" }),
+  gender: genderType("gender"),
+  socialUrl: text("socialUrl"),
+  location: text("location"),
+  role: text("role"),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt").notNull().defaultNow(),
 });
@@ -159,11 +178,18 @@ export const verificationToken = pgTable(
 
 export type VerificationToken = InferSelectModel<typeof verificationToken>;
 
-export const company = pgTable("company", {
+export const project = pgTable("project", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),
   name: text("name").notNull(),
+  link: text("link").notNull(),
+  description: text("description").notNull(),
+  coverImage: text("coverImage").notNull(),
+  logoImage: text("logoImage"),
+  userId: uuid("userId")
+    .references(() => user.id, { onDelete: "cascade" })
+    .notNull(),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt").notNull().defaultNow(),
 });
 
-export type Company = InferSelectModel<typeof company>;
+export type Project = InferSelectModel<typeof project>;

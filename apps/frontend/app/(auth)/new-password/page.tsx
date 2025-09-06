@@ -19,10 +19,8 @@ const ResetPasswordPage = async (props: {
       <div className="flex h-dvh w-screen items-start pt-12 md:pt-0 md:items-center justify-center bg-background">
         <div className="w-full max-w-md overflow-hidden rounded-2xl flex flex-col gap-6">
           <div className="flex flex-col items-center justify-center gap-2 px-4 text-center sm:px-16">
-            <h3 className="text-xl font-semibold dark:text-zinc-50">
-              Invalid Token
-            </h3>
-            <p className="text-sm text-gray-500 dark:text-zinc-400">
+            <h3 className="text-xl font-semibold">Invalid Token</h3>
+            <p className="text-sm">
               The token is invalid or has expired. Please request a new password
               reset link.
             </p>
@@ -30,7 +28,7 @@ const ResetPasswordPage = async (props: {
           <div className="px-4 sm:px-16 pb-12 text-center">
             <Link
               href="/reset-password"
-              className="font-semibold text-gray-800 hover:underline dark:text-zinc-200"
+              className="font-semibold hover:underline"
             >
               Request New Password Reset
             </Link>
@@ -44,10 +42,8 @@ const ResetPasswordPage = async (props: {
     <div className="flex h-dvh w-screen items-start pt-12 md:pt-0 md:items-center justify-center bg-background">
       <div className="w-full max-w-md overflow-hidden rounded-2xl flex flex-col gap-12">
         <div className="flex flex-col items-center justify-center gap-2 px-4 pt-12 text-center sm:px-16">
-          <h3 className="text-xl font-semibold dark:text-zinc-50">
-            Set up a new Password
-          </h3>
-          <p className="text-sm text-gray-500 dark:text-zinc-400">
+          <h3 className="text-xl font-semibold">Set up a new Password</h3>
+          <p className="text-sm">
             Enter your new password below for {dbToken.email}.
           </p>
         </div>

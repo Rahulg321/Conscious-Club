@@ -1,3 +1,4 @@
+import ProjectUploadDialog from "@/components/dialogs/project-upload-dialog";
 import { Button } from "@/components/ui/button";
 import { Camera, Heart, Sparkles } from "lucide-react";
 import React from "react";
@@ -125,6 +126,7 @@ const ProfilePage = () => {
               <div className="text-sm text-[#a9acb4]">Standard</div>
             </div>
           </div>
+          <ProjectUploadDialog />
         </div>
       </div>
     </div>
