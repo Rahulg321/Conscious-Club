@@ -1,5 +1,7 @@
 import { OnboardingForm } from "@/components/forms/onboarding-form";
 import { TestimonialPanel } from "@/components/testimonial-panel";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function OnboardingPage() {
   return (
@@ -9,6 +11,10 @@ export default function OnboardingPage() {
         <div className="absolute left-4 top-4 md:left-8 md:top-8">
           {/* <Logo /> */}
         </div>
+
+        <Button asChild>
+          <Link href="/profile">Skip Onboarding</Link>
+        </Button>
 
         <div className="w-full max-w-md px-4 py-12 md:px-8">
           <OnboardingForm />

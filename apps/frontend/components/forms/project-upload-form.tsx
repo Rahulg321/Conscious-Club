@@ -22,7 +22,11 @@ import {
 } from "@/lib/schemas/project-upload-schema";
 import { toast } from "sonner";
 
-function ProjectUploadForm({ className }: React.ComponentProps<"form">) {
+function ProjectUploadForm({
+  setDialogOpen,
+}: {
+  setDialogOpen: (open: boolean) => void;
+}) {
   const [isSubmitting, startTransition] = useTransition();
 
   const form = useForm<ProjectUploadFormData>({
@@ -60,6 +64,7 @@ function ProjectUploadForm({ className }: React.ComponentProps<"form">) {
 
         // Reset form on success
         form.reset();
+        setDialogOpen(false);
       } catch (error) {
         console.error("Error uploading project:", error);
         // You might want to show a toast notification here
@@ -72,7 +77,7 @@ function ProjectUploadForm({ className }: React.ComponentProps<"form">) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className={cn("grid items-start gap-6", className)}
+        className={cn("grid items-start gap-6")}
       >
         <FormField
           control={form.control}

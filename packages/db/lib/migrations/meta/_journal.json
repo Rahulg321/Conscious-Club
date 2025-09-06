@@ -29,6 +29,13 @@
       "when": 1757085243231,
       "tag": "0003_closed_sasquatch",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1757148296155,
+      "tag": "0004_kind_goblin_queen",
+      "breakpoints": true
     }
   ]
 }

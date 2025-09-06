@@ -51,7 +51,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "seeklogo.com",
+        hostname: "storage.googleapis.com",
         port: "",
         pathname: "/**",
       },

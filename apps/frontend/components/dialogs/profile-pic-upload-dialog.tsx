@@ -21,10 +21,13 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import ProjectUploadForm from "../forms/project-upload-form";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import useMediaQuery from "@/hooks/use-media-query";
+import { Camera } from "lucide-react";
+import ProfilePicUploadForm from "../forms/profile-pic-upload-form";
 
-export default function ProjectUploadDialog() {
+export default function ProfilePicUploadDialog() {
   const [open, setOpen] = React.useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
@@ -32,17 +35,19 @@ export default function ProjectUploadDialog() {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button variant="outline">Upload Project</Button>
+          <button className="w-8 h-8 md:w-10 md:h-10 bg-black/20 rounded-full flex items-center justify-center hover:bg-black/30 transition-colors">
+            <Camera className="w-4 h-4 md:w-5 md:h-5 text-white" />
+          </button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Upload Project</DialogTitle>
+            <DialogTitle>Edit profile</DialogTitle>
             <DialogDescription>
-              Make changes to your project here. Click save when you&apos;re
+              Make changes to your profile here. Click save when you&apos;re
               done.
             </DialogDescription>
           </DialogHeader>
-          <ProjectUploadForm setDialogOpen={setOpen} />
+          <ProfilePicUploadForm />
         </DialogContent>
       </Dialog>
     );
@@ -51,16 +56,18 @@ export default function ProjectUploadDialog() {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant="outline">Upload Project</Button>
+        <button className="w-8 h-8 md:w-10 md:h-10 bg-black/20 rounded-full flex items-center justify-center hover:bg-black/30 transition-colors">
+          <Camera className="w-4 h-4 md:w-5 md:h-5 text-white" />
+        </button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left">
-          <DrawerTitle>Upload Project</DrawerTitle>
+          <DrawerTitle>Edit profile</DrawerTitle>
           <DrawerDescription>
-            Make changes to your project here. Click save when you&apos;re done.
+            Make changes to your profile here. Click save when you&apos;re done.
           </DrawerDescription>
         </DrawerHeader>
-        <ProjectUploadForm setDialogOpen={setOpen} />
+        <ProfilePicUploadForm />
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>

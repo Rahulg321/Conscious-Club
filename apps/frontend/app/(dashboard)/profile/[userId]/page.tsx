@@ -6,6 +6,8 @@ import { Camera, Heart, Loader2, Sparkles } from "lucide-react";
 import { redirect } from "next/navigation";
 import React, { Suspense } from "react";
 import Image from "next/image";
+import BannerUploadDialog from "@/components/dialogs/banner-upload-dialog";
+import ProfilePicUploadDialog from "@/components/dialogs/profile-pic-upload-dialog";
 
 const ProfilePage = async ({
   params,
@@ -14,28 +16,29 @@ const ProfilePage = async ({
 }) => {
   const { userId } = await params;
 
+  if (!userId) redirect("/");
+
   const userSession = await auth();
 
   if (!userSession) redirect("/login");
 
   if (userSession.user.id !== userId) redirect("/");
-
   const currentUser = await getUserById(userSession.user.id);
-
   if (!currentUser) redirect("/");
 
   return (
     <div>
       <div className="relative h-32 md:h-48 bg-gradient-to-r from-[#4d83c9] to-[#42354a] overflow-hidden">
-        <img
-          src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-          alt="Profile banner"
-          className="w-full h-full object-cover"
-        />
+        {currentUser.bannerImage && (
+          <Image
+            src={currentUser.bannerImage}
+            fill
+            alt="Profile banner"
+            className="w-full h-full object-cover"
+          />
+        )}
         <div className="absolute top-2 md:top-4 right-2 md:right-4">
-          <button className="w-8 h-8 md:w-10 md:h-10 bg-black/20 rounded-full flex items-center justify-center hover:bg-black/30 transition-colors">
-            <Camera className="w-4 h-4 md:w-5 md:h-5 text-white" />
-          </button>
+          <BannerUploadDialog />
         </div>
       </div>
 
@@ -51,9 +54,7 @@ const ProfilePage = async ({
                   className="object-cover"
                 />
               </div>
-              <button className="absolute bottom-0 right-0 w-6 h-6 md:w-8 md:h-8 bg-black/60 rounded-full flex items-center justify-center">
-                <Camera className="w-3 h-3 md:w-4 md:h-4 text-white" />
-              </button>
+              <ProfilePicUploadDialog />
             </div>
 
             <div className="text-center md:text-left md:pt-4">
