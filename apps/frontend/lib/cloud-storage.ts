@@ -11,8 +11,6 @@ const storage = new Storage({
 const BUCKET = process.env.GCLOUD_BUCKET;
 
 export const uploadFile = async (file: File) => {
-  console.log("inside upload file", file);
-
   try {
     const bucket = storage.bucket(BUCKET as string);
     const blob = bucket.file(file.name);
@@ -27,6 +25,7 @@ export const uploadFile = async (file: File) => {
       blobStream.on("finish", resolve);
       blobStream.end(buffer);
     });
+
     return blob.publicUrl();
   } catch (error) {
     console.error(error);
