@@ -8,6 +8,7 @@ import React, { Suspense } from "react";
 import Image from "next/image";
 import BannerUploadDialog from "@/components/dialogs/banner-upload-dialog";
 import ProfilePicUploadDialog from "@/components/dialogs/profile-pic-upload-dialog";
+import ProjectCard from "@/components/project-card";
 
 const ProfilePage = async ({
   params,
@@ -206,29 +207,12 @@ async function DisplayUserProjectWork({
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projects.map((project) => (
-            <div
-              key={project.id}
-              className="group bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200"
-            >
-              <div className="aspect-video bg-gray-100 overflow-hidden">
-                <img
-                  src={project.coverImage}
-                  alt={project.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
-                />
-              </div>
-              <div className="p-4">
-                <h4 className="font-medium text-[#171c21] mb-2 line-clamp-1">
-                  {project.name}
-                </h4>
-                <p className="text-sm text-[#667085] line-clamp-2">
-                  {project.description}
-                </p>
-              </div>
-            </div>
-          ))}
+        <div className="overflow-x-auto">
+          <div className="flex gap-6 pb-4 min-w-max">
+            {projects.map((project) => (
+              <ProjectCard key={project.id} project={project} />
+            ))}
+          </div>
         </div>
       )}
     </div>

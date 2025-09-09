@@ -2,11 +2,12 @@ import { db } from "@repo/db";
 import {
   passwordResetToken,
   project,
+  projectTags,
   tags,
   user,
   verificationToken,
 } from "@repo/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, and, or, ilike, inArray, desc, count, sql } from "drizzle-orm";
 import { generateHashedPassword } from "./utils";
 
 /**
@@ -204,5 +205,215 @@ export async function getAllTags() {
   } catch (error) {
     console.log("An error occured trying to get all tags", error);
     return null;
+  }
+}
+
+/**
+ * Get all projects
+ * @returns All projects
+ */
+export async function getAllProjects() {
+  try {
+    return await db.select().from(project);
+  } catch (error) {
+    console.log("An error occured trying to get all projects", error);
+    return null;
+  }
+}
+
+/**
+ * Get all projects with their corresponding tag names
+ * @returns All projects with their tags (flat structure - one row per project-tag combination)
+ */
+export async function getAllProjectsWithTags() {
+  try {
+    return await db
+      .select({
+        project: project,
+        tagName: tags.name,
+      })
+      .from(project)
+      .leftJoin(projectTags, eq(project.id, projectTags.projectId))
+      .leftJoin(tags, eq(projectTags.tagId, tags.id));
+  } catch (error) {
+    console.log("An error occured trying to get all projects with tags", error);
+    return null;
+  }
+}
+
+/**
+ * Get all projects with their tags grouped
+ * @returns All projects with their tags grouped by project
+ */
+export async function getAllProjectsWithTagsGrouped() {
+  try {
+    const results = await db
+      .select({
+        project: project,
+        tagName: tags.name,
+      })
+      .from(project)
+      .leftJoin(projectTags, eq(project.id, projectTags.projectId))
+      .leftJoin(tags, eq(projectTags.tagId, tags.id));
+
+    // Group tags by project
+    const groupedResults = results.reduce(
+      (acc, row) => {
+        const projectId = row.project.id;
+
+        if (!acc[projectId]) {
+          acc[projectId] = {
+            ...row.project,
+            tags: [],
+          };
+        }
+
+        if (row.tagName) {
+          acc[projectId].tags.push(row.tagName);
+        }
+
+        return acc;
+      },
+      {} as Record<string, any>
+    );
+
+    return Object.values(groupedResults);
+  } catch (error) {
+    console.log(
+      "An error occured trying to get all projects with tags grouped",
+      error
+    );
+    return null;
+  }
+}
+
+/**
+ * Get filtered projects by tags and search query
+ * @param filterTags - The tag IDs to filter by (string or array of strings)
+ * @param query - The search query for project name or description
+ * @param offset - The offset for pagination
+ * @param limit - The limit for pagination
+ * @returns The filtered projects with pagination info
+ */
+export async function getFilteredProjects(
+  filterTags?: string | string[],
+  query?: string,
+  offset?: number,
+  limit?: number
+) {
+  try {
+    // Normalize filterTags to an array of tag ID strings
+    const tagIdArray: string[] =
+      typeof filterTags === "string"
+        ? [filterTags]
+        : Array.isArray(filterTags)
+          ? filterTags
+          : [];
+
+    // Build where conditions
+    const conditions = [];
+
+    // Add search query condition
+    if (query) {
+      conditions.push(
+        or(
+          ilike(project.name, `%${query}%`),
+          ilike(project.description, `%${query}%`)
+        )
+      );
+    }
+
+    // Add tags filter condition
+    if (tagIdArray.length > 0) {
+      // Get project IDs that have any of the specified tag IDs
+      const projectIdsWithTags = await db
+        .selectDistinct({ projectId: projectTags.projectId })
+        .from(projectTags)
+        .where(inArray(projectTags.tagId, tagIdArray));
+
+      const projectIds = projectIdsWithTags
+        .map((p) => p.projectId)
+        .filter((id): id is string => id !== null);
+
+      if (projectIds.length > 0) {
+        conditions.push(inArray(project.id, projectIds));
+      } else {
+        // If no projects match the tags, return empty result
+        return { projects: [], totalPages: 0, totalProjects: 0 };
+      }
+    }
+
+    const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+
+    // Get filtered projects with their tags
+    const filteredProjects = await db
+      .select({
+        id: project.id,
+        name: project.name,
+        link: project.link,
+        description: project.description,
+        coverImage: project.coverImage,
+        logoImage: project.logoImage,
+        userId: project.userId,
+        createdAt: project.createdAt,
+        updatedAt: project.updatedAt,
+        tagName: tags.name,
+      })
+      .from(project)
+      .leftJoin(projectTags, eq(project.id, projectTags.projectId))
+      .leftJoin(tags, eq(projectTags.tagId, tags.id))
+      .where(whereClause)
+      .orderBy(desc(project.createdAt))
+      .limit(limit ?? 10)
+      .offset(offset ?? 0);
+
+    // Get total count for pagination
+    const totalResult = await db
+      .select({ total: count(sql`DISTINCT ${project.id}`) })
+      .from(project)
+      .leftJoin(projectTags, eq(project.id, projectTags.projectId))
+      .leftJoin(tags, eq(projectTags.tagId, tags.id))
+      .where(whereClause);
+
+    const total = totalResult[0]?.total ?? 0;
+    const totalPages = Math.ceil(Number(total) / (limit ?? 10));
+
+    // Group projects with their tags
+    const groupedProjects = filteredProjects.reduce(
+      (acc, row) => {
+        const projectId = row.id;
+
+        if (!acc[projectId]) {
+          acc[projectId] = {
+            id: row.id,
+            name: row.name,
+            link: row.link,
+            description: row.description,
+            coverImage: row.coverImage,
+            logoImage: row.logoImage,
+            userId: row.userId,
+            createdAt: row.createdAt,
+            updatedAt: row.updatedAt,
+            tags: [],
+          };
+        }
+
+        if (row.tagName) {
+          acc[projectId].tags.push(row.tagName);
+        }
+
+        return acc;
+      },
+      {} as Record<string, any>
+    );
+
+    return {
+      projects: Object.values(groupedProjects),
+      totalPages,
+      totalProjects: total,
+    };
+  } catch (error) {
+    console.error("An error occurred trying to get filtered projects", error);
+    return { projects: [], totalPages: 0, totalProjects: 0 };
   }
 }
