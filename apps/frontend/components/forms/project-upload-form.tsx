@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/lib/utils";
 import { Input } from "../ui/input";
-import { Label } from "../ui/label";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 import {
@@ -17,15 +16,26 @@ import {
   FormMessage,
 } from "../ui/form";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import {
   projectUploadSchema,
   type ProjectUploadFormData,
 } from "@/lib/schemas/project-upload-schema";
 import { toast } from "sonner";
+import { X } from "lucide-react";
+import { Tags } from "@repo/db/schema";
 
 function ProjectUploadForm({
   setDialogOpen,
+  allTags,
 }: {
   setDialogOpen: (open: boolean) => void;
+  allTags: Tags[];
 }) {
   const [isSubmitting, startTransition] = useTransition();
 
@@ -35,8 +45,19 @@ function ProjectUploadForm({
       projectName: "",
       projectDescription: "",
       projectLink: "",
+      tagId: "",
     },
   });
+
+  const [coverPreviewUrl, setCoverPreviewUrl] = useState<string | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  // Revoke object URL on unmount or when file changes
+  useEffect(() => {
+    return () => {
+      if (coverPreviewUrl) URL.revokeObjectURL(coverPreviewUrl);
+    };
+  }, [coverPreviewUrl]);
 
   const onSubmit = async (data: ProjectUploadFormData) => {
     startTransition(async () => {
@@ -46,6 +67,7 @@ function ProjectUploadForm({
         formData.append("projectName", data.projectName);
         formData.append("projectDescription", data.projectDescription);
         formData.append("projectLink", data.projectLink);
+        formData.append("tagId", data.tagId);
 
         const response = await fetch("/api/upload-project", {
           method: "POST",
@@ -64,6 +86,8 @@ function ProjectUploadForm({
 
         // Reset form on success
         form.reset();
+        if (coverPreviewUrl) URL.revokeObjectURL(coverPreviewUrl);
+        setCoverPreviewUrl(null);
         setDialogOpen(false);
       } catch (error) {
         console.error("Error uploading project:", error);
@@ -77,7 +101,7 @@ function ProjectUploadForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className={cn("grid items-start gap-6")}
+        className={cn("grid items-start gap-4")}
       >
         <FormField
           control={form.control}
@@ -86,17 +110,65 @@ function ProjectUploadForm({
             <FormItem>
               <FormLabel>Project Cover</FormLabel>
               <FormControl>
-                <Input
-                  type="file"
-                  accept="image/jpeg,image/jpg,image/png"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      onChange(file);
-                    }
-                  }}
-                  {...field}
-                />
+                <div className="space-y-3">
+                  <input
+                    {...field}
+                    ref={fileRef}
+                    type="file"
+                    accept="image/jpeg,image/jpg,image/png,image/webp"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      onChange(file as unknown as File);
+                      if (file) {
+                        const nextUrl = URL.createObjectURL(file);
+                        if (coverPreviewUrl)
+                          URL.revokeObjectURL(coverPreviewUrl);
+                        setCoverPreviewUrl(nextUrl);
+                      } else {
+                        if (coverPreviewUrl)
+                          URL.revokeObjectURL(coverPreviewUrl);
+                        setCoverPreviewUrl(null);
+                      }
+                    }}
+                  />
+                  {!coverPreviewUrl && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => fileRef.current?.click()}
+                    >
+                      Choose File
+                    </Button>
+                  )}
+
+                  {value && coverPreviewUrl && (
+                    <div className="rounded-md border p-3">
+                      <div className="relative mx-auto h-32">
+                        <img
+                          src={coverPreviewUrl}
+                          alt="Project cover preview"
+                          className="w-full h-full object-cover rounded-md"
+                        />
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="sm"
+                          className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0"
+                          onClick={() => {
+                            if (coverPreviewUrl)
+                              URL.revokeObjectURL(coverPreviewUrl);
+                            setCoverPreviewUrl(null);
+                            onChange(undefined as unknown as File);
+                            if (fileRef.current) fileRef.current.value = "";
+                          }}
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -148,6 +220,31 @@ function ProjectUploadForm({
                   {...field}
                 />
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="tagId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Tag</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a tag" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {allTags.map((tag) => (
+                    <SelectItem key={tag.id} value={tag.id}>
+                      {tag.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}

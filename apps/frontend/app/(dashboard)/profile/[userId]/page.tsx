@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { getUserById, getUserProjects } from "@/lib/queries";
+import { getAllTags, getUserById, getUserProjects } from "@/lib/queries";
 import ProjectUploadDialog from "@/components/dialogs/project-upload-dialog";
 import { Button } from "@/components/ui/button";
 import { Camera, Heart, Loader2, Sparkles } from "lucide-react";
@@ -15,13 +15,9 @@ const ProfilePage = async ({
   params: Promise<{ userId: string }>;
 }) => {
   const { userId } = await params;
-
   if (!userId) redirect("/");
-
   const userSession = await auth();
-
   if (!userSession) redirect("/login");
-
   if (userSession.user.id !== userId) redirect("/");
   const currentUser = await getUserById(userSession.user.id);
   if (!currentUser) redirect("/");
@@ -173,13 +169,16 @@ async function DisplayUserProjectWork({
 }: {
   currentUserId: string;
 }) {
-  const projects = await getUserProjects(currentUserId);
+  const [projects, allTags] = await Promise.all([
+    getUserProjects(currentUserId),
+    getAllTags(),
+  ]);
 
   return (
     <div className="mt-8">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
         <h3 className="text-lg font-semibold text-[#171c21]">Work Sample</h3>
-        <ProjectUploadDialog />
+        <ProjectUploadDialog allTags={allTags || []} />
       </div>
 
       {!projects || projects.length === 0 ? (

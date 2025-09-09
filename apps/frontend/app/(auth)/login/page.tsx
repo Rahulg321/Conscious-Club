@@ -4,10 +4,52 @@ import { ProviderButtons } from "@/components/provider-buttons";
 import { TestimonialPanel } from "@/components/testimonial-panel";
 import { redirect } from "next/navigation";
 
-export default async function LoginPage() {
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const error = (await searchParams).error;
+
   const userSession = await auth();
 
   if (userSession) redirect("/");
+
+  // Error message configuration
+  const getErrorMessage = (error: string | string[] | undefined) => {
+    const errorString = Array.isArray(error) ? error[0] : error;
+
+    switch (errorString) {
+      case "OAuthAccountNotLinked":
+        return {
+          message:
+            "This OAuth account is not linked to your existing account. Please sign in with your original method or contact support.",
+          type: "warning" as const,
+        };
+      case "Configuration":
+        return {
+          message:
+            "There's a problem with the authentication configuration. Please contact support or try again later.",
+          type: "error" as const,
+        };
+      case "AccessDenied":
+        return {
+          message:
+            "You don't have permission to access this resource. Please check your account status or contact an administrator.",
+          type: "error" as const,
+        };
+      case "Verification":
+        return {
+          message:
+            "Please check your email and click the verification link before signing in.",
+          type: "info" as const,
+        };
+      default:
+        return null;
+    }
+  };
+
+  const errorInfo = getErrorMessage(error);
 
   return (
     <main className="min-h-screen grid grid-cols-1 md:grid-cols-2">
@@ -24,6 +66,26 @@ export default async function LoginPage() {
               Please enter your details to sign in.
             </p>
           </div>
+
+          {/* Error message display */}
+          {errorInfo && (
+            <div
+              className={`mb-6 p-4 rounded-lg border ${
+                errorInfo.type === "warning"
+                  ? "bg-yellow-50 border-yellow-200 text-yellow-800"
+                  : errorInfo.type === "error"
+                    ? "bg-red-50 border-red-200 text-red-800"
+                    : "bg-blue-50 border-blue-200 text-blue-800"
+              }`}
+            >
+              <div className="text-sm font-medium mb-1">
+                {errorInfo.type === "warning" && "⚠️ Account Not Linked"}
+                {errorInfo.type === "error" && "❌ Authentication Error"}
+                {errorInfo.type === "info" && "ℹ️ Verification Required"}
+              </div>
+              <div className="text-sm">{errorInfo.message}</div>
+            </div>
+          )}
 
           <ProviderButtons />
           <LoginForm />

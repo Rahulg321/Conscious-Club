@@ -2,6 +2,7 @@ import { db } from "@repo/db";
 import {
   passwordResetToken,
   project,
+  tags,
   user,
   verificationToken,
 } from "@repo/db/schema";
@@ -189,6 +190,19 @@ export async function getUserProjects(userId: string) {
     return await db.select().from(project).where(eq(project.userId, userId));
   } catch (error) {
     console.log("An error occured trying to get user projects", error);
+    return null;
+  }
+}
+
+/**
+ * Get all tags
+ * @returns
+ */
+export async function getAllTags() {
+  try {
+    return await db.select().from(tags);
+  } catch (error) {
+    console.log("An error occured trying to get all tags", error);
     return null;
   }
 }

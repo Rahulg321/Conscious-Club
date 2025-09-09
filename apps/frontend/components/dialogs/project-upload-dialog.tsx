@@ -23,8 +23,9 @@ import {
 } from "@/components/ui/drawer";
 import ProjectUploadForm from "../forms/project-upload-form";
 import useMediaQuery from "@/hooks/use-media-query";
+import { Tags } from "@repo/db/schema";
 
-export default function ProjectUploadDialog() {
+export default function ProjectUploadDialog({ allTags }: { allTags: Tags[] }) {
   const [open, setOpen] = React.useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
@@ -42,7 +43,7 @@ export default function ProjectUploadDialog() {
               done.
             </DialogDescription>
           </DialogHeader>
-          <ProjectUploadForm setDialogOpen={setOpen} />
+          <ProjectUploadForm setDialogOpen={setOpen} allTags={allTags} />
         </DialogContent>
       </Dialog>
     );
@@ -60,7 +61,7 @@ export default function ProjectUploadDialog() {
             Make changes to your project here. Click save when you&apos;re done.
           </DrawerDescription>
         </DrawerHeader>
-        <ProjectUploadForm setDialogOpen={setOpen} />
+        <ProjectUploadForm setDialogOpen={setOpen} allTags={allTags} />
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>

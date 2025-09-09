@@ -3,7 +3,6 @@ import {
   pgTable,
   varchar,
   timestamp,
-  json,
   uuid,
   text,
   primaryKey,
@@ -196,3 +195,29 @@ export const project = pgTable("project", {
 });
 
 export type Project = InferSelectModel<typeof project>;
+
+export const tags = pgTable("tags", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: text("name").notNull().unique(),
+});
+
+export type Tags = InferSelectModel<typeof tags>;
+
+export const projectTags = pgTable(
+  "project_tags",
+  {
+    projectId: uuid("projectId").references(() => project.id, {
+      onDelete: "cascade",
+    }),
+    tagId: uuid("tagId").references(() => tags.id, { onDelete: "cascade" }),
+  },
+  (table) => ({
+    pk: primaryKey({ columns: [table.projectId, table.tagId] }),
+    projectTagUnique: uniqueIndex("project_tags_project_id_tag_id_unique").on(
+      table.projectId,
+      table.tagId
+    ),
+  })
+);
+
+export type ProjectTags = InferSelectModel<typeof projectTags>;

@@ -25,6 +25,7 @@ export const projectUploadSchema = z.object({
     .string()
     .min(1, "Project link is required")
     .url("Please enter a valid URL"),
+  tagId: z.string().min(1, "Please select a tag").uuid("Invalid tag selected"),
 });
 
 export type ProjectUploadFormData = z.infer<typeof projectUploadSchema>;

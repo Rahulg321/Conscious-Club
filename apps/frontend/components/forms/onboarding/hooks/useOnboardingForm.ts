@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { OnboardingFormData } from "../types";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const initialFormData: OnboardingFormData = {
   userRole: "",
@@ -21,9 +23,11 @@ const initialFormData: OnboardingFormData = {
 export const useOnboardingForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<OnboardingFormData>(initialFormData);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, isSubmittingTransition] = useTransition();
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [stepErrors, setStepErrors] = useState<Record<number, string[]>>({});
+
+  const router = useRouter();
 
   const updateFormData = (
     field: keyof OnboardingFormData,
@@ -148,52 +152,56 @@ export const useOnboardingForm = () => {
   };
 
   const submitOnboarding = async () => {
-    setIsSubmitting(true);
-    setSubmitError(null);
+    isSubmittingTransition(async () => {
+      setSubmitError(null);
 
-    try {
-      // Create FormData for file uploads
-      const formDataToSubmit = new FormData();
+      try {
+        // Create FormData for file uploads
+        const formDataToSubmit = new FormData();
 
-      // Add all form fields
-      Object.entries(formData).forEach(([key, value]) => {
-        if (value instanceof File) {
-          formDataToSubmit.append(key, value);
-        } else if (value !== null && value !== "") {
-          formDataToSubmit.append(key, String(value));
+        // Add all form fields
+        Object.entries(formData).forEach(([key, value]) => {
+          if (value instanceof File) {
+            formDataToSubmit.append(key, value);
+          } else if (value !== null && value !== "") {
+            formDataToSubmit.append(key, String(value));
+          }
+        });
+
+        // Log out all the entries in the FormData
+        for (const [key, value] of formDataToSubmit.entries()) {
+          console.log("FormData entry:", key, value);
         }
-      });
 
-      // Log out all the entries in the FormData
-      for (const [key, value] of formDataToSubmit.entries()) {
-        console.log("FormData entry:", key, value);
+        // Make API call to submit onboarding data
+        const response = await fetch("/api/onboarding", {
+          method: "POST",
+          body: formDataToSubmit,
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to submit onboarding data");
+        }
+
+        const result = await response.json();
+
+        console.log("Onboarding submitted successfully:", result);
+        toast.success("Successfully, completed onboarding", {
+          description: "You can now start exploring the platform",
+        });
+
+        router.push("/profile");
+      } catch (error) {
+        console.error("Error submitting onboarding:", error);
+        toast.error("Error submitting form", {
+          description: "Please try again later",
+        });
+
+        setSubmitError(
+          error instanceof Error ? error.message : "An error occurred"
+        );
       }
-
-      // Make API call to submit onboarding data
-      const response = await fetch("/api/onboarding", {
-        method: "POST",
-        body: formDataToSubmit,
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to submit onboarding data");
-      }
-
-      const result = await response.json();
-
-      // Handle successful submission
-      console.log("Onboarding submitted successfully:", result);
-
-      // You can redirect or show success message here
-      // For example: router.push("/dashboard");
-    } catch (error) {
-      console.error("Error submitting onboarding:", error);
-      setSubmitError(
-        error instanceof Error ? error.message : "An error occurred"
-      );
-    } finally {
-      setIsSubmitting(false);
-    }
+    });
   };
 
   const resetForm = () => {

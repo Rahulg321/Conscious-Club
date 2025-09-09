@@ -2,7 +2,7 @@ import { auth } from "@/auth";
 import { uploadFile } from "@/lib/cloud-storage";
 import { projectUploadSchema } from "@/lib/schemas/project-upload-schema";
 import { db } from "@repo/db";
-import { project } from "@repo/db/schema";
+import { project, projectTags } from "@repo/db/schema";
 import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -17,6 +17,7 @@ export const POST = async (req: NextRequest) => {
   const projectCover = formData.get("projectCover");
   const projectName = formData.get("projectName");
   const projectDescription = formData.get("projectDescription");
+  const tagId = formData.get("tagId") as string;
   const projectLink = formData.get("projectLink");
 
   if (!projectCover)
@@ -27,6 +28,7 @@ export const POST = async (req: NextRequest) => {
     projectName,
     projectDescription,
     projectLink,
+    tagId: tagId as string,
   });
 
   if (!validatedData.success) {
@@ -37,6 +39,8 @@ export const POST = async (req: NextRequest) => {
       { status: 400 }
     );
   }
+
+  console.log("invalidatedData", validatedData);
 
   const url = await uploadFile(projectCover as File);
 
@@ -59,6 +63,19 @@ export const POST = async (req: NextRequest) => {
         userId: userSession.user.id,
       })
       .returning();
+
+    if (!insertedProject) {
+      console.error("project was not inserted");
+      return NextResponse.json(
+        { error: "Failed to insert project" },
+        { status: 500 }
+      );
+    }
+
+    await db.insert(projectTags).values({
+      projectId: insertedProject?.id as string,
+      tagId: validatedData.data.tagId,
+    });
 
     revalidatePath(`/profile`);
     revalidatePath(`/profile/${userSession.user.id}`);

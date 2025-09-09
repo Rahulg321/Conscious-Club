@@ -1,9 +1,12 @@
 import { auth } from "@/auth";
 import { OnboardingForm } from "@/components/forms/onboarding-form";
 import { TestimonialPanel } from "@/components/testimonial-panel";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { redirect } from "next/navigation";
+
+export const metadata = {
+  title: "Onboarding",
+  description: "Onboarding",
+};
 
 export default async function OnboardingPage() {
   const userSession = await auth();
