@@ -310,10 +310,8 @@ export async function getFilteredProjects(
           ? filterTags
           : [];
 
-    // Build where conditions
     const conditions = [];
 
-    // Add search query condition
     if (query) {
       conditions.push(
         or(
@@ -323,9 +321,7 @@ export async function getFilteredProjects(
       );
     }
 
-    // Add tags filter condition
     if (tagIdArray.length > 0) {
-      // Get project IDs that have any of the specified tag IDs
       const projectIdsWithTags = await db
         .selectDistinct({ projectId: projectTags.projectId })
         .from(projectTags)
@@ -338,7 +334,6 @@ export async function getFilteredProjects(
       if (projectIds.length > 0) {
         conditions.push(inArray(project.id, projectIds));
       } else {
-        // If no projects match the tags, return empty result
         return { projects: [], totalPages: 0, totalProjects: 0 };
       }
     }
