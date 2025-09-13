@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import {
@@ -36,7 +35,7 @@ export default async function DiscoverPage({
   const projectSearchQuery = query as string;
   const currentPage = Number(page) || 1;
 
-  const showProfiles = type && type === "profiles";
+  const showProfiles = type && type === "profiles" ? true : false;
 
   const selectedTags =
     typeof tags === "string"
@@ -50,14 +49,12 @@ export default async function DiscoverPage({
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
       <header className="bg-white border-b border-gray-200 px-6 py-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+        <div className="max-w-7xl mx-auto flex items-center gap-4 justify-between">
           <Suspense fallback={<div>Loading.....</div>}>
-            <ProjectSearchFilter />
+            <ProjectSearchFilter showProfiles={showProfiles} />
           </Suspense>
 
-          {/* Navigation */}
           <div className="flex items-center space-x-6">
             <ProjectProfileTabs />
           </div>
@@ -68,20 +65,22 @@ export default async function DiscoverPage({
         <ProjectTagsFilter filterTags={projectTags!} />
       </Suspense>
 
-      {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 py-8">
-        {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-2xl font-semibold text-gray-900">
-            Explore Projects
+            {showProfiles ? "Explore Profiles" : "Explore Projects"}
           </h1>
           <Suspense
             fallback={<span className="text-gray-500">Loading...</span>}
           >
-            <ProjectCount
-              tags={selectedTags}
-              projectSearchQuery={projectSearchQuery || ""}
-            />
+            {showProfiles ? (
+              <ProfileCount personSearchQuery={projectSearchQuery || ""} />
+            ) : (
+              <ProjectCount
+                tags={selectedTags}
+                projectSearchQuery={projectSearchQuery || ""}
+              />
+            )}
           </Suspense>
         </div>
 
@@ -98,7 +97,11 @@ export default async function DiscoverPage({
               </div>
             }
           >
-            <FetchAndDisplayUserProfiles />
+            <FetchAndDisplayUserProfiles
+              personSearchQuery={projectSearchQuery || ""}
+              limit={limit}
+              offset={offset}
+            />
           </Suspense>
         ) : (
           <Suspense
@@ -147,6 +150,20 @@ async function ProjectCount({
   );
 }
 
+async function ProfileCount({
+  personSearchQuery,
+}: {
+  personSearchQuery: string;
+}) {
+  const { totalUsers } = await getFilteredUserProfiles(personSearchQuery, 0, 1);
+
+  return (
+    <span className="text-gray-500">
+      {totalUsers} {totalUsers === 1 ? "profile" : "profiles"}
+    </span>
+  );
+}
+
 async function FetchAndDisplayProjects({
   projectSearchQuery,
   limit,
@@ -184,16 +201,29 @@ async function FetchAndDisplayProjects({
   );
 }
 
-async function FetchAndDisplayUserProfiles() {
-  const userProfiles = await getFilteredUserProfiles();
+async function FetchAndDisplayUserProfiles({
+  personSearchQuery,
+  limit,
+  offset,
+}: {
+  personSearchQuery: string | undefined;
+  limit: number;
+  offset: number;
+}) {
+  const { userProfiles, totalPages, totalUsers } =
+    await getFilteredUserProfiles(personSearchQuery, offset, limit);
 
   return (
-    <div className="space-y-4 md:space-y-6">
-      {userProfiles?.map((userProfile) => (
-        <div key={userProfile.id}>
-          <ProfileCard userProfile={userProfile} />
-        </div>
-      ))}
+    <div>
+      <div className="space-y-4 md:space-y-6">
+        {userProfiles?.map((userProfile) => (
+          <div key={userProfile.id}>
+            <ProfileCard userProfile={userProfile} />
+          </div>
+        ))}
+      </div>
+
+      <ProjectPagination totalPages={totalPages} />
     </div>
   );
 }

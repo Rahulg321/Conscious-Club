@@ -7,7 +7,11 @@ import { useDebouncedCallback } from "use-debounce";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-export default function ProjectSearchFilter() {
+export default function ProjectSearchFilter({
+  showProfiles,
+}: {
+  showProfiles: boolean;
+}) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
@@ -48,7 +52,7 @@ export default function ProjectSearchFilter() {
       )}
       <Input
         className="h-8 pl-8 w-full "
-        placeholder="Search Projects"
+        placeholder={showProfiles ? "Search Creators" : "Search Projects"}
         onChange={(e) => {
           handleSearch(e.target.value);
         }}

@@ -419,9 +419,36 @@ export async function getFilteredProjects(
   }
 }
 
-export async function getFilteredUserProfiles(): Promise<UserProfile[] | null> {
+/**
+ * Get filtered user profiles with pagination and search functionality
+ * @param query - Search query for user name, location, discipline, or role
+ * @param offset - The offset for pagination
+ * @param limit - The limit for pagination
+ * @returns The filtered user profiles with pagination info
+ */
+export async function getFilteredUserProfiles(
+  query?: string,
+  offset?: number,
+  limit?: number
+) {
   try {
-    // Get all users with their latest 3 projects - only specific fields
+    const conditions = [];
+
+    // Add search conditions if query is provided
+    if (query) {
+      conditions.push(
+        or(
+          ilike(user.name, `%${query}%`),
+          ilike(user.location, `%${query}%`),
+          ilike(user.discipline, `%${query}%`),
+          ilike(user.role, `%${query}%`)
+        )
+      );
+    }
+
+    const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+
+    // Get users with their latest 3 projects - only specific fields
     const userProfilesWithProjects = await db
       .select({
         // User fields
@@ -446,7 +473,17 @@ export async function getFilteredUserProfiles(): Promise<UserProfile[] | null> {
       })
       .from(user)
       .leftJoin(project, eq(user.id, project.userId))
-      .orderBy(desc(project.createdAt));
+      .where(whereClause)
+      .orderBy(desc(user.createdAt), desc(project.createdAt));
+
+    // Get total count for pagination (count distinct users)
+    const totalResult = await db
+      .select({ total: count(sql`DISTINCT ${user.id}`) })
+      .from(user)
+      .where(whereClause);
+
+    const total = totalResult[0]?.total ?? 0;
+    const totalPages = Math.ceil(Number(total) / (limit ?? 10));
 
     // Group users with their projects (max 3 per user)
     const groupedUsers = userProfilesWithProjects.reduce(
@@ -487,9 +524,20 @@ export async function getFilteredUserProfiles(): Promise<UserProfile[] | null> {
       {} as Record<string, UserProfile>
     );
 
-    return Object.values(groupedUsers);
+    // Convert to array and apply pagination
+    const allUsers = Object.values(groupedUsers);
+    const paginatedUsers = allUsers.slice(
+      offset ?? 0,
+      (offset ?? 0) + (limit ?? 10)
+    );
+
+    return {
+      userProfiles: paginatedUsers,
+      totalPages,
+      totalUsers: total,
+    };
   } catch (error) {
     console.log("an error occcured trying to get user profiles", error);
-    return null;
+    return { userProfiles: [], totalPages: 0, totalUsers: 0 };
   }
 }
