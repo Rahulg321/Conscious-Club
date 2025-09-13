@@ -9,6 +9,10 @@ import {
 } from "@repo/db/schema";
 import { eq, and, or, ilike, inArray, desc, count, sql } from "drizzle-orm";
 import { generateHashedPassword } from "./utils";
+import {
+  ProjectProfile,
+  UserProfile,
+} from "@/components/forms/onboarding/types";
 
 /**
  * Create a user

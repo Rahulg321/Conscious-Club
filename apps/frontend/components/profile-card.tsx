@@ -9,12 +9,10 @@ export default function ProfileCard({
 }: {
   userProfile: UserProfile;
 }) {
-  console.log(userProfile);
-
   return (
     <Card className="w-full max-w-4xl mx-auto p-6 bg-white shadow-lg">
       {/* Header Section */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
         <div className="flex items-center gap-4">
           <Avatar className="w-16 h-16">
             <AvatarImage

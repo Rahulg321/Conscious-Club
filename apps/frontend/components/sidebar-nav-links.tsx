@@ -8,11 +8,15 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { User } from "lucide-react";
+import { FaCompass } from "react-icons/fa";
+import { FaHeadphones } from "react-icons/fa";
+import { FaUser } from "react-icons/fa";
 
 type NavLink = {
   label: string;
   href: string;
   leading?: React.ReactNode;
+  activeColor: string;
 };
 
 const navLinks: NavLink[] = [
@@ -20,24 +24,22 @@ const navLinks: NavLink[] = [
     label: "Profile",
     href: "/profile",
     leading: <User className="w-4 h-4" />,
+    activeColor:
+      "!bg-[#FEDADA] !text-pink-700 data-[active=true]:!bg-[#FEDADA] data-[active=true]:!text-pink-700",
   },
   {
     label: "Discover",
     href: "/discover",
-    leading: (
-      <div className="w-4 h-4 bg-[#ffeccc] rounded-full flex items-center justify-center">
-        <div className="w-2 h-2 bg-[#e7aa63] rounded-full"></div>
-      </div>
-    ),
+    leading: <FaCompass className="size-4" />,
+    activeColor:
+      "!bg-[#FFECCC] !text-yellow-700 data-[active=true]:!bg-[#FFECCC] data-[active=true]:!text-yellow-700",
   },
   {
     label: "Support and FAQ",
     href: "/support",
-    leading: (
-      <div className="w-4 h-4 bg-[#d7e9ff] rounded-full flex items-center justify-center">
-        <div className="w-2 h-2 bg-[#4d83c9] rounded-full"></div>
-      </div>
-    ),
+    leading: <FaHeadphones className="size-4" />,
+    activeColor:
+      "!bg-[#D7E9FF] !text-blue-700 data-[active=true]:!bg-[#D7E9FF] data-[active=true]:!text-blue-700",
   },
 ];
 
@@ -47,14 +49,14 @@ export function SidebarNavLinks() {
   return (
     <SidebarMenu>
       {navLinks.map((item) => {
-        const isActive = pathname === item.href;
+        const isActive = pathname.includes(item.href);
         return (
           <SidebarMenuItem key={item.href}>
             <SidebarMenuButton
               isActive={isActive}
               className={
                 isActive
-                  ? "bg-[#f9fafb] text-[#171c21]"
+                  ? item.activeColor
                   : "text-[#666a6e] hover:bg-[#f9fafb]"
               }
               asChild

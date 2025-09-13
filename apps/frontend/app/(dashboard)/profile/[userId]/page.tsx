@@ -1,26 +1,43 @@
 import { auth } from "@/auth";
-import { getAllTags, getUserById, getUserProjects } from "@/lib/queries";
+import { getAllTags, getUserProjects } from "@/lib/queries";
 import ProjectUploadDialog from "@/components/dialogs/project-upload-dialog";
 import { Button } from "@/components/ui/button";
-import { Camera, Heart, Loader2, Sparkles } from "lucide-react";
+import { Heart, Loader2, Sparkles } from "lucide-react";
 import { redirect } from "next/navigation";
 import React, { Suspense } from "react";
 import Image from "next/image";
 import BannerUploadDialog from "@/components/dialogs/banner-upload-dialog";
 import ProfilePicUploadDialog from "@/components/dialogs/profile-pic-upload-dialog";
 import ProjectCard from "@/components/project-card";
+import { Metadata } from "next";
+import { getCachedUserById } from "@/lib/cached-queries";
 
-const ProfilePage = async ({
+export async function generateMetadata({
   params,
-}: {
+  searchParams,
+}: Props): Promise<Metadata> {
+  const { userId } = await params;
+
+  const profileUser = await getCachedUserById(userId);
+
+  return {
+    title: `Profile ${profileUser?.name || "User"}`,
+    description: `${profileUser?.name} ${profileUser?.role} ${profileUser?.discipline} ${profileUser?.location}`,
+  };
+}
+
+type Props = {
   params: Promise<{ userId: string }>;
-}) => {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+
+const ProfilePage = async ({ params }: Props) => {
   const { userId } = await params;
   if (!userId) redirect("/");
   const userSession = await auth();
   if (!userSession) redirect("/login");
   if (userSession.user.id !== userId) redirect("/");
-  const currentUser = await getUserById(userSession.user.id);
+  const currentUser = await getCachedUserById(userId);
   if (!currentUser) redirect("/");
 
   return (
@@ -43,15 +60,17 @@ const ProfilePage = async ({
         <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-6 gap-4">
           <div className="flex flex-col md:flex-row md:items-start gap-4 md:gap-6">
             <div className="relative self-center md:self-start">
-              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-4 border-white shadow-lg -mt-8 md:-mt-12 relative">
+              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full border-4 border-white shadow-lg -mt-8 md:-mt-12 relative">
                 <Image
                   src={currentUser.image || "/user-placeholder.png"}
                   fill
                   alt={currentUser.name || "User"}
-                  className="object-cover"
+                  className="object-cover rounded-full"
                 />
+                <div className="absolute bottom-1 -right-2">
+                  <ProfilePicUploadDialog />
+                </div>
               </div>
-              <ProfilePicUploadDialog />
             </div>
 
             <div className="text-center md:text-left md:pt-4">
