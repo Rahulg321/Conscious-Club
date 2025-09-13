@@ -22,3 +22,28 @@ export interface OnboardingStep {
 }
 
 export type UserRole = "explorer" | "creator" | "organizer";
+
+// Type definitions for getFilteredUserProfiles
+export type UserProfile = {
+  id: string;
+  name: string | null;
+  email: string;
+  image: string | null;
+  bannerImage: string | null;
+  type: "explorer" | "creator" | "organizer" | null;
+  location: string | null;
+  discipline: string | null;
+  role: string | null;
+  createdAt: Date;
+  projects: ProjectProfile[];
+};
+
+export type ProjectProfile = {
+  id: string;
+  name: string;
+  link: string;
+  description: string;
+  coverImage: string;
+  logoImage: string | null;
+  createdAt: Date;
+};

@@ -2,16 +2,24 @@ import { Button } from "@/components/ui/button";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import {
-  getAllProjects,
-  getAllProjectsWithTags,
   getAllTags,
   getFilteredProjects,
+  getFilteredUserProfiles,
 } from "@/lib/queries";
 import ProjectTagsFilter from "@/components/project-tag-filters";
 import { Suspense } from "react";
 import ProjectSearchFilter from "@/components/project-search-filter";
 import DiscoverProjectCard from "@/components/discover-project-card";
 import ProjectPagination from "@/components/project-pagination";
+import ProjectProfileTabs from "@/components/project-profile-tabs";
+import ProjectCardSkeleton from "@/components/skeletons/project-card-skeleton";
+import ProfileCard from "@/components/profile-card";
+import ProfileCardSkeleton from "@/components/skeletons/profile-card-skeleton";
+
+export const metadata = {
+  title: "Discover Projects",
+  description: "Discover projects on the platform",
+};
 
 export default async function DiscoverPage({
   searchParams,
@@ -19,15 +27,17 @@ export default async function DiscoverPage({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const userSession = await auth();
+
   if (!userSession) redirect("/login");
   const projectTags = await getAllTags();
 
-  const { page, query, tags } = await searchParams;
+  const { page, query, tags, type } = await searchParams;
 
   const projectSearchQuery = query as string;
   const currentPage = Number(page) || 1;
 
-  // Parse tags parameter - it comes as comma-separated string from URL
+  const showProfiles = type && type === "profiles";
+
   const selectedTags =
     typeof tags === "string"
       ? tags.split(",").filter(Boolean)
@@ -49,18 +59,7 @@ export default async function DiscoverPage({
 
           {/* Navigation */}
           <div className="flex items-center space-x-6">
-            <Button
-              variant="ghost"
-              className="text-gray-600 hover:text-gray-900"
-            >
-              Projects
-            </Button>
-            <Button
-              variant="ghost"
-              className="text-gray-600 hover:text-gray-900"
-            >
-              Profiles
-            </Button>
+            <ProjectProfileTabs />
           </div>
         </div>
       </header>
@@ -86,14 +85,42 @@ export default async function DiscoverPage({
           </Suspense>
         </div>
 
-        <Suspense fallback={<div>Loading</div>}>
-          <FetchAndDisplayProjects
-            tags={selectedTags}
-            limit={limit}
-            offset={offset}
-            projectSearchQuery={projectSearchQuery || ""}
-          />
-        </Suspense>
+        {showProfiles ? (
+          <Suspense
+            fallback={
+              <div className="space-y-4 md:space-y-6">
+                <ProfileCardSkeleton />
+                <ProfileCardSkeleton />
+                <ProfileCardSkeleton />
+                <ProfileCardSkeleton />
+                <ProfileCardSkeleton />
+                <ProfileCardSkeleton />
+              </div>
+            }
+          >
+            <FetchAndDisplayUserProfiles />
+          </Suspense>
+        ) : (
+          <Suspense
+            fallback={
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <ProjectCardSkeleton />
+                <ProjectCardSkeleton />
+                <ProjectCardSkeleton />
+                <ProjectCardSkeleton />
+                <ProjectCardSkeleton />
+                <ProjectCardSkeleton />
+              </div>
+            }
+          >
+            <FetchAndDisplayProjects
+              tags={selectedTags}
+              limit={limit}
+              offset={offset}
+              projectSearchQuery={projectSearchQuery || ""}
+            />
+          </Suspense>
+        )}
       </main>
     </div>
   );
@@ -153,6 +180,20 @@ async function FetchAndDisplayProjects({
       </div>
 
       <ProjectPagination totalPages={totalPages} />
+    </div>
+  );
+}
+
+async function FetchAndDisplayUserProfiles() {
+  const userProfiles = await getFilteredUserProfiles();
+
+  return (
+    <div className="space-y-4 md:space-y-6">
+      {userProfiles?.map((userProfile) => (
+        <div key={userProfile.id}>
+          <ProfileCard userProfile={userProfile} />
+        </div>
+      ))}
     </div>
   );
 }

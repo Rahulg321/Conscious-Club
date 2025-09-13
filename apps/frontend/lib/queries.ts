@@ -55,6 +55,8 @@ export async function getVerificationTokenByToken(token: string) {
  */
 export async function getUserById(id: string) {
   try {
+    console.log(id);
+
     const [foundUser] = await db.select().from(user).where(eq(user.id, id));
     return foundUser;
   } catch (error) {
@@ -216,7 +218,7 @@ export async function getAllProjects() {
   try {
     return await db.select().from(project);
   } catch (error) {
-    console.log("An error occured trying to get all projects", error);
+    console.log(error);
     return null;
   }
 }
@@ -410,5 +412,80 @@ export async function getFilteredProjects(
   } catch (error) {
     console.error("An error occurred trying to get filtered projects", error);
     return { projects: [], totalPages: 0, totalProjects: 0 };
+  }
+}
+
+export async function getFilteredUserProfiles(): Promise<UserProfile[] | null> {
+  try {
+    // Get all users with their latest 3 projects - only specific fields
+    const userProfilesWithProjects = await db
+      .select({
+        // User fields
+        userId: user.id,
+        userName: user.name,
+        userEmail: user.email,
+        userImage: user.image,
+        userBannerImage: user.bannerImage,
+        userType: user.type,
+        userLocation: user.location,
+        userDiscipline: user.discipline,
+        userRole: user.role,
+        userCreatedAt: user.createdAt,
+        // Project fields
+        projectId: project.id,
+        projectName: project.name,
+        projectLink: project.link,
+        projectDescription: project.description,
+        projectCoverImage: project.coverImage,
+        projectLogoImage: project.logoImage,
+        projectCreatedAt: project.createdAt,
+      })
+      .from(user)
+      .leftJoin(project, eq(user.id, project.userId))
+      .orderBy(desc(project.createdAt));
+
+    // Group users with their projects (max 3 per user)
+    const groupedUsers = userProfilesWithProjects.reduce(
+      (acc, row) => {
+        const userId = row.userId;
+
+        if (!acc[userId]) {
+          acc[userId] = {
+            id: row.userId,
+            name: row.userName,
+            email: row.userEmail,
+            image: row.userImage,
+            bannerImage: row.userBannerImage,
+            type: row.userType,
+            location: row.userLocation,
+            discipline: row.userDiscipline,
+            role: row.userRole,
+            createdAt: row.userCreatedAt,
+            projects: [],
+          } as UserProfile;
+        }
+
+        // Only add project if we have less than 3 projects for this user and project exists
+        if (row.projectId && acc[userId].projects.length < 3) {
+          acc[userId].projects.push({
+            id: row.projectId,
+            name: row.projectName,
+            link: row.projectLink,
+            description: row.projectDescription,
+            coverImage: row.projectCoverImage,
+            logoImage: row.projectLogoImage,
+            createdAt: row.projectCreatedAt,
+          } as ProjectProfile);
+        }
+
+        return acc;
+      },
+      {} as Record<string, UserProfile>
+    );
+
+    return Object.values(groupedUsers);
+  } catch (error) {
+    console.log("an error occcured trying to get user profiles", error);
+    return null;
   }
 }
