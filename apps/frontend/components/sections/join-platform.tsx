@@ -9,7 +9,7 @@ const JoinPlatform = () => {
   return (
     <div>
       <div className="flex flex-col items-center justify-center text-center my-12">
-        <h3 className="text-3xl font-bold mb-4">Why Join Our Platform?</h3>
+        <h2 className="font-bold mb-4">Why Join Our Platform?</h2>
         <p className="text-lg text-muted-foreground max-w-2xl">
           Because loyalty and creativity should feel like pleasure and comfort,
           not work.

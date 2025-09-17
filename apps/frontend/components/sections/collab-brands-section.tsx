@@ -1,20 +1,23 @@
 import React from "react";
+import Image from "next/image";
 
 const CollabBrandsSection = () => {
   return (
-    <div className="container mx-auto px-4 sm:px-6 py-14 lg:py-16">
+    <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-16">
       <div className="bg-white rounded-3xl overflow-hidden shadow-2xl">
-        <div className="flex flex-col lg:flex-row lg:h-[600px]">
-          <div className="flex-1 relative h-64 lg:h-full">
-            <img
+        <div className="grid grid-cols-1 lg:grid-cols-2 lg:min-h-[600px]">
+          <div className="relative h-64 lg:h-auto">
+            <Image
               src="/collab-brands.png"
               alt="Stylized characters collaborating in a vibrant city setting"
-              className="absolute inset-0 w-full h-full object-cover"
+              fill
+              priority
+              className="object-cover"
             />
           </div>
 
           {/* Right Content Section */}
-          <div className="flex-1 bg-gradient-to-br from-[#ff6b35] to-[#f7931e] flex flex-col justify-center px-8 lg:px-12 py-12 lg:py-16 lg:h-full">
+          <div className="bg-gradient-to-br from-[#ff6b35] to-[#f7931e] flex flex-col justify-center px-6 sm:px-8 lg:px-12 py-12 lg:py-16">
             <div className="max-w-xl">
               {/* Main Heading */}
               <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4 sm:mb-6">
@@ -62,7 +65,7 @@ const CollabBrandsSection = () => {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

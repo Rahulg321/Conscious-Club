@@ -22,10 +22,10 @@ const HomePage = async () => {
   return (
     <div>
       <HeroSection />
+      <JoinPlatform />
       <ExplorersSections />
       <AheadSection />
-      <TestimonialsSection />
-      <JoinPlatform />
+      {/* <TestimonialsSection /> */}
       <FAQSection />
       <JoinClubSection />
     </div>

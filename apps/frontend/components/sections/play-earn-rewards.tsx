@@ -1,52 +1,59 @@
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
 export default function PlayEarnRewards() {
   return (
-    <div className="container mx-auto px-6 py-16">
+    <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <div className="bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] rounded-3xl overflow-hidden">
-        <div className="flex flex-col lg:flex-row lg:h-[600px]">
-          <div className="flex-1 flex flex-col justify-center px-16 py-20">
-            <div className="max-w-2xl">
-              <h1 className="text-6xl font-bold text-white leading-tight mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 lg:min-h-[600px]">
+          <div className="order-2 lg:order-1 flex items-center px-6 sm:px-10 lg:px-16 py-12 sm:py-16 lg:py-20">
+            <div className="w-full max-w-2xl">
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
                 Play and Earn
                 <br />
                 Rewards
-              </h1>
+              </h2>
 
               {/* Subheading */}
-              <p className="text-xl text-white/80 mb-16 font-light">
+              <p className="text-base sm:text-lg lg:text-xl text-white/90 mb-10 font-light">
                 Build your fan circle & make real connections
               </p>
 
               {/* Game Buttons Grid */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 {/* Top Row */}
-                <button className="bg-white text-[#6366f1] px-6 py-4 rounded-2xl text-lg font-medium hover:bg-white/90 transition-colors">
+                <Button className="bg-white text-[#6366f1] px-6 py-4 rounded-2xl text-base sm:text-lg font-medium hover:bg-white/90">
                   Selfie Style Challenge
-                </button>
-                <button className="bg-white text-[#6366f1] px-6 py-4 rounded-2xl text-lg font-medium hover:bg-white/90 transition-colors">
+                </Button>
+                <Button className="bg-white text-[#6366f1] px-6 py-4 rounded-2xl text-base sm:text-lg font-medium hover:bg-white/90">
                   Lucky Spinner
-                </button>
+                </Button>
 
                 {/* Bottom Row */}
-                <button className="bg-white text-[#6366f1] px-6 py-4 rounded-2xl text-lg font-medium hover:bg-white/90 transition-colors">
+                <Button className="bg-white text-[#6366f1] px-6 py-4 rounded-2xl text-base sm:text-lg font-medium hover:bg-white/90">
                   Give away
-                </button>
-                <button className="border-2 border-white/30 text-white px-6 py-4 rounded-2xl text-lg font-medium hover:border-white/50 transition-colors">
+                </Button>
+                <Button
+                  variant="outline"
+                  className="border-2 border-white/30 text-white hover:bg-white/10 hover:border-white/50 px-6 py-4 rounded-2xl text-base sm:text-lg font-medium"
+                >
                   More games are coming soon...
-                </button>
+                </Button>
               </div>
             </div>
           </div>
 
           {/* Right Illustration Section */}
-          <div className="flex-1 relative overflow-hidden h-64 lg:h-full">
-            <img
+          <div className="order-1 lg:order-2 relative h-60 lg:h-auto">
+            <Image
               src="/play-earn-rewards.png"
               alt="Colorful animals including a panda DJ with turntables at a vibrant party"
-              className="absolute inset-0 w-full h-full object-cover object-center"
+              fill
+              priority
+              className="object-cover object-center"
             />
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

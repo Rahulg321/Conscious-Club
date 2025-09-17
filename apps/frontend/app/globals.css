@@ -172,37 +172,26 @@
   padding-block: min(3vh, 6rem);
 }
 
-.cta {
-  position: relative;
-  overflow: hidden;
-}
+/* .cta {
+  background: url("/rectangle.png") lightgray 0% 0% / 67.138671875px
+    67.138671875px repeat;
 
-.cta::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image: url("/rectangle.png");
-  background-position: 0% 0%;
-  background-size: 67.138671875px 67.138671875px;
-  background-repeat: repeat;
   mix-blend-mode: overlay;
-  z-index: 0;
-}
+} */
 
 .itc-font {
   font-family: var(--font-itc);
 }
 
-
 /* Gradient text utility */
 .gradient-text {
-  background: linear-gradient(51.07deg, #FCB35C 22.34%, #DD5CC8 44.5%, #6156D3 67.08%);
+  background: linear-gradient(
+    51.07deg,
+    #fcb35c 22.34%,
+    #dd5cc8 44.5%,
+    #6156d3 67.08%
+  );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
-
-
-
-

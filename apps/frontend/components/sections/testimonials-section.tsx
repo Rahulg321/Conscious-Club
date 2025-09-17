@@ -1,5 +1,4 @@
-import { Card } from "@/components/ui/card";
-import { Star, Quote } from "lucide-react";
+import TestimonialCard from "@/components/testimonial-card";
 
 const testimonials = [
   {
@@ -81,45 +80,13 @@ export default function TestimonialsSection() {
       <div className="w-full">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {testimonials.map((testimonial) => (
-            <Card
+            <TestimonialCard
               key={testimonial.id}
-              className="relative p-6 bg-[#ffffff] border border-[#dee5ed] rounded-lg shadow-sm hover:shadow-md transition-shadow"
-            >
-              {/* Quote icon */}
-              <div className="absolute top-4 right-4">
-                <Quote className="w-6 h-6 text-[#333333] opacity-30" />
-              </div>
-
-              {/* Profile section */}
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-full overflow-hidden bg-[#dee5ed]">
-                  <img
-                    src={testimonial.image || "/placeholder.svg"}
-                    alt={testimonial.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-[#1d1d1d] text-base">
-                    {testimonial.name}
-                  </h3>
-                  {/* Star rating */}
-                  <div className="flex gap-1 mt-1">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className="w-4 h-4 fill-[#ffd029] text-[#ffd029]"
-                      />
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Testimonial text */}
-              <p className="text-[#333333] text-sm leading-relaxed">
-                {testimonial.text}
-              </p>
-            </Card>
+              name={testimonial.name}
+              image={testimonial.image}
+              rating={testimonial.rating}
+              text={testimonial.text}
+            />
           ))}
         </div>
       </div>

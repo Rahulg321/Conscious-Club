@@ -14,20 +14,40 @@ const HeroSection = () => {
   return (
     <div>
       <div className="min-h-screen bg-background relative overflow-hidden">
-        <div className="absolute top-4 left-4 sm:top-16 sm:left-16 w-10 h-10 sm:w-16 sm:h-16 bg-[#EA591F] rounded-xl flex items-center justify-center rotate-12 shadow-lg">
-          <PenTool className="w-5 h-5 sm:w-8 sm:h-8 text-white rotate-260" />
+        <div
+          className="hidden sm:flex absolute pointer-events-none 
+          top-8 left-4 sm:top-12 sm:left-5 md:top-16 md:left-16 lg:top-20 lg:left-24 
+          w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 
+          bg-[#EA591F] rounded-xl items-center justify-center rotate-12 shadow-lg"
+        >
+          <PenTool className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-10 lg:h-10 text-white" />
         </div>
 
-        <div className="absolute top-2 right-4 sm:top-12 sm:right-16 w-10 h-10 sm:w-16 sm:h-16 bg-teal-600 rounded-xl flex items-center justify-center -rotate-12 shadow-lg">
-          <Database className="w-5 h-5 sm:w-8 sm:h-8 text-white" />
+        <div
+          className="hidden sm:flex absolute pointer-events-none 
+          top-6 right-4 sm:top-10 sm:right-10 md:top-12 md:right-16 
+          w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 
+          bg-teal-600 rounded-xl items-center justify-center -rotate-12 shadow-lg"
+        >
+          <Database className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-10 lg:h-10 text-white" />
         </div>
 
-        <div className="absolute bottom-24 left-8 sm:bottom-40 sm:left-32 w-10 h-10 sm:w-16 sm:h-16 bg-yellow-400 rounded-xl flex items-center justify-center rotate-12 shadow-lg">
-          <Camera className="w-5 h-5 sm:w-8 sm:h-8 text-white" />
+        <div
+          className="hidden sm:flex absolute pointer-events-none 
+          bottom-24 left-6 sm:bottom-20 sm:left-4 md:bottom-40 md:left-32 
+          w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 
+          bg-yellow-400 rounded-xl items-center justify-center rotate-12 shadow-lg"
+        >
+          <Camera className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-10 lg:h-10 text-white" />
         </div>
 
-        <div className="absolute bottom-28 right-12 sm:bottom-44 sm:right-40 w-10 h-10 sm:w-16 sm:h-16 bg-[#514ADB] rounded-2xl flex items-center justify-center -rotate-12 shadow-2xl">
-          <MicVocal className="w-6 h-6 sm:size-12 text-white" />
+        <div
+          className="hidden sm:flex absolute pointer-events-none 
+          bottom-28 right-6 sm:bottom-26 sm:right-10 md:bottom-44 md:right-40 
+          w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 
+          bg-[#514ADB] rounded-2xl items-center justify-center -rotate-12 shadow-2xl"
+        >
+          <MicVocal className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-10 lg:h-10 text-white" />
         </div>
 
         <div className="container mx-auto px-4 py-10 flex flex-col items-center justify-center min-h-[80dvh] text-center">

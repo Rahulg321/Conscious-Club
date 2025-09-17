@@ -1,9 +1,13 @@
+"use client";
+
+import { useState } from "react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { cn } from "@/lib/utils";
 
 const faqData = [
   {
@@ -44,13 +48,14 @@ const faqData = [
 ];
 
 export function FAQSection() {
+  const [openItem, setOpenItem] = useState<string | undefined>("item-0");
   return (
     <section className="w-full max-w-4xl mx-auto px-4 py-16 md:py-24">
       <div className="text-center mb-12">
         <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4 text-balance">
           Your curiosity, answered.
         </h2>
-        <p className="text-muted-foreground text-lg md:text-xl">
+        <p className="text-muted-foreground text-lg mt-8">
           We're here to answer your all questions.
         </p>
       </div>
@@ -59,14 +64,18 @@ export function FAQSection() {
         <Accordion
           type="single"
           collapsible
-          defaultValue="item-0"
-          className="space-y-4"
+          value={openItem}
+          onValueChange={setOpenItem}
+          className="space-y-2"
         >
           {faqData.map((faq, index) => (
             <AccordionItem
               key={index}
               value={`item-${index}`}
-              className="border border-border rounded-lg px-6 py-2 bg-card"
+              className={cn(
+                "rounded-lg border-none px-6 py-2",
+                openItem === `item-${index}` ? "bg-muted" : "bg-card"
+              )}
             >
               <AccordionTrigger className="text-left text-base md:text-lg font-medium hover:no-underline py-6">
                 {faq.question}

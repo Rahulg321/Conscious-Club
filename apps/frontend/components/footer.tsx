@@ -2,10 +2,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Facebook, Instagram, Linkedin, Youtube, Twitter } from "lucide-react";
 
+import CClogo from "@/public/cc-home-logo.png";
+import Image from "next/image";
+
 export function Footer() {
   return (
-    <footer className="px-4 py-6">
-      {/* Massive, full-width, responsive header (no background) */}
+    <footer className="px-4 py-6 max-w-7xl mx-auto">
       <div className="w-full mb-16">
         <h1
           className="
@@ -13,21 +15,17 @@ export function Footer() {
             sm:text-[80px]
             md:text-[120px]
             lg:text-[160px]
-            xl:text-[200px]
+            xl:text-[170px]
             text-[rgba(212,110,154,1)]
             leading-none
-            font-bold
-            break-words
-            text-center
+            font-semibold
           "
         >
-          ConsciousClub
+          Conscious Club
         </h1>
       </div>
 
-      {/* Newsletter and Navigation */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 mb-16">
-        {/* Newsletter Section */}
         <div className="space-y-6">
           <div className="space-y-2">
             <h2 className="text-xl md:text-2xl font-semibold text-gray-900 leading-tight">
@@ -49,7 +47,6 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Navigation Links */}
         <div className="grid grid-cols-2 gap-8 md:gap-12">
           <div className="space-y-4">
             <nav className="flex flex-col space-y-3">
@@ -112,15 +109,7 @@ export function Footer() {
 
       {/* Bottom Section */}
       <div className="flex flex-col sm:flex-row justify-between items-center gap-6 pt-8 border-t border-gray-200">
-        {/* Logo */}
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-pink-400 rounded-full flex items-center justify-center">
-            <div className="w-4 h-4 bg-white rounded-full"></div>
-          </div>
-          <span className="text-lg font-semibold text-pink-400">
-            ConsciousClub
-          </span>
-        </div>
+        <Image src={CClogo} alt="ConsciousClub Logo" />
 
         {/* Social Icons */}
         <div className="flex items-center gap-4">

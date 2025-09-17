@@ -30,7 +30,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const userSession = await auth();
-  console.log("userSession inside layout", userSession);
 
   return (
     <html lang="en">
