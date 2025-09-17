@@ -7,6 +7,13 @@ import { Toaster } from "@/components/ui/sonner";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 
+import localFont from "next/font/local";
+
+const itcFont = localFont({
+  src: "../fonts/itc-std.otf",
+  variable: "--font-itc",
+});
+
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
@@ -27,7 +34,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${inter.variable} antialiased`}>
+      <body className={`${inter.variable} ${itcFont.variable} antialiased`}>
         <SessionProvider>
           <Header userSession={userSession} />
           {children}

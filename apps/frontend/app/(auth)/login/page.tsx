@@ -13,7 +13,7 @@ export default async function LoginPage({
 
   const userSession = await auth();
 
-  if (userSession) redirect("/");
+  if (userSession) redirect("/profile");
 
   // Error message configuration
   const getErrorMessage = (error: string | string[] | undefined) => {

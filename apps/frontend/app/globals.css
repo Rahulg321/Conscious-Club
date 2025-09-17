@@ -189,3 +189,20 @@
   mix-blend-mode: overlay;
   z-index: 0;
 }
+
+.itc-font {
+  font-family: var(--font-itc);
+}
+
+
+/* Gradient text utility */
+.gradient-text {
+  background: linear-gradient(51.07deg, #FCB35C 22.34%, #DD5CC8 44.5%, #6156D3 67.08%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+
+
+

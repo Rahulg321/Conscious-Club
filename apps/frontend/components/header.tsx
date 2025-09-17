@@ -22,6 +22,8 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Session } from "next-auth";
 import { signOut } from "next-auth/react";
+import Image from "next/image";
+import CClogo from "@/public/cc-home-logo.png";
 
 export default function Header({
   userSession,
@@ -46,17 +48,7 @@ export default function Header({
     <header className="w-full bg-white border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          {/* Logo */}
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[#cf5b8d] rounded-full flex items-center justify-center">
-              <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
-                <div className="w-3 h-3 bg-[#cf5b8d] rounded-full"></div>
-              </div>
-            </div>
-            <span className="text-[#cf5b8d] text-xl font-semibold">
-              ConsciousClub
-            </span>
-          </div>
+          <Image src={CClogo} alt="ConsciousClub Logo"/>
 
           {/* Desktop Navigation Menu */}
           <nav className="hidden md:flex items-center gap-8">

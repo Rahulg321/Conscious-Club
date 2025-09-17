@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 export default async function RegisterPage() {
   const userSession = await auth();
 
-  if (userSession) redirect("/");
+  if (userSession) redirect("/profile");
 
   return (
     <main className="min-h-screen grid grid-cols-1 md:grid-cols-2">

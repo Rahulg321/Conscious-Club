@@ -1,4 +1,5 @@
 import Link from "next/link";
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -7,7 +8,6 @@ import {
   Mail,
   Link as LinkIcon,
   Settings,
-  RefreshCw,
 } from "lucide-react";
 
 interface ErrorConfig {
@@ -28,7 +28,7 @@ interface ErrorConfig {
 const getErrorConfig = (error: string): ErrorConfig => {
   const configs: Record<string, ErrorConfig> = {
     Configuration: {
-      icon: <Settings className="h-8 w-8" />,
+      icon: <Settings className="size-8" />,
       title: "Configuration Error",
       description:
         "There's a problem with the authentication configuration. Please contact support or try again later.",
@@ -109,11 +109,11 @@ const ErrorPage = async ({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) => {
   const { error } = await searchParams;
+
   const errorString = Array.isArray(error) ? error[0] : error;
 
-  console.log("error", errorString);
-
   const errorConfig = getErrorConfig(errorString || "Default");
+
   const colors = getColorClasses(errorConfig.color);
 
   return (
@@ -180,10 +180,10 @@ const ErrorPage = async ({
           </div>
         </div>
 
-        {/* Error details for debugging (only in development) */}
         {process.env.NODE_ENV === "development" && errorString && (
           <div className="mt-6 p-4 bg-gray-100 rounded-lg text-left">
             <p className="text-xs text-gray-500 mb-2">Debug Info:</p>
+
             <code className="text-xs text-gray-700 break-all">
               Error: {errorString}
             </code>
