@@ -1,7 +1,7 @@
 import React from "react";
 import SplitFeatureSection from "./SplitFeatureSection";
 
-const ExplorersSections = () => {
+const ExplorersSections = async () => {
   return (
     <div>
       <div className="flex flex-col items-center justify-center text-center my-12">

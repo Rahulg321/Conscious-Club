@@ -14,7 +14,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -130,13 +129,9 @@ export function LoginForm() {
         </div>
       </div>
 
-      <Link
-        href="/new-password"
-        className="font-semibold text-foreground hover:underline"
-      >
-        Forgot password?
-      </Link>
-
+      <p className="text-center text-xs text-foreground hover:underline">
+        <Link href="/new-password">Forgot password?</Link>
+      </p>
       <p className="text-center text-xs text-muted-foreground">
         Don&apos;t have an account?{" "}
         <Link href="/register" className="underline underline-offset-2">

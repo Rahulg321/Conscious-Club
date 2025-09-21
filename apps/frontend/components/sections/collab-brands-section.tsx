@@ -1,17 +1,18 @@
 import React from "react";
 import Image from "next/image";
+import { cn } from "@/lib/utils";
+import CollabBrands from "@/public/collab-brands.png";
 
-const CollabBrandsSection = () => {
+const CollabBrandsSection = ({ className }: { className?: string }) => {
   return (
-    <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-16">
-      <div className="bg-white rounded-3xl overflow-hidden shadow-2xl">
-        <div className="grid grid-cols-1 lg:grid-cols-2 lg:min-h-[600px]">
-          <div className="relative h-64 lg:h-auto">
+    <section className={cn("", className)}>
+      <div className="bg-white rounded-3xl overflow-hidden shadow-2xl h-[500px] lg:h-[600px]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
+          <div className="relative h-[300px] lg:h-full">
             <Image
-              src="/collab-brands.png"
+              src={CollabBrands}
               alt="Stylized characters collaborating in a vibrant city setting"
               fill
-              priority
               className="object-cover"
             />
           </div>

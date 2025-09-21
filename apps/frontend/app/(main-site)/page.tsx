@@ -15,10 +15,6 @@ export const metadata: Metadata = {
 };
 
 const HomePage = async () => {
-  const userSession = await auth();
-
-  console.log(userSession);
-
   return (
     <div>
       <HeroSection />

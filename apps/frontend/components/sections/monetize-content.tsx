@@ -1,11 +1,17 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import YoungManCharacterWithPhone from "@/public/young-man-character-with-phone.jpg";
 
-export default function MonetizeContentSection() {
+export default function MonetizeContentSection({
+  className,
+}: {
+  className?: string;
+}) {
   return (
-    <section className="container mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="rounded-2xl bg-[#1a1a1a] overflow-hidden">
-        <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[60vh]">
+    <section className={cn("", className)}>
+      <div className="rounded-2xl bg-[#1a1a1a] overflow-hidden h-[500px] lg:h-[600px]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
           {/* Text column */}
           <div className="order-2 lg:order-1 flex items-center py-12 sm:py-16 lg:py-20 px-6 sm:px-10 lg:px-16">
             <div className="w-full max-w-2xl">
@@ -25,19 +31,19 @@ export default function MonetizeContentSection() {
                 </h3>
 
                 <div className="flex flex-wrap gap-3 sm:gap-4">
-                  <Button className="bg-[#cdff98] text-black px-5 sm:px-6 py-2.5 sm:py-3 rounded-full text-base sm:text-lg font-medium hover:opacity-90">
+                  <Button className="bg-[#cdff98] text-black px-5 sm:px-6 py-2.5 sm:py-3 rounded-full text-base sm:text-lg font-medium ">
                     Visual Arts & Design
                   </Button>
-                  <Button className="bg-[#aa9bff] text-white px-5 sm:px-6 py-2.5 sm:py-3 rounded-full text-base sm:text-lg font-medium hover:opacity-90">
+                  <Button className="bg-[#aa9bff] text-white px-5 sm:px-6 py-2.5 sm:py-3 rounded-full text-base sm:text-lg font-medium ">
                     Video & Motion Media
                   </Button>
-                  <Button className="bg-[#ffc471] text-black px-5 sm:px-6 py-2.5 sm:py-3 rounded-full text-base sm:text-lg font-medium hover:opacity-90">
+                  <Button className="bg-[#ffc471] text-black px-5 sm:px-6 py-2.5 sm:py-3 rounded-full text-base sm:text-lg font-medium ">
                     Writing & Storytelling
                   </Button>
-                  <Button className="bg-[#ff8787] text-white px-5 sm:px-6 py-2.5 sm:py-3 rounded-full text-base sm:text-lg font-medium hover:opacity-90">
+                  <Button className="bg-[#ff8787] text-white px-5 sm:px-6 py-2.5 sm:py-3 rounded-full text-base sm:text-lg font-medium ">
                     Performance & Audio
                   </Button>
-                  <Button className="bg-[#8bb0ff] text-white px-5 sm:px-6 py-2.5 sm:py-3 rounded-full text-base sm:text-lg font-medium hover:opacity-90">
+                  <Button className="bg-[#8bb0ff] text-white px-5 sm:px-6 py-2.5 sm:py-3 rounded-full text-base sm:text-lg font-medium ">
                     Tech & Digital Creation
                   </Button>
                 </div>
@@ -46,17 +52,13 @@ export default function MonetizeContentSection() {
           </div>
 
           {/* Image column */}
-          <div className="order-1 lg:order-2 relative min-h-[240px] sm:min-h-[320px] lg:min-h-[60vh]">
-            <div
-              className="absolute inset-0 bg-gradient-to-br from-[#8bb0ff] to-[#aa9bff]"
-              aria-hidden
-            />
+          <div className="order-1 lg:order-2 relative h-[300px] lg:h-full">
             <Image
-              src="/young-man-character-with-phone.jpg"
+              src={YoungManCharacterWithPhone}
               alt="3D character with colorful hair holding a phone"
-              fill
               priority
-              className="object-cover object-center mix-blend-multiply"
+              fill
+              className="object-cover object-center"
             />
           </div>
         </div>

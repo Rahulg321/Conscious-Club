@@ -138,6 +138,10 @@
   p {
     @apply leading-8;
   }
+
+  .box {
+    @apply mx-auto container px-4 sm:px-6 lg:px-8 py-14 lg:py-16;
+  }
 }
 
 * {
@@ -178,6 +182,11 @@
 
   mix-blend-mode: overlay;
 } */
+
+.spacer {
+  height: 40vh;
+  position: relative;
+}
 
 .itc-font {
   font-family: var(--font-itc);

@@ -1,37 +1,39 @@
 import Image from "next/image";
 import WorldMap from "@/public/world-map.png";
+import { cn } from "@/lib/utils";
 
-export default function CommunityBanner() {
+export default function CommunityBanner({ className }: { className?: string }) {
   return (
-    <section className="container mx-auto px-4 sm:px-6 lg:px-8 my-8">
-      <div className="relative overflow-hidden rounded-4xl bg-[#158f7b]">
-        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 min-h-[500px] lg:min-h-[600px]">
-          <div className="px-8 py-12 lg:px-16">
-            <h2 className="text-4xl lg:text-6xl xl:text-7xl font-bold text-white leading-tight mb-6">
-              Grow Your
-              <br />
-              Community
-            </h2>
-            <p className="text-base lg:text-xl text-white/90 font-medium max-w-md">
-              Build your fan circle & make real connections
-            </p>
-            <div>
+    <section className={cn("", className)}>
+      <div className="relative overflow-visible rounded-4xl bg-[#158f7b] h-[500px] lg:h-[600px]">
+        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 h-full">
+          <div className="overflow-hidden">
+            <div className="px-8 py-12 lg:px-16">
+              <h2 className="text-4xl lg:text-6xl xl:text-7xl font-bold text-white leading-tight mb-6">
+                Grow Your
+                <br />
+                Community
+              </h2>
+              <p className="text-base lg:text-xl text-white/90 font-medium max-w-md">
+                Build your fan circle & make real connections
+              </p>
+            </div>
+            <div className="relative h-[200px] lg:h-[300px]">
               <Image
                 src={WorldMap}
                 alt="Community Banner"
-                className="object-cover object-center"
+                fill
+                className="object-cover object-bottom"
               />
             </div>
           </div>
 
-          {/* Right Image Section */}
-          <div className="relative h-60 lg:h-full">
+          <div className="relative h-[300px] overflow-hidden lg:h-full rounded-r-4xl">
             <Image
               src="/community.png"
               alt="Diverse group of young people representing community members"
+              className="rounded-r-4xl object-cover"
               fill
-              priority
-              className="object-cover object-center"
             />
           </div>
         </div>
