@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 export default function ExclusivePerks({ className }: { className?: string }) {
   return (
     <section className={cn("", className)}>
-      <div className="bg-white rounded-4xl overflow-hidden shadow-lg h-[500px] lg:h-[600px]">
+      <div className="bg-white rounded-3xl overflow-hidden shadow-lg h-[500px] lg:h-[600px]">
         <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
           <div className="relative h-[300px] lg:h-full rounded-l-4xl">
             <Image

@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 export default function CommunityBanner({ className }: { className?: string }) {
   return (
     <section className={cn("", className)}>
-      <div className="relative overflow-visible rounded-4xl bg-[#158f7b] h-[500px] lg:h-[600px]">
+      <div className="relative overflow-visible rounded-3xl bg-[#158f7b] h-[500px] lg:h-[600px]">
         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 h-full">
           <div className="overflow-hidden">
             <div className="px-8 py-12 lg:px-16">

@@ -10,7 +10,7 @@ export default function MonetizeContentSection({
 }) {
   return (
     <section className={cn("", className)}>
-      <div className="rounded-2xl bg-[#1a1a1a] overflow-hidden h-[500px] lg:h-[600px]">
+      <div className="rounded-3xl bg-[#1a1a1a] overflow-hidden h-[500px] lg:h-[600px]">
         <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
           {/* Text column */}
           <div className="order-2 lg:order-1 flex items-center py-12 sm:py-16 lg:py-20 px-6 sm:px-10 lg:px-16">

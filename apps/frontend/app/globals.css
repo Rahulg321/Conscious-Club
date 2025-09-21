@@ -204,3 +204,28 @@
   background-clip: text;
   color: transparent;
 }
+
+.sticky-statement {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.marquee {
+  position: relative;
+  display: flex;
+  margin: auto;
+  overflow: hidden;
+  user-select: none;
+
+  .marquee__content {
+    flex-shrink: 0;
+    display: flex;
+    gap: 1rem;
+  }
+
+  .marquee__item {
+    object-fit: contain;
+  }
+}
