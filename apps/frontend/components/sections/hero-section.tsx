@@ -2,138 +2,41 @@
 
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Play,
-  Database,
-  Megaphone,
-  PenTool,
-  Camera,
-  MicVocal,
-} from "lucide-react";
+import { PenTool, Database, Camera, MicVocal } from "lucide-react";
 import Link from "next/link";
 
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
 import { useRef } from "react";
-import Rollout1 from "@/public/CC_LandingPage_Rollout1.png";
-import Rollout2 from "@/public/CC_LandingPage_Rollout2.png";
-import Rollout3 from "@/public/CC_LandingPage_Rollout3.png";
-import Rollout4 from "@/public/CC_LandingPage_Rollout4.png";
+
 import RolloutCenter from "@/public/CC_LandingPage_RolloutCentre.png";
 import Image from "next/image";
+import HeroMarqueeSection from "./hero-marquee-section";
 
-gsap.registerPlugin(ScrollTrigger);
-
-// Floating Icon Components
+// Floating Icon Components (No changes needed here, keeping them for context)
 const FloatingPenTool = () => (
-  <div
-    className="hidden sm:flex absolute pointer-events-none 
-    top-8 left-4 sm:top-12 sm:left-5 md:top-16 md:left-16 lg:top-20 lg:left-24 
-    w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 
-    bg-[#EA591F] rounded-xl items-center justify-center rotate-12 shadow-lg"
-  >
+  <div className="hidden sm:flex absolute pointer-events-none top-8 left-4 sm:top-12 sm:left-5 md:top-16 md:left-16 lg:top-20 lg:left-24 w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-[#EA591F] rounded-xl items-center justify-center rotate-12 shadow-lg">
     <PenTool className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-10 lg:h-10 text-white" />
   </div>
 );
 
 const FloatingDatabase = () => (
-  <div
-    className="hidden sm:flex absolute pointer-events-none 
-    top-6 right-4 sm:top-10 sm:right-10 md:top-12 md:right-16 
-    w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 
-    bg-teal-600 rounded-xl items-center justify-center -rotate-12 shadow-lg"
-  >
+  <div className="hidden sm:flex absolute pointer-events-none top-6 right-4 sm:top-10 sm:right-10 md:top-12 md:right-16 w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 bg-teal-600 rounded-xl items-center justify-center -rotate-12 shadow-lg">
     <Database className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-10 lg:h-10 text-white" />
   </div>
 );
-
 const FloatingCamera = () => (
-  <div
-    className="hidden sm:flex absolute pointer-events-none 
-    bottom-24 left-6 sm:bottom-20 sm:left-4 md:bottom-40 md:left-32 
-    w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 
-    bg-yellow-400 rounded-xl items-center justify-center rotate-12 shadow-lg"
-  >
+  <div className="hidden sm:flex absolute pointer-events-none bottom-24 left-6 sm:bottom-20 sm:left-4 md:bottom-40 md:left-32 w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 bg-yellow-400 rounded-xl items-center justify-center rotate-12 shadow-lg">
     <Camera className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-10 lg:h-10 text-white" />
   </div>
 );
 
 const FloatingMicVocal = () => (
-  <div
-    className="hidden sm:flex absolute pointer-events-none 
-    bottom-28 right-6 sm:bottom-26 sm:right-10 md:bottom-44 md:right-40 
-    w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 
-    bg-[#514ADB] rounded-2xl items-center justify-center -rotate-12 shadow-2xl"
-  >
+  <div className="hidden sm:flex absolute pointer-events-none bottom-28 right-6 sm:bottom-26 sm:right-10 md:bottom-44 md:right-40 w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 bg-[#514ADB] rounded-2xl items-center justify-center -rotate-12 shadow-2xl">
     <MicVocal className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-10 lg:h-10 text-white" />
   </div>
 );
 
 const HeroSection = () => {
   const container = useRef<HTMLDivElement>(null);
-
-  useGSAP(
-    () => {
-      let tl = gsap.timeline();
-      let marquee = document.querySelector(".marquee");
-      let content = document.querySelector(".marquee__content");
-      let items = document.querySelectorAll(".marquee__item");
-      let tlLength = items.length * 2;
-
-      // animation timeline
-      tl.to(".marquee__content", tlLength, {
-        xPercent: -100,
-        repeat: -1,
-        ease: "none",
-      });
-
-      let currentScale = 1;
-      let scaleTl: any;
-      let isUpdated: boolean;
-
-      // scroll trigger
-      ScrollTrigger.create({
-        // markers: true,
-        trigger: marquee,
-        onUpdate: (self) => {
-          if (self.direction == 1) {
-            let isUpdated = true;
-            let tScale = self.getVelocity() / 200;
-            if (tScale > currentScale) {
-              currentScale = tScale;
-              scaleTl && scaleTl.kill();
-              scaleTl = gsap
-                .timeline({
-                  deafults: {
-                    ease: "power2.out",
-                  },
-                  onComplete: () => {
-                    currentScale = 1;
-                    scaleTl.kill();
-                  },
-                })
-                .to(tl, {
-                  duration: 0.2,
-                  timeScale: tScale,
-                  ease: "power2.out",
-                })
-                .to(
-                  tl,
-                  {
-                    timeScale: 1,
-                    duration: 1,
-                    ease: "none",
-                  },
-                  "+=1"
-                );
-            }
-          }
-        },
-      });
-    },
-    { scope: container }
-  );
 
   return (
     <div ref={container}>
@@ -175,13 +78,11 @@ const HeroSection = () => {
             </div>
           </div>
 
-          {/* Main headline */}
           <h1 className="text-5xl md:text-6xl font-medium mb-8 max-w-5xl leading-tight">
             All-in-One platform for Creators, <br />
             Brands & <span className="italic itc-font gradient-text">You.</span>
           </h1>
 
-          {/* Subheading */}
           <p className="text-xl text-muted-foreground font-semibold mb-12 max-w-2xl leading-relaxed">
             Join the platform that connects curious minds, creative talent and
             brands through play and rewards.
@@ -197,34 +98,18 @@ const HeroSection = () => {
         </div>
       </div>
 
-      <div className="relative">
+      <div className="relative py-8">
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
           <Image
             src={RolloutCenter}
             alt="Rollout Center"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover max-w-xs"
+            width={320}
+            height={320}
           />
         </div>
 
-        <div className="marquee">
-          <div className="marquee__content">
-            <Image
-              className="marquee__item animate-marquee"
-              src={Rollout1}
-              alt="Rollout 1"
-            />
-            <Image className="marquee__item" src={Rollout2} alt="Rollout 2" />
-            <Image className="marquee__item" src={Rollout3} alt="Rollout 3" />
-            <Image className="marquee__item" src={Rollout4} alt="Rollout 4" />
-          </div>
-
-          <div className="marquee__content">
-            <Image className="marquee__item" src={Rollout1} alt="Rollout 1" />
-            <Image className="marquee__item" src={Rollout2} alt="Rollout 2" />
-            <Image className="marquee__item" src={Rollout3} alt="Rollout 3" />
-            <Image className="marquee__item" src={Rollout4} alt="Rollout 4" />
-          </div>
-        </div>
+        <HeroMarqueeSection />
       </div>
     </div>
   );

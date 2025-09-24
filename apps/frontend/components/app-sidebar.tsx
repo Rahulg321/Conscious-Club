@@ -12,6 +12,7 @@ import { SidebarUserNav } from "./sidebar-user-nav";
 import CCFaviconLogo from "@/public/CC_Logo_Favicon.png";
 import CCLogo from "@/public/cc_logo.png";
 import Image from "next/image";
+import { BravoDialog } from "./dialogs/bravo-dialog";
 
 export function AppSidebar({ user }: { user: User | null }) {
   return (
@@ -36,6 +37,7 @@ export function AppSidebar({ user }: { user: User | null }) {
       </SidebarContent>
 
       <SidebarFooter className="">
+        <BravoDialog />
         {user && <SidebarUserNav user={user} />}
       </SidebarFooter>
     </Sidebar>

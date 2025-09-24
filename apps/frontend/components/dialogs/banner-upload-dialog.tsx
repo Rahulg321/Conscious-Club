@@ -34,10 +34,11 @@ export default function BannerUploadDialog() {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <button className="w-8 h-8 md:w-10 md:h-10 bg-black/20 rounded-full flex items-center justify-center hover:bg-black/30 transition-colors">
+          <Button className="w-8 h-8 md:w-10 md:h-10 bg-black/20 rounded-full flex items-center justify-center hover:bg-black/30 transition-colors">
             <Camera className="w-4 h-4 md:w-5 md:h-5 text-white" />
-          </button>
+          </Button>
         </DialogTrigger>
+
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Upload Banner</DialogTitle>
@@ -55,9 +56,9 @@ export default function BannerUploadDialog() {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <button className="w-8 h-8 md:w-10 md:h-10 bg-black/20 rounded-full flex items-center justify-center hover:bg-black/30 transition-colors">
+        <Button className="w-8 h-8 md:w-10 md:h-10 bg-black/20 rounded-full flex items-center justify-center hover:bg-black/30 transition-colors">
           <Camera className="w-4 h-4 md:w-5 md:h-5 text-white" />
-        </button>
+        </Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left">

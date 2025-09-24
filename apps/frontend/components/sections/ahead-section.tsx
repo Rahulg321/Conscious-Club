@@ -28,6 +28,7 @@ const AheadSection = () => {
         });
 
         tl.to(card, { opacity: 0, yPercent: -10 });
+
         ScrollTrigger.create({
           trigger: card,
           pin: true,
