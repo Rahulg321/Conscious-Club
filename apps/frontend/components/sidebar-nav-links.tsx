@@ -8,7 +8,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { User } from "lucide-react";
-import { FaCompass } from "react-icons/fa";
+import { FaCompass, FaHeart } from "react-icons/fa";
 import { FaHeadphones } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
 
@@ -40,6 +40,13 @@ const navLinks: NavLink[] = [
     leading: <FaHeadphones className="size-4" />,
     activeColor:
       "!bg-[#D7E9FF] !text-blue-700 data-[active=true]:!bg-[#D7E9FF] data-[active=true]:!text-blue-700",
+  },
+  {
+    label: "Bravos",
+    href: "/bravos",
+    leading: <FaHeart className="size-4" />,
+    activeColor:
+      "!bg-[#FEDADA] !text-pink-700 data-[active=true]:!bg-[#FEDADA] data-[active=true]:!text-pink-700",
   },
 ];
 

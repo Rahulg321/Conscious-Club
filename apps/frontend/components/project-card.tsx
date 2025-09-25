@@ -1,4 +1,5 @@
-// Project Card Component
+import Link from "next/link";
+import { Button } from "./ui/button";
 
 export default function ProjectCard({ project }: { project: any }) {
   return (
@@ -17,6 +18,12 @@ export default function ProjectCard({ project }: { project: any }) {
         <p className="text-sm text-[#667085] line-clamp-2">
           {project.description}
         </p>
+
+        <Button variant="outline" asChild>
+          <Link href={`/profile/${project.userId}/projects/${project.id}`}>
+            View
+          </Link>
+        </Button>
       </div>
     </div>
   );

@@ -11,6 +11,7 @@ import ProfilePicUploadDialog from "@/components/dialogs/profile-pic-upload-dial
 import ProjectCard from "@/components/project-card";
 import { Metadata } from "next";
 import { getCachedUserById } from "@/lib/cached-queries";
+import Link from "next/link";
 
 export async function generateMetadata({
   params,
@@ -198,7 +199,14 @@ async function DisplayUserProjectWork({
     <div className="mt-8">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
         <h3 className="text-lg font-semibold text-[#171c21]">Work Sample</h3>
-        <ProjectUploadDialog allTags={allTags || []} />
+
+        <div>
+          <Button variant="outline" asChild>
+            <Link href={`/profile/${currentUserId}/projects`}>View All</Link>
+          </Button>
+
+          <ProjectUploadDialog allTags={allTags || []} />
+        </div>
       </div>
 
       {!projects || projects.length === 0 ? (

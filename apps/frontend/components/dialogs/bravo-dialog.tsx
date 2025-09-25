@@ -44,6 +44,7 @@ import Bravo51 from "@/public/bravos/Bravo51.jpg";
 import Bravo52 from "@/public/bravos/Bravo52.jpg";
 import Bravo57 from "@/public/bravos/Bravo57.jpg";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import Link from "next/link";
 
 const allBravos = [
   {
@@ -159,7 +160,7 @@ export function BravoDialog() {
             <DialogTitle>Bravo</DialogTitle>
             <DialogDescription>
               Make changes to your profile here. Click save when you&apos;re
-              done.
+              done. <Link href="/bravos">View All</Link>{" "}
             </DialogDescription>
           </DialogHeader>
           <DisplayBravo className="px-4" />
@@ -171,14 +172,20 @@ export function BravoDialog() {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant="outline">Bravo</Button>
+        <div className="flex items-center gap-2 flex-col">
+          <Image src={BearSticker} alt="Bear Sticker" />
+          <Button variant="link">
+            Collect Bravos <ArrowRight className="w-4 h-4" />
+          </Button>
+        </div>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left">
           <DrawerTitle>Bravo</DrawerTitle>
           <DrawerDescription>
-            Make changes to your profile here. Click save when you&apos;re done.
-          </DrawerDescription>
+            Make changes to your profile here. Click save when you&apos;re done.{" "}
+            <Link href="/bravos">View All</Link>{" "}
+          </DrawerDescription>{" "}
         </DrawerHeader>
         <DisplayBravo className="px-4" />
         <DrawerFooter className="pt-2">

@@ -4,8 +4,6 @@ import { ChevronUp, LoaderIcon } from "lucide-react";
 import Image from "next/image";
 import type { User } from "next-auth";
 import { signOut, useSession } from "next-auth/react";
-import { useState } from "react";
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,6 +21,7 @@ import { toast } from "sonner";
 
 export function SidebarUserNav({ user }: { user: User }) {
   const router = useRouter();
+
   const { status } = useSession();
 
   return (
