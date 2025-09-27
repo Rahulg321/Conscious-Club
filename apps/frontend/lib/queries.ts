@@ -3,6 +3,7 @@ import {
   passwordResetToken,
   project,
   projectTags,
+  projectLikes,
   tags,
   user,
   verificationToken,
@@ -299,13 +300,15 @@ export async function getAllProjectsWithTagsGrouped() {
  * @param query - The search query for project name or description
  * @param offset - The offset for pagination
  * @param limit - The limit for pagination
+ * @param userId - The current user ID to check like status
  * @returns The filtered projects with pagination info
  */
 export async function getFilteredProjects(
   filterTags?: string | string[],
   query?: string,
   offset?: number,
-  limit?: number
+  limit?: number,
+  userId?: string
 ) {
   try {
     // Normalize filterTags to an array of tag ID strings
@@ -346,7 +349,7 @@ export async function getFilteredProjects(
 
     const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
-    // Get filtered projects with their tags
+    // Get filtered projects with their tags and like counts
     const filteredProjects = await db
       .select({
         id: project.id,
@@ -359,6 +362,10 @@ export async function getFilteredProjects(
         createdAt: project.createdAt,
         updatedAt: project.updatedAt,
         tagName: tags.name,
+        likeCount: sql<number>`COALESCE((${sql`SELECT COUNT(*) FROM ${projectLikes} WHERE ${projectLikes.projectId} = ${project.id}`}), 0)`,
+        isLiked: userId
+          ? sql<boolean>`EXISTS(SELECT 1 FROM ${projectLikes} WHERE ${projectLikes.projectId} = ${project.id} AND ${projectLikes.userId} = ${userId})`
+          : sql<boolean>`false`,
       })
       .from(project)
       .leftJoin(projectTags, eq(project.id, projectTags.projectId))
@@ -396,6 +403,8 @@ export async function getFilteredProjects(
             createdAt: row.createdAt,
             updatedAt: row.updatedAt,
             tags: [],
+            likeCount: row.likeCount,
+            isLiked: row.isLiked,
           };
         }
 
@@ -507,8 +516,8 @@ export async function getFilteredUserProfiles(
         }
 
         // Only add project if we have less than 3 projects for this user and project exists
-        if (row.projectId && acc[userId].projects.length < 3) {
-          acc[userId].projects.push({
+        if (row.projectId && acc[userId] && acc[userId]!.projects.length < 3) {
+          acc[userId]!.projects.push({
             id: row.projectId,
             name: row.projectName,
             link: row.projectLink,

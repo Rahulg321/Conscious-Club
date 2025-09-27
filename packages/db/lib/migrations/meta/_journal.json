@@ -50,6 +50,13 @@
       "when": 1757412111530,
       "tag": "0006_complex_lockheed",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1758974089262,
+      "tag": "0007_elite_payback",
+      "breakpoints": true
     }
   ]
 }

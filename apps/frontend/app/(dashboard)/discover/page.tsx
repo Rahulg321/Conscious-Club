@@ -121,6 +121,7 @@ export default async function DiscoverPage({
               limit={limit}
               offset={offset}
               projectSearchQuery={projectSearchQuery || ""}
+              userId={userSession.user.id}
             />
           </Suspense>
         )}
@@ -169,17 +170,20 @@ async function FetchAndDisplayProjects({
   limit,
   tags,
   offset,
+  userId,
 }: {
   projectSearchQuery: string | undefined;
   limit: number;
   tags: string[] | string | undefined;
   offset: number;
+  userId: string;
 }) {
   const { projects, totalPages, totalProjects } = await getFilteredProjects(
     tags,
     projectSearchQuery,
     offset,
-    limit
+    limit,
+    userId
   );
 
   return (
@@ -188,10 +192,13 @@ async function FetchAndDisplayProjects({
         {projects?.map((project) => (
           <DiscoverProjectCard
             key={project.id}
+            projectId={project.id}
             projectCoverImage={project.coverImage}
             projectName={project.name}
             tagName={project.tags?.[0] || ""}
             projectDescription={project.description}
+            likeCount={project.likeCount}
+            isLiked={project.isLiked}
           />
         ))}
       </div>

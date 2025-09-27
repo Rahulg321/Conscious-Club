@@ -221,3 +221,51 @@ export const projectTags = pgTable(
 );
 
 export type ProjectTags = InferSelectModel<typeof projectTags>;
+
+export const follows = pgTable(
+  "follows",
+  {
+    // The ID of the user who is performing the follow action
+    followerId: uuid("followerId")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+
+    // The ID of the user who is being followed
+    followingId: uuid("followingId")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+
+    // Timestamp for when the follow action occurred
+    createdAt: timestamp("createdAt").notNull().defaultNow(),
+  },
+  (table) => ({
+    // A composite primary key ensures that a user can only follow another user once.
+    pk: primaryKey({ columns: [table.followerId, table.followingId] }),
+  })
+);
+
+export type Follows = InferSelectModel<typeof follows>;
+
+export const projectLikes = pgTable(
+  "project_likes",
+  {
+    // The ID of the user who liked the project
+    userId: uuid("userId")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+
+    // The ID of the project that was liked
+    projectId: uuid("projectId")
+      .notNull()
+      .references(() => project.id, { onDelete: "cascade" }),
+
+    // Timestamp for when the like occurred
+    createdAt: timestamp("createdAt").notNull().defaultNow(),
+  },
+  (table) => ({
+    // A composite primary key ensures a user can only like a specific project once.
+    pk: primaryKey({ columns: [table.userId, table.projectId] }),
+  })
+);
+
+export type ProjectLikes = InferSelectModel<typeof projectLikes>;
