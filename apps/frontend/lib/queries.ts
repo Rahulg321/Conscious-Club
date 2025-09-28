@@ -9,6 +9,7 @@ import {
   bravoType,
   user,
   verificationToken,
+  follows,
 } from "@repo/db/schema";
 import { eq, and, or, ilike, inArray, desc, count, sql } from "drizzle-orm";
 import { generateHashedPassword } from "./utils";
@@ -437,12 +438,14 @@ export async function getFilteredProjects(
  * @param query - Search query for user name, location, discipline, or role
  * @param offset - The offset for pagination
  * @param limit - The limit for pagination
+ * @param currentUserId - The ID of the current user (for checking follow status)
  * @returns The filtered user profiles with pagination info
  */
 export async function getFilteredUserProfiles(
   query?: string,
   offset?: number,
-  limit?: number
+  limit?: number,
+  currentUserId?: string
 ) {
   try {
     const conditions = [];
@@ -498,12 +501,72 @@ export async function getFilteredUserProfiles(
     const total = totalResult[0]?.total ?? 0;
     const totalPages = Math.ceil(Number(total) / (limit ?? 10));
 
+    // Get follow information for all users
+    const userIds = [
+      ...new Set(userProfilesWithProjects.map((row) => row.userId)),
+    ];
+
+    // Get follow counts for all users
+    const followCounts = await Promise.all(
+      userIds.map(async (userId) => {
+        const [followersCount] = await db
+          .select({ count: sql<number>`COUNT(*)` })
+          .from(follows)
+          .where(eq(follows.followingId, userId));
+
+        const [followingCount] = await db
+          .select({ count: sql<number>`COUNT(*)` })
+          .from(follows)
+          .where(eq(follows.followerId, userId));
+
+        return {
+          userId,
+          followersCount: Number(followersCount?.count || 0),
+          followingCount: Number(followingCount?.count || 0),
+        };
+      })
+    );
+
+    // Get follow status for current user
+    const followStatuses = currentUserId
+      ? await Promise.all(
+          userIds.map(async (userId) => {
+            if (userId === currentUserId) return { userId, isFollowing: false };
+
+            const followCheck = await db
+              .select()
+              .from(follows)
+              .where(
+                and(
+                  eq(follows.followerId, currentUserId),
+                  eq(follows.followingId, userId)
+                )
+              );
+
+            return {
+              userId,
+              isFollowing: followCheck.length > 0,
+            };
+          })
+        )
+      : userIds.map((userId) => ({ userId, isFollowing: false }));
+
+    const followCountsMap = Object.fromEntries(
+      followCounts.map((fc) => [fc.userId, fc])
+    );
+    const followStatusesMap = Object.fromEntries(
+      followStatuses.map((fs) => [fs.userId, fs])
+    );
+
     // Group users with their projects (max 3 per user)
     const groupedUsers = userProfilesWithProjects.reduce(
       (acc, row) => {
         const userId = row.userId;
 
         if (!acc[userId]) {
+          const followInfo = followCountsMap[userId];
+          const followStatus = followStatusesMap[userId];
+
           acc[userId] = {
             id: row.userId,
             name: row.userName,
@@ -516,6 +579,9 @@ export async function getFilteredUserProfiles(
             role: row.userRole,
             createdAt: row.userCreatedAt,
             projects: [],
+            followersCount: followInfo?.followersCount || 0,
+            followingCount: followInfo?.followingCount || 0,
+            isFollowing: followStatus?.isFollowing || false,
           } as UserProfile;
         }
 
@@ -631,6 +697,116 @@ export async function getBravoBySlug(slug: string) {
     return bravo;
   } catch (error) {
     console.log("An error occured trying to get bravo by slug", error);
+    return null;
+  }
+}
+
+/**
+ * Get user profile with follow information
+ * @param userId - The ID of the user
+ * @param currentUserId - The ID of the current user (for checking follow status)
+ * @returns User profile with follow information
+ */
+export async function getUserProfileWithFollowInfo(
+  userId: string,
+  currentUserId?: string
+) {
+  try {
+    // Get user with projects
+    const userWithProjects = await db
+      .select({
+        // User fields
+        userId: user.id,
+        userName: user.name,
+        userEmail: user.email,
+        userImage: user.image,
+        userBannerImage: user.bannerImage,
+        userType: user.type,
+        userLocation: user.location,
+        userDiscipline: user.discipline,
+        userRole: user.role,
+        userCreatedAt: user.createdAt,
+        // Project fields
+        projectId: project.id,
+        projectName: project.name,
+        projectLink: project.link,
+        projectDescription: project.description,
+        projectCoverImage: project.coverImage,
+        projectLogoImage: project.logoImage,
+        projectCreatedAt: project.createdAt,
+      })
+      .from(user)
+      .leftJoin(project, eq(user.id, project.userId))
+      .where(eq(user.id, userId))
+      .orderBy(desc(project.createdAt));
+
+    if (userWithProjects.length === 0) {
+      return null;
+    }
+
+    const firstRow = userWithProjects[0];
+    if (!firstRow) {
+      return null;
+    }
+
+    // Get follow counts
+    const [followersCountResult] = await db
+      .select({ count: sql<number>`COUNT(*)` })
+      .from(follows)
+      .where(eq(follows.followingId, userId));
+
+    const [followingCountResult] = await db
+      .select({ count: sql<number>`COUNT(*)` })
+      .from(follows)
+      .where(eq(follows.followerId, userId));
+
+    // Check if current user is following this user
+    let isFollowing = false;
+    if (currentUserId && currentUserId !== userId) {
+      const followCheck = await db
+        .select()
+        .from(follows)
+        .where(
+          and(
+            eq(follows.followerId, currentUserId),
+            eq(follows.followingId, userId)
+          )
+        );
+      isFollowing = followCheck.length > 0;
+    }
+
+    // Group projects
+    const projects = userWithProjects
+      .filter((row) => row.projectId)
+      .slice(0, 3) // Limit to 3 projects
+      .map((row) => ({
+        id: row.projectId,
+        name: row.projectName,
+        link: row.projectLink,
+        description: row.projectDescription,
+        coverImage: row.projectCoverImage,
+        logoImage: row.projectLogoImage,
+        createdAt: row.projectCreatedAt,
+      }));
+
+    return {
+      id: firstRow.userId,
+      name: firstRow.userName,
+      email: firstRow.userEmail,
+      image: firstRow.userImage,
+      bannerImage: firstRow.userBannerImage,
+      type: firstRow.userType,
+      location: firstRow.userLocation,
+      discipline: firstRow.userDiscipline,
+      role: firstRow.userRole,
+      createdAt: firstRow.userCreatedAt,
+      projects,
+      followersCount: Number(followersCountResult?.count || 0),
+      followingCount: Number(followingCountResult?.count || 0),
+      isFollowing,
+    };
+  } catch (error) {
+    console.error("Error getting user profile with follow info:", error);
     return null;
   }
 }

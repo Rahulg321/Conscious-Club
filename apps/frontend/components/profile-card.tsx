@@ -1,14 +1,58 @@
+"use client";
+
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Heart, MapPin, Trophy } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Heart,
+  MapPin,
+  Trophy,
+  Users,
+  UserPlus,
+  UserCheck,
+} from "lucide-react";
 import { UserProfile } from "./forms/onboarding/types";
+import { followUser, unfollowUser } from "@/lib/actions/follow-action";
+import { useTransition } from "react";
+import { toast } from "sonner";
 
 export default function ProfileCard({
   userProfile,
+  currentUserId,
 }: {
   userProfile: UserProfile;
+  currentUserId?: string;
 }) {
+  const [isPending, startTransition] = useTransition();
+
+  const handleFollowToggle = () => {
+    if (!currentUserId) {
+      toast.error("You must be logged in to follow users");
+      return;
+    }
+
+    if (currentUserId === userProfile.id) {
+      toast.error("You cannot follow yourself");
+      return;
+    }
+
+    startTransition(async () => {
+      try {
+        const action = userProfile.isFollowing ? unfollowUser : followUser;
+        const result = await action(userProfile.id);
+
+        if (result.error) {
+          toast.error(result.error);
+        } else {
+          toast.success(result.success || "Action completed successfully");
+          // The component will re-render with updated data due to revalidatePath in the action
+        }
+      } catch (error) {
+        toast.error("Something went wrong. Please try again.");
+      }
+    });
+  };
   return (
     <Card className="w-full max-w-4xl mx-auto p-6 bg-white shadow-lg">
       {/* Header Section */}
@@ -30,14 +74,47 @@ export default function ProfileCard({
                 {userProfile.discipline || "Discipline"}
               </Badge>
             </div>
-            <div className="flex items-center gap-1 text-gray-600">
+            <div className="flex items-center gap-1 text-gray-600 mb-2">
               <MapPin className="w-4 h-4" />
               <span className="text-sm">
                 {userProfile.location || "Location"}
               </span>
             </div>
+            {/* Follow Stats */}
+            <div className="flex items-center gap-4 text-sm text-gray-600">
+              <div className="flex items-center gap-1">
+                <Users className="w-4 h-4" />
+                <span>{userProfile.followersCount || 0} followers</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <UserCheck className="w-4 h-4" />
+                <span>{userProfile.followingCount || 0} following</span>
+              </div>
+            </div>
           </div>
         </div>
+
+        {/* Follow Button */}
+        {currentUserId && currentUserId !== userProfile.id && (
+          <Button
+            onClick={handleFollowToggle}
+            disabled={isPending}
+            variant={userProfile.isFollowing ? "outline" : "default"}
+            className="flex items-center gap-2"
+          >
+            {userProfile.isFollowing ? (
+              <>
+                <UserCheck className="w-4 h-4" />
+                {isPending ? "Unfollowing..." : "Unfollow"}
+              </>
+            ) : (
+              <>
+                <UserPlus className="w-4 h-4" />
+                {isPending ? "Following..." : "Follow"}
+              </>
+            )}
+          </Button>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

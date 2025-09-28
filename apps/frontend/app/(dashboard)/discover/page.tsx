@@ -101,6 +101,7 @@ export default async function DiscoverPage({
               personSearchQuery={projectSearchQuery || ""}
               limit={limit}
               offset={offset}
+              currentUserId={userSession.user.id}
             />
           </Suspense>
         ) : (
@@ -212,20 +213,30 @@ async function FetchAndDisplayUserProfiles({
   personSearchQuery,
   limit,
   offset,
+  currentUserId,
 }: {
   personSearchQuery: string | undefined;
   limit: number;
   offset: number;
+  currentUserId: string;
 }) {
   const { userProfiles, totalPages, totalUsers } =
-    await getFilteredUserProfiles(personSearchQuery, offset, limit);
+    await getFilteredUserProfiles(
+      personSearchQuery,
+      offset,
+      limit,
+      currentUserId
+    );
 
   return (
     <div>
       <div className="space-y-4 md:space-y-6">
         {userProfiles?.map((userProfile) => (
           <div key={userProfile.id}>
-            <ProfileCard userProfile={userProfile} />
+            <ProfileCard
+              userProfile={userProfile}
+              currentUserId={currentUserId}
+            />
           </div>
         ))}
       </div>

@@ -36,6 +36,9 @@ export type UserProfile = {
   role: string | null;
   createdAt: Date;
   projects: ProjectProfile[];
+  followersCount?: number;
+  followingCount?: number;
+  isFollowing?: boolean;
 };
 
 export type ProjectProfile = {

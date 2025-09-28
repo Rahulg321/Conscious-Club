@@ -49,7 +49,11 @@ export default function Header({
     <header className="w-full bg-white border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          <Image src={CClogo} alt="ConsciousClub Logo" />
+          <div>
+            <Link href="/">
+              <Image src={CClogo} alt="ConsciousClub Logo" />
+            </Link>
+          </div>
 
           {/* Desktop Navigation Menu */}
           <nav className="hidden md:flex items-center gap-8">
