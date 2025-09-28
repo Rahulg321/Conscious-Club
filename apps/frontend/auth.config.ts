@@ -11,6 +11,22 @@ import {
   updateUserEmailVerification,
 } from "./lib/queries";
 
+// Define admin emails - you can move this to environment variables for better security
+const ADMIN_EMAILS = [
+  "admin@consciousclub.com",
+  "rahul@consciousclub.com",
+  "rg5353070@gmail.com",
+  "rahul@darkalphacapital.com",
+  "info@ravisi.ms",
+  "manavi@ravisi.ms",
+  // Add more admin emails as needed
+];
+
+// Helper function to check if email is admin
+const isAdminEmail = (email: string): boolean => {
+  return ADMIN_EMAILS.includes(email.toLowerCase());
+};
+
 export const authConfig = {
   session: { strategy: "jwt" },
   pages: {
@@ -45,7 +61,11 @@ export const authConfig = {
         }
 
         // Don't create access token here - let JWT callback handle it
-        return { ...user, type: "credentials" };
+        return {
+          ...user,
+          type: "credentials",
+          isAdmin: isAdminEmail(user.email as string),
+        };
       },
     }),
   ],
@@ -98,6 +118,11 @@ export const authConfig = {
       if (user) {
         token.id = user.id;
         token.type = (user as any).type || "oauth";
+
+        // Set isAdmin flag based on user email
+        if (user.email) {
+          token.isAdmin = isAdminEmail(user.email);
+        }
       }
 
       // Fetch fresh name and image from database
@@ -107,6 +132,10 @@ export const authConfig = {
           if (dbUser) {
             token.name = dbUser.name;
             token.image = dbUser.image;
+            // Ensure isAdmin is set correctly even on token refresh
+            if (dbUser.email) {
+              token.isAdmin = isAdminEmail(dbUser.email);
+            }
           }
         } catch (error) {
           console.error("Error fetching user data:", error);
@@ -120,11 +149,17 @@ export const authConfig = {
             id: token.id,
             type: token.type,
             email: user.email,
+            isAdmin: token.isAdmin,
           },
           process.env.AUTH_SECRET as string
         );
         token.accessToken = accessToken;
-        console.log("Created access token for user:", user.email);
+        console.log(
+          "Created access token for user:",
+          user.email,
+          "isAdmin:",
+          token.isAdmin
+        );
       }
 
       return token;
@@ -137,6 +172,7 @@ export const authConfig = {
         session.user.image = token.image as string;
         (session.user as any).accessToken = token.accessToken;
         (session.user as any).type = token.type;
+        (session.user as any).isAdmin = token.isAdmin;
       }
       return session;
     },

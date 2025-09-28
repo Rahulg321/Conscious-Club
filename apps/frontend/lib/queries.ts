@@ -14,6 +14,8 @@ import {
   ProjectProfile,
   UserProfile,
 } from "@/components/forms/onboarding/types";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 /**
  * Create a user
@@ -549,4 +551,48 @@ export async function getFilteredUserProfiles(
     console.log("an error occcured trying to get user profiles", error);
     return { userProfiles: [], totalPages: 0, totalUsers: 0 };
   }
+}
+
+/**
+ * Checks if the current user is an admin
+ * @returns Promise<boolean>
+ */
+export async function isAdmin(): Promise<boolean> {
+  const session = await auth();
+  return (session?.user as any)?.isAdmin === true;
+}
+
+/**
+ * Redirects to login if user is not authenticated
+ * Redirects to unauthorized page if user is not admin
+ * @param redirectTo - Optional redirect path for unauthorized users
+ */
+export async function requireAdmin(redirectTo: string = "/dashboard") {
+  const session = await auth();
+
+  console.log("user session inside requireAdmin", session);
+
+  if (!session?.user) {
+    redirect("/login");
+  }
+
+  if (!(session?.user as any)?.isAdmin) {
+    redirect(redirectTo);
+  }
+
+  return session;
+}
+
+/**
+ * Server-side admin check for use in components
+ * @returns Promise<{ isAdmin: boolean; user: any }>
+ */
+export async function getAdminStatus() {
+  const session = await auth();
+  const isAdminUser = (session?.user as any)?.isAdmin === true;
+
+  return {
+    isAdmin: isAdminUser,
+    user: session?.user,
+  };
 }

@@ -1,6 +1,8 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { genSaltSync, hashSync } from "bcrypt-ts";
+import { auth } from "../auth";
+import { redirect } from "next/navigation";
 
 /**
  * Merges class names
