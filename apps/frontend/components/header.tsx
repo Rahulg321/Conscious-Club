@@ -38,6 +38,7 @@ export default function Header({
     { label: "Benefits", href: "#" },
     { label: "Who is this for?", href: "#" },
     { label: "Join as a Brand", href: "#", icon: Crown },
+    { label: "Contact Us", href: "/contact-us" },
   ] satisfies ReadonlyArray<{
     label: string;
     href: string;
@@ -48,7 +49,7 @@ export default function Header({
     <header className="w-full bg-white border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          <Image src={CClogo} alt="ConsciousClub Logo"/>
+          <Image src={CClogo} alt="ConsciousClub Logo" />
 
           {/* Desktop Navigation Menu */}
           <nav className="hidden md:flex items-center gap-8">

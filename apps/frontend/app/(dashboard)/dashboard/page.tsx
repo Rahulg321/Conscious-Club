@@ -1,3 +1,8 @@
+export const metadata = {
+  title: "Dashboard",
+  description: "Dashboard page",
+};
+
 export default async function DashboardPage() {
   return (
     <div className="container mx-auto py-8">

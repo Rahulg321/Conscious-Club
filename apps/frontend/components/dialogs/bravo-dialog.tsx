@@ -45,6 +45,7 @@ import Bravo52 from "@/public/bravos/Bravo52.jpg";
 import Bravo57 from "@/public/bravos/Bravo57.jpg";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from "next/link";
+import { BravoCard } from "../bravo-card";
 
 const allBravos = [
   {
@@ -124,22 +125,6 @@ const allBravos = [
   },
 ];
 
-type BravoImageProps = {
-  src: StaticImageData;
-  alt: string;
-  className?: string;
-};
-
-function BravoImage({ src, alt, className }: BravoImageProps) {
-  return (
-    <Image
-      src={src}
-      alt={alt}
-      className={cn("w-full h-32 object-cover grayscale opacity-70", className)}
-    />
-  );
-}
-
 export function BravoDialog() {
   const [open, setOpen] = React.useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
@@ -163,7 +148,6 @@ export function BravoDialog() {
               done. <Link href="/bravos">View All</Link>{" "}
             </DialogDescription>
           </DialogHeader>
-          <DisplayBravo className="px-4" />
         </DialogContent>
       </Dialog>
     );
@@ -187,7 +171,7 @@ export function BravoDialog() {
             <Link href="/bravos">View All</Link>{" "}
           </DrawerDescription>{" "}
         </DrawerHeader>
-        <DisplayBravo className="px-4" />
+        {/* <DisplayBravo className="px-4" /> */}
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>
@@ -195,22 +179,5 @@ export function BravoDialog() {
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
-  );
-}
-
-function DisplayBravo({ className }: { className: string }) {
-  return (
-    <ScrollArea
-      className={cn("h-[500px] md:h-[600px] lg:h-[700px]", className)}
-    >
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-        {allBravos.map((bravo) => (
-          <div key={bravo.id} className="overflow-hidden rounded-md border">
-            <BravoImage src={bravo.image} alt={bravo.name} />
-            <div className="p-2 text-sm font-medium">{bravo.name}</div>
-          </div>
-        ))}
-      </div>
-    </ScrollArea>
   );
 }

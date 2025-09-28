@@ -5,6 +5,8 @@ import {
   projectTags,
   projectLikes,
   tags,
+  bravos,
+  bravoType,
   user,
   verificationToken,
 } from "@repo/db/schema";
@@ -570,8 +572,6 @@ export async function isAdmin(): Promise<boolean> {
 export async function requireAdmin(redirectTo: string = "/dashboard") {
   const session = await auth();
 
-  console.log("user session inside requireAdmin", session);
-
   if (!session?.user) {
     redirect("/login");
   }
@@ -595,4 +595,42 @@ export async function getAdminStatus() {
     isAdmin: isAdminUser,
     user: session?.user,
   };
+}
+
+/**
+ * Get all bravos
+ * @returns All bravos
+ */
+export async function getAllBravos() {
+  try {
+    return await db
+      .select({
+        id: bravos.id,
+        name: bravos.name,
+        slug: bravos.slug,
+        image: bravos.image,
+        type: bravos.type,
+        createdAt: bravos.createdAt,
+        updatedAt: bravos.updatedAt,
+      })
+      .from(bravos);
+  } catch (error) {
+    console.log("An error occured trying to get all bravos", error);
+    return null;
+  }
+}
+
+/**
+ * Get a bravo by slug
+ * @param slug - The slug of the bravo
+ * @returns The bravo
+ */
+export async function getBravoBySlug(slug: string) {
+  try {
+    const [bravo] = await db.select().from(bravos).where(eq(bravos.slug, slug));
+    return bravo;
+  } catch (error) {
+    console.log("An error occured trying to get bravo by slug", error);
+    return null;
+  }
 }

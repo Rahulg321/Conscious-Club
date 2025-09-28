@@ -269,3 +269,24 @@ export const projectLikes = pgTable(
 );
 
 export type ProjectLikes = InferSelectModel<typeof projectLikes>;
+
+export const bravoType = pgEnum("bravoType", [
+  "Boss",
+  "Bestie",
+  "Buzz",
+  "Bold",
+  "Brag",
+]);
+
+export const bravos = pgTable("bravos", {
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
+  name: varchar("name", { length: 64 }).notNull(),
+  slug: varchar("slug", { length: 64 }).notNull().unique(),
+  description: text("description").notNull(),
+  image: text("image").notNull(),
+  type: bravoType("type").notNull(),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+});
+
+export type Bravos = InferSelectModel<typeof bravos>;

@@ -1,5 +1,6 @@
 "use server";
 
+import ContactMessageEmail from "@/components/emails/contact-email";
 import { ResetPasswordEmail } from "@/components/emails/reset-password";
 import TokenVerificationEmail from "@/components/emails/token-verification-email";
 import { Resend } from "resend";
@@ -69,4 +70,33 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
   return {
     success: true,
   };
+};
+
+export const sendContactFormEmail = async (
+  email: string,
+  firstName: string,
+  lastName: string,
+  message: string
+) => {
+  const { data, error } = await resend.emails.send({
+    from: "Hydranode <Contact@hydranode.ai>",
+    to: ["rg5353070@gmail.com", "info@ravisi.ms", "manavi@ravisi.ms"],
+    replyTo: email,
+    subject: `Contact Inquiry by ${firstName} ${lastName} from Conscious Club`,
+    react: ContactMessageEmail({
+      firstName,
+      lastName,
+      email,
+      message,
+    }),
+  });
+
+  if (error) {
+    console.log("error sending email", error.name, error.message);
+    return {
+      error: `could not send email -> ${error.message}}`,
+    };
+  }
+
+  return { data };
 };

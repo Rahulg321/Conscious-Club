@@ -57,6 +57,20 @@
       "when": 1758974089262,
       "tag": "0007_elite_payback",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1759034317180,
+      "tag": "0008_talented_johnny_blaze",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1759035744982,
+      "tag": "0009_safe_tempest",
+      "breakpoints": true
     }
   ]
 }

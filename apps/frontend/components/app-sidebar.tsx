@@ -9,10 +9,12 @@ import {
 import { SidebarNavLinks } from "@/components/sidebar-nav-links";
 import { User } from "next-auth";
 import { SidebarUserNav } from "./sidebar-user-nav";
-import CCFaviconLogo from "@/public/CC_Logo_Favicon.png";
 import CCLogo from "@/public/cc_logo.png";
 import Image from "next/image";
-import { BravoDialog } from "./dialogs/bravo-dialog";
+import { Button } from "./ui/button";
+import { ArrowRight } from "lucide-react";
+import BearSticker from "@/public/stickers/bear-sticker.png";
+import Link from "next/link";
 
 export function AppSidebar({ user }: { user: User | null }) {
   return (
@@ -37,7 +39,16 @@ export function AppSidebar({ user }: { user: User | null }) {
       </SidebarContent>
 
       <SidebarFooter className="">
-        <BravoDialog />
+        <div className="flex items-center gap-2 flex-col">
+          <Image src={BearSticker} alt="Bear Sticker" />
+          <Button variant="link" asChild>
+            <Link href="/bravos">
+              Collect Bravos <ArrowRight className="w-4 h-4" />
+            </Link>
+          </Button>
+        </div>
+
+        {/* <BravoDialog /> */}
         {user && <SidebarUserNav user={user} />}
       </SidebarFooter>
     </Sidebar>
