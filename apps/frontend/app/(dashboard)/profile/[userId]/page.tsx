@@ -1,5 +1,9 @@
 import { auth } from "@/auth";
-import { getAllTags, getUserProjects } from "@/lib/queries";
+import {
+  getAllTags,
+  getUserFollowCounts,
+  getUserProjects,
+} from "@/lib/queries";
 import ProjectUploadDialog from "@/components/dialogs/project-upload-dialog";
 import { Button } from "@/components/ui/button";
 import { Edit, Heart, Loader2, Share, Sparkles } from "lucide-react";
@@ -41,6 +45,8 @@ const ProfilePage = async ({ params }: Props) => {
   if (userSession.user.id !== userId) redirect("/");
   const currentUser = await getCachedUserById(userId);
   if (!currentUser) redirect("/");
+
+  const { followers, following } = await getUserFollowCounts(userId);
 
   return (
     <div>
@@ -89,6 +95,12 @@ const ProfilePage = async ({ params }: Props) => {
                 </span>
                 <span className="px-3 py-1 bg-[#f9fafb] text-[#666a6e] text-sm font-medium rounded-full border border-[#e2e3e6]">
                   {currentUser.type || "Explorer"}
+                </span>
+                <span className="px-3 py-1 bg-[#f9fafb] text-[#666a6e] text-sm font-medium rounded-full border border-[#e2e3e6]">
+                  {followers} followers
+                </span>
+                <span className="px-3 py-1 bg-[#f9fafb] text-[#666a6e] text-sm font-medium rounded-full border border-[#e2e3e6]">
+                  {following} following
                 </span>
               </div>
             </div>

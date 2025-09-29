@@ -31,10 +31,7 @@ export function AppSidebar({ user }: { user: User | null }) {
         </div>
       </SidebarHeader>
 
-      <SidebarContent>
-        <div className="text-[#666a6e] text-xs font-medium mb-4 tracking-wide">
-          MENU
-        </div>
+      <SidebarContent className="p-2">
         <SidebarNavLinks />
       </SidebarContent>
 

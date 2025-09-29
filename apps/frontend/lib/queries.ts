@@ -186,7 +186,11 @@ export async function getPasswordResetTokenByToken(token: string) {
  */
 export async function getProjectById(projectId: string) {
   try {
-    return await db.select().from(project).where(eq(project.id, projectId));
+    const [foundProject] = await db
+      .select()
+      .from(project)
+      .where(eq(project.id, projectId));
+    return foundProject;
   } catch (error) {
     console.log("An error occured trying to get project by id", error);
     return null;
@@ -808,5 +812,32 @@ export async function getUserProfileWithFollowInfo(
   } catch (error) {
     console.error("Error getting user profile with follow info:", error);
     return null;
+  }
+}
+
+/**
+ * Get total followers and following counts for a user
+ * @param userId - The ID of the user
+ * @returns An object with followers and following totals
+ */
+export async function getUserFollowCounts(userId: string) {
+  try {
+    const [followersCountResult] = await db
+      .select({ count: sql<number>`COUNT(*)` })
+      .from(follows)
+      .where(eq(follows.followingId, userId));
+
+    const [followingCountResult] = await db
+      .select({ count: sql<number>`COUNT(*)` })
+      .from(follows)
+      .where(eq(follows.followerId, userId));
+
+    return {
+      followers: Number(followersCountResult?.count || 0),
+      following: Number(followingCountResult?.count || 0),
+    };
+  } catch (error) {
+    console.error("Error getting follow counts", error);
+    return { followers: 0, following: 0 };
   }
 }
