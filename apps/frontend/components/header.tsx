@@ -38,8 +38,8 @@ export default function Header({
     { label: "Benefits", href: "#" },
     { label: "Who is this for?", href: "#" },
     { label: "Join as a Brand", href: "#", icon: Crown },
-    { label: "Contact Us", href: "/contact-us" },
     { label: "Community", href: "/community" },
+    { label: "Contact Us", href: "/contact-us" },
   ] satisfies ReadonlyArray<{
     label: string;
     href: string;

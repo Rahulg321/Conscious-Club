@@ -671,9 +671,9 @@ export async function getAdminStatus() {
  * Get all bravos
  * @returns All bravos
  */
-export async function getAllBravos() {
+export async function getAllBravos(type?: string | string[]) {
   try {
-    return await db
+    const baseSelect = db
       .select({
         id: bravos.id,
         name: bravos.name,
@@ -684,6 +684,16 @@ export async function getAllBravos() {
         updatedAt: bravos.updatedAt,
       })
       .from(bravos);
+
+    if (type && Array.isArray(type) && type.length > 0) {
+      return await baseSelect.where(inArray(bravos.type, type as any));
+    }
+
+    if (type && !Array.isArray(type)) {
+      return await baseSelect.where(eq(bravos.type, type as any));
+    }
+
+    return await baseSelect;
   } catch (error) {
     console.log("An error occured trying to get all bravos", error);
     return null;
