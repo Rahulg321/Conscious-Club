@@ -71,6 +71,13 @@
       "when": 1759035744982,
       "tag": "0009_safe_tempest",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1759147016141,
+      "tag": "0010_cynical_speedball",
+      "breakpoints": true
     }
   ]
 }

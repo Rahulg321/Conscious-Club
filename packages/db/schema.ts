@@ -32,6 +32,7 @@ export const user = pgTable("user", {
   password: varchar("password", { length: 64 }),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
+  bio: text("bio"),
   bannerImage: text("bannerImage"),
   type: userType("type"),
   dateOfBirth: timestamp("dateOfBirth", { mode: "date" }),

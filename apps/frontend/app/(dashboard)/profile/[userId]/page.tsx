@@ -2,7 +2,7 @@ import { auth } from "@/auth";
 import { getAllTags, getUserProjects } from "@/lib/queries";
 import ProjectUploadDialog from "@/components/dialogs/project-upload-dialog";
 import { Button } from "@/components/ui/button";
-import { Heart, Loader2, Sparkles } from "lucide-react";
+import { Edit, Heart, Loader2, Share, Sparkles } from "lucide-react";
 import { redirect } from "next/navigation";
 import React, { Suspense } from "react";
 import Image from "next/image";
@@ -12,6 +12,7 @@ import ProjectCard from "@/components/project-card";
 import { Metadata } from "next";
 import { getCachedUserById } from "@/lib/cached-queries";
 import Link from "next/link";
+import ProfileEditDialog from "@/components/dialogs/profile-edit-dialog";
 
 export async function generateMetadata({
   params,
@@ -93,20 +94,28 @@ const ProfilePage = async ({ params }: Props) => {
             </div>
           </div>
 
-          <Button
-            variant="outline"
-            className="w-full md:w-auto px-4 py-2 text-sm font-medium bg-transparent"
-          >
-            Save
-          </Button>
+          <div className="flex items-center gap-2">
+            <ProfileEditDialog
+              userId={userId}
+              name={currentUser.name || ""}
+              bio={currentUser.bio || ""}
+              location={currentUser.location || ""}
+            />
+
+            <Button variant="outline" className="">
+              <Share /> Share
+            </Button>
+          </div>
         </div>
 
         <div className="mb-8">
           <h3 className="text-lg font-semibold text-[#171c21] mb-3">About</h3>
-          <p className="text-[#667085] leading-relaxed">
-            Lorem ipsum dolor sit amet consectetur. Ullamcorper in at dolor sit
-            dolor tellus viverra. Fermentum dolor dolor tincidunt senectus.
-          </p>
+
+          {currentUser.bio ? (
+            <p>{currentUser.bio}</p>
+          ) : (
+            <p>Bio Not Available Yet</p>
+          )}
         </div>
 
         <div>
