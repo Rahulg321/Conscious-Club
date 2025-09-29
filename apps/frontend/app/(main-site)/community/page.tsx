@@ -1,4 +1,8 @@
 import React, { Suspense } from "react";
+
+// export const dynamic = "force-dynamic";
+// export const revalidate = 0;
+
 import {
   getAllTags,
   getFilteredProjects,
@@ -12,6 +16,8 @@ import ProjectProfileTabs from "@/components/project-profile-tabs";
 import ProjectCardSkeleton from "@/components/skeletons/project-card-skeleton";
 import ProfileCard from "@/components/profile-card";
 import ProfileCardSkeleton from "@/components/skeletons/profile-card-skeleton";
+import CommunityProjectCard from "@/components/community-project-card";
+import ProjectSheet from "../../../components/project-sheet";
 
 export const metadata = {
   title: "Community",
@@ -119,6 +125,8 @@ export default async function CommunityPage({
             />
           </Suspense>
         )}
+        {/* Project details sheet controlled via ?project= query param */}
+        <ProjectSheet />
       </main>
     </div>
   );
@@ -181,7 +189,7 @@ async function FetchAndDisplayProjects({
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {projects?.map((project) => (
-          <DiscoverProjectCard
+          <CommunityProjectCard
             key={project.id}
             projectId={project.id}
             projectCoverImage={project.coverImage}
