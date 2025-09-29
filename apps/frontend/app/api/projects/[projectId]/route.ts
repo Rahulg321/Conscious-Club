@@ -9,8 +9,6 @@ export async function GET(
 ) {
   const { projectId } = await context.params;
 
-  console.log(projectId);
-
   try {
     const [p] = await db
       .select()

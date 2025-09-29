@@ -39,6 +39,7 @@ export default function Header({
     { label: "Who is this for?", href: "#" },
     { label: "Join as a Brand", href: "#", icon: Crown },
     { label: "Contact Us", href: "/contact-us" },
+    { label: "Community", href: "/community" },
   ] satisfies ReadonlyArray<{
     label: string;
     href: string;
