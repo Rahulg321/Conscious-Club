@@ -1,4 +1,3 @@
-import { Check } from "lucide-react";
 import { OnboardingStep } from "../types";
 
 interface ProgressIndicatorProps {
@@ -10,28 +9,33 @@ export const ProgressIndicator = ({
   steps,
   currentStep,
 }: ProgressIndicatorProps) => {
+  const totalSteps = steps.length;
+  const progressPercentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
+
   return (
-    <div className="flex items-center justify-center gap-2">
-      {steps.map((step, index) => (
-        <div key={step.id} className="flex items-center">
+    <div className="w-full mx-auto">
+      <div className="relative">
+        <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
           <div
-            className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-medium ${
-              step.id < currentStep
-                ? "bg-indigo-600 text-white"
-                : step.id === currentStep
-                  ? "bg-indigo-600 text-white"
-                  : "bg-gray-200 text-gray-600"
-            }`}
-          >
-            {step.id < currentStep ? <Check className="h-4 w-4" /> : step.id}
-          </div>
-          {index < steps.length - 1 && (
-            <div
-              className={`h-0.5 w-8 ${step.id < currentStep ? "bg-indigo-600" : "bg-gray-200"}`}
-            />
-          )}
+            className="h-full bg-indigo-600 rounded-full transition-all duration-300 ease-out"
+            style={{ width: `${progressPercentage}%` }}
+          />
         </div>
-      ))}
+
+        {/* Step labels */}
+        {/* <div className="flex justify-between mt-2">
+          {steps.map((step, index) => (
+            <span
+              key={step.id}
+              className={`text-xs font-medium transition-colors duration-200 ${
+                step.id <= currentStep ? "text-indigo-600" : "text-gray-400"
+              }`}
+            >
+              {step.title || `Step ${step.id}`}
+            </span>
+          ))}
+        </div> */}
+      </div>
     </div>
   );
 };

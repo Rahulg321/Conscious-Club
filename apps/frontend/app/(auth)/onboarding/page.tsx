@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
-import { OnboardingForm } from "@/components/forms/onboarding-form";
-import { TestimonialPanel } from "@/components/testimonial-panel";
+import { OnboardingPageContent } from "@/components/onboarding-page-content";
+import { OnboardingProvider } from "@/components/forms/onboarding/context/OnboardingContext";
 import { redirect } from "next/navigation";
 
 export const metadata = {
@@ -8,20 +8,20 @@ export const metadata = {
   description: "Onboarding",
 };
 
-export default async function OnboardingPage() {
+export default async function OnboardingPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
   const userSession = await auth();
 
   if (!userSession) redirect("/login");
 
-  return (
-    <main className="h-screen grid grid-cols-1 md:grid-cols-2 overflow-hidden">
-      <section className="overflow-y-auto px-4 md:px-8 lg:px-12 py-8">
-        <OnboardingForm />
-      </section>
+  const step = parseInt((await searchParams).step as string, 10) || 1;
 
-      <aside className="hidden md:block h-screen">
-        <TestimonialPanel imageUrl="https://plus.unsplash.com/premium_photo-1756138487610-f76348465c58?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
-      </aside>
-    </main>
+  return (
+    <OnboardingProvider>
+      <OnboardingPageContent step={step} />
+    </OnboardingProvider>
   );
 }
