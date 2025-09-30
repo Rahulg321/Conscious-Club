@@ -125,13 +125,14 @@ export const authConfig = {
         }
       }
 
-      // Fetch fresh name and image from database
+      // Fetch fresh name, image, and onboarding status from database
       if (token.id) {
         try {
           const dbUser = await getUserById(token.id as string);
           if (dbUser) {
             token.name = dbUser.name;
             token.image = dbUser.image;
+            token.onboardingCompleted = dbUser.onboardingCompleted;
             // Ensure isAdmin is set correctly even on token refresh
             if (dbUser.email) {
               token.isAdmin = isAdminEmail(dbUser.email);
@@ -173,6 +174,7 @@ export const authConfig = {
         (session.user as any).accessToken = token.accessToken;
         (session.user as any).type = token.type;
         (session.user as any).isAdmin = token.isAdmin;
+        (session.user as any).onboardingCompleted = token.onboardingCompleted;
       }
       return session;
     },

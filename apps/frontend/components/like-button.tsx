@@ -3,6 +3,8 @@
 import { useState, useTransition } from "react";
 import { Heart } from "lucide-react";
 import { Button } from "./ui/button";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 interface LikeButtonProps {
   projectId: string;
@@ -20,9 +22,22 @@ export default function LikeButton({
   const [isLiked, setIsLiked] = useState(initialIsLiked);
   const [likeCount, setLikeCount] = useState(initialLikeCount);
   const [isLoading, startTransition] = useTransition();
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
   const handleLikeToggle = async () => {
     if (isLoading) return;
+
+    // Check if user is authenticated
+    if (status === "loading") {
+      return; // Wait for session to load
+    }
+
+    if (!session?.user) {
+      // Redirect to login page if user is not authenticated
+      router.push("/login");
+      return;
+    }
 
     startTransition(async () => {
       // Optimistic update
@@ -64,6 +79,21 @@ export default function LikeButton({
       }
     });
   };
+
+  // Show loading state while checking authentication
+  if (status === "loading") {
+    return (
+      <Button
+        variant="ghost"
+        size="sm"
+        disabled
+        className="flex items-center gap-1 h-8 px-2"
+      >
+        <Heart className="h-4 w-4 text-gray-300" />
+        <span className="text-sm font-medium">{likeCount}</span>
+      </Button>
+    );
+  }
 
   return (
     <Button

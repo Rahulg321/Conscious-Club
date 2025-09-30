@@ -42,6 +42,7 @@ export const user = pgTable("user", {
   discipline: text("discipline"),
   role: text("role"),
   fun: text("fun"),
+  onboardingCompleted: boolean("onboardingCompleted").notNull().default(false),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt").notNull().defaultNow(),
 });

@@ -13,7 +13,15 @@ export default async function LoginPage({
 
   const userSession = await auth();
 
-  if (userSession) redirect("/profile");
+  if (userSession) {
+    // Check if user has completed onboarding
+    const onboardingCompleted = (userSession.user as any)?.onboardingCompleted;
+    if (onboardingCompleted) {
+      redirect("/dashboard");
+    } else {
+      redirect("/onboarding");
+    }
+  }
 
   // Error message configuration
   const getErrorMessage = (error: string | string[] | undefined) => {

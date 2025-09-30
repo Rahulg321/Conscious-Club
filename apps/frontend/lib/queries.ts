@@ -851,3 +851,22 @@ export async function getUserFollowCounts(userId: string) {
     return { followers: 0, following: 0 };
   }
 }
+
+/**
+ * Check if a user has completed onboarding
+ * @param userId - The user ID to check
+ * @returns Boolean indicating if onboarding is completed
+ */
+export async function hasCompletedOnboarding(userId: string): Promise<boolean> {
+  try {
+    const [userData] = await db
+      .select({ onboardingCompleted: user.onboardingCompleted })
+      .from(user)
+      .where(eq(user.id, userId));
+
+    return userData?.onboardingCompleted ?? false;
+  } catch (error) {
+    console.error("Error checking onboarding status:", error);
+    return false;
+  }
+}

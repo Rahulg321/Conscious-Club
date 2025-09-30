@@ -17,6 +17,12 @@ export default async function OnboardingPage({
 
   if (!userSession) redirect("/login");
 
+  // Check if user has already completed onboarding
+  const onboardingCompleted = (userSession.user as any)?.onboardingCompleted;
+  if (onboardingCompleted) {
+    redirect("/dashboard");
+  }
+
   const step = parseInt((await searchParams).step as string, 10) || 1;
 
   return (

@@ -2,9 +2,9 @@
 
 import { auth } from "@/auth";
 import { loginFormSchema, LoginFormSchemaType } from "../schemas/auth-schema";
-import { getUserByEmail } from "../queries";
+import { getUserByEmail, hasCompletedOnboarding } from "../queries";
 import { signIn } from "@/auth";
-import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
+import { DEFAULT_LOGIN_REDIRECT, FIRST_LOGIN_REDIRECT } from "@/routes";
 
 /**
  *
@@ -38,10 +38,16 @@ export const loginAction = async (values: LoginFormSchemaType) => {
   }
 
   try {
+    // Check if user has completed onboarding
+    const onboardingCompleted = await hasCompletedOnboarding(existingUser.id);
+    const redirectTo = onboardingCompleted
+      ? DEFAULT_LOGIN_REDIRECT
+      : FIRST_LOGIN_REDIRECT;
+
     await signIn("credentials", {
       email,
       password,
-      redirectTo: `${DEFAULT_LOGIN_REDIRECT}?login=success`,
+      redirectTo: `${redirectTo}?login=success`,
     });
   } catch (error) {
     // NEXT_REDIRECT is expected behavior when signIn succeeds

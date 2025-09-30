@@ -112,7 +112,10 @@ export const POST = async (req: NextRequest) => {
     // Update user in database
     await db
       .update(user)
-      .set(userUpdateData)
+      .set({
+        ...userUpdateData,
+        onboardingCompleted: true,
+      })
       .where(eq(user.id, userSession.user.id));
 
     // Handle project creation for creators and organizers (optional)
