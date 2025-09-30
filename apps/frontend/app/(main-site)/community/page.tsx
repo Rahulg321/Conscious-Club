@@ -1,8 +1,4 @@
 import React, { Suspense } from "react";
-
-// export const dynamic = "force-dynamic";
-// export const revalidate = 0;
-
 import {
   getAllTags,
   getFilteredProjects,
@@ -10,7 +6,6 @@ import {
 } from "@/lib/queries";
 import ProjectTagsFilter from "@/components/project-tag-filters";
 import ProjectSearchFilter from "@/components/project-search-filter";
-import DiscoverProjectCard from "@/components/discover-project-card";
 import ProjectPagination from "@/components/project-pagination";
 import ProjectProfileTabs from "@/components/project-profile-tabs";
 import ProjectCardSkeleton from "@/components/skeletons/project-card-skeleton";
@@ -50,7 +45,7 @@ export default async function CommunityPage({
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-200 px-6 py-4">
+      <div className="border-b border-gray-200 px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center gap-4 justify-between">
           <Suspense fallback={<div>Loading.....</div>}>
             <ProjectSearchFilter showProfiles={showProfiles} />
@@ -60,13 +55,13 @@ export default async function CommunityPage({
             <ProjectProfileTabs />
           </div>
         </div>
-      </header>
+      </div>
 
       <Suspense fallback={<div>Loading...</div>}>
         <ProjectTagsFilter filterTags={projectTags!} />
       </Suspense>
 
-      <main className="max-w-7xl mx-auto px-6 py-8">
+      <main className="max-w-7xl mx-auto px-6 block-space">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-2xl font-semibold text-gray-900">
             {showProfiles ? "Explore Profiles" : "Explore Projects"}
@@ -224,7 +219,7 @@ async function FetchAndDisplayUserProfiles({
 
   return (
     <div>
-      <div className="space-y-4 md:space-y-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {userProfiles?.map((userProfile) => (
           <div key={userProfile.id}>
             <ProfileCard userProfile={userProfile} />

@@ -23,8 +23,7 @@ export const ProfileCompletionStep = ({
 }: ProfileCompletionStepProps) => {
   return (
     <div className="space-y-6">
-      {/* Profile Picture Upload */}
-      <div className="flex flex-col items-center space-y-4">
+      <div className="flex items-center space-x-4">
         <div className="relative">
           <div className="h-24 w-24 rounded-full border-4 border-gray-200 overflow-hidden bg-gray-100 flex items-center justify-center">
             {formData.profilePicture ? (
@@ -68,9 +67,9 @@ export const ProfileCompletionStep = ({
       </div>
 
       {/* Gender Selection */}
-      <div className="space-y-3">
+      <div className="space-y-3 flex flex-col ">
         <Label>Gender</Label>
-        <div className="space-y-2">
+        <div className="flex gap-4 items-center ">
           {GENDER_OPTIONS.map((option) => (
             <label key={option.value} className="flex items-center space-x-2">
               <input

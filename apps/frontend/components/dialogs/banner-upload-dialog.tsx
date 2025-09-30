@@ -47,7 +47,7 @@ export default function BannerUploadDialog() {
               done.
             </DialogDescription>
           </DialogHeader>
-          <BannerUploadForm />
+          <BannerUploadForm setDialogOpen={setOpen} />
         </DialogContent>
       </Dialog>
     );
@@ -67,7 +67,7 @@ export default function BannerUploadDialog() {
             Make changes to your banner here. Click save when you&apos;re done.
           </DrawerDescription>
         </DrawerHeader>
-        <BannerUploadForm />
+        <BannerUploadForm setDialogOpen={setOpen} />
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>

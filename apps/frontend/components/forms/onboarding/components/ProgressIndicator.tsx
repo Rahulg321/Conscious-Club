@@ -17,7 +17,7 @@ export const ProgressIndicator = ({
       <div className="relative">
         <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
           <div
-            className="h-full bg-indigo-600 rounded-full transition-all duration-300 ease-out"
+            className="h-full bg-[#877DFE] rounded-full transition-all duration-300 ease-out"
             style={{ width: `${progressPercentage}%` }}
           />
         </div>

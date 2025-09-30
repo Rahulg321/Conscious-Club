@@ -29,6 +29,7 @@ import {
 import { toast } from "sonner";
 import { X } from "lucide-react";
 import { Tags } from "@repo/db/schema";
+import { useRouter } from "next/navigation";
 
 function ProjectUploadForm({
   setDialogOpen,
@@ -38,6 +39,7 @@ function ProjectUploadForm({
   allTags: Tags[];
 }) {
   const [isSubmitting, startTransition] = useTransition();
+  const router = useRouter();
 
   const form = useForm<ProjectUploadFormData>({
     resolver: zodResolver(projectUploadSchema),
@@ -89,6 +91,7 @@ function ProjectUploadForm({
         if (coverPreviewUrl) URL.revokeObjectURL(coverPreviewUrl);
         setCoverPreviewUrl(null);
         setDialogOpen(false);
+        router.refresh();
       } catch (error) {
         console.error("Error uploading project:", error);
         // You might want to show a toast notification here

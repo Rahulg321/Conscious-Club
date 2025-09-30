@@ -22,7 +22,11 @@ import {
 } from "@/lib/schemas/banner-upload-schema";
 import { useRouter } from "next/navigation";
 
-const BannerUploadForm = () => {
+const BannerUploadForm = ({
+  setDialogOpen,
+}: {
+  setDialogOpen: (open: boolean) => void;
+}) => {
   const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
   const [isUploading, startUploadTransition] = React.useTransition();
   const router = useRouter();
@@ -87,6 +91,7 @@ const BannerUploadForm = () => {
         console.log("Banner file:", values.banner);
         form.reset();
         setPreviewUrl(null);
+        setDialogOpen(false);
         router.refresh();
       } catch (error) {
         toast.error("Failed to upload banner. Please try again.");

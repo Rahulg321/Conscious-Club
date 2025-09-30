@@ -33,12 +33,14 @@ function EditProfileForm({
   name,
   bio,
   location,
+  setDialogOpen,
 }: {
   className?: string;
   userId: string;
   name?: string;
   bio?: string;
   location?: string;
+  setDialogOpen: (open: boolean) => void;
 }) {
   const router = useRouter();
   const [isSubmitting, startTransition] = React.useTransition();
@@ -63,6 +65,7 @@ function EditProfileForm({
         }
 
         toast.success("Profile updated successfully");
+        setDialogOpen(false);
         router.refresh();
       } catch (error) {
         console.error(error);

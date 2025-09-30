@@ -63,6 +63,7 @@ export default function ProfileEditDialog({
             name={name}
             bio={bio}
             location={location}
+            setDialogOpen={setOpen}
           />
         </DialogContent>
       </Dialog>
@@ -89,6 +90,7 @@ export default function ProfileEditDialog({
           name={name}
           bio={bio}
           location={location}
+          setDialogOpen={setOpen}
         />
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>

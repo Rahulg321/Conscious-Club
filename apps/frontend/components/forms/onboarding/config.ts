@@ -53,6 +53,60 @@ export const DISCIPLINES = [
   "Video & Motion Media",
 ] as const;
 
+// Maps each discipline to a curated list of possible roles
+export const DISCIPLINE_TO_ROLES: Record<string, string[]> = {
+  "Writing & Storytelling": [
+    "Content Writer",
+    "Copywriter",
+    "Scriptwriter",
+    "Author",
+    "Editor",
+    "Journalist",
+    "Storyteller",
+    "Technical Writer",
+  ],
+  "Performance & Audio": [
+    "Singer",
+    "Musician",
+    "Voice Actor",
+    "Podcaster",
+    "Sound Designer",
+    "Audio Engineer",
+    "DJ",
+    "Composer",
+  ],
+  "Tech & Digital Creation": [
+    "Software Developer",
+    "Product Designer",
+    "UI/UX Designer",
+    "No-Code Maker",
+    "Data Analyst",
+    "AI Engineer",
+    "Web Developer",
+    "Game Developer",
+  ],
+  "Visual Arts & Design": [
+    "Illustrator",
+    "Graphic Designer",
+    "3D Artist",
+    "Animator",
+    "Art Director",
+    "Photographer",
+    "Brand Designer",
+    "Motion Designer",
+  ],
+  "Video & Motion Media": [
+    "Video Editor",
+    "Filmmaker",
+    "Cinematographer",
+    "Video Producer",
+    "Colorist",
+    "VFX Artist",
+    "YouTuber",
+    "Content Creator",
+  ],
+};
+
 export const GENDER_OPTIONS = [
   { value: "male", label: "Male" },
   { value: "female", label: "Female" },

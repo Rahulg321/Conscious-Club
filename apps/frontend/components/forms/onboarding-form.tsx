@@ -36,36 +36,19 @@ export function OnboardingForm() {
 
   return (
     <div className="">
-      <div className="px-4 py-4 space-y-4 md:space-y-6">
+      <div className="px-4 py-4 space-y-4 ">
         <ProgressIndicator steps={steps} currentStep={currentStep} />
         <StepHeader step={currentStepData} />
         <Separator />
       </div>
 
-      <div className="px-4 md:px-8 lg:px-12 py-8">
+      <div className="px-4 md:px-8 lg:px-12 py-4">
         {/* Error display */}
         {submitError && (
           <div className="rounded-md bg-red-50 p-4">
             <div className="text-sm text-red-700">{submitError}</div>
           </div>
         )}
-
-        {/* Step validation errors */}
-        {stepErrors[currentStep] &&
-          (stepErrors[currentStep]?.length ?? 0) > 0 && (
-            <div className="rounded-md bg-red-50 p-4">
-              <div className="text-sm text-red-700">
-                <p className="font-medium mb-2">
-                  Please fix the following errors:
-                </p>
-                <ul className="list-disc list-inside space-y-1">
-                  {stepErrors[currentStep]?.map((error, index) => (
-                    <li key={index}>{error}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          )}
 
         {/* Step content */}
         <div className="space-y-4">
@@ -107,8 +90,26 @@ export function OnboardingForm() {
           )}
         </div>
 
+        <div className="mt-4">
+          {stepErrors[currentStep] &&
+            (stepErrors[currentStep]?.length ?? 0) > 0 && (
+              <div className="rounded-md bg-red-50 p-4">
+                <div className="text-sm text-red-700">
+                  <p className="font-medium mb-2">
+                    Please fix the following errors:
+                  </p>
+                  <ul className="list-disc list-inside space-y-1">
+                    {stepErrors[currentStep]?.map((error, index) => (
+                      <li key={index}>{error}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
+        </div>
+
         {/* Navigation buttons */}
-        <div className="flex items-center justify-between pt-4">
+        <div className="flex items-center justify-between pt-4 mt-4 border-t border-gray-200">
           <Button
             variant="outline"
             onClick={prevStep}
@@ -125,7 +126,7 @@ export function OnboardingForm() {
               disabled={hasStepErrors}
               className="flex items-center gap-2 disabled:opacity-50"
             >
-              {currentStep === steps.length - 1 ? "Complete Setup" : "Next"}
+              Next
               {currentStep < steps.length - 1 && (
                 <ChevronRight className="h-4 w-4" />
               )}
