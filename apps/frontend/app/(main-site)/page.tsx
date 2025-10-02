@@ -4,14 +4,14 @@ import { Metadata } from "next";
 import { FAQSection } from "@/components/sections/faq-section";
 import ExplorersSections from "@/components/sections/explorers-section";
 import AheadSection from "@/components/sections/ahead-section";
-import TestimonialsSection from "@/components/sections/testimonials-section";
 import JoinPlatform from "@/components/sections/join-platform";
 import HeroSection from "@/components/sections/hero-section";
-import { auth } from "@/auth";
+import TitleHighlight from "@/components/title-highlight";
 
 export const metadata: Metadata = {
-  title: "ConsciousClub",
-  description: "ConsciousClub",
+  title: "ConsciousClubb — Create, Explore, Earn Bravos",
+  description:
+    "Join ConsciousClubb: the gamified platform where explorers, creators, organizers, and brands connect. Join challenges, earn Bravos, and unlock rewards.",
 };
 
 const HomePage = async () => {
@@ -20,10 +20,11 @@ const HomePage = async () => {
       <HeroSection />
       <JoinPlatform />
       <ExplorersSections />
-      <AheadSection />
+      {/* <AheadSection /> */}
       {/* <TestimonialsSection /> */}
       <FAQSection />
       <JoinClubSection />
+      <TitleHighlight />
     </div>
   );
 };

@@ -35,9 +35,7 @@ export default function Header({
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navLinks = [
-    { label: "Benefits", href: "#" },
-    { label: "Who is this for?", href: "#" },
-    { label: "Join as a Brand", href: "#", icon: Crown },
+    { label: "Blog", href: "/blog" },
     { label: "Community", href: "/community" },
     { label: "Contact Us", href: "/contact-us" },
   ] satisfies ReadonlyArray<{
@@ -58,13 +56,12 @@ export default function Header({
 
           {/* Desktop Navigation Menu */}
           <nav className="hidden md:flex items-center gap-8">
-            {navLinks.map(({ label, href, icon: Icon }) => (
+            {navLinks.map(({ label, href }) => (
               <Link
                 key={label}
                 href={href}
-                className={`text-[#3e4a5b] hover:text-[#cf5b8d] transition-colors${Icon ? " flex items-center gap-2" : ""}`}
+                className={`text-[#3e4a5b] hover:text-[#cf5b8d] transition-colors`}
               >
-                {Icon ? <Icon className="w-4 h-4 text-[#e01e5a]" /> : null}
                 {label}
               </Link>
             ))}
@@ -138,14 +135,13 @@ export default function Header({
             </div>
 
             <nav className="flex flex-col gap-6">
-              {navLinks.map(({ label, href, icon: Icon }) => (
+              {navLinks.map(({ label, href }) => (
                 <Link
                   key={`mobile-${label}`}
                   href={href}
-                  className={`text-[#3e4a5b] hover:text-[#cf5b8d] transition-colors text-lg py-2${Icon ? " flex items-center gap-2" : ""}`}
+                  className={`text-[#3e4a5b] hover:text-[#cf5b8d] transition-colors text-lg py-2`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  {Icon ? <Icon className="w-4 h-4 text-[#e01e5a]" /> : null}
                   {label}
                 </Link>
               ))}

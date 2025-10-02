@@ -46,7 +46,7 @@ const HeroSection = () => {
         <FloatingCamera />
         <FloatingMicVocal />
 
-        <div className="container mx-auto px-4 flex flex-col items-center justify-center min-h-screen text-center">
+        <div className="container mx-auto px-4 flex flex-col items-center justify-center min-h-[80vh] text-center">
           <div className="mb-12 border-2 border-gray-200 rounded-full px-6 py-3 flex items-center gap-3 shadow-sm">
             <span
               className="text-white px-3 py-1 rounded-full text-sm font-semibold"
@@ -89,7 +89,6 @@ const HeroSection = () => {
           </p>
 
           <Button
-            size="lg"
             className="bg-black hover:bg-gray-800 text-white px-8 py-6 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-200"
             asChild
           >
@@ -97,20 +96,18 @@ const HeroSection = () => {
           </Button>
         </div>
       </div>
-
+      {/* 
       <div className="relative py-8">
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
           <Image
             src={RolloutCenter}
             alt="Rollout Center"
             className="w-full h-full object-cover max-w-xs"
-            width={320}
-            height={320}
           />
         </div>
 
         <HeroMarqueeSection />
-      </div>
+      </div> */}
     </div>
   );
 };

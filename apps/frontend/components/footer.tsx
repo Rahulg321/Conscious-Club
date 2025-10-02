@@ -4,27 +4,11 @@ import { Facebook, Instagram, Linkedin, Youtube, Twitter } from "lucide-react";
 
 import CClogo from "@/public/cc-home-logo.png";
 import Image from "next/image";
+import Link from "next/link";
 
 export function Footer() {
   return (
     <footer className="px-4 py-6 max-w-7xl mx-auto">
-      <div className="w-full mb-16">
-        <h1
-          className="
-            text-[48px]
-            sm:text-[80px]
-            md:text-[120px]
-            lg:text-[160px]
-            xl:text-[170px]
-            text-[rgba(212,110,154,1)]
-            leading-none
-            font-semibold
-          "
-        >
-          Conscious Club
-        </h1>
-      </div>
-
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 mb-16">
         <div className="space-y-6">
           <div className="space-y-2">
@@ -50,58 +34,70 @@ export function Footer() {
         <div className="grid grid-cols-2 gap-8 md:gap-12">
           <div className="space-y-4">
             <nav className="flex flex-col space-y-3">
-              <a
-                href="#"
+              <Link
+                href="/"
                 className="text-gray-600 hover:text-gray-900 transition-colors"
               >
                 Home
-              </a>
-              <a
+              </Link>
+              <Link
                 href="#"
                 className="text-gray-600 hover:text-gray-900 transition-colors"
               >
                 Join as Brand
-              </a>
-              <a
+              </Link>
+              <Link
                 href="#"
                 className="text-gray-600 hover:text-gray-900 transition-colors"
               >
                 Features
-              </a>
-              <a
+              </Link>
+              <Link
                 href="#"
                 className="text-gray-600 hover:text-gray-900 transition-colors"
               >
                 Persona
-              </a>
-              <a
+              </Link>
+              <Link
                 href="#"
                 className="text-gray-600 hover:text-gray-900 transition-colors"
               >
                 Roadmap
-              </a>
+              </Link>
             </nav>
           </div>
           <div className="space-y-4">
             <nav className="flex flex-col space-y-3">
-              <a
-                href="#"
-                className="text-gray-600 hover:text-gray-900 transition-colors"
-              >
-                Terms & Conditions
-              </a>
-              <a
-                href="#"
+              <Link
+                href="/privacy-policy"
                 className="text-gray-600 hover:text-gray-900 transition-colors"
               >
                 Privacy Policy
-              </a>
-              <a
-                href="#"
+              </Link>
+              <Link
+                href="/terms-of-use"
                 className="text-gray-600 hover:text-gray-900 transition-colors"
               >
-                Help
-              </a>
+                Terms of Use
+              </Link>
+              <Link
+                href="/creator-terms"
+                className="text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                Creator Terms
+              </Link>
+              <Link
+                href="/cookie-policy"
+                className="text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                Cookie Policy
+              </Link>
+              <Link
+                href="/license"
+                className="text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                License
+              </Link>
             </nav>
           </div>
         </div>
