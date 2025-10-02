@@ -272,13 +272,16 @@ export const projectLikes = pgTable(
 
 export type ProjectLikes = InferSelectModel<typeof projectLikes>;
 
-export const bravoType = pgEnum("bravoType", [
-  "Boss",
-  "Bestie",
-  "Buzz",
-  "Bold",
-  "Brag",
-]);
+export const bravoCategories = pgTable("bravo_categories", {
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
+  name: varchar("name", { length: 64 }).notNull().unique(),
+  slug: varchar("slug", { length: 64 }).notNull().unique(),
+  description: text("description").notNull(),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+});
+
+export type BravoCategories = InferSelectModel<typeof bravoCategories>;
 
 export const bravos = pgTable("bravos", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),
@@ -286,7 +289,9 @@ export const bravos = pgTable("bravos", {
   slug: varchar("slug", { length: 64 }).notNull().unique(),
   description: text("description").notNull(),
   image: text("image").notNull(),
-  type: bravoType("type").notNull(),
+  categoryId: uuid("categoryId")
+    .references(() => bravoCategories.id, { onDelete: "cascade" })
+    .notNull(),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt").notNull().defaultNow(),
 });

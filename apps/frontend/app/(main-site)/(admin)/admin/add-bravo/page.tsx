@@ -1,7 +1,7 @@
 import AddBravoForm from "@/components/forms/add-bravo-form";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-
+import { getAllBravoCategories, requireAdmin } from "@/lib/queries";
 import React from "react";
 
 export const metadata = {
@@ -9,7 +9,9 @@ export const metadata = {
   description: "Add Bravo page",
 };
 
-const AddBravoPage = () => {
+const AddBravoPage = async () => {
+  const session = await requireAdmin();
+  const categories = (await getAllBravoCategories()) ?? [];
   return (
     <div className="block-space big-container">
       <div>
@@ -18,7 +20,7 @@ const AddBravoPage = () => {
         </Button>
       </div>
 
-      <AddBravoForm />
+      <AddBravoForm categories={categories} />
     </div>
   );
 };

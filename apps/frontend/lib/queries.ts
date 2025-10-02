@@ -6,7 +6,7 @@ import {
   projectLikes,
   tags,
   bravos,
-  bravoType,
+  bravoCategories,
   user,
   verificationToken,
   follows,
@@ -668,10 +668,33 @@ export async function getAdminStatus() {
 }
 
 /**
+ * Get all bravo categories
+ * @returns All bravo categories
+ */
+export async function getAllBravoCategories() {
+  try {
+    return await db
+      .select({
+        id: bravoCategories.id,
+        name: bravoCategories.name,
+        slug: bravoCategories.slug,
+        description: bravoCategories.description,
+        createdAt: bravoCategories.createdAt,
+        updatedAt: bravoCategories.updatedAt,
+      })
+      .from(bravoCategories)
+      .orderBy(desc(bravoCategories.createdAt));
+  } catch (error) {
+    console.log("An error occured trying to get all bravo categories", error);
+    return null;
+  }
+}
+
+/**
  * Get all bravos
  * @returns All bravos
  */
-export async function getAllBravos(type?: string | string[]) {
+export async function getAllBravos(categorySlug?: string | string[]) {
   try {
     const baseSelect = db
       .select({
@@ -679,18 +702,28 @@ export async function getAllBravos(type?: string | string[]) {
         name: bravos.name,
         slug: bravos.slug,
         image: bravos.image,
-        type: bravos.type,
+        categoryId: bravos.categoryId,
+        categoryName: bravoCategories.name,
+        categorySlug: bravoCategories.slug,
+        categoryDescription: bravoCategories.description,
         createdAt: bravos.createdAt,
         updatedAt: bravos.updatedAt,
       })
-      .from(bravos);
+      .from(bravos)
+      .leftJoin(bravoCategories, eq(bravos.categoryId, bravoCategories.id));
 
-    if (type && Array.isArray(type) && type.length > 0) {
-      return await baseSelect.where(inArray(bravos.type, type as any));
+    if (
+      categorySlug &&
+      Array.isArray(categorySlug) &&
+      categorySlug.length > 0
+    ) {
+      return await baseSelect.where(
+        inArray(bravoCategories.slug, categorySlug)
+      );
     }
 
-    if (type && !Array.isArray(type)) {
-      return await baseSelect.where(eq(bravos.type, type as any));
+    if (categorySlug && !Array.isArray(categorySlug)) {
+      return await baseSelect.where(eq(bravoCategories.slug, categorySlug));
     }
 
     return await baseSelect;

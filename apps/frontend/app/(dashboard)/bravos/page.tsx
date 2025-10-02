@@ -1,5 +1,5 @@
 import React from "react";
-import { getAllBravos } from "@/lib/queries";
+import { getAllBravos, getAllBravoCategories } from "@/lib/queries";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { BravoCard } from "@/components/bravo-card";
@@ -14,7 +14,7 @@ export const metadata = {
 const page = async ({
   searchParams,
 }: {
-  searchParams: { type?: string | string[] };
+  searchParams: { category?: string | string[] };
 }) => {
   const userSession = await auth();
 
@@ -22,9 +22,9 @@ const page = async ({
     redirect("/login");
   }
 
-  const selectedType = searchParams?.type;
-  const bravos = await getAllBravos(selectedType);
-  const types = ["All", "Boss", "Bestie", "Buzz", "Bold", "Brag"] as const;
+  const selectedCategory = searchParams?.category;
+  const bravos = await getAllBravos(selectedCategory);
+  const categories = await getAllBravoCategories();
   return (
     <div className="block-space-mini big-container">
       <div className="mb-8 text-center max-w-2xl mx-auto space-y-4">
@@ -37,18 +37,24 @@ const page = async ({
       </div>
 
       <div className="mb-6 flex flex-wrap items-center gap-2">
-        {types.map((t) => {
-          const isAll = t === "All";
-          const isActive = isAll ? !selectedType : selectedType === t;
-          const href = isAll ? "/bravos" : `/bravos?type=${t}`;
+        <Button
+          size="sm"
+          variant={!selectedCategory ? "default" : "outline"}
+          asChild
+        >
+          <Link href="/bravos">All</Link>
+        </Button>
+        {categories?.map((category) => {
+          const isActive = selectedCategory === category.slug;
+          const href = `/bravos?category=${category.slug}`;
           return (
             <Button
-              key={t}
+              key={category.id}
               size="sm"
               variant={isActive ? "default" : "outline"}
               asChild
             >
-              <Link href={href}>{t}</Link>
+              <Link href={href}>{category.name}</Link>
             </Button>
           );
         })}

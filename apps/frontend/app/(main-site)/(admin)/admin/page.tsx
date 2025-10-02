@@ -1,4 +1,8 @@
-import { getAllBravos, requireAdmin } from "@/lib/queries";
+import {
+  getAllBravos,
+  getAllBravoCategories,
+  requireAdmin,
+} from "@/lib/queries";
 import AddBravoForm from "@/components/forms/add-bravo-form";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -14,35 +18,44 @@ export const metadata = {
 export default async function AdminPage({
   searchParams,
 }: {
-  searchParams: { type?: string | string[] };
+  searchParams: { category?: string | string[] };
 }) {
   // This will redirect to login if not authenticated, or to dashboard if not admin
   const session = await requireAdmin();
-  const selectedType = searchParams?.type;
-  const bravos = (await getAllBravos(selectedType)) ?? [];
-  const types = ["All", "Boss", "Bestie", "Buzz", "Bold", "Brag"] as const;
+  const selectedCategory = searchParams?.category;
+  const bravos = (await getAllBravos(selectedCategory)) ?? [];
+  const categories = await getAllBravoCategories();
 
   return (
     <div className="block-space big-container">
-      <div>
+      <div className="mb-4 flex flex-wrap items-center gap-2">
         <Button asChild>
           <Link href="/admin/add-bravo">Add Bravo</Link>
+        </Button>
+        <Button asChild>
+          <Link href="/admin/add-bravo-category">Add Bravo Category</Link>
         </Button>
       </div>
 
       <div className="mt-6 mb-2 flex flex-wrap items-center gap-2">
-        {types.map((t) => {
-          const isAll = t === "All";
-          const isActive = isAll ? !selectedType : selectedType === t;
-          const href = isAll ? "/admin" : `/admin?type=${t}`;
+        <Button
+          size="sm"
+          variant={!selectedCategory ? "default" : "outline"}
+          asChild
+        >
+          <Link href="/admin">All</Link>
+        </Button>
+        {categories?.map((category) => {
+          const isActive = selectedCategory === category.slug;
+          const href = `/admin?category=${category.slug}`;
           return (
             <Button
-              key={t}
+              key={category.id}
               size="sm"
               variant={isActive ? "default" : "outline"}
               asChild
             >
-              <Link href={href}>{t}</Link>
+              <Link href={href}>{category.name}</Link>
             </Button>
           );
         })}
@@ -61,7 +74,7 @@ export default async function AdminPage({
               name={b.name}
               slug={b.slug}
               image={b.image}
-              type={b.type}
+              categoryName={b.categoryName}
             />
           ))
         )}

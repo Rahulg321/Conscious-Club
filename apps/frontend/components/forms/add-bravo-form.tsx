@@ -30,8 +30,9 @@ import {
   BravoUploadSchemaType,
 } from "@/lib/schemas/bravo-upload-schema";
 import { useRouter } from "next/navigation";
+import { BravoCategories } from "@repo/db/schema";
 
-const AddBravoForm = () => {
+const AddBravoForm = ({ categories }: { categories: BravoCategories[] }) => {
   const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
   const [isUploading, startUploadTransition] = React.useTransition();
   const router = useRouter();
@@ -42,7 +43,7 @@ const AddBravoForm = () => {
       name: "",
       description: "",
       image: undefined,
-      type: undefined,
+      categoryId: "",
     },
   });
 
@@ -82,7 +83,7 @@ const AddBravoForm = () => {
         const formData = new FormData();
         formData.append("name", values.name);
         formData.append("description", values.description);
-        formData.append("type", values.type);
+        formData.append("categoryId", values.categoryId);
         formData.append("image", values.image);
 
         const response = await fetch("/api/upload-bravo", {
@@ -148,28 +149,30 @@ const AddBravoForm = () => {
 
               <FormField
                 control={form.control}
-                name="type"
+                name="categoryId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Bravo Type</FormLabel>
+                    <FormLabel>Bravo Category</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select bravo type" />
+                          <SelectValue placeholder="Select bravo category" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="Boss">Boss</SelectItem>
-                        <SelectItem value="Bestie">Bestie</SelectItem>
-                        <SelectItem value="Buzz">Buzz</SelectItem>
-                        <SelectItem value="Bold">Bold</SelectItem>
-                        <SelectItem value="Brag">Brag</SelectItem>
+                        {categories.map((category) => (
+                          <SelectItem key={category.id} value={category.id}>
+                            {category.name}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
-                    <FormDescription>Choose the type of bravo</FormDescription>
+                    <FormDescription>
+                      Choose the category of bravo
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}

@@ -17,10 +17,10 @@ export const POST = async (req: NextRequest) => {
 
   const name = formData.get("name");
   const description = formData.get("description");
-  const type = formData.get("type");
+  const categoryId = formData.get("categoryId");
   const image = formData.get("image");
 
-  if (!name || !description || !type || !image) {
+  if (!name || !description || !categoryId || !image) {
     return NextResponse.json(
       { error: "All fields are required" },
       { status: 400 }
@@ -30,7 +30,7 @@ export const POST = async (req: NextRequest) => {
   const validatedData = bravoUploadSchema.safeParse({
     name,
     description,
-    type,
+    categoryId,
     image,
   });
 
@@ -60,7 +60,7 @@ export const POST = async (req: NextRequest) => {
         name: validatedData.data.name,
         slug: slugify(validatedData.data.name, { lower: true }),
         description: validatedData.data.description,
-        type: validatedData.data.type,
+        categoryId: validatedData.data.categoryId,
         image: url,
       })
       .returning();

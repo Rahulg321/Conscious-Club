@@ -11,13 +11,13 @@ export default function AdminBravoCard({
   name,
   slug,
   image,
-  type,
+  categoryName,
 }: {
   id: string;
   name: string;
   slug: string;
   image: string;
-  type: string | null;
+  categoryName: string | null;
 }) {
   const [isPending, startTransition] = useTransition();
 
@@ -59,9 +59,9 @@ export default function AdminBravoCard({
           <div className="text-xs text-muted-foreground">/{slug}</div>
         </div>
         <div className="flex items-center gap-2">
-          {type ? (
+          {categoryName ? (
             <span className="rounded-md bg-muted px-2 py-1 text-xs capitalize text-muted-foreground">
-              {type}
+              {categoryName}
             </span>
           ) : null}
           <Button
