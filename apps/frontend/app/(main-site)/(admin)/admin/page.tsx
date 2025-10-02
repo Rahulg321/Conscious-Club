@@ -33,6 +33,9 @@ export default async function AdminPage({
           <Link href="/admin/add-bravo">Add Bravo</Link>
         </Button>
         <Button asChild>
+          <Link href="/admin/bravo-categories">See Bravo Categories</Link>
+        </Button>
+        <Button asChild>
           <Link href="/admin/add-bravo-category">Add Bravo Category</Link>
         </Button>
       </div>

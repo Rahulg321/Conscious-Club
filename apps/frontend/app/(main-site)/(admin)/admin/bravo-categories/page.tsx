@@ -1,0 +1,48 @@
+import { getAllBravoCategories, requireAdmin } from "@/lib/queries";
+import React from "react";
+import AdminBravoCategoryCard from "@/components/admin-bravo-category-card";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+
+export const metadata = {
+  title: "Bravo Categories",
+  description: "Bravo Categories page",
+};
+
+const page = async () => {
+  await requireAdmin();
+  const categories = await getAllBravoCategories();
+  return (
+    <div className="block-space big-container">
+      <div>
+        <Button asChild>
+          <Link href="/admin">Admin page</Link>
+        </Button>
+      </div>
+
+      <div className="mb-4 flex flex-wrap items-center gap-2">
+        <h1 className="text-2xl font-bold">Bravo Categories</h1>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {!categories || categories.length === 0 ? (
+          <div className="col-span-full text-sm text-muted-foreground">
+            No categories yet.
+          </div>
+        ) : (
+          categories.map((category) => (
+            <AdminBravoCategoryCard
+              key={category.id}
+              id={category.id}
+              name={category.name}
+              slug={category.slug}
+              description={category.description}
+            />
+          ))
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default page;
