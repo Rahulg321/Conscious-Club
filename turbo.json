@@ -8,6 +8,7 @@
         "GCS_CLIENT_EMAIL",
         "GCS_PRIVATE_KEY",
         "GCLOUD_BUCKET",
+        "DATABASE_URL",
         "AUTH_GOOGLE_ID",
         "AUTH_GOOGLE_SECRET",
         "RESEND_API_KEY",
