@@ -15,7 +15,6 @@ const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
       <h1 className="text-4xl font-bold">{bravo.name}</h1>
       <p className="text-gray-600">{bravo?.description}</p>
       <Image src={bravo?.image} alt={bravo?.name} width={300} height={128} />
-      <p className="text-gray-600">{bravo?.type}</p>
     </div>
   );
 };
