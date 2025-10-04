@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { inter, spectral, jetBrainsMono } from "@/app/fonts";
 import "../globals.css";
 import { Footer } from "@/components/footer";
 import Header from "@/components/header";
@@ -8,16 +8,6 @@ import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 
 import localFont from "next/font/local";
-
-const itcFont = localFont({
-  src: "../fonts/itc-std.otf",
-  variable: "--font-itc",
-});
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -33,7 +23,9 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${itcFont.variable} antialiased`}>
+      <body
+        className={`${inter.variable} ${spectral.variable} ${jetBrainsMono.variable} antialiased`}
+      >
         <SessionProvider>
           <Header userSession={userSession} />
           {children}
