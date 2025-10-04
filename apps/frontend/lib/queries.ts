@@ -691,6 +691,31 @@ export async function getAllBravoCategories() {
 }
 
 /**
+ * Get a bravo category by ID
+ * @param id - The ID of the bravo category
+ * @returns The bravo category
+ */
+export async function getBravoCategoryById(id: string) {
+  try {
+    const [category] = await db
+      .select({
+        id: bravoCategories.id,
+        name: bravoCategories.name,
+        slug: bravoCategories.slug,
+        description: bravoCategories.description,
+        createdAt: bravoCategories.createdAt,
+        updatedAt: bravoCategories.updatedAt,
+      })
+      .from(bravoCategories)
+      .where(eq(bravoCategories.id, id));
+    return category;
+  } catch (error) {
+    console.log("An error occured trying to get bravo category by ID", error);
+    return null;
+  }
+}
+
+/**
  * Get all bravos
  * @returns All bravos
  */

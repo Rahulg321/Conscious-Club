@@ -15,8 +15,9 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useTransition } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, Trash } from "lucide-react";
 import { Button } from "./ui/button";
+import { EditBravoCategoryDialog } from "./dialogs/edit-bravo-category-dialog";
 
 export default function AdminBravoCategoryCard({
   id,
@@ -38,13 +39,16 @@ export default function AdminBravoCategoryCard({
             /{slug}
           </span>
         </CardTitle>
+        <EditBravoCategoryDialog
+          bravoCategoryId={id}
+          bravoCategoryName={name}
+          bravoCategoryDescription={description}
+        />
 
         <CategoryDeleteAlertDialog id={id} />
       </CardHeader>
       <CardContent>
-        <p className="text-sm text-muted-foreground line-clamp-3">
-          {description}
-        </p>
+        <p className="text-sm text-muted-foreground">{description}</p>
       </CardContent>
     </Card>
   );
@@ -56,8 +60,8 @@ const CategoryDeleteAlertDialog = ({ id }: { id: string }) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger>
-        <Button variant="destructive" size="sm">
-          Delete
+        <Button variant="destructive" size={"icon"}>
+          <Trash />
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>

@@ -24,7 +24,7 @@ const page = async () => {
         <h1 className="text-2xl font-bold">Bravo Categories</h1>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="space-y-4 md:space-y-6 lg:space-y-8">
         {!categories || categories.length === 0 ? (
           <div className="col-span-full text-sm text-muted-foreground">
             No categories yet.
