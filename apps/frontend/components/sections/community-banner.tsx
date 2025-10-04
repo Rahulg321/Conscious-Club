@@ -8,17 +8,17 @@ export default function CommunityBanner({ className }: { className?: string }) {
       <div className="relative overflow-visible rounded-3xl bg-[#158f7b] h-[500px] lg:h-[600px]">
         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 h-full">
           <div className="overflow-hidden">
-            <div className="px-8 py-12 lg:px-16">
-              <h2 className="text-4xl lg:text-6xl xl:text-7xl font-bold text-white leading-tight mb-6">
+            <div className="px-6 sm:px-8 lg:px-12 py-8 sm:py-10 lg:py-12">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight mb-4 sm:mb-6">
                 Grow Your
                 <br />
                 Community
               </h2>
-              <p className="text-base lg:text-xl text-white/90 font-medium max-w-md">
+              <p className="text-sm sm:text-base lg:text-lg text-white/90 font-medium max-w-md leading-relaxed">
                 Build your fan circle & make real connections
               </p>
             </div>
-            <div className="relative h-[200px] lg:h-[300px]">
+            <div className="relative h-[180px] sm:h-[200px] lg:h-[300px]">
               <Image
                 src={WorldMap}
                 alt="Community Banner"

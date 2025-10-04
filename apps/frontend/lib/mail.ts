@@ -21,7 +21,7 @@ export const sendVerificationTokenEmail = async (
   console.log("confirmLink", confirmLink);
 
   const { data, error } = await resend.emails.send({
-    from: `Hydranode <Contact@hydranode.ai>`,
+    from: `Conscious Club <Contact@consciousclubb.com>`,
     to: [email],
     subject: "Verify your account",
     react: await TokenVerificationEmail({
@@ -52,7 +52,7 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
   const resetLink = `${process.env.NEXT_PUBLIC_APP_URL}/new-password?token=${token}`;
 
   const { data, error } = await resend.emails.send({
-    from: `Hydranode <Contact@hydranode.ai>`,
+    from: `Conscious Club <Contact@consciousclubb.com>`,
     to: [email],
     subject: "Reset your Password",
     react: await ResetPasswordEmail({
@@ -79,7 +79,7 @@ export const sendContactFormEmail = async (
   message: string
 ) => {
   const { data, error } = await resend.emails.send({
-    from: "Hydranode <Contact@hydranode.ai>",
+    from: "Conscious Club <Contact@consciousclubb.com>",
     to: ["rg5353070@gmail.com", "info@ravisi.ms", "manavi@ravisi.ms"],
     replyTo: email,
     subject: `Contact Inquiry by ${firstName} ${lastName} from Conscious Club`,
