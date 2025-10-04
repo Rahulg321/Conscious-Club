@@ -142,12 +142,12 @@ export const POST = async (req: NextRequest) => {
       }
 
       // Create project if all required fields are present
-      if (projectCoverImageUrl && projectLink) {
+      if (projectCoverImageUrl) {
         await db.insert(project).values({
           name: projectName,
           description: projectDescription,
           coverImage: projectCoverImageUrl,
-          link: projectLink,
+          link: projectLink || null,
           userId: userSession.user.id,
         });
       }

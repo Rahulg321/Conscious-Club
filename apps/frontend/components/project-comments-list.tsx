@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState, useTransition } from "react";
-import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MessageCircle, User, Loader2 } from "lucide-react";

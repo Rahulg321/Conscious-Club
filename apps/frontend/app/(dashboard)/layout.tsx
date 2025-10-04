@@ -9,6 +9,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { getUserPinnedBravoImage } from "@/lib/queries";
+import DashboardHeader from "@/components/dashboard-header";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -43,12 +44,7 @@ export default async function RootLayout({
 
               <main className="flex-1 min-w-0">
                 <SidebarInset className="">
-                  <div className="bg-white border-b border-[#e2e3e6] px-4 md:px-8 py-4 md:py-6 flex items-center gap-4">
-                    <SidebarTrigger className="md:hidden" />
-                    <h1 className="text-xl md:text-2xl font-semibold text-[#171c21]">
-                      Profile
-                    </h1>
-                  </div>
+                  <DashboardHeader />
                   {children}
                 </SidebarInset>
               </main>

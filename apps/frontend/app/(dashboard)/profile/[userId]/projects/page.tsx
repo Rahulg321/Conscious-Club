@@ -59,11 +59,9 @@ const ProjectsPage = async ({ params }: Props) => {
             </svg>
           </div>
           <h4 className="text-lg font-medium text-[#171c21] mb-2">
-            No projects yet
+            No uploads yet. Add something cool so your community can discover
+            you.
           </h4>
-          <p className="text-[#667085] mb-4">
-            Upload your first project to showcase your work
-          </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

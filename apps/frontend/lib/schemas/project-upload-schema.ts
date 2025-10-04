@@ -23,8 +23,11 @@ export const projectUploadSchema = z.object({
     .max(500, "Project description must be less than 500 characters"),
   projectLink: z
     .string()
-    .min(1, "Project link is required")
-    .url("Please enter a valid URL"),
+    .optional()
+    .refine(
+      (val) => !val || z.string().url().safeParse(val).success,
+      "Please enter a valid URL"
+    ),
   tagId: z.string().min(1, "Please select a tag").uuid("Invalid tag selected"),
 });
 

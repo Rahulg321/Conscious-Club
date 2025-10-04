@@ -4,6 +4,7 @@ import {
   project,
   projectTags,
   projectLikes,
+  projectComments,
   tags,
   bravos,
   bravoCategories,
@@ -372,6 +373,7 @@ export async function getFilteredProjects(
         updatedAt: project.updatedAt,
         tagName: tags.name,
         likeCount: sql<number>`COALESCE((${sql`SELECT COUNT(*) FROM ${projectLikes} WHERE ${projectLikes.projectId} = ${project.id}`}), 0)`,
+        commentsCount: sql<number>`COALESCE((${sql`SELECT COUNT(*) FROM ${projectComments} WHERE ${projectComments.projectId} = ${project.id}`}), 0)`,
         isLiked: userId
           ? sql<boolean>`EXISTS(SELECT 1 FROM ${projectLikes} WHERE ${projectLikes.projectId} = ${project.id} AND ${projectLikes.userId} = ${userId})`
           : sql<boolean>`false`,
@@ -413,6 +415,7 @@ export async function getFilteredProjects(
             updatedAt: row.updatedAt,
             tags: [],
             likeCount: row.likeCount,
+            commentsCount: row.commentsCount,
             isLiked: row.isLiked,
           };
         }
@@ -957,6 +960,40 @@ export async function getUserPinnedBravoImage(userId: string) {
     };
   } catch (error) {
     console.error("Error fetching user pinned bravo:", error);
+    return null;
+  }
+}
+
+/**
+ * Get a project by ID with likes and comments count
+ * @param projectId - The ID of the project
+ * @returns The project with likes and comments count
+ */
+export async function getProjectByIdWithStats(projectId: string) {
+  try {
+    const [foundProject] = await db
+      .select({
+        id: project.id,
+        name: project.name,
+        link: project.link,
+        description: project.description,
+        coverImage: project.coverImage,
+        logoImage: project.logoImage,
+        userId: project.userId,
+        createdAt: project.createdAt,
+        updatedAt: project.updatedAt,
+        likesCount: sql<number>`COALESCE((${sql`SELECT COUNT(*) FROM ${projectLikes} WHERE ${projectLikes.projectId} = ${project.id}`}), 0)`,
+        commentsCount: sql<number>`COALESCE((${sql`SELECT COUNT(*) FROM ${projectComments} WHERE ${projectComments.projectId} = ${project.id}`}), 0)`,
+      })
+      .from(project)
+      .where(eq(project.id, projectId));
+
+    return foundProject;
+  } catch (error) {
+    console.log(
+      "An error occurred trying to get project by id with stats",
+      error
+    );
     return null;
   }
 }

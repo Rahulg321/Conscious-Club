@@ -57,7 +57,7 @@ export const POST = async (req: NextRequest) => {
       .insert(project)
       .values({
         name: validatedData.data.projectName,
-        link: validatedData.data.projectLink as string,
+        link: validatedData.data.projectLink || null,
         description: validatedData.data.projectDescription,
         coverImage: url,
         userId: userSession.user.id,

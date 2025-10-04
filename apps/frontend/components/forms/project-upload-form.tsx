@@ -68,7 +68,7 @@ function ProjectUploadForm({
         formData.append("projectCover", data.projectCover);
         formData.append("projectName", data.projectName);
         formData.append("projectDescription", data.projectDescription);
-        formData.append("projectLink", data.projectLink);
+        formData.append("projectLink", data.projectLink || "");
         formData.append("tagId", data.tagId);
 
         const response = await fetch("/api/upload-project", {
@@ -183,7 +183,7 @@ function ProjectUploadForm({
           name="projectName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Project Name</FormLabel>
+              <FormLabel>Title</FormLabel>
               <FormControl>
                 <Input placeholder="Enter project name" {...field} />
               </FormControl>
@@ -197,7 +197,7 @@ function ProjectUploadForm({
           name="projectDescription"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Project Description</FormLabel>
+              <FormLabel>Caption</FormLabel>
               <FormControl>
                 <Textarea
                   placeholder="Describe your project..."
@@ -215,7 +215,7 @@ function ProjectUploadForm({
           name="projectLink"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Project Link</FormLabel>
+              <FormLabel>Add Link (Optional)</FormLabel>
               <FormControl>
                 <Input
                   type="url"

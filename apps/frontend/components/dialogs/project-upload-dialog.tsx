@@ -24,6 +24,7 @@ import {
 import ProjectUploadForm from "../forms/project-upload-form";
 import useMediaQuery from "@/hooks/use-media-query";
 import { Tags } from "@repo/db/schema";
+import { Plus } from "lucide-react";
 
 export default function ProjectUploadDialog({ allTags }: { allTags: Tags[] }) {
   const [open, setOpen] = React.useState(false);
@@ -33,7 +34,9 @@ export default function ProjectUploadDialog({ allTags }: { allTags: Tags[] }) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button variant="outline">Upload Project</Button>
+          <Button variant="default" size={"icon"}>
+            <Plus className="w-4 h-4" />
+          </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
@@ -52,7 +55,9 @@ export default function ProjectUploadDialog({ allTags }: { allTags: Tags[] }) {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant="outline">Upload Project</Button>
+        <Button size={"icon"}>
+          <Plus className="w-4 h-4" />
+        </Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left">

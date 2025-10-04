@@ -91,7 +91,7 @@ const ProfilePage = async ({ params }: Props) => {
 
               <div className="flex flex-wrap gap-2 justify-center md:justify-start">
                 <span className="px-3 py-1 bg-[#cdff98] text-[#42354a] text-sm font-medium rounded-full">
-                  {currentUser.role || ""}
+                  {currentUser.role || "No Role Yet"}
                 </span>
                 <span className="px-3 py-1 bg-[#f9fafb] text-[#666a6e] text-sm font-medium rounded-full border border-[#e2e3e6]">
                   {currentUser.type || "Explorer"}
@@ -221,7 +221,7 @@ async function DisplayUserProjectWork({
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
         <h3 className="text-lg font-semibold text-[#171c21]">Work Sample</h3>
 
-        <div>
+        <div className="flex items-center gap-2">
           <Button variant="outline" asChild>
             <Link href={`/profile/${currentUserId}/projects`}>View All</Link>
           </Button>

@@ -190,7 +190,7 @@ export type VerificationToken = InferSelectModel<typeof verificationToken>;
 export const project = pgTable("project", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),
   name: text("name").notNull(),
-  link: text("link").notNull(),
+  link: text("link"),
   description: text("description").notNull(),
   coverImage: text("coverImage").notNull(),
   logoImage: text("logoImage"),

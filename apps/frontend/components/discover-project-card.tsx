@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import LikeButton from "./like-button";
+import { TAG_COLORS } from "@/lib/tag-colors";
 
 export default function DiscoverProjectCard({
   projectId,
@@ -67,7 +68,12 @@ export default function DiscoverProjectCard({
           </div>
         </div>
         <div className="mb-2">
-          <span className="inline-block px-2 py-1 text-xs font-medium text-primary bg-primary/10 rounded-full">
+          <span
+            className={`inline-block px-2 py-1 text-xs font-medium text-white rounded-full ${
+              TAG_COLORS[tagName as keyof typeof TAG_COLORS] ||
+              "bg-primary/10 text-primary"
+            }`}
+          >
             {tagName}
           </span>
         </div>
