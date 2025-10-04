@@ -9,6 +9,7 @@ import {
   boolean,
   integer,
   uniqueIndex,
+  index,
   pgEnum,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "next-auth/adapters";
@@ -275,6 +276,40 @@ export const projectLikes = pgTable(
 );
 
 export type ProjectLikes = InferSelectModel<typeof projectLikes>;
+
+export const projectComments = pgTable(
+  "project_comments",
+  {
+    id: uuid("id").primaryKey().notNull().defaultRandom(),
+
+    // The ID of the user who wrote the comment
+    userId: uuid("userId")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+
+    // The ID of the project that was commented on
+    projectId: uuid("projectId")
+      .notNull()
+      .references(() => project.id, { onDelete: "cascade" }),
+
+    // The comment content
+    content: text("content").notNull(),
+
+    // Timestamp for when the comment was created
+    createdAt: timestamp("createdAt").notNull().defaultNow(),
+    updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+  },
+  (table) => ({
+    // Index for efficient querying by project
+    projectIndex: index("project_comments_project_id_index").on(
+      table.projectId
+    ),
+    // Index for efficient querying by user
+    userIndex: index("project_comments_user_id_index").on(table.userId),
+  })
+);
+
+export type ProjectComments = InferSelectModel<typeof projectComments>;
 
 export const bravoCategories = pgTable("bravo_categories", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),

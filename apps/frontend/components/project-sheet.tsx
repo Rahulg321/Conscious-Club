@@ -10,6 +10,9 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import LikeButton from "./like-button";
+import ProjectCommentForm from "./forms/project-comment-form";
+import ProjectCommentsList from "./project-comments-list";
 
 type ProjectDetails = {
   id: string;
@@ -20,6 +23,7 @@ type ProjectDetails = {
   link: string | null;
   tags: string[];
   likeCount: number;
+  isLiked: boolean;
 };
 
 export default function ProjectSheet() {
@@ -31,6 +35,8 @@ export default function ProjectSheet() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [project, setProject] = useState<ProjectDetails | null>(null);
+  const [likeCount, setLikeCount] = useState<number>(0);
+  const [isLiked, setIsLiked] = useState<boolean>(false);
 
   const currentPathWithParams = useMemo(() => {
     const params = new URLSearchParams(searchParams?.toString());
@@ -63,6 +69,8 @@ export default function ProjectSheet() {
         const data = (await res.json()) as { project: ProjectDetails };
         if (!cancelled) {
           setProject(data.project);
+          setLikeCount(data.project.likeCount);
+          setIsLiked(data.project.isLiked);
         }
       } catch (e: any) {
         if (!cancelled) setError(e?.message || "Failed to load project");
@@ -80,6 +88,19 @@ export default function ProjectSheet() {
     setOpen(nextOpen);
     if (!nextOpen) {
       router.push(currentPathWithParams);
+    }
+  };
+
+  const handleLikeToggle = (projectId: string, newIsLiked: boolean) => {
+    setIsLiked(newIsLiked);
+    // Update the like count optimistically
+    setLikeCount((prev) => (newIsLiked ? prev + 1 : prev - 1));
+  };
+
+  const handleCommentAdded = () => {
+    // Refresh comments when a new comment is added
+    if ((window as any).refreshComments) {
+      (window as any).refreshComments();
     }
   };
 
@@ -137,31 +158,16 @@ export default function ProjectSheet() {
                   </div>
                 ) : null}
 
-                {typeof project?.likeCount === "number" ? (
-                  <div className="inline-flex items-center gap-2 text-sm text-muted-foreground">
-                    <span aria-hidden>❤️</span>
-                    <span>
-                      {project.likeCount}{" "}
-                      {project.likeCount === 1 ? "like" : "likes"}
-                    </span>
+                {project && (
+                  <div className="flex items-center gap-2">
+                    <LikeButton
+                      projectId={project.id}
+                      initialLikeCount={likeCount}
+                      initialIsLiked={isLiked}
+                      onLikeToggle={handleLikeToggle}
+                    />
                   </div>
-                ) : null}
-
-                {/* {project?.link ? (
-                  <div>
-                    <a
-                      href={project.link}
-                      target="_blank"
-                      rel="noreferrer noopener"
-                      className="inline-flex items-center text-sm text-primary hover:underline"
-                    >
-                      Visit project
-                      <span className="ml-1" aria-hidden>
-                        ↗
-                      </span>
-                    </a>
-                  </div>
-                ) : null} */}
+                )}
               </div>
             </div>
           </div>
@@ -177,6 +183,21 @@ export default function ProjectSheet() {
               </p>
             </div>
           ) : null}
+
+          {projectId && (
+            <div className="mt-8 space-y-6">
+              <ProjectCommentsList
+                key={`comments-${projectId}`}
+                projectId={projectId}
+                onCommentAdded={handleCommentAdded}
+              />
+              <ProjectCommentForm
+                key={`form-${projectId}`}
+                projectId={projectId}
+                onCommentAdded={handleCommentAdded}
+              />
+            </div>
+          )}
         </div>
       </SheetContent>
     </Sheet>

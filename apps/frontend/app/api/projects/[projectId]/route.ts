@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@repo/db";
 import { project, projectTags, tags, projectLikes } from "@repo/db/schema";
 import { eq, and, sql } from "drizzle-orm";
+import { auth } from "@/auth";
 
 export async function GET(
   _request: Request,
@@ -27,6 +28,23 @@ export async function GET(
       .from(projectLikes)
       .where(eq(projectLikes.projectId, projectId));
 
+    // Get user session to check if user has liked this project
+    const userSession = await auth();
+    let isLiked = false;
+
+    if (userSession?.user?.id) {
+      const [userLike] = await db
+        .select()
+        .from(projectLikes)
+        .where(
+          and(
+            eq(projectLikes.projectId, projectId),
+            eq(projectLikes.userId, userSession.user.id)
+          )
+        );
+      isLiked = !!userLike;
+    }
+
     const payload = {
       id: p.id,
       name: p.name,
@@ -36,6 +54,7 @@ export async function GET(
       link: p.link,
       tags: tagRows.map((t) => t.name).filter(Boolean) as string[],
       likeCount: Number(likesRow?.count || 0),
+      isLiked,
     };
 
     return NextResponse.json({ project: payload });

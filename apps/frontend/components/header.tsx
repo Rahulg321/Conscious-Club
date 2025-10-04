@@ -2,7 +2,7 @@
 
 import { ChevronDown, Crown, Menu, X } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useState } from "react";
 import { Button } from "./ui/button";
 import {
@@ -31,7 +31,7 @@ export default function Header({
   userSession: Session | null;
 }) {
   const router = useRouter();
-
+  const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navLinks = [
@@ -60,7 +60,11 @@ export default function Header({
               <Link
                 key={label}
                 href={href}
-                className={`text-[#3e4a5b] hover:text-[#cf5b8d] transition-colors`}
+                className={`transition-colors ${
+                  pathname === href
+                    ? "text-[#cf5b8d] font-medium"
+                    : "text-[#3e4a5b] hover:text-[#cf5b8d]"
+                }`}
               >
                 {label}
               </Link>
@@ -139,7 +143,11 @@ export default function Header({
                 <Link
                   key={`mobile-${label}`}
                   href={href}
-                  className={`text-[#3e4a5b] hover:text-[#cf5b8d] transition-colors text-lg py-2`}
+                  className={`transition-colors text-lg py-2 ${
+                    pathname === href
+                      ? "text-[#cf5b8d] font-medium"
+                      : "text-[#3e4a5b] hover:text-[#cf5b8d]"
+                  }`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {label}
