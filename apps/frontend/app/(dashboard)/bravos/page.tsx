@@ -1,5 +1,9 @@
 import React from "react";
-import { getAllBravos, getAllBravoCategories } from "@/lib/queries";
+import {
+  getAllBravos,
+  getAllBravoCategories,
+  getUserPinnedBravoImage,
+} from "@/lib/queries";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { BravoCard } from "@/components/bravo-card";
@@ -7,8 +11,22 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 export const metadata = {
-  title: "Bravos",
-  description: "Bravos page",
+  title: "Bravos | ConsciousClub",
+  description:
+    "Discover and collect Bravos to show your support for your favorite projects and creators. Earn Bravos by completing tasks, participating in projects, and more on ConsciousClub.",
+  openGraph: {
+    title: "Bravos | ConsciousClub",
+    description:
+      "Collect Bravos to support projects and creators. Explore all available Bravos and categories on ConsciousClub.",
+    url: "/bravos",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Bravos | ConsciousClub",
+    description:
+      "Show your support for projects and creators by collecting Bravos on ConsciousClub.",
+  },
 };
 
 const page = async ({
@@ -25,14 +43,21 @@ const page = async ({
   const selectedCategory = searchParams?.category;
   const bravos = await getAllBravos(selectedCategory);
   const categories = await getAllBravoCategories();
+  const pinnedBravo = await getUserPinnedBravoImage(userSession.user.id);
+
+  // Find the selected category object to get its description
+  const selectedCategoryObj = categories?.find(
+    (category) => category.slug === selectedCategory
+  );
+
   return (
     <div className="block-space-mini big-container">
       <div className="mb-8 text-center max-w-2xl mx-auto space-y-4">
         <h1 className="text-4xl font-bold">Bravos</h1>
         <p className="text-gray-600">
-          Bravos are the best way to show your support for your favorite
-          projects. You can collect bravos by completing tasks, projects, and
-          more.
+          {selectedCategory && selectedCategoryObj
+            ? selectedCategoryObj.description
+            : "Bravos are the best way to show your support for your favorite projects. You can collect bravos by completing tasks, projects, and more."}
         </p>
       </div>
 
@@ -69,6 +94,8 @@ const page = async ({
             slug={bravo.slug}
             name={bravo.name}
             imageUrl={bravo.image}
+            bravoCategory={bravo.categoryName || ""}
+            isPinned={pinnedBravo?.name === bravo.name}
           />
         ))}
       </div>

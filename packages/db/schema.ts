@@ -42,6 +42,10 @@ export const user = pgTable("user", {
   discipline: text("discipline"),
   role: text("role"),
   fun: text("fun"),
+
+  moodSelectedBravoId: uuid("moodSelectedBravoId").references(() => bravos.id, {
+    onDelete: "cascade",
+  }),
   onboardingCompleted: boolean("onboardingCompleted").notNull().default(false),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt").notNull().defaultNow(),

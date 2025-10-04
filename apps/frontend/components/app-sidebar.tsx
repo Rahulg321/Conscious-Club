@@ -16,7 +16,15 @@ import { ArrowRight } from "lucide-react";
 import BearSticker from "@/public/stickers/bear-sticker.png";
 import Link from "next/link";
 
-export function AppSidebar({ user }: { user: User | null }) {
+type AppSidebarProps = {
+  user: User | null;
+  pinnedBravo: {
+    name: string;
+    image: string;
+  } | null;
+};
+
+export function AppSidebar({ user, pinnedBravo }: AppSidebarProps) {
   return (
     <Sidebar className="border-r border-[#e2e3e6]" variant="inset">
       <SidebarHeader className="p-2 border-b border-[#e2e3e6]">
@@ -37,7 +45,17 @@ export function AppSidebar({ user }: { user: User | null }) {
 
       <SidebarFooter className="">
         <div className="flex items-center gap-2 flex-col">
-          <Image src={BearSticker} alt="Bear Sticker" />
+          {pinnedBravo ? (
+            <Image
+              src={pinnedBravo.image}
+              alt="Pinned Bravo"
+              width={200}
+              height={200}
+              className=""
+            />
+          ) : (
+            <Image src={BearSticker} alt="Bear Sticker" />
+          )}
           <Button variant="link" asChild>
             <Link href="/bravos">
               Collect Bravos <ArrowRight className="w-4 h-4" />

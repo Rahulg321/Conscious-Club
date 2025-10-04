@@ -928,3 +928,35 @@ export async function hasCompletedOnboarding(userId: string): Promise<boolean> {
     return false;
   }
 }
+
+/**
+ * get pinned bravo for a user
+ *
+ * @param userId
+ * @returns
+ */
+export async function getUserPinnedBravoImage(userId: string) {
+  try {
+    const [result] = await db
+      .select({
+        bravoName: bravos.name,
+        bravoImage: bravos.image,
+      })
+      .from(user)
+      .leftJoin(bravos, eq(user.moodSelectedBravoId, bravos.id))
+      .where(eq(user.id, userId));
+
+    // Return null if no pinned bravo is set
+    if (!result?.bravoName || !result?.bravoImage) {
+      return null;
+    }
+
+    return {
+      name: result.bravoName,
+      image: result.bravoImage,
+    };
+  } catch (error) {
+    console.error("Error fetching user pinned bravo:", error);
+    return null;
+  }
+}

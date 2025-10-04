@@ -7,6 +7,8 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { SessionProvider } from "next-auth/react";
 import { Toaster } from "@/components/ui/sonner";
 import { auth } from "@/auth";
+import { redirect } from "next/navigation";
+import { getUserPinnedBravoImage } from "@/lib/queries";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -20,6 +22,12 @@ export default async function RootLayout({
 }>) {
   const userSession = await auth();
 
+  if (!userSession) {
+    redirect("/login");
+  }
+
+  const pinnedBravo = await getUserPinnedBravoImage(userSession.user.id);
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body
@@ -28,7 +36,10 @@ export default async function RootLayout({
         <SessionProvider>
           <SidebarProvider>
             <div className="flex min-h-screen w-full ">
-              <AppSidebar user={userSession?.user || null} />
+              <AppSidebar
+                user={userSession?.user || null}
+                pinnedBravo={pinnedBravo}
+              />
 
               <main className="flex-1 min-w-0">
                 <SidebarInset className="">

@@ -176,10 +176,14 @@ p,
 span,
 ul,
 ul,
+input,
+textarea,
 a,
 li,
 ol,
-small {
+label,
+small,
+button {
   font-family: var(--font-jetbrains-mono);
 }
 
