@@ -336,3 +336,93 @@ export const bravos = pgTable("bravos", {
 });
 
 export type Bravos = InferSelectModel<typeof bravos>;
+
+export const blogCategories = pgTable("blog_categories", {
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
+  name: varchar("name", { length: 100 }).notNull().unique(),
+  slug: varchar("slug", { length: 100 }).notNull().unique(),
+  description: text("description"),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+});
+
+export type BlogCategories = InferSelectModel<typeof blogCategories>;
+
+export const blogTags = pgTable("blog_tags", {
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
+  name: varchar("name", { length: 50 }).notNull().unique(),
+  slug: varchar("slug", { length: 50 }).notNull().unique(),
+  description: text("description"),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+});
+
+export type BlogTags = InferSelectModel<typeof blogTags>;
+
+export const blogPosts = pgTable(
+  "blog_posts",
+  {
+    id: uuid("id").primaryKey().notNull().defaultRandom(),
+
+    title: varchar("title", { length: 200 }).notNull(),
+    slug: varchar("slug", { length: 200 }).notNull().unique(),
+    excerpt: text("excerpt"),
+    content: text("content").notNull(), // Markdown content
+
+    // SEO fields
+    metaTitle: varchar("metaTitle", { length: 200 }),
+    metaDescription: text("metaDescription"),
+    metaKeywords: text("metaKeywords"),
+    canonicalUrl: text("canonicalUrl"),
+
+    // Media fields
+    featuredImage: text("featuredImage"),
+    featuredImageAlt: text("featuredImageAlt"),
+
+    // Status and visibility
+    status: varchar("status", { length: 20 }).notNull().default("draft"), // draft, published, archived
+    isPublished: boolean("isPublished").notNull().default(false),
+
+    // Category (one-to-many relationship)
+    categoryId: uuid("categoryId").references(() => blogCategories.id, {
+      onDelete: "set null",
+    }),
+
+    // SEO and analytics
+    readingTime: integer("readingTime"), // in minutes
+    wordCount: integer("wordCount"),
+    viewCount: integer("viewCount").notNull().default(0),
+
+    // Timestamps
+    publishedAt: timestamp("publishedAt", { mode: "date" }),
+    createdAt: timestamp("createdAt").notNull().defaultNow(),
+    updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+  },
+  (table) => ({
+    // Indexes for performance
+    statusIndex: index("blog_posts_status_index").on(table.status),
+    publishedIndex: index("blog_posts_published_index").on(table.isPublished),
+    publishedAtIndex: index("blog_posts_published_at_index").on(
+      table.publishedAt
+    ),
+    categoryIndex: index("blog_posts_category_index").on(table.categoryId),
+  })
+);
+
+export type BlogPosts = InferSelectModel<typeof blogPosts>;
+
+export const blogPostTags = pgTable(
+  "blog_post_tags",
+  {
+    postId: uuid("postId")
+      .notNull()
+      .references(() => blogPosts.id, { onDelete: "cascade" }),
+    tagId: uuid("tagId")
+      .notNull()
+      .references(() => blogTags.id, { onDelete: "cascade" }),
+  },
+  (table) => ({
+    pk: primaryKey({ columns: [table.postId, table.tagId] }),
+  })
+);
+
+export type BlogPostTags = InferSelectModel<typeof blogPostTags>;

@@ -39,17 +39,14 @@ const CollabBrandsSection = ({ className }: { className?: string }) => {
                   amazon
                 </div>
 
-                {/* Dribbble */}
                 <div className="text-white/90 text-base sm:text-lg font-bold italic">
                   dribbble
                 </div>
 
-                {/* HubSpot */}
                 <div className="text-white/90 text-base sm:text-lg font-bold">
                   HubSpot
                 </div>
 
-                {/* Notion */}
                 <div className="flex items-center text-white/90 text-base sm:text-lg font-bold">
                   <span className="bg-white text-orange-500 px-1 py-0.5 rounded mr-1.5 text-xs sm:text-sm">
                     N
@@ -57,7 +54,6 @@ const CollabBrandsSection = ({ className }: { className?: string }) => {
                   Notion
                 </div>
 
-                {/* Netflix */}
                 <div className="text-white text-lg sm:text-xl font-bold tracking-wider col-span-2 sm:col-span-3">
                   NETFLIX
                 </div>
