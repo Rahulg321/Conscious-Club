@@ -120,7 +120,6 @@ export default async function CommunityPage({
             />
           </Suspense>
         )}
-        {/* Project details sheet controlled via ?project= query param */}
         <ProjectSheet />
       </main>
     </div>

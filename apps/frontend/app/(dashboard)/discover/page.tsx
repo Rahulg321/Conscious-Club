@@ -14,6 +14,7 @@ import ProjectProfileTabs from "@/components/project-profile-tabs";
 import ProjectCardSkeleton from "@/components/skeletons/project-card-skeleton";
 import ProfileCard from "@/components/profile-card";
 import ProfileCardSkeleton from "@/components/skeletons/profile-card-skeleton";
+import ProjectSheet from "@/components/project-sheet";
 
 export const metadata = {
   title: "Discover Projects",
@@ -126,6 +127,7 @@ export default async function DiscoverPage({
             />
           </Suspense>
         )}
+        <ProjectSheet />
       </main>
     </div>
   );

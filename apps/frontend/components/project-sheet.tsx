@@ -32,11 +32,18 @@ export default function ProjectSheet() {
   const [error, setError] = useState<string | null>(null);
   const [project, setProject] = useState<ProjectDetails | null>(null);
 
-  const communityPathWithParams = useMemo(() => {
+  const currentPathWithParams = useMemo(() => {
     const params = new URLSearchParams(searchParams?.toString());
     params.delete("project");
     const qs = params.toString();
-    return qs ? `/community?${qs}` : "/community";
+
+    // Determine the current path based on the URL
+    const currentPath = window.location.pathname;
+    if (currentPath.startsWith("/discover")) {
+      return qs ? `/discover?${qs}` : "/discover";
+    } else {
+      return qs ? `/community?${qs}` : "/community";
+    }
   }, [searchParams]);
 
   useEffect(() => {
@@ -72,7 +79,7 @@ export default function ProjectSheet() {
   const handleOpenChange = (nextOpen: boolean) => {
     setOpen(nextOpen);
     if (!nextOpen) {
-      router.push(communityPathWithParams);
+      router.push(currentPathWithParams);
     }
   };
 

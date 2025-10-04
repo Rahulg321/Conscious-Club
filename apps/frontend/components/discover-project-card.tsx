@@ -1,5 +1,7 @@
-// Project Card Component
+"use client";
+
 import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
 import LikeButton from "./like-button";
 
 export default function DiscoverProjectCard({
@@ -19,8 +21,25 @@ export default function DiscoverProjectCard({
   likeCount?: number;
   isLiked?: boolean;
 }) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const openProject = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const params = new URLSearchParams(searchParams?.toString());
+    params.set("project", projectId);
+    router.push(`/discover?${params.toString()}`);
+  };
+
+  const onLikeButtonClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
   return (
-    <div className="group bg-card rounded-lg border border-border overflow-hidden hover:shadow-md transition-shadow duration-200 ">
+    <div
+      className="group bg-card rounded-lg border border-border overflow-hidden hover:shadow-md transition-shadow duration-200 "
+      onClick={openProject}
+    >
       <div className="aspect-video bg-muted overflow-hidden relative">
         <Image
           src={projectCoverImage}
@@ -32,13 +51,20 @@ export default function DiscoverProjectCard({
       <div className="p-4">
         <div className="flex items-start justify-between mb-2">
           <h4 className="font-medium text-card-foreground line-clamp-1 flex-1">
-            {projectName}
+            <button
+              className="text-left hover:underline cursor-pointer"
+              onClick={openProject}
+            >
+              {projectName}
+            </button>
           </h4>
-          <LikeButton
-            projectId={projectId}
-            initialLikeCount={likeCount}
-            initialIsLiked={isLiked}
-          />
+          <div onClick={onLikeButtonClick}>
+            <LikeButton
+              projectId={projectId}
+              initialLikeCount={likeCount}
+              initialIsLiked={isLiked}
+            />
+          </div>
         </div>
         <div className="mb-2">
           <span className="inline-block px-2 py-1 text-xs font-medium text-primary bg-primary/10 rounded-full">
