@@ -169,7 +169,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-spectral);
+  font-family: var(--font-prata);
 }
 
 p,
@@ -184,7 +184,7 @@ ol,
 label,
 small,
 button {
-  font-family: var(--font-jetbrains-mono);
+  font-family: var(--font-urbanist);
 }
 
 .parent-container {

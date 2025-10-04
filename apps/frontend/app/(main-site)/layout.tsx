@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { inter, spectral, jetBrainsMono } from "@/app/fonts";
+import { prata, urbanist } from "@/app/fonts";
 import "../globals.css";
 import { Footer } from "@/components/footer";
 import Header from "@/components/header";
@@ -23,9 +23,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body
-        className={`${inter.variable} ${spectral.variable} ${jetBrainsMono.variable} antialiased`}
-      >
+      <body className={`${prata.variable} ${urbanist.variable} antialiased`}>
         <SessionProvider>
           <Header userSession={userSession} />
           {children}

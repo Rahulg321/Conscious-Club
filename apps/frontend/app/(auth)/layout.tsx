@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { inter, jetBrainsMono, spectral } from "@/app/fonts";
+import { prata, urbanist } from "@/app/fonts";
 import "../globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { SessionProvider } from "next-auth/react";
@@ -16,9 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${inter.variable} ${spectral.variable} ${jetBrainsMono.variable} antialiased`}
-      >
+      <body className={`${prata.variable} ${urbanist.variable} antialiased`}>
         <SessionProvider>{children}</SessionProvider>
         <Toaster />
       </body>
