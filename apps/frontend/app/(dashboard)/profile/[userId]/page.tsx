@@ -129,66 +129,7 @@ const ProfilePage = async ({ params }: Props) => {
             <p>Bio Not Available Yet</p>
           )}
         </div>
-
-        <div>
-          <h3 className="text-lg font-semibold text-[#171c21] mb-6">
-            Profile picture theme
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-2xl">
-            <div className="text-center">
-              <div className="relative mb-3">
-                <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden mx-auto border-2 border-[#cf5b8d]">
-                  <img
-                    src="https://images.unsplash.com/photo-1604382354696-e1ded9e5c2cb?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                    alt="Conscious Club theme"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="absolute -top-1 -right-1 w-5 h-5 md:w-6 md:h-6 bg-[#ff7497] rounded-full flex items-center justify-center">
-                  <Heart className="w-2.5 h-2.5 md:w-3 md:h-3 text-white fill-current" />
-                </div>
-                <div className="absolute -bottom-1 -right-1 w-6 h-6 md:w-8 md:h-8 bg-[#ff7497] rounded-full flex items-center justify-center">
-                  <Heart className="w-3 h-3 md:w-4 md:h-4 text-white fill-current" />
-                </div>
-              </div>
-              <div className="text-sm font-medium text-[#171c21] border-b-2 border-[#171c21] pb-1 inline-block">
-                Conscious Club theme
-              </div>
-            </div>
-
-            <div className="text-center">
-              <div className="relative mb-3">
-                <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden mx-auto">
-                  <img
-                    src="https://images.unsplash.com/photo-1604382354696-e1ded9e5c2cb?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                    alt="Creative theme"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="absolute -top-1 -right-1 w-5 h-5 md:w-6 md:h-6 bg-[#7cde4c] rounded-full flex items-center justify-center">
-                  <Sparkles className="w-2.5 h-2.5 md:w-3 md:h-3 text-white fill-current" />
-                </div>
-                <div className="absolute -bottom-1 -right-1 w-6 h-6 md:w-8 md:h-8 bg-[#8be030] rounded-full flex items-center justify-center">
-                  <Sparkles className="w-3 h-3 md:w-4 md:h-4 text-white fill-current" />
-                </div>
-              </div>
-              <div className="text-sm text-[#a9acb4]">Creative theme</div>
-            </div>
-
-            <div className="text-center">
-              <div className="relative mb-3">
-                <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden mx-auto">
-                  <img
-                    src="https://images.unsplash.com/photo-1533473359331-0135ef168bfd?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                    alt="Standard"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </div>
-              <div className="text-sm text-[#a9acb4]">Standard</div>
-            </div>
-          </div>
-
+        <div className="text-center">
           <Suspense
             fallback={
               <div className="flex items-center justify-center py-12">
@@ -219,6 +160,10 @@ async function DisplayUserProjectWork({
   return (
     <div className="mt-8">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
+        <div>
+          <h4>View Your Work</h4>
+        </div>
+
         <div className="flex items-center gap-2">
           <Button variant="outline" asChild>
             <Link href={`/profile/${currentUserId}/projects`}>View All</Link>
