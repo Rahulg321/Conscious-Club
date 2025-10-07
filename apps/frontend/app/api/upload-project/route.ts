@@ -19,6 +19,7 @@ export const POST = async (req: NextRequest) => {
   const projectDescription = formData.get("projectDescription");
   const tagId = formData.get("tagId") as string;
   const projectLink = formData.get("projectLink");
+  const additionalImages = formData.getAll("additionalImages");
 
   if (!projectCover)
     return NextResponse.json({ error: "File is required" }, { status: 400 });
@@ -29,6 +30,8 @@ export const POST = async (req: NextRequest) => {
     projectDescription,
     projectLink,
     tagId: tagId as string,
+    additionalImages:
+      additionalImages.length > 0 ? additionalImages : undefined,
   });
 
   if (!validatedData.success) {
@@ -42,6 +45,7 @@ export const POST = async (req: NextRequest) => {
 
   console.log("invalidatedData", validatedData);
 
+  // Upload cover image
   const url = await uploadFile(projectCover as File);
 
   if (!url)
@@ -52,6 +56,30 @@ export const POST = async (req: NextRequest) => {
 
   console.log("the url is also working", url);
 
+  // Upload additional images if any
+  let additionalImageUrls: string[] = [];
+  if (
+    validatedData.data.additionalImages &&
+    validatedData.data.additionalImages.length > 0
+  ) {
+    try {
+      const uploadPromises = validatedData.data.additionalImages.map((file) =>
+        uploadFile(file)
+      );
+      const urls = await Promise.all(uploadPromises);
+
+      // Filter out any failed uploads (null values)
+      additionalImageUrls = urls.filter((url): url is string => url !== null);
+
+      if (additionalImageUrls.length !== urls.length) {
+        console.warn("Some additional images failed to upload");
+      }
+    } catch (error) {
+      console.error("Error uploading additional images:", error);
+      // Continue with project creation even if additional images fail
+    }
+  }
+
   try {
     const [insertedProject] = await db
       .insert(project)
@@ -60,6 +88,8 @@ export const POST = async (req: NextRequest) => {
         link: validatedData.data.projectLink || null,
         description: validatedData.data.projectDescription,
         coverImage: url,
+        additionalImages:
+          additionalImageUrls.length > 0 ? additionalImageUrls : null,
         userId: userSession.user.id,
       })
       .returning();

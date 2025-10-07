@@ -4,8 +4,9 @@ import { OnboardingProvider } from "@/components/forms/onboarding/context/Onboar
 import { redirect } from "next/navigation";
 
 export const metadata = {
-  title: "Onboarding",
-  description: "Onboarding",
+  title: "Welcome to Conscious Club - Complete Your Profile",
+  description:
+    "Complete your profile setup to get started with Conscious Club. Share your interests, skills, and connect with like-minded creators and explorers.",
 };
 
 export default async function OnboardingPage({

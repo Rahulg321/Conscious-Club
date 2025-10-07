@@ -21,6 +21,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import ProjectUploadForm from "../forms/project-upload-form";
 import useMediaQuery from "@/hooks/use-media-query";
 import { Tags } from "@repo/db/schema";
@@ -38,7 +39,7 @@ export default function ProjectUploadDialog({ allTags }: { allTags: Tags[] }) {
             <Plus className="w-4 h-4" />
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[700px]">
           <DialogHeader>
             <DialogTitle>Upload Project</DialogTitle>
             <DialogDescription>
@@ -46,7 +47,9 @@ export default function ProjectUploadDialog({ allTags }: { allTags: Tags[] }) {
               done.
             </DialogDescription>
           </DialogHeader>
-          <ProjectUploadForm setDialogOpen={setOpen} allTags={allTags} />
+          <ScrollArea className="max-h-[600px] pr-4">
+            <ProjectUploadForm setDialogOpen={setOpen} allTags={allTags} />
+          </ScrollArea>
         </DialogContent>
       </Dialog>
     );
@@ -63,10 +66,12 @@ export default function ProjectUploadDialog({ allTags }: { allTags: Tags[] }) {
         <DrawerHeader className="text-left">
           <DrawerTitle>Upload Project</DrawerTitle>
           <DrawerDescription>
-            Make changes to your project here. Click save when you&apos;re done.
+            Make changes to your project here.
           </DrawerDescription>
         </DrawerHeader>
-        <ProjectUploadForm setDialogOpen={setOpen} allTags={allTags} />
+        <ScrollArea className="max-h-[500px] px-4">
+          <ProjectUploadForm setDialogOpen={setOpen} allTags={allTags} />
+        </ScrollArea>
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>

@@ -14,6 +14,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "../ui/form";
 import {
   Select,
@@ -27,7 +28,7 @@ import {
   type ProjectUploadFormData,
 } from "@/lib/schemas/project-upload-schema";
 import { toast } from "sonner";
-import { X } from "lucide-react";
+import { X, Plus, ImagePlus } from "lucide-react";
 import { Tags } from "@repo/db/schema";
 import { useRouter } from "next/navigation";
 
@@ -48,18 +49,24 @@ function ProjectUploadForm({
       projectDescription: "",
       projectLink: "",
       tagId: "",
+      additionalImages: [],
     },
   });
 
   const [coverPreviewUrl, setCoverPreviewUrl] = useState<string | null>(null);
+  const [additionalImagePreviews, setAdditionalImagePreviews] = useState<
+    string[]
+  >([]);
   const fileRef = useRef<HTMLInputElement>(null);
+  const additionalImagesRef = useRef<HTMLInputElement>(null);
 
-  // Revoke object URL on unmount or when file changes
+  // Revoke object URLs on unmount
   useEffect(() => {
     return () => {
       if (coverPreviewUrl) URL.revokeObjectURL(coverPreviewUrl);
+      additionalImagePreviews.forEach((url) => URL.revokeObjectURL(url));
     };
-  }, [coverPreviewUrl]);
+  }, [coverPreviewUrl, additionalImagePreviews]);
 
   const onSubmit = async (data: ProjectUploadFormData) => {
     startTransition(async () => {
@@ -70,6 +77,13 @@ function ProjectUploadForm({
         formData.append("projectDescription", data.projectDescription);
         formData.append("projectLink", data.projectLink || "");
         formData.append("tagId", data.tagId);
+
+        // Append additional images if any
+        if (data.additionalImages && data.additionalImages.length > 0) {
+          data.additionalImages.forEach((image) => {
+            formData.append("additionalImages", image);
+          });
+        }
 
         const response = await fetch("/api/upload-project", {
           method: "POST",
@@ -89,12 +103,13 @@ function ProjectUploadForm({
         // Reset form on success
         form.reset();
         if (coverPreviewUrl) URL.revokeObjectURL(coverPreviewUrl);
+        additionalImagePreviews.forEach((url) => URL.revokeObjectURL(url));
         setCoverPreviewUrl(null);
+        setAdditionalImagePreviews([]);
         setDialogOpen(false);
         router.refresh();
       } catch (error) {
         console.error("Error uploading project:", error);
-        // You might want to show a toast notification here
         toast.error("error uploading file");
       }
     });
@@ -111,7 +126,7 @@ function ProjectUploadForm({
           name="projectCover"
           render={({ field: { onChange, value, ...field } }) => (
             <FormItem>
-              <FormLabel>Project Cover</FormLabel>
+              <FormLabel>Cover</FormLabel>
               <FormControl>
                 <div className="space-y-3">
                   <input
@@ -248,6 +263,125 @@ function ProjectUploadForm({
                   ))}
                 </SelectContent>
               </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="additionalImages"
+          render={({ field: { onChange, value, ...field } }) => (
+            <FormItem>
+              <FormLabel>Additional Images (Optional)</FormLabel>
+              <FormDescription>
+                Upload up to 5 additional images to showcase your project
+              </FormDescription>
+              <FormControl>
+                <div className="space-y-3">
+                  <input
+                    {...field}
+                    ref={additionalImagesRef}
+                    type="file"
+                    accept="image/jpeg,image/jpg,image/png,image/webp"
+                    multiple
+                    className="hidden"
+                    onChange={(e) => {
+                      const files = Array.from(e.target.files || []);
+                      const currentImages = value || [];
+
+                      // Check if total count exceeds 5
+                      if (currentImages.length + files.length > 5) {
+                        toast.error(
+                          "You can only upload up to 5 additional images"
+                        );
+                        return;
+                      }
+
+                      const newImages = [...currentImages, ...files];
+                      onChange(newImages);
+
+                      // Create preview URLs
+                      const newPreviews = files.map((file) =>
+                        URL.createObjectURL(file)
+                      );
+                      setAdditionalImagePreviews((prev) => [
+                        ...prev,
+                        ...newPreviews,
+                      ]);
+
+                      // Reset input
+                      if (additionalImagesRef.current) {
+                        additionalImagesRef.current.value = "";
+                      }
+                    }}
+                  />
+
+                  {(!value || value.length === 0) && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => additionalImagesRef.current?.click()}
+                      className="w-full"
+                    >
+                      <ImagePlus className="mr-2 h-4 w-4" />
+                      Add Additional Images
+                    </Button>
+                  )}
+
+                  {value && value.length > 0 && (
+                    <div className="space-y-3">
+                      <div className="grid grid-cols-2 gap-3">
+                        {additionalImagePreviews.map((preview, index) => (
+                          <div
+                            key={index}
+                            className="relative rounded-md border p-2"
+                          >
+                            <img
+                              src={preview}
+                              alt={`Additional image ${index + 1}`}
+                              className="w-full h-24 object-cover rounded-md"
+                            />
+                            <Button
+                              type="button"
+                              variant="destructive"
+                              size="sm"
+                              className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0"
+                              onClick={() => {
+                                const newImages = [...(value || [])];
+                                newImages.splice(index, 1);
+                                onChange(newImages);
+
+                                // Revoke and update previews
+                                URL.revokeObjectURL(preview);
+                                const newPreviews = [
+                                  ...additionalImagePreviews,
+                                ];
+                                newPreviews.splice(index, 1);
+                                setAdditionalImagePreviews(newPreviews);
+                              }}
+                            >
+                              <X className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+
+                      {value.length < 5 && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => additionalImagesRef.current?.click()}
+                          className="w-full"
+                        >
+                          <Plus className="mr-2 h-4 w-4" />
+                          Add More Images ({value.length}/5)
+                        </Button>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}
