@@ -6,38 +6,38 @@ import PlayEarnRewardsImage from "@/public/play-earn-rewards.png";
 export default function PlayEarnRewards({ className }: { className?: string }) {
   return (
     <section className={cn("", className)}>
-      <div className="bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] rounded-3xl overflow-hidden h-[500px] lg:h-[600px]">
+      <div className="bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] rounded-3xl overflow-hidden h-[400px] lg:h-[480px]">
         <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
-          <div className="order-2 lg:order-1 flex items-center px-6 sm:px-8 lg:px-12 py-10 sm:py-12 lg:py-16">
+          <div className="order-2 lg:order-1 flex items-center px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10">
             <div className="w-full max-w-xl">
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight mb-4 sm:mb-6">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white leading-tight mb-3 sm:mb-4">
                 Play and Earn
                 <br />
                 Rewards
               </h2>
 
               {/* Subheading */}
-              <p className="text-sm sm:text-base lg:text-lg text-white/90 mb-6 sm:mb-8 font-light leading-relaxed">
+              <p className="text-xs sm:text-sm lg:text-base text-white/90 mb-4 sm:mb-6 font-light leading-relaxed">
                 Build your fan circle & make real connections
               </p>
 
               {/* Game Buttons Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 sm:gap-2">
                 {/* Top Row */}
-                <Button className="bg-white text-[#6366f1] px-4 py-3 rounded-2xl text-xs sm:text-sm font-medium hover:bg-white/90 whitespace-nowrap">
+                <Button className="bg-white text-[#6366f1] px-3 py-2 rounded-2xl text-[10px] sm:text-xs font-medium hover:bg-white/90 whitespace-nowrap">
                   Selfie Style Challenge
                 </Button>
-                <Button className="bg-white text-[#6366f1] px-4 py-3 rounded-2xl text-xs sm:text-sm font-medium hover:bg-white/90 whitespace-nowrap">
+                <Button className="bg-white text-[#6366f1] px-3 py-2 rounded-2xl text-[10px] sm:text-xs font-medium hover:bg-white/90 whitespace-nowrap">
                   Lucky Spinner
                 </Button>
 
                 {/* Bottom Row */}
-                <Button className="bg-white text-[#6366f1] px-4 py-3 rounded-2xl text-xs sm:text-sm font-medium hover:bg-white/90 whitespace-nowrap">
+                <Button className="bg-white text-[#6366f1] px-3 py-2 rounded-2xl text-[10px] sm:text-xs font-medium hover:bg-white/90 whitespace-nowrap">
                   Give away
                 </Button>
                 <Button
                   variant="outline"
-                  className="border-2 border-white/30 text-white hover:bg-white/10 hover:border-white/50 px-4 py-3 rounded-2xl text-xs sm:text-sm font-medium whitespace-nowrap"
+                  className="border-2 border-white/30 text-white hover:bg-white/10 hover:border-white/50 px-3 py-2 rounded-2xl text-[10px] sm:text-xs font-medium whitespace-nowrap"
                 >
                   More games are coming soon...
                 </Button>
@@ -46,7 +46,7 @@ export default function PlayEarnRewards({ className }: { className?: string }) {
           </div>
 
           {/* Right Illustration Section */}
-          <div className="relative h-[300px] lg:h-full">
+          <div className="relative h-[240px] lg:h-full">
             <Image
               src={PlayEarnRewardsImage}
               alt="Colorful animals including a panda DJ with turntables at a vibrant party"

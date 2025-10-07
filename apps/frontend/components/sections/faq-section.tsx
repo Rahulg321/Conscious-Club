@@ -50,12 +50,12 @@ const faqData = [
 export function FAQSection() {
   const [openItem, setOpenItem] = useState<string | undefined>("item-0");
   return (
-    <section className="w-full max-w-4xl mx-auto px-4 py-16 md:py-24">
-      <div className="text-center mb-12">
-        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4 text-balance">
+    <section className="w-full max-w-4xl mx-auto px-4 py-12 md:py-16">
+      <div className="text-center mb-8">
+        <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-3 text-balance">
           Your curiosity, answered.
         </h2>
-        <p className="text-muted-foreground text-lg mt-8">
+        <p className="text-muted-foreground text-base mt-4">
           We're here to answer your all questions.
         </p>
       </div>
@@ -73,14 +73,14 @@ export function FAQSection() {
               key={index}
               value={`item-${index}`}
               className={cn(
-                "rounded-lg border-none px-6 py-2",
+                "rounded-lg border-none px-4 py-1",
                 openItem === `item-${index}` ? "bg-muted" : "bg-card"
               )}
             >
-              <AccordionTrigger className="text-left text-base md:text-lg font-medium hover:no-underline py-6">
+              <AccordionTrigger className="text-left text-sm md:text-base font-medium hover:no-underline py-4">
                 {faq.question}
               </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground text-base leading-relaxed pb-6">
+              <AccordionContent className="text-muted-foreground text-sm leading-relaxed pb-4">
                 {faq.answer}
               </AccordionContent>
             </AccordionItem>

@@ -36,37 +36,37 @@ const SplitFeatureSection: React.FC<SplitFeatureSectionProps> = ({
 
   return (
     <div>
-      <div className="flex flex-col items-center justify-center px-4 py-8">
+      <div className="flex flex-col items-center justify-center px-4 py-6">
         <div
-          className={`flex flex-col ${containerDirectionClass} items-center justify-center gap-12 lg:gap-20 max-w-6xl w-full`}
+          className={`flex flex-col ${containerDirectionClass} items-center justify-center gap-8 lg:gap-12 max-w-5xl w-full`}
         >
           <div className="flex-shrink-0">
             <img
               src={image.src}
               alt={image.alt}
-              className="w-full max-w-md lg:max-w-lg h-auto"
+              className="w-full max-w-xs lg:max-w-md h-auto"
             />
           </div>
 
-          <div className="flex flex-col space-y-8 max-w-md">
+          <div className="flex flex-col space-y-6 max-w-md">
             <h1
-              className={`font-bold text-5xl sm:text-6xl md:text-7xl lg:text-8xl ${accentClassName} mb-8 leading-tight`}
+              className={`font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl ${accentClassName} mb-6 leading-tight`}
             >
               {title}
             </h1>
 
-            <div className="space-y-8">
+            <div className="space-y-6">
               {features.map((feature, index) => (
                 <div
-                  className="flex items-start gap-6"
+                  className="flex items-start gap-4"
                   key={`${index}-${feature.text}`}
                 >
-                  <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10  mt-1">
+                  <div className="flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 mt-1">
                     <PiStarFourFill
-                      className={`size-4 ${iconClassName} md:size-6 lg:size-8`}
+                      className={`size-3 ${iconClassName} md:size-4 lg:size-6`}
                     />
                   </div>
-                  <p className="text-lg sm:text-xl ">{feature.text}</p>
+                  <p className="text-base sm:text-lg">{feature.text}</p>
                 </div>
               ))}
             </div>

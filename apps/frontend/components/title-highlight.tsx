@@ -2,14 +2,14 @@ import React from "react";
 
 const TitleHighlight = () => {
   return (
-    <div className="w-full mb-16">
+    <div className="w-full my-12 text-center">
       <h1
         className="
-            text-[48px]
-            sm:text-[80px]
-            md:text-[120px]
-            lg:text-[160px]
-            xl:text-[170px]
+            text-[32px]
+            sm:text-[48px]
+            md:text-[72px]
+            lg:text-[96px]
+            xl:text-[108px]
             text-[rgba(212,110,154,1)]
             leading-none
             font-semibold

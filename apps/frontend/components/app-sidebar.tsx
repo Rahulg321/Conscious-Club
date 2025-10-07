@@ -30,11 +30,13 @@ export function AppSidebar({ user, pinnedBravo }: AppSidebarProps) {
       <SidebarHeader className="p-2 border-b border-[#e2e3e6]">
         <div className="flex items-center gap-3">
           <div className=" mx-auto">
-            <Image
-              src={CCLogo}
-              alt="ConsciousClub Logo"
-              className="size-12 mx-auto"
-            />
+            <Link href="/">
+              <Image
+                src={CCLogo}
+                alt="ConsciousClub Logo"
+                className="size-12 mx-auto cursor-pointer"
+              />
+            </Link>
           </div>
         </div>
       </SidebarHeader>

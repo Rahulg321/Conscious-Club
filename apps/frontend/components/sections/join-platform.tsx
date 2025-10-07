@@ -60,9 +60,11 @@ const JoinPlatform = () => {
     <div className="">
       <div className="box-section" ref={container}>
         <div>
-          <div className="flex flex-col items-center justify-center text-center my-12">
-            <h2 className="font-bold mb-4">Why Join Our Platform?</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl">
+          <div className="flex flex-col items-center justify-center text-center my-8">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-3">
+              Why Join Our Platform?
+            </h2>
+            <p className="text-base text-muted-foreground max-w-xl">
               Because loyalty and creativity should feel like pleasure and
               comfort, not work.
               <br />

@@ -3,7 +3,6 @@ import React from "react";
 import { Metadata } from "next";
 import { FAQSection } from "@/components/sections/faq-section";
 import ExplorersSections from "@/components/sections/explorers-section";
-import AheadSection from "@/components/sections/ahead-section";
 import JoinPlatform from "@/components/sections/join-platform";
 import HeroSection from "@/components/sections/hero-section";
 import TitleHighlight from "@/components/title-highlight";
