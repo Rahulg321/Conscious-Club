@@ -14,7 +14,7 @@ import {
   blogTags,
   blogCategories,
 } from "@repo/db/schema";
-import { eq, and, or, ilike, inArray, desc, count, sql } from "drizzle-orm";
+import { eq, and, or, ilike, inArray, desc, count, sql, ne } from "drizzle-orm";
 import { generateHashedPassword } from "./utils";
 import {
   ProjectProfile,
@@ -1001,22 +1001,212 @@ export async function getProjectByIdWithStats(projectId: string) {
 }
 
 /**
- * Get all blog tags
- * @returns All blog tags
+ * Get all blog posts with their categories and tags
+ * @returns All blog posts with related data
  */
-export async function getAllBlogTags() {
+export async function getAllBlogPosts() {
   try {
-    return await db
+    const { blogPosts, blogPostTags } = await import("@repo/db/schema");
+
+    // First, get all blog posts with their categories
+    const posts = await db
       .select({
-        id: blogTags.id,
-        name: blogTags.name,
-        slug: blogTags.slug,
-        description: blogTags.description,
+        id: blogPosts.id,
+        title: blogPosts.title,
+        slug: blogPosts.slug,
+        excerpt: blogPosts.excerpt,
+        content: blogPosts.content,
+        status: blogPosts.status,
+        isPublished: blogPosts.isPublished,
+        categoryId: blogPosts.categoryId,
+        categoryName: blogCategories.name,
+        readingTime: blogPosts.readingTime,
+        wordCount: blogPosts.wordCount,
+        publishedAt: blogPosts.publishedAt,
+        createdAt: blogPosts.createdAt,
+        updatedAt: blogPosts.updatedAt,
+        metaTitle: blogPosts.metaTitle,
+        metaDescription: blogPosts.metaDescription,
+        metaKeywords: blogPosts.metaKeywords,
+        canonicalUrl: blogPosts.canonicalUrl,
+        featuredImage: blogPosts.featuredImage,
+        featuredImageAlt: blogPosts.featuredImageAlt,
       })
-      .from(blogTags);
+      .from(blogPosts)
+      .leftJoin(blogCategories, eq(blogPosts.categoryId, blogCategories.id))
+      .orderBy(desc(blogPosts.createdAt));
+
+    // Then, get all tags for each post
+    const postsWithTags = await Promise.all(
+      posts.map(async (post) => {
+        const postTags = await db
+          .select({
+            id: blogTags.id,
+            name: blogTags.name,
+            slug: blogTags.slug,
+          })
+          .from(blogPostTags)
+          .innerJoin(blogTags, eq(blogPostTags.tagId, blogTags.id))
+          .where(eq(blogPostTags.postId, post.id));
+
+        return {
+          ...post,
+          tags: postTags,
+        };
+      })
+    );
+
+    return postsWithTags;
   } catch (error) {
-    console.error("error fetching blog tags");
+    console.error("error fetching blog posts", error);
     return null;
+  }
+}
+
+/**
+ * Get filtered and paginated published blog posts
+ * @param categorySlug - Optional category slug to filter by
+ * @param tagSlugs - Optional array of tag slugs to filter by
+ * @param searchQuery - Optional search query for title and excerpt
+ * @param offset - Offset for pagination
+ * @param limit - Limit for pagination
+ * @returns Filtered blog posts with pagination data
+ */
+export async function getFilteredBlogPosts(
+  categorySlug?: string | undefined,
+  tagSlugs?: string[] | string | undefined,
+  searchQuery?: string | undefined,
+  offset = 0,
+  limit = 10
+) {
+  try {
+    const { blogPosts, blogPostTags } = await import("@repo/db/schema");
+
+    // Build the where conditions
+    const conditions = [eq(blogPosts.isPublished, true)];
+
+    // Add category filter
+    if (categorySlug) {
+      const category = await db
+        .select({ id: blogCategories.id })
+        .from(blogCategories)
+        .where(eq(blogCategories.slug, categorySlug))
+        .limit(1);
+
+      if (category.length > 0 && category[0]) {
+        conditions.push(eq(blogPosts.categoryId, category[0].id));
+      }
+    }
+
+    // Add search filter
+    if (searchQuery && searchQuery.trim() !== "") {
+      conditions.push(
+        or(
+          ilike(blogPosts.title, `%${searchQuery}%`),
+          ilike(blogPosts.excerpt, `%${searchQuery}%`)
+        )!
+      );
+    }
+
+    // Get posts with basic filters
+    let postsQuery = db
+      .select({
+        id: blogPosts.id,
+        title: blogPosts.title,
+        slug: blogPosts.slug,
+        excerpt: blogPosts.excerpt,
+        status: blogPosts.status,
+        isPublished: blogPosts.isPublished,
+        categoryId: blogPosts.categoryId,
+        categoryName: blogCategories.name,
+        categorySlug: blogCategories.slug,
+        readingTime: blogPosts.readingTime,
+        wordCount: blogPosts.wordCount,
+        publishedAt: blogPosts.publishedAt,
+        createdAt: blogPosts.createdAt,
+        featuredImage: blogPosts.featuredImage,
+        featuredImageAlt: blogPosts.featuredImageAlt,
+        viewCount: blogPosts.viewCount,
+      })
+      .from(blogPosts)
+      .leftJoin(blogCategories, eq(blogPosts.categoryId, blogCategories.id))
+      .where(and(...conditions))
+      .orderBy(desc(blogPosts.publishedAt));
+
+    const allPosts = await postsQuery;
+
+    // Filter by tags if provided
+    let filteredPosts = allPosts;
+    if (tagSlugs && tagSlugs.length > 0) {
+      const tagSlugArray = Array.isArray(tagSlugs)
+        ? tagSlugs
+        : tagSlugs.split(",").filter(Boolean);
+
+      if (tagSlugArray.length > 0) {
+        // Get posts that have at least one of the specified tags
+        const postsWithTags = await Promise.all(
+          allPosts.map(async (post) => {
+            const postTags = await db
+              .select({
+                slug: blogTags.slug,
+              })
+              .from(blogPostTags)
+              .innerJoin(blogTags, eq(blogPostTags.tagId, blogTags.id))
+              .where(eq(blogPostTags.postId, post.id));
+
+            const postTagSlugs = postTags.map((t) => t.slug);
+            const hasMatchingTag = tagSlugArray.some((slug) =>
+              postTagSlugs.includes(slug)
+            );
+
+            return hasMatchingTag ? post : null;
+          })
+        );
+
+        filteredPosts = postsWithTags.filter(
+          (p): p is NonNullable<typeof p> => p !== null
+        );
+      }
+    }
+
+    const totalPosts = filteredPosts.length;
+    const totalPages = Math.ceil(totalPosts / limit);
+
+    // Apply pagination
+    const paginatedPosts = filteredPosts.slice(offset, offset + limit);
+
+    // Get tags for paginated posts
+    const postsWithTags = await Promise.all(
+      paginatedPosts.map(async (post) => {
+        const postTags = await db
+          .select({
+            id: blogTags.id,
+            name: blogTags.name,
+            slug: blogTags.slug,
+          })
+          .from(blogPostTags)
+          .innerJoin(blogTags, eq(blogPostTags.tagId, blogTags.id))
+          .where(eq(blogPostTags.postId, post.id));
+
+        return {
+          ...post,
+          tags: postTags,
+        };
+      })
+    );
+
+    return {
+      posts: postsWithTags,
+      totalPosts,
+      totalPages,
+    };
+  } catch (error) {
+    console.error("error fetching filtered blog posts", error);
+    return {
+      posts: [],
+      totalPosts: 0,
+      totalPages: 0,
+    };
   }
 }
 
@@ -1026,16 +1216,190 @@ export async function getAllBlogTags() {
  */
 export async function getAllBlogCategories() {
   try {
-    return await db
+    const categories = await db
       .select({
         id: blogCategories.id,
         name: blogCategories.name,
         slug: blogCategories.slug,
         description: blogCategories.description,
       })
-      .from(blogCategories);
+      .from(blogCategories)
+      .orderBy(blogCategories.name);
+
+    return categories;
   } catch (error) {
-    console.error("error fetching blog categories");
+    console.error("error fetching blog categories", error);
+    return [];
+  }
+}
+
+/**
+ * Get all blog tags
+ * @returns All blog tags
+ */
+export async function getAllBlogTags() {
+  try {
+    const tags = await db
+      .select({
+        id: blogTags.id,
+        name: blogTags.name,
+        slug: blogTags.slug,
+        description: blogTags.description,
+      })
+      .from(blogTags)
+      .orderBy(blogTags.name);
+
+    return tags;
+  } catch (error) {
+    console.error("error fetching blog tags", error);
+    return [];
+  }
+}
+
+/**
+ * Get a single blog post by slug with all related data
+ * @param slug - The slug of the blog post
+ * @returns Blog post with category and tags, or null if not found
+ */
+export async function getBlogPostBySlug(slug: string) {
+  try {
+    const { blogPosts, blogPostTags } = await import("@repo/db/schema");
+
+    // Get the blog post with category
+    const posts = await db
+      .select({
+        id: blogPosts.id,
+        title: blogPosts.title,
+        slug: blogPosts.slug,
+        excerpt: blogPosts.excerpt,
+        content: blogPosts.content,
+        status: blogPosts.status,
+        isPublished: blogPosts.isPublished,
+        categoryId: blogPosts.categoryId,
+        categoryName: blogCategories.name,
+        categorySlug: blogCategories.slug,
+        readingTime: blogPosts.readingTime,
+        wordCount: blogPosts.wordCount,
+        publishedAt: blogPosts.publishedAt,
+        createdAt: blogPosts.createdAt,
+        updatedAt: blogPosts.updatedAt,
+        metaTitle: blogPosts.metaTitle,
+        metaDescription: blogPosts.metaDescription,
+        metaKeywords: blogPosts.metaKeywords,
+        canonicalUrl: blogPosts.canonicalUrl,
+        featuredImage: blogPosts.featuredImage,
+        featuredImageAlt: blogPosts.featuredImageAlt,
+        viewCount: blogPosts.viewCount,
+      })
+      .from(blogPosts)
+      .leftJoin(blogCategories, eq(blogPosts.categoryId, blogCategories.id))
+      .where(and(eq(blogPosts.slug, slug), eq(blogPosts.isPublished, true)))
+      .limit(1);
+
+    if (posts.length === 0 || !posts[0]) {
+      return null;
+    }
+
+    const post = posts[0];
+
+    // Get tags for the post
+    const postTags = await db
+      .select({
+        id: blogTags.id,
+        name: blogTags.name,
+        slug: blogTags.slug,
+      })
+      .from(blogPostTags)
+      .innerJoin(blogTags, eq(blogPostTags.tagId, blogTags.id))
+      .where(eq(blogPostTags.postId, post.id));
+
+    return {
+      ...post,
+      tags: postTags,
+    };
+  } catch (error) {
+    console.error("error fetching blog post by slug", error);
     return null;
+  }
+}
+
+/**
+ * Get related blog posts based on category and tags
+ * @param postId - The ID of the current post to exclude
+ * @param categoryId - The category ID to find related posts
+ * @param tagIds - Array of tag IDs to find related posts
+ * @param limit - Number of related posts to return
+ * @returns Array of related blog posts
+ */
+export async function getRelatedBlogPosts(
+  postId: string,
+  categoryId: string | null,
+  tagIds: string[],
+  limit = 3
+) {
+  try {
+    const { blogPosts, blogPostTags } = await import("@repo/db/schema");
+
+    // Build conditions - exclude current post and only published
+    const conditions = [
+      ne(blogPosts.id, postId),
+      eq(blogPosts.isPublished, true),
+    ];
+
+    // Prefer posts from the same category
+    if (categoryId) {
+      conditions.push(eq(blogPosts.categoryId, categoryId));
+    }
+
+    const posts = await db
+      .select({
+        id: blogPosts.id,
+        title: blogPosts.title,
+        slug: blogPosts.slug,
+        excerpt: blogPosts.excerpt,
+        categoryName: blogCategories.name,
+        categorySlug: blogCategories.slug,
+        readingTime: blogPosts.readingTime,
+        publishedAt: blogPosts.publishedAt,
+        featuredImage: blogPosts.featuredImage,
+        featuredImageAlt: blogPosts.featuredImageAlt,
+      })
+      .from(blogPosts)
+      .leftJoin(blogCategories, eq(blogPosts.categoryId, blogCategories.id))
+      .where(and(...conditions))
+      .orderBy(desc(blogPosts.publishedAt))
+      .limit(limit * 2); // Get more to filter by tags
+
+    // If we have tag IDs, prioritize posts with matching tags
+    if (tagIds.length > 0 && posts.length > 0) {
+      const postsWithScores = await Promise.all(
+        posts.map(async (post) => {
+          const postTags = await db
+            .select({ tagId: blogPostTags.tagId })
+            .from(blogPostTags)
+            .where(eq(blogPostTags.postId, post.id));
+
+          const postTagIds = postTags.map((t) => t.tagId);
+          const matchingTags = tagIds.filter((id) => postTagIds.includes(id));
+
+          return {
+            ...post,
+            tagMatchScore: matchingTags.length,
+          };
+        })
+      );
+
+      // Sort by tag matches first, then by publish date
+      const sortedPosts = postsWithScores.sort(
+        (a, b) => b.tagMatchScore - a.tagMatchScore
+      );
+
+      return sortedPosts.slice(0, limit);
+    }
+
+    return posts.slice(0, limit);
+  } catch (error) {
+    console.error("error fetching related blog posts", error);
+    return [];
   }
 }

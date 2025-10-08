@@ -1,17 +1,224 @@
 import { Metadata } from "next";
-import React from "react";
+import React, { Suspense } from "react";
+import {
+  getFilteredBlogPosts,
+  getAllBlogCategories,
+  getAllBlogTags,
+} from "@/lib/queries";
+import BlogCategoryFilter from "@/components/blog-category-filter";
+import BlogTagFilter from "@/components/blog-tag-filter";
+import BlogSearchFilter from "@/components/blog-search-filter";
+import BlogCard from "@/components/blog-card";
+import ProjectPagination from "@/components/project-pagination";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Card } from "@/components/ui/card";
 
 export const metadata: Metadata = {
-  title: "Blog",
-  description: "Blog",
+  title: "Blog - Conscious Club",
+  description:
+    "Read the latest articles, tutorials, and insights from the Conscious Club community",
 };
 
-const BlogPage = () => {
+export default async function BlogPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const categories = await getAllBlogCategories();
+  const tags = await getAllBlogTags();
+
+  const { page, query, category, tags: tagParams } = await searchParams;
+
+  const searchQuery = query as string;
+  const categorySlug = category as string;
+  const currentPage = Number(page) || 1;
+
+  const selectedTags =
+    typeof tagParams === "string"
+      ? tagParams.split(",").filter(Boolean)
+      : Array.isArray(tagParams)
+        ? tagParams
+        : [];
+
+  const limit = 9;
+  const offset = (currentPage - 1) * limit;
+
   return (
-    <div className="block-space-mini big-container">
-      <div></div>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header with Search */}
+      <header className="bg-white border-b border-gray-200 px-6 py-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-4">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Our Blog</h1>
+            <p className="text-muted-foreground">
+              Discover insights, tutorials, and stories from our community
+            </p>
+          </div>
+          <Suspense
+            fallback={<Skeleton className="h-12 w-full max-w-2xl rounded-lg" />}
+          >
+            <BlogSearchFilter />
+          </Suspense>
+        </div>
+      </header>
+
+      {/* Category Filter */}
+      {categories && categories.length > 0 && (
+        <Suspense fallback={<div>Loading categories...</div>}>
+          <BlogCategoryFilter
+            categories={categories.map((c) => ({
+              id: c.id,
+              name: c.name,
+              slug: c.slug,
+            }))}
+          />
+        </Suspense>
+      )}
+
+      {/* Tag Filter */}
+      {tags && tags.length > 0 && (
+        <Suspense fallback={<div>Loading tags...</div>}>
+          <BlogTagFilter
+            tags={tags.map((t) => ({
+              id: t.id,
+              name: t.name,
+              slug: t.slug,
+            }))}
+          />
+        </Suspense>
+      )}
+
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-6 py-8">
+        <div className="flex items-center justify-between mb-8">
+          <Suspense
+            fallback={<span className="text-gray-500">Loading...</span>}
+          >
+            <BlogPostCount
+              categorySlug={categorySlug}
+              tagSlugs={selectedTags}
+              searchQuery={searchQuery || ""}
+            />
+          </Suspense>
+        </div>
+
+        <Suspense
+          fallback={
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <Card key={index} className="overflow-hidden">
+                  <Skeleton className="h-48 w-full" />
+                  <div className="p-4 space-y-3">
+                    <Skeleton className="h-6 w-32" />
+                    <Skeleton className="h-5 w-full" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-3/4" />
+                  </div>
+                </Card>
+              ))}
+            </div>
+          }
+        >
+          <FetchAndDisplayBlogPosts
+            categorySlug={categorySlug}
+            tagSlugs={selectedTags}
+            searchQuery={searchQuery || ""}
+            limit={limit}
+            offset={offset}
+          />
+        </Suspense>
+      </main>
     </div>
   );
-};
+}
 
-export default BlogPage;
+async function BlogPostCount({
+  categorySlug,
+  tagSlugs,
+  searchQuery,
+}: {
+  categorySlug: string | undefined;
+  tagSlugs: string[] | string | undefined;
+  searchQuery: string;
+}) {
+  const { totalPosts } = await getFilteredBlogPosts(
+    categorySlug,
+    tagSlugs,
+    searchQuery,
+    0,
+    1
+  );
+
+  return (
+    <h2 className="text-2xl font-semibold text-gray-900">
+      {totalPosts} {totalPosts === 1 ? "Post" : "Posts"}
+      {searchQuery && (
+        <span className="text-lg font-normal text-muted-foreground ml-2">
+          matching "{searchQuery}"
+        </span>
+      )}
+    </h2>
+  );
+}
+
+async function FetchAndDisplayBlogPosts({
+  categorySlug,
+  tagSlugs,
+  searchQuery,
+  limit,
+  offset,
+}: {
+  categorySlug: string | undefined;
+  tagSlugs: string[] | string | undefined;
+  searchQuery: string | undefined;
+  limit: number;
+  offset: number;
+}) {
+  const { posts, totalPages, totalPosts } = await getFilteredBlogPosts(
+    categorySlug,
+    tagSlugs,
+    searchQuery,
+    offset,
+    limit
+  );
+
+  if (totalPosts === 0) {
+    return (
+      <div className="text-center py-12">
+        <div className="text-6xl mb-4">📝</div>
+        <h3 className="text-xl font-semibold text-gray-900 mb-2">
+          No posts found
+        </h3>
+        <p className="text-muted-foreground">
+          Try adjusting your filters or search query
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        {posts.map((post) => (
+          <BlogCard
+            key={post.id}
+            id={post.id}
+            title={post.title}
+            slug={post.slug}
+            excerpt={post.excerpt}
+            categoryName={post.categoryName}
+            categorySlug={post.categorySlug}
+            tags={post.tags}
+            readingTime={post.readingTime}
+            publishedAt={post.publishedAt}
+            featuredImage={post.featuredImage}
+            featuredImageAlt={post.featuredImageAlt}
+            viewCount={post.viewCount}
+          />
+        ))}
+      </div>
+
+      {totalPages > 1 && <ProjectPagination totalPages={totalPages} />}
+    </div>
+  );
+}
