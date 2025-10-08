@@ -30,6 +30,22 @@ export default async function AdminPage({
     <div className="block-space big-container">
       <div className="mb-4 flex flex-wrap items-center gap-2">
         <Button asChild>
+          <Link href="/">Home</Link>
+        </Button>
+
+        <Button asChild>
+          <Link href="/admin/add-blog-tags">Add Blog Tags</Link>
+        </Button>
+
+        <Button asChild>
+          <Link href="/admin/add-blog-categories">Add Blog Categories</Link>
+        </Button>
+
+        <Button asChild>
+          <Link href="/admin/add-blog-posts">Add Blog Posts</Link>
+        </Button>
+
+        <Button asChild>
           <Link href="/admin/add-bravo">Add Bravo</Link>
         </Button>
         <Button asChild>

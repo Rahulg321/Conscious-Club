@@ -11,6 +11,8 @@ import {
   user,
   verificationToken,
   follows,
+  blogTags,
+  blogCategories,
 } from "@repo/db/schema";
 import { eq, and, or, ilike, inArray, desc, count, sql } from "drizzle-orm";
 import { generateHashedPassword } from "./utils";
@@ -994,6 +996,46 @@ export async function getProjectByIdWithStats(projectId: string) {
       "An error occurred trying to get project by id with stats",
       error
     );
+    return null;
+  }
+}
+
+/**
+ * Get all blog tags
+ * @returns All blog tags
+ */
+export async function getAllBlogTags() {
+  try {
+    return await db
+      .select({
+        id: blogTags.id,
+        name: blogTags.name,
+        slug: blogTags.slug,
+        description: blogTags.description,
+      })
+      .from(blogTags);
+  } catch (error) {
+    console.error("error fetching blog tags");
+    return null;
+  }
+}
+
+/**
+ * Get all blog categories
+ * @returns All blog categories
+ */
+export async function getAllBlogCategories() {
+  try {
+    return await db
+      .select({
+        id: blogCategories.id,
+        name: blogCategories.name,
+        slug: blogCategories.slug,
+        description: blogCategories.description,
+      })
+      .from(blogCategories);
+  } catch (error) {
+    console.error("error fetching blog categories");
     return null;
   }
 }

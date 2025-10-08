@@ -16,6 +16,7 @@ const ADMIN_EMAILS = [
   "admin@consciousclub.com",
   "rahul@consciousclub.com",
   "rg5353070@gmail.com",
+  "rahulguptax14@gmail.com",
   "rahul@darkalphacapital.com",
   "info@ravisi.ms",
   "manavi@ravisi.ms",
