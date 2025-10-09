@@ -6,6 +6,7 @@ import ExplorersSections from "@/components/sections/explorers-section";
 import JoinPlatform from "@/components/sections/join-platform";
 import HeroSection from "@/components/sections/hero-section";
 import TitleHighlight from "@/components/title-highlight";
+import AheadSection from "@/components/sections/ahead-section";
 
 export const metadata: Metadata = {
   title: "ConsciousClubb — Create, Explore, Earn Bravos",
@@ -19,7 +20,7 @@ const HomePage = async () => {
       <HeroSection />
       <JoinPlatform />
       <ExplorersSections />
-      {/* <AheadSection /> */}
+      <AheadSection />
       {/* <TestimonialsSection /> */}
       <FAQSection />
       <JoinClubSection />

@@ -3,9 +3,19 @@ import type { NextRequest } from "next/server";
 import { auth } from "./auth";
 
 export async function middleware(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+
+  // Skip middleware for static assets, API routes, and specific paths
+  if (
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/api") ||
+    pathname.includes(".")
+  ) {
+    return NextResponse.next();
+  }
+
   // Get the session using the auth function
   const session = await auth();
-  const pathname = request.nextUrl.pathname;
 
   // Log the session
   console.log("=== MIDDLEWARE SESSION LOG ===");
@@ -50,11 +60,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    "/dashboard/:path*",
-    "/profile/:path*",
-    "/blog/:path*",
-    "/onboarding/:path*",
-    "/",
-  ],
+  matcher: ["/dashboard/:path*", "/profile/:path*", "/onboarding/:path*"],
 };

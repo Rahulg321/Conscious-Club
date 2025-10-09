@@ -163,10 +163,6 @@ async function DisplayUserProjectWork({
   return (
     <div className="mt-8">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
-        <div>
-          <h4>View Your Work</h4>
-        </div>
-
         <div className="flex items-center gap-2">
           <Button variant="outline" asChild>
             <Link href={`/profile/${currentUserId}/projects`}>View All</Link>

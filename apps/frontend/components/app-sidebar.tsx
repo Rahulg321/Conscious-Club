@@ -26,11 +26,14 @@ type AppSidebarProps = {
 
 export function AppSidebar({ user, pinnedBravo }: AppSidebarProps) {
   return (
-    <Sidebar className="border-r border-[#e2e3e6]" variant="inset">
+    <Sidebar
+      className="border-r border-[#e2e3e6] sidebar-shine"
+      variant="inset"
+    >
       <SidebarHeader className="p-2 border-b border-[#e2e3e6]">
         <div className="flex items-center gap-3">
           <div className=" mx-auto">
-            <Link href="/">
+            <Link className="cursor-pointer" href="/">
               <Image
                 src={CCLogo}
                 alt="ConsciousClub Logo"
@@ -45,20 +48,28 @@ export function AppSidebar({ user, pinnedBravo }: AppSidebarProps) {
         <SidebarNavLinks />
       </SidebarContent>
 
-      <SidebarFooter className="">
+      <SidebarFooter className="mt-auto">
         <div className="flex items-center gap-2 flex-col">
           {pinnedBravo ? (
-            <Image
-              src={pinnedBravo.image}
-              alt="Pinned Bravo"
-              width={200}
-              height={200}
-              className=""
-            />
+            <div className="relative w-full max-w-[180px] aspect-square">
+              <Image
+                src={pinnedBravo.image}
+                alt="Pinned Bravo"
+                fill
+                className="object-contain"
+              />
+            </div>
           ) : (
-            <Image src={BearSticker} alt="Bear Sticker" />
+            <div className="relative w-full max-w-[140px] aspect-square">
+              <Image
+                src={BearSticker}
+                alt="Bear Sticker"
+                fill
+                className="object-contain"
+              />
+            </div>
           )}
-          <Button variant="link" asChild>
+          <Button variant="link" asChild className="shrink-0">
             <Link href="/bravos">
               Collect Bravos <ArrowRight className="w-4 h-4" />
             </Link>
