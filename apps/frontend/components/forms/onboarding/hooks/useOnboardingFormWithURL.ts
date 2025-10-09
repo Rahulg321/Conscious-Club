@@ -1,5 +1,6 @@
 import { useState, useTransition, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { OnboardingFormData } from "../types";
 import { toast } from "sonner";
 
@@ -23,6 +24,7 @@ const initialFormData: OnboardingFormData = {
 export const useOnboardingFormWithURL = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { data: session, update: updateSession } = useSession();
 
   // Get current step from URL params, default to 1
   const currentStep = parseInt(searchParams.get("step") || "1", 10);
@@ -200,7 +202,15 @@ export const useOnboardingFormWithURL = () => {
           description: "You can now start exploring the platform",
         });
 
-        router.push("/profile");
+        console.log("🔄 Forcing session update...");
+        await updateSession();
+        console.log("✅ Session updated, redirecting to dashboard...");
+
+        router.push("/dashboard");
+
+        setTimeout(() => {
+          router.refresh();
+        }, 100);
       } catch (error) {
         console.error("Error submitting onboarding:", error);
         toast.error("Error submitting form", {

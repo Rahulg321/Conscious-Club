@@ -6,6 +6,18 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
+import { Metadata } from "next";
+import { getCachedUserById } from "@/lib/cached-queries";
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { userId } = await params;
+  const profileUser = await getCachedUserById(userId);
+
+  return {
+    title: `Projects ${profileUser?.name || "User"}`,
+    description: `${profileUser?.name} ${profileUser?.role} ${profileUser?.discipline} ${profileUser?.location}`,
+  };
+}
 
 type Props = {
   params: Promise<{ userId: string }>;

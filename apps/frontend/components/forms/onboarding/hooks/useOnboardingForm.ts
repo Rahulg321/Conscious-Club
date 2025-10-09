@@ -190,7 +190,8 @@ export const useOnboardingForm = () => {
           description: "You can now start exploring the platform",
         });
 
-        router.push("/profile");
+        // Force full page reload to refresh session with updated onboarding status
+        window.location.href = "/dashboard";
       } catch (error) {
         console.error("Error submitting onboarding:", error);
         toast.error("Error submitting form", {

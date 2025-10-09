@@ -118,6 +118,11 @@ export const POST = async (req: NextRequest) => {
       })
       .where(eq(user.id, userSession.user.id));
 
+    console.log(
+      "✅ Database updated - onboardingCompleted set to true for user:",
+      userSession.user.id
+    );
+
     // Handle project creation for creators and organizers (optional)
     if (userRole !== "explorer" && projectName && projectDescription) {
       let projectCoverImageUrl = null;

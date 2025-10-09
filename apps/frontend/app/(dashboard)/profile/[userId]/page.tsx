@@ -116,9 +116,10 @@ const ProfilePage = async ({ params }: Props) => {
               location={currentUser.location || ""}
             />
 
-            <Button variant="outline" className="">
+            {/* <Button variant="outline" className="">
               <Share /> Share
             </Button>
+             */}
           </div>
         </div>
 

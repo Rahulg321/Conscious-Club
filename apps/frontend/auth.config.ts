@@ -133,7 +133,7 @@ export const authConfig = {
           if (dbUser) {
             token.name = dbUser.name;
             token.image = dbUser.image;
-            token.onboardingCompleted = dbUser.onboardingCompleted;
+            token.onboardingCompleted = dbUser.onboardingCompleted ?? false;
             // Ensure isAdmin is set correctly even on token refresh
             if (dbUser.email) {
               token.isAdmin = isAdminEmail(dbUser.email);
@@ -141,6 +141,10 @@ export const authConfig = {
           }
         } catch (error) {
           console.error("Error fetching user data:", error);
+          // Ensure onboardingCompleted has a default value on error
+          if (token.onboardingCompleted === undefined) {
+            token.onboardingCompleted = false;
+          }
         }
       }
 
@@ -160,7 +164,9 @@ export const authConfig = {
           "Created access token for user:",
           user.email,
           "isAdmin:",
-          token.isAdmin
+          token.isAdmin,
+          "onboardingCompleted:",
+          token.onboardingCompleted
         );
       }
 
@@ -175,7 +181,16 @@ export const authConfig = {
         (session.user as any).accessToken = token.accessToken;
         (session.user as any).type = token.type;
         (session.user as any).isAdmin = token.isAdmin;
-        (session.user as any).onboardingCompleted = token.onboardingCompleted;
+        (session.user as any).onboardingCompleted =
+          token.onboardingCompleted ?? false;
+
+        // Debug log to verify onboarding status is being set
+        console.log(
+          "Session callback - User:",
+          session.user.email,
+          "onboardingCompleted:",
+          token.onboardingCompleted
+        );
       }
       return session;
     },
