@@ -79,8 +79,8 @@ const HeroSection = () => {
           </div>
 
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-medium mb-6 max-w-4xl leading-tight">
-            All-in-One platform for Creators, <br />
-            Brands & <span className="italic itc-font gradient-text">You.</span>
+            Building the Creator economy of{" "}
+            <span className="italic itc-font gradient-text">tomorrow.</span>
           </h1>
 
           <p className="text-base sm:text-lg text-muted-foreground font-semibold mb-8 max-w-xl leading-relaxed">
@@ -92,7 +92,7 @@ const HeroSection = () => {
             className="bg-black hover:bg-gray-800 text-white px-6 py-4 text-base font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-200"
             asChild
           >
-            <Link href="/login">Join the Club</Link>
+            <Link href="/login">Join the Clubb</Link>
           </Button>
         </div>
       </div>

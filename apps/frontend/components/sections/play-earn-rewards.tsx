@@ -11,14 +11,12 @@ export default function PlayEarnRewards({ className }: { className?: string }) {
           <div className="order-2 lg:order-1 flex items-center px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10">
             <div className="w-full max-w-xl">
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white leading-tight mb-3 sm:mb-4">
-                Play and Earn
-                <br />
-                Rewards
+                Play, Earn & Flex!
               </h2>
 
               {/* Subheading */}
               <p className="text-xs sm:text-sm lg:text-base text-white/90 mb-4 sm:mb-6 font-light leading-relaxed">
-                Build your fan circle & make real connections
+                Take on fun challenges - rack up Bravos!
               </p>
 
               {/* Game Buttons Grid */}
@@ -35,10 +33,7 @@ export default function PlayEarnRewards({ className }: { className?: string }) {
                 <Button className="bg-white text-[#6366f1] px-3 py-2 rounded-2xl text-[10px] sm:text-xs font-medium hover:bg-white/90 whitespace-nowrap">
                   Give away
                 </Button>
-                <Button
-                  variant="outline"
-                  className="border-2 border-white/30 text-white hover:bg-white/10 hover:border-white/50 px-3 py-2 rounded-2xl text-[10px] sm:text-xs font-medium whitespace-nowrap"
-                >
+                <Button className="bg-white text-[#6366f1] px-3 py-2 rounded-2xl text-[10px] sm:text-xs font-medium hover:bg-white/90 whitespace-nowrap">
                   More games are coming soon...
                 </Button>
               </div>

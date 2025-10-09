@@ -13,10 +13,10 @@ export function Footer() {
         <div className="space-y-6">
           <div className="space-y-2">
             <h2 className="text-xl md:text-2xl font-semibold text-gray-900 leading-tight">
-              Subscribe to our newsletter for
+              Get your weekly dose of creativity.
             </h2>
             <h2 className="text-xl md:text-2xl font-semibold text-gray-900 leading-tight">
-              weekly updates on our Creativity
+              inspo straight to your inbox.
             </h2>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 max-w-md">

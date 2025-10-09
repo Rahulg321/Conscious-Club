@@ -15,7 +15,7 @@ const TitleHighlight = () => {
             font-semibold
           "
       >
-        Conscious Club
+        Conscious Clubb
       </h1>
     </div>
   );

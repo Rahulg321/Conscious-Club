@@ -11,34 +11,33 @@ import { cn } from "@/lib/utils";
 
 const faqData = [
   {
+    question: "Why the extra 'b' in ConsciousClubb?",
+    answer:
+      "Because one ‘b’ wasn’t enough. The extra b = bravos + benefits + more bang for your creativity + more clubB!",
+  },
+  {
     question: "Who can be an explorer on CC?",
     answer:
       "Doesn't matter if you're into matcha, checkered boxers, K-dramas, Marvel, or cat memes. If you love trying trends before they're cool, you belong here. (p.s. if shopping is your guilty pleasure - congrats, you qualify.)",
   },
   {
     question: "Do I need to be a professional creator to join?",
-    answer:
-      "Not at all! We welcome creators of all levels, from beginners to professionals. What matters most is your passion for creating and exploring new trends.",
-  },
-  {
-    question: "What do I get as an explorer?",
-    answer:
-      "As an explorer, you'll get early access to trending products, exclusive rewards, opportunities to collaborate with brands, and a community of like-minded creators to connect with.",
+    answer: "Not at all! Creators of all levels are welcome.",
   },
   {
     question: "Is there a cost to join?",
     answer:
-      "Joining CC is completely free! There are no membership fees or hidden costs. We believe in making creativity accessible to everyone.",
+      "Joining CC is completely free! We believe in making creativity accessible to everyone :)",
   },
   {
-    question: "How do rewards work right now?",
+    question: "What are CC Bravos? How to earn them?",
     answer:
-      "Our reward system is based on your engagement and content quality. You can earn points through creating content, engaging with the community, and completing challenges, which can be redeemed for exclusive perks and products.",
+      "Bravos are CC’s tokens of celebration and achievement. They’re how you show off your vibe, your style, your wins, and your community cred — while also unlocking real perks along the way.",
   },
   {
-    question: "Can I upload my past portfolio work?",
+    question: "What are the different Types of Bravos?",
     answer:
-      "Yes! We encourage you to showcase your previous work. You can upload your portfolio to help brands and other creators discover your unique style and expertise.",
+      "Flex Bravos — Pin them on your profile to show your personality, your vibe, flex your style, or start a conversation!..Utility Bravos — They are earned through challenges, collabs or hitting task milestones. They are your power- ups that unlock exclusive goodies n surprises.",
   },
   {
     question: "When will brands come onboard?",

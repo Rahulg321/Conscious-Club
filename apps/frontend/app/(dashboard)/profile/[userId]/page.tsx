@@ -90,9 +90,11 @@ const ProfilePage = async ({ params }: Props) => {
               </p>
 
               <div className="flex flex-wrap gap-2 justify-center md:justify-start">
-                <span className="px-3 py-1 bg-[#cdff98] text-[#42354a] text-sm font-medium rounded-full">
-                  {currentUser.role || "No Role Yet"}
-                </span>
+                {currentUser.role && (
+                  <span className="px-3 py-1 bg-[#cdff98] text-[#42354a] text-sm font-medium rounded-full">
+                    {currentUser.role}
+                  </span>
+                )}
                 <span className="px-3 py-1 bg-[#f9fafb] text-[#666a6e] text-sm font-medium rounded-full border border-[#e2e3e6]">
                   {currentUser.type || "Explorer"}
                 </span>

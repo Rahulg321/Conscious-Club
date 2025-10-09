@@ -10,12 +10,10 @@ export default function CommunityBanner({ className }: { className?: string }) {
           <div className="overflow-hidden">
             <div className="px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10">
               <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-white leading-tight mb-3 sm:mb-4">
-                Grow Your
-                <br />
-                Community
+                Grow Your Community
               </h2>
               <p className="text-xs sm:text-sm lg:text-base text-white/90 font-medium max-w-md leading-relaxed">
-                Build your fan circle & make real connections
+                Build your global fanbase, let your tribe find you :)
               </p>
             </div>
             <div className="relative h-[140px] sm:h-[160px] lg:h-[220px]">

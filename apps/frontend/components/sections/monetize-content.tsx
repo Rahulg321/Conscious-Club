@@ -18,11 +18,11 @@ export default function MonetizeContentSection({
               <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-white leading-tight mb-3 sm:mb-4">
                 Monetize
                 <br />
-                Your Content
+                Your Creativity
               </h2>
 
               <p className="text-xs sm:text-sm lg:text-base text-[#dddfe1] mb-4 sm:mb-6 font-light leading-relaxed">
-                Turn your creativity into cool rewards
+                Turn your art, videos, beats, or words into perks
               </p>
 
               <div className="space-y-2 sm:space-y-3">

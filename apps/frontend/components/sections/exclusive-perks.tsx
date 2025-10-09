@@ -19,14 +19,12 @@ export default function ExclusivePerks({ className }: { className?: string }) {
           <div className="bg-gradient-to-br from-[#617200] to-[#8a9f00] flex flex-col justify-center px-4 sm:px-6 lg:px-8 py-6 lg:py-10">
             <div className="max-w-lg">
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white leading-tight mb-3 sm:mb-4">
-                Exclusive
-                <br />
-                Perks
+                Unlock Perks
               </h2>
 
               {/* Subheading */}
               <p className="text-xs sm:text-sm lg:text-base text-white/90 font-light leading-relaxed">
-                Unlock deals & surprises you won't find anywhere else
+                Get exclusive rewards you won’t find anywhere else
               </p>
             </div>
           </div>

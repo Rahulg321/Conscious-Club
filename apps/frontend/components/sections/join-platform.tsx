@@ -65,10 +65,8 @@ const JoinPlatform = () => {
               Why Join Our Platform?
             </h2>
             <p className="text-base text-muted-foreground max-w-xl">
-              Because loyalty and creativity should feel like pleasure and
-              comfort, not work.
-              <br />
-              CC gives you a space to explore, create, and collaborate.
+              Because we’re the global playground for creativity, fun and
+              Bravos.
             </p>
           </div>
           <div className="boxes space-y-12">

@@ -22,7 +22,7 @@ const JoinClubSection = () => {
           <p className="text-white/90 text-base sm:text-lg lg:text-xl font-light leading-relaxed max-w-2xl mx-auto">
             Run creative, gamified campaigns,
             <br />
-            connect with diverse UGC and grow community
+            connect with diverse creators and grow community
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center max-w-xl mx-auto w-full">

@@ -22,8 +22,8 @@ const ExplorersSections = async () => {
         }}
         features={[
           { text: "Join fun and engaging challenges" },
-          { text: "Win rewards while learning new things" },
-          { text: "Discover exciting ideas and trends" },
+          { text: "Collect bravos & build your community" },
+          { text: "Discover new creators, trends & communities worldwide" },
         ]}
         accentClassName="text-[rgba(81,74,219,1)]"
         iconClassName="text-purple-600"
@@ -38,9 +38,9 @@ const ExplorersSections = async () => {
           alt: "Explorers app interface with person using phone",
         }}
         features={[
-          { text: "Showcase your talent to a wide audience" },
-          { text: "Participate in campaigns and challenges" },
-          { text: "Earn money, gigs and build your portfolio" },
+          { text: "Flex your talent, globally" },
+          { text: "Create fun collabs that earn you bravos" },
+          { text: "Grow your community & unlock perks" },
         ]}
         accentClassName="text-[rgba(234,89,31,1)]"
         iconClassName="text-[rgba(224,30,90,1)]"
@@ -55,9 +55,9 @@ const ExplorersSections = async () => {
           alt: "Explorers app interface with person using phone",
         }}
         features={[
-          { text: "Create and run large-scale challenges easily" },
-          { text: "Attract participants and boost engagement" },
-          { text: "Connect with a vibrant creative community" },
+          { text: "Onboard & manage multiple creators under one hub" },
+          { text: "Run large-scale community campaigns" },
+          { text: "Connect & grow a vibrant creative community" },
         ]}
         accentClassName="text-purple-600"
         iconClassName="text-[rgba(255,153,0,1)]"

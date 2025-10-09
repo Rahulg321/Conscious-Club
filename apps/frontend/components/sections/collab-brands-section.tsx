@@ -22,14 +22,12 @@ const CollabBrandsSection = ({ className }: { className?: string }) => {
             <div className="max-w-lg">
               {/* Main Heading */}
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white leading-tight mb-2 sm:mb-3">
-                Collab With
-                <br />
-                Brands
+                Do Cool Collabs
               </h2>
 
               {/* Subheading */}
               <p className="text-xs sm:text-sm lg:text-base text-white/90 mb-4 lg:mb-6 font-light leading-relaxed">
-                Work with the brands you love
+                Create mashups across disciplines. Create magic together!
               </p>
 
               {/* Brand Logos Grid */}
