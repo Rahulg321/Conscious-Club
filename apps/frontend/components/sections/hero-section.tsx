@@ -84,8 +84,8 @@ const HeroSection = () => {
           </h1>
 
           <p className="text-base sm:text-lg text-muted-foreground font-semibold mb-8 max-w-xl leading-relaxed">
-            Join the platform that connects curious minds, creative talent and
-            brands through play and rewards.
+            Join the platform that connects curious minds and creative talent
+            through self- expression, play and rewards.
           </p>
 
           <Button
@@ -96,18 +96,18 @@ const HeroSection = () => {
           </Button>
         </div>
       </div>
-      {/* 
+
       <div className="relative py-8">
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
           <Image
             src={RolloutCenter}
             alt="Rollout Center"
-            className="w-full h-full object-cover max-w-xs"
+            className="object-cover w-auto h-80 md:h-[28rem] xl:h-[30rem] max-h-[90vh] rounded-xl"
           />
         </div>
 
         <HeroMarqueeSection />
-      </div> */}
+      </div>
     </div>
   );
 };
