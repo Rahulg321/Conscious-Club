@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { prata, urbanist } from "@/app/fonts";
+import { prata, poppins } from "@/app/fonts";
 import "../globals.css";
 import { Footer } from "@/components/footer";
 import Header from "@/components/header";
@@ -23,7 +23,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${prata.variable} ${urbanist.variable} antialiased`}>
+      <body className={`${prata.variable} ${poppins.variable} antialiased`}>
         <SessionProvider>
           <Header userSession={userSession} />
           {children}

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { prata, urbanist } from "@/app/fonts";
+import { prata, poppins } from "@/app/fonts";
 import "../globals.css";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { SidebarTrigger } from "@/components/ui/sidebar";
@@ -31,7 +31,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${prata.variable} ${urbanist.variable} antialiased`}>
+      <body className={`${prata.variable} ${poppins.variable} antialiased`}>
         <SessionProvider>
           <SidebarProvider>
             <div className="flex min-h-screen w-full ">

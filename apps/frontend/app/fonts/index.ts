@@ -1,4 +1,4 @@
-import { Prata, Urbanist } from "next/font/google";
+import { Prata, Urbanist, Poppins } from "next/font/google";
 
 export const prata = Prata({
   variable: "--font-prata",
@@ -8,6 +8,12 @@ export const prata = Prata({
 
 export const urbanist = Urbanist({
   variable: "--font-urbanist",
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800"],
+});
+
+export const poppins = Poppins({
+  variable: "--font-poppins",
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800"],
 });
