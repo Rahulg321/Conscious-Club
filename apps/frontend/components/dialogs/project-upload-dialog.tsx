@@ -24,10 +24,9 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import ProjectUploadForm from "../forms/project-upload-form";
 import useMediaQuery from "@/hooks/use-media-query";
-import { Tags } from "@repo/db/schema";
 import { Plus } from "lucide-react";
 
-export default function ProjectUploadDialog({ allTags }: { allTags: Tags[] }) {
+export default function ProjectUploadDialog() {
   const [open, setOpen] = React.useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
@@ -42,13 +41,9 @@ export default function ProjectUploadDialog({ allTags }: { allTags: Tags[] }) {
         <DialogContent className="sm:max-w-[700px]">
           <DialogHeader>
             <DialogTitle>Upload Project</DialogTitle>
-            <DialogDescription>
-              Make changes to your project here. Click save when you&apos;re
-              done.
-            </DialogDescription>
           </DialogHeader>
           <ScrollArea className="max-h-[600px] pr-4">
-            <ProjectUploadForm setDialogOpen={setOpen} allTags={allTags} />
+            <ProjectUploadForm setDialogOpen={setOpen} />
           </ScrollArea>
         </DialogContent>
       </Dialog>
@@ -70,7 +65,7 @@ export default function ProjectUploadDialog({ allTags }: { allTags: Tags[] }) {
           </DrawerDescription>
         </DrawerHeader>
         <ScrollArea className="max-h-[500px] px-4">
-          <ProjectUploadForm setDialogOpen={setOpen} allTags={allTags} />
+          <ProjectUploadForm setDialogOpen={setOpen} />
         </ScrollArea>
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>

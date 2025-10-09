@@ -2,7 +2,7 @@ import { auth } from "@/auth";
 import { uploadFile } from "@/lib/cloud-storage";
 import { projectUploadSchema } from "@/lib/schemas/project-upload-schema";
 import { db } from "@repo/db";
-import { project, projectTags } from "@repo/db/schema";
+import { project } from "@repo/db/schema";
 import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -17,9 +17,13 @@ export const POST = async (req: NextRequest) => {
   const projectCover = formData.get("projectCover");
   const projectName = formData.get("projectName");
   const projectDescription = formData.get("projectDescription");
-  const tagId = formData.get("tagId") as string;
   const projectLink = formData.get("projectLink");
+  const dedicatedToPerson = formData.get("dedicatedToPerson");
+  const dedicatedToBrand = formData.get("dedicatedToBrand");
+  const dedicatedToCause = formData.get("dedicatedToCause");
   const additionalImages = formData.getAll("additionalImages");
+  const coverVideo = formData.get("coverVideo");
+  const videoDuration = formData.get("videoDuration");
 
   if (!projectCover)
     return NextResponse.json({ error: "File is required" }, { status: 400 });
@@ -29,9 +33,13 @@ export const POST = async (req: NextRequest) => {
     projectName,
     projectDescription,
     projectLink,
-    tagId: tagId as string,
+    dedicatedToPerson: dedicatedToPerson || undefined,
+    dedicatedToBrand: dedicatedToBrand || undefined,
+    dedicatedToCause: dedicatedToCause || undefined,
     additionalImages:
       additionalImages.length > 0 ? additionalImages : undefined,
+    coverVideo: coverVideo || undefined,
+    videoDuration: videoDuration ? Number(videoDuration) : undefined,
   });
 
   if (!validatedData.success) {
@@ -80,6 +88,20 @@ export const POST = async (req: NextRequest) => {
     }
   }
 
+  // Upload video if provided
+  let videoUrl: string | null = null;
+  if (validatedData.data.coverVideo) {
+    try {
+      videoUrl = await uploadFile(validatedData.data.coverVideo);
+      if (!videoUrl) {
+        console.warn("Video upload failed");
+      }
+    } catch (error) {
+      console.error("Error uploading video:", error);
+      // Continue with project creation even if video upload fails
+    }
+  }
+
   try {
     const [insertedProject] = await db
       .insert(project)
@@ -88,8 +110,12 @@ export const POST = async (req: NextRequest) => {
         link: validatedData.data.projectLink || null,
         description: validatedData.data.projectDescription,
         coverImage: url,
+        coverVideo: videoUrl,
         additionalImages:
           additionalImageUrls.length > 0 ? additionalImageUrls : null,
+        dedicatedToPerson: validatedData.data.dedicatedToPerson || null,
+        dedicatedToBrand: validatedData.data.dedicatedToBrand || null,
+        dedicatedToCause: validatedData.data.dedicatedToCause || null,
         userId: userSession.user.id,
       })
       .returning();
@@ -101,11 +127,6 @@ export const POST = async (req: NextRequest) => {
         { status: 500 }
       );
     }
-
-    await db.insert(projectTags).values({
-      projectId: insertedProject?.id as string,
-      tagId: validatedData.data.tagId,
-    });
 
     revalidatePath(`/profile`);
     revalidatePath(`/profile/${userSession.user.id}`);

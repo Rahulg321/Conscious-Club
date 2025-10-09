@@ -978,6 +978,7 @@ export async function getProjectByIdWithStats(projectId: string) {
         id: project.id,
         name: project.name,
         link: project.link,
+        // coverVideo: project.coverVideo,
         description: project.description,
         coverImage: project.coverImage,
         logoImage: project.logoImage,

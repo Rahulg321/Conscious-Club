@@ -17,27 +17,17 @@ import {
   FormDescription,
 } from "../ui/form";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
-import {
   projectUploadSchema,
   type ProjectUploadFormData,
 } from "@/lib/schemas/project-upload-schema";
 import { toast } from "sonner";
-import { X, Plus, ImagePlus } from "lucide-react";
-import { Tags } from "@repo/db/schema";
+import { X, Plus, ImagePlus, Video } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 function ProjectUploadForm({
   setDialogOpen,
-  allTags,
 }: {
   setDialogOpen: (open: boolean) => void;
-  allTags: Tags[];
 }) {
   const [isSubmitting, startTransition] = useTransition();
   const router = useRouter();
@@ -48,7 +38,9 @@ function ProjectUploadForm({
       projectName: "",
       projectDescription: "",
       projectLink: "",
-      tagId: "",
+      dedicatedToPerson: "",
+      dedicatedToBrand: "",
+      dedicatedToCause: "",
       additionalImages: [],
     },
   });
@@ -57,18 +49,30 @@ function ProjectUploadForm({
   const [additionalImagePreviews, setAdditionalImagePreviews] = useState<
     string[]
   >([]);
+  const [videoPreviewUrl, setVideoPreviewUrl] = useState<string | null>(null);
+  const [videoDuration, setVideoDuration] = useState<number | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const additionalImagesRef = useRef<HTMLInputElement>(null);
+  const videoRef = useRef<HTMLInputElement>(null);
 
   // Revoke object URLs on unmount
   useEffect(() => {
     return () => {
       if (coverPreviewUrl) URL.revokeObjectURL(coverPreviewUrl);
       additionalImagePreviews.forEach((url) => URL.revokeObjectURL(url));
+      if (videoPreviewUrl) URL.revokeObjectURL(videoPreviewUrl);
     };
-  }, [coverPreviewUrl, additionalImagePreviews]);
+  }, [coverPreviewUrl, additionalImagePreviews, videoPreviewUrl]);
 
   const onSubmit = async (data: ProjectUploadFormData) => {
+    // Validate video duration if video is provided
+    if (data.coverVideo && videoDuration) {
+      if (videoDuration < 5 || videoDuration > 10) {
+        toast.error("Video must be between 5 and 10 seconds long");
+        return;
+      }
+    }
+
     startTransition(async () => {
       try {
         const formData = new FormData();
@@ -76,13 +80,23 @@ function ProjectUploadForm({
         formData.append("projectName", data.projectName);
         formData.append("projectDescription", data.projectDescription);
         formData.append("projectLink", data.projectLink || "");
-        formData.append("tagId", data.tagId);
+        formData.append("dedicatedToPerson", data.dedicatedToPerson || "");
+        formData.append("dedicatedToBrand", data.dedicatedToBrand || "");
+        formData.append("dedicatedToCause", data.dedicatedToCause || "");
 
         // Append additional images if any
         if (data.additionalImages && data.additionalImages.length > 0) {
           data.additionalImages.forEach((image) => {
             formData.append("additionalImages", image);
           });
+        }
+
+        // Append video if provided
+        if (data.coverVideo) {
+          formData.append("coverVideo", data.coverVideo);
+          if (videoDuration) {
+            formData.append("videoDuration", videoDuration.toString());
+          }
         }
 
         const response = await fetch("/api/upload-project", {
@@ -104,8 +118,11 @@ function ProjectUploadForm({
         form.reset();
         if (coverPreviewUrl) URL.revokeObjectURL(coverPreviewUrl);
         additionalImagePreviews.forEach((url) => URL.revokeObjectURL(url));
+        if (videoPreviewUrl) URL.revokeObjectURL(videoPreviewUrl);
         setCoverPreviewUrl(null);
         setAdditionalImagePreviews([]);
+        setVideoPreviewUrl(null);
+        setVideoDuration(null);
         setDialogOpen(false);
         router.refresh();
       } catch (error) {
@@ -243,30 +260,57 @@ function ProjectUploadForm({
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="tagId"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Tag</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <FormLabel>Dedications (Optional)</FormLabel>
+            <FormDescription>
+              Would you like to dedicate this to someone? — a person, a brand,
+              or a cause that inspired it?
+            </FormDescription>
+          </div>
+
+          <FormField
+            control={form.control}
+            name="dedicatedToPerson"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>A Person</FormLabel>
                 <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a tag" />
-                  </SelectTrigger>
+                  <Input placeholder="Enter person's name" {...field} />
                 </FormControl>
-                <SelectContent>
-                  {allTags.map((tag) => (
-                    <SelectItem key={tag.id} value={tag.id}>
-                      {tag.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="dedicatedToBrand"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>A Brand</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter brand name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="dedicatedToCause"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>A Cause</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter cause name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         <FormField
           control={form.control}
@@ -377,6 +421,111 @@ function ProjectUploadForm({
                           <Plus className="mr-2 h-4 w-4" />
                           Add More Images ({value.length}/5)
                         </Button>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="coverVideo"
+          render={({ field: { onChange, value, ...field } }) => (
+            <FormItem>
+              <FormLabel>Cover Video (Optional)</FormLabel>
+              <FormDescription>
+                Upload a video between 5-10 seconds to showcase your project
+              </FormDescription>
+              <FormControl>
+                <div className="space-y-3">
+                  <input
+                    {...field}
+                    ref={videoRef}
+                    type="file"
+                    accept="video/mp4,video/webm,video/quicktime"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        // Create video element to check duration
+                        const videoElement = document.createElement("video");
+                        videoElement.preload = "metadata";
+
+                        videoElement.onloadedmetadata = () => {
+                          window.URL.revokeObjectURL(videoElement.src);
+                          const duration = videoElement.duration;
+                          setVideoDuration(duration);
+
+                          if (duration < 5 || duration > 10) {
+                            toast.error(
+                              "Video must be between 5 and 10 seconds long"
+                            );
+                            if (videoRef.current) videoRef.current.value = "";
+                            return;
+                          }
+
+                          onChange(file as unknown as File);
+                          const nextUrl = URL.createObjectURL(file);
+                          if (videoPreviewUrl)
+                            URL.revokeObjectURL(videoPreviewUrl);
+                          setVideoPreviewUrl(nextUrl);
+                        };
+
+                        videoElement.src = URL.createObjectURL(file);
+                      } else {
+                        if (videoPreviewUrl)
+                          URL.revokeObjectURL(videoPreviewUrl);
+                        setVideoPreviewUrl(null);
+                        setVideoDuration(null);
+                      }
+                    }}
+                  />
+
+                  {!videoPreviewUrl && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => videoRef.current?.click()}
+                      className="w-full"
+                    >
+                      <Video className="mr-2 h-4 w-4" />
+                      Add Cover Video
+                    </Button>
+                  )}
+
+                  {value && videoPreviewUrl && (
+                    <div className="rounded-md border p-3">
+                      <div className="relative mx-auto">
+                        <video
+                          src={videoPreviewUrl}
+                          controls
+                          className="w-full h-48 rounded-md"
+                        />
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="sm"
+                          className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0"
+                          onClick={() => {
+                            if (videoPreviewUrl)
+                              URL.revokeObjectURL(videoPreviewUrl);
+                            setVideoPreviewUrl(null);
+                            setVideoDuration(null);
+                            onChange(undefined as unknown as File);
+                            if (videoRef.current) videoRef.current.value = "";
+                          }}
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </div>
+                      {videoDuration && (
+                        <p className="text-sm text-muted-foreground mt-2 text-center">
+                          Duration: {videoDuration.toFixed(1)}s
+                        </p>
                       )}
                     </div>
                   )}

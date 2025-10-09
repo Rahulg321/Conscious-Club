@@ -31,10 +31,7 @@ const ProjectsPage = async ({ params }: Props) => {
   if (!userSession) redirect("/login");
   if (userSession.user.id !== userId) redirect("/");
 
-  const [projects, allTags] = await Promise.all([
-    getUserProjects(userId),
-    getAllTags(),
-  ]);
+  const projects = await getUserProjects(userId);
 
   return (
     <div className="px-4 md:px-8 py-6">
@@ -49,7 +46,7 @@ const ProjectsPage = async ({ params }: Props) => {
           <Button variant="outline" asChild>
             <Link href={`/profile/${userId}`}>Back to Profile</Link>
           </Button>
-          <ProjectUploadDialog allTags={allTags || []} />
+          <ProjectUploadDialog />
         </div>
       </div>
 

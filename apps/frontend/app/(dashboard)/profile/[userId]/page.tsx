@@ -155,10 +155,7 @@ async function DisplayUserProjectWork({
 }: {
   currentUserId: string;
 }) {
-  const [projects, allTags] = await Promise.all([
-    getUserProjects(currentUserId),
-    getAllTags(),
-  ]);
+  const projects = await getUserProjects(currentUserId);
 
   return (
     <div className="mt-8">
@@ -168,7 +165,7 @@ async function DisplayUserProjectWork({
             <Link href={`/profile/${currentUserId}/projects`}>View All</Link>
           </Button>
 
-          <ProjectUploadDialog allTags={allTags || []} />
+          <ProjectUploadDialog />
         </div>
       </div>
 

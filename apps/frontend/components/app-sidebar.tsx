@@ -26,10 +26,7 @@ type AppSidebarProps = {
 
 export function AppSidebar({ user, pinnedBravo }: AppSidebarProps) {
   return (
-    <Sidebar
-      className="border-r border-[#e2e3e6] sidebar-shine"
-      variant="inset"
-    >
+    <Sidebar className="">
       <SidebarHeader className="p-2 border-b border-[#e2e3e6]">
         <div className="flex items-center gap-3">
           <div className=" mx-auto">

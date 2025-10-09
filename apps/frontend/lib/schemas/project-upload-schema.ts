@@ -14,6 +14,18 @@ const imageFileSchema = z
     "Only JPEG, JPG, PNG, and WebP files are allowed"
   );
 
+const videoFileSchema = z
+  .instanceof(File)
+  .refine(
+    (file) => file.size <= 50 * 1024 * 1024,
+    "Video size must be less than 50MB"
+  )
+  .refine(
+    (file) =>
+      ["video/mp4", "video/webm", "video/quicktime"].includes(file.type),
+    "Only MP4, WebM, and MOV video files are allowed"
+  );
+
 export const projectUploadSchema = z.object({
   projectCover: imageFileSchema,
   projectName: z
@@ -33,11 +45,24 @@ export const projectUploadSchema = z.object({
       (val) => !val || z.string().url().safeParse(val).success,
       "Please enter a valid URL"
     ),
-  tagId: z.string().min(1, "Please select a tag").uuid("Invalid tag selected"),
+  dedicatedToPerson: z
+    .string()
+    .max(100, "Person name must be less than 100 characters")
+    .optional(),
+  dedicatedToBrand: z
+    .string()
+    .max(100, "Brand name must be less than 100 characters")
+    .optional(),
+  dedicatedToCause: z
+    .string()
+    .max(100, "Cause name must be less than 100 characters")
+    .optional(),
   additionalImages: z
     .array(imageFileSchema)
     .max(5, "You can upload up to 5 additional images")
     .optional(),
+  coverVideo: videoFileSchema.optional(),
+  videoDuration: z.number().optional(),
 });
 
 export type ProjectUploadFormData = z.infer<typeof projectUploadSchema>;
