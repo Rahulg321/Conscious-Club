@@ -1,8 +1,9 @@
 import Image from "next/image";
-import Rollout1 from "@/public/CC_LandingPage_Rollout1.png";
-import Rollout2 from "@/public/CC_LandingPage_Rollout2.png";
-import Rollout3 from "@/public/CC_LandingPage_Rollout3.png";
-import Rollout4 from "@/public/CC_LandingPage_Rollout4.png";
+import Rollout1 from "@/public/CC_ROLLOUT_1.png";
+import Rollout2 from "@/public/CC_ROLLOUT_2.png";
+import Rollout3 from "@/public/CC_ROLLOUT_3.png";
+import Rollout4 from "@/public/CC_ROLLOUT_4.png";
+import Rollout5 from "@/public/CC_ROLLOUT_5.png";
 
 import React from "react";
 import { Marquee } from "../ui/marquee";
@@ -13,6 +14,7 @@ const HeroMarqueeSection = () => {
     { src: Rollout2, alt: "Rollout 2" },
     { src: Rollout3, alt: "Rollout 3" },
     { src: Rollout4, alt: "Rollout 4" },
+    { src: Rollout5, alt: "Rollout 5" },
   ];
 
   return (
