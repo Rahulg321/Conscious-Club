@@ -21,18 +21,14 @@ const HeroMarqueeSection = () => {
     <div>
       <Marquee className="[--gap:1rem]">
         {images.map((image, index) => (
-          <div
-            key={index}
-            className="relative w-64 md:w-80 aspect-[3/4] overflow-hidden"
-          >
+          <div key={index} className="relative w-64 md:w-80 aspect-[3/4]">
             <Image
               src={image.src}
               alt={image.alt}
               fill
               priority
-              quality={95}
               sizes="(max-width: 768px) 256px, (max-width: 1024px) 320px, 384px"
-              className="object-cover object-center"
+              className="object-contain"
             />
           </div>
         ))}
