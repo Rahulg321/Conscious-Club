@@ -3,6 +3,8 @@ import type { NextRequest } from "next/server";
 import { auth } from "./auth";
 
 export async function middleware(request: NextRequest) {
+  console.log("middleware");
+
   const pathname = request.nextUrl.pathname;
 
   // Skip middleware for static assets, API routes, and specific paths

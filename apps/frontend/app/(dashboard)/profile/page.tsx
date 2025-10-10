@@ -5,11 +5,11 @@ import React from "react";
 const page = async () => {
   const userSession = await auth();
 
-  if (!userSession) {
+  if (!userSession?.user?.id) {
     redirect("/login");
-  } else {
-    redirect(`/profile/${userSession.user.id}`);
   }
+
+  redirect(`/profile/${userSession.user.id}`);
 };
 
 export default page;

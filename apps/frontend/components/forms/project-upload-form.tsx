@@ -212,108 +212,6 @@ function ProjectUploadForm({
 
         <FormField
           control={form.control}
-          name="projectName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Title</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter project name" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="projectDescription"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Caption</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Describe your project..."
-                  className="min-h-[100px]"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="projectLink"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Add Link (Optional)</FormLabel>
-              <FormControl>
-                <Input
-                  type="url"
-                  placeholder="https://example.com"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <FormLabel>Dedications (Optional)</FormLabel>
-            <FormDescription>
-              Would you like to dedicate this to someone? — a person, a brand,
-              or a cause that inspired it?
-            </FormDescription>
-          </div>
-
-          <FormField
-            control={form.control}
-            name="dedicatedToPerson"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>A Person</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter person's name" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="dedicatedToBrand"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>A Brand</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter brand name" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="dedicatedToCause"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>A Cause</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter cause name" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <FormField
-          control={form.control}
           name="additionalImages"
           render={({ field: { onChange, value, ...field } }) => (
             <FormItem>
@@ -535,6 +433,107 @@ function ProjectUploadForm({
             </FormItem>
           )}
         />
+
+        <FormField
+          control={form.control}
+          name="projectName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Title</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter project name" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="projectDescription"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Caption</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Describe your project..."
+                  className="min-h-[100px]"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="projectLink"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Add Link (Optional)</FormLabel>
+              <FormControl>
+                <Input
+                  type="url"
+                  placeholder="https://example.com"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <FormLabel>Dedications (Optional)</FormLabel>
+            <FormDescription>
+              Would you like to dedicate this to someone? — a person, a brand?
+            </FormDescription>
+          </div>
+
+          <FormField
+            control={form.control}
+            name="dedicatedToPerson"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>A Person</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter person's name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="dedicatedToBrand"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>A Brand</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter brand name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="dedicatedToCause"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>A Cause</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter cause name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         <Button type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Uploading..." : "Upload Project"}
