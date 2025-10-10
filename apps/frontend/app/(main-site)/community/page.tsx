@@ -56,10 +56,10 @@ export default async function CommunityPage({
           </div>
         </div>
       </div>
-
+      {/* 
       <Suspense fallback={<div>Loading...</div>}>
         <ProjectTagsFilter filterTags={projectTags!} />
-      </Suspense>
+      </Suspense> */}
 
       <main className="max-w-7xl mx-auto px-6 block-space">
         <div className="flex items-center justify-between mb-8">

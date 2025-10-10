@@ -62,9 +62,9 @@ export default async function DiscoverPage({
         </div>
       </header>
 
-      <Suspense fallback={<div>Loading...</div>}>
+      {/* <Suspense fallback={<div>Loading...</div>}>
         <ProjectTagsFilter filterTags={projectTags!} />
-      </Suspense>
+      </Suspense> */}
 
       <main className="max-w-7xl mx-auto px-6 py-8">
         <div className="flex items-center justify-between mb-8">
