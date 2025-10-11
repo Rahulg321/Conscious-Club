@@ -136,16 +136,16 @@ function ProjectUploadForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className={cn("grid items-start gap-4")}
+        className={cn("grid items-start gap-3 text-sm")}
       >
         <FormField
           control={form.control}
           name="projectCover"
           render={({ field: { onChange, value, ...field } }) => (
             <FormItem>
-              <FormLabel>Cover</FormLabel>
+              <FormLabel className="text-sm font-medium">Cover</FormLabel>
               <FormControl>
-                <div className="space-y-3">
+                <div className="space-y-2">
                   <input
                     {...field}
                     ref={fileRef}
@@ -172,14 +172,15 @@ function ProjectUploadForm({
                       type="button"
                       variant="outline"
                       onClick={() => fileRef.current?.click()}
+                      size="sm"
                     >
                       Choose File
                     </Button>
                   )}
 
                   {value && coverPreviewUrl && (
-                    <div className="rounded-md border p-3">
-                      <div className="relative mx-auto h-32">
+                    <div className="rounded-md border p-2">
+                      <div className="relative mx-auto h-20">
                         <img
                           src={coverPreviewUrl}
                           alt="Project cover preview"
@@ -215,12 +216,14 @@ function ProjectUploadForm({
           name="additionalImages"
           render={({ field: { onChange, value, ...field } }) => (
             <FormItem>
-              <FormLabel>Additional Images (Optional)</FormLabel>
-              <FormDescription>
+              <FormLabel className="text-sm font-medium">
+                Additional Images (Optional)
+              </FormLabel>
+              <FormDescription className="text-xs">
                 Upload up to 5 additional images to showcase your project
               </FormDescription>
               <FormControl>
-                <div className="space-y-3">
+                <div className="space-y-2">
                   <input
                     {...field}
                     ref={additionalImagesRef}
@@ -265,24 +268,25 @@ function ProjectUploadForm({
                       variant="outline"
                       onClick={() => additionalImagesRef.current?.click()}
                       className="w-full"
+                      size="sm"
                     >
-                      <ImagePlus className="mr-2 h-4 w-4" />
+                      <ImagePlus className="mr-2 h-3 w-3" />
                       Add Additional Images
                     </Button>
                   )}
 
                   {value && value.length > 0 && (
-                    <div className="space-y-3">
-                      <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-2">
+                      <div className="grid grid-cols-3 gap-2">
                         {additionalImagePreviews.map((preview, index) => (
                           <div
                             key={index}
-                            className="relative rounded-md border p-2"
+                            className="relative rounded-md border p-1"
                           >
                             <img
                               src={preview}
                               alt={`Additional image ${index + 1}`}
-                              className="w-full h-24 object-cover rounded-md"
+                              className="w-full h-16 object-cover rounded-md"
                             />
                             <Button
                               type="button"
@@ -315,8 +319,9 @@ function ProjectUploadForm({
                           variant="outline"
                           onClick={() => additionalImagesRef.current?.click()}
                           className="w-full"
+                          size="sm"
                         >
-                          <Plus className="mr-2 h-4 w-4" />
+                          <Plus className="mr-2 h-3 w-3" />
                           Add More Images ({value.length}/5)
                         </Button>
                       )}
@@ -334,12 +339,14 @@ function ProjectUploadForm({
           name="coverVideo"
           render={({ field: { onChange, value, ...field } }) => (
             <FormItem>
-              <FormLabel>Cover Video (Optional)</FormLabel>
-              <FormDescription>
+              <FormLabel className="text-sm font-medium">
+                Cover Video (Optional)
+              </FormLabel>
+              <FormDescription className="text-xs">
                 Upload a video between 5-10 seconds to showcase your project
               </FormDescription>
               <FormControl>
-                <div className="space-y-3">
+                <div className="space-y-2">
                   <input
                     {...field}
                     ref={videoRef}
@@ -389,19 +396,20 @@ function ProjectUploadForm({
                       variant="outline"
                       onClick={() => videoRef.current?.click()}
                       className="w-full"
+                      size="sm"
                     >
-                      <Video className="mr-2 h-4 w-4" />
+                      <Video className="mr-2 h-3 w-3" />
                       Add Cover Video
                     </Button>
                   )}
 
                   {value && videoPreviewUrl && (
-                    <div className="rounded-md border p-3">
+                    <div className="rounded-md border p-2">
                       <div className="relative mx-auto">
                         <video
                           src={videoPreviewUrl}
                           controls
-                          className="w-full h-48 rounded-md"
+                          className="w-full h-32 rounded-md"
                         />
                         <Button
                           type="button"
@@ -421,7 +429,7 @@ function ProjectUploadForm({
                         </Button>
                       </div>
                       {videoDuration && (
-                        <p className="text-sm text-muted-foreground mt-2 text-center">
+                        <p className="text-xs text-muted-foreground mt-1 text-center">
                           Duration: {videoDuration.toFixed(1)}s
                         </p>
                       )}
@@ -439,9 +447,13 @@ function ProjectUploadForm({
           name="projectName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Title</FormLabel>
+              <FormLabel className="text-sm font-medium">Title</FormLabel>
               <FormControl>
-                <Input placeholder="Enter project name" {...field} />
+                <Input
+                  placeholder="Enter project name"
+                  {...field}
+                  className="h-9"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -453,11 +465,11 @@ function ProjectUploadForm({
           name="projectDescription"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Caption</FormLabel>
+              <FormLabel className="text-sm font-medium">Caption</FormLabel>
               <FormControl>
                 <Textarea
                   placeholder="Describe your project..."
-                  className="min-h-[100px]"
+                  className="min-h-[80px]"
                   {...field}
                 />
               </FormControl>
@@ -471,12 +483,15 @@ function ProjectUploadForm({
           name="projectLink"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Add Link (Optional)</FormLabel>
+              <FormLabel className="text-sm font-medium">
+                Add Link (Optional)
+              </FormLabel>
               <FormControl>
                 <Input
                   type="url"
                   placeholder="https://example.com"
                   {...field}
+                  className="h-9"
                 />
               </FormControl>
               <FormMessage />
@@ -484,10 +499,12 @@ function ProjectUploadForm({
           )}
         />
 
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <FormLabel>Dedications (Optional)</FormLabel>
-            <FormDescription>
+        <div className="space-y-3">
+          <div className="space-y-1">
+            <FormLabel className="text-sm font-medium">
+              Dedications (Optional)
+            </FormLabel>
+            <FormDescription className="text-xs">
               Would you like to dedicate this to someone? — a person, a brand?
             </FormDescription>
           </div>
@@ -497,9 +514,13 @@ function ProjectUploadForm({
             name="dedicatedToPerson"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>A Person</FormLabel>
+                <FormLabel className="text-sm">A Person</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter person's name" {...field} />
+                  <Input
+                    placeholder="Enter person's name"
+                    {...field}
+                    className="h-9"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -511,9 +532,13 @@ function ProjectUploadForm({
             name="dedicatedToBrand"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>A Brand</FormLabel>
+                <FormLabel className="text-sm">A Brand</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter brand name" {...field} />
+                  <Input
+                    placeholder="Enter brand name"
+                    {...field}
+                    className="h-9"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -525,9 +550,13 @@ function ProjectUploadForm({
             name="dedicatedToCause"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>A Cause</FormLabel>
+                <FormLabel className="text-sm">A Cause</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter cause name" {...field} />
+                  <Input
+                    placeholder="Enter cause name"
+                    {...field}
+                    className="h-9"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -535,7 +564,7 @@ function ProjectUploadForm({
           />
         </div>
 
-        <Button type="submit" disabled={isSubmitting}>
+        <Button type="submit" disabled={isSubmitting} className="h-9">
           {isSubmitting ? "Uploading..." : "Upload Project"}
         </Button>
       </form>
