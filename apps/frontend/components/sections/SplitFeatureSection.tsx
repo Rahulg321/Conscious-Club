@@ -52,7 +52,7 @@ const SplitFeatureSection: React.FC<SplitFeatureSectionProps> = ({
           {/* Content Container */}
           <div className="flex flex-col space-y-4 sm:space-y-6 md:space-y-8 w-full lg:w-auto lg:flex-1 lg:max-w-xl">
             <h1
-              className={`font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl ${accentClassName} leading-tight`}
+              className={`font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl } leading-tight`}
             >
               {title}
             </h1>
@@ -67,12 +67,12 @@ const SplitFeatureSection: React.FC<SplitFeatureSectionProps> = ({
             <div className="space-y-4 sm:space-y-5 md:space-y-6 pt-2 sm:pt-4">
               {features.map((feature, index) => (
                 <div
-                  className="flex items-start gap-3 sm:gap-4 md:gap-5"
+                  className="flex items-start gap-3 sm:gap-4 "
                   key={`${index}-${feature.text}`}
                 >
                   <div className="flex-shrink-0 mt-0.5 sm:mt-1">
                     <PiStarFourFill
-                      className={`w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 ${iconClassName}`}
+                      className={`w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7`}
                     />
                   </div>
                   <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-800 leading-relaxed">
