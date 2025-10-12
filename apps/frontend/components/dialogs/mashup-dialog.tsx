@@ -22,6 +22,12 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Shuffle } from "lucide-react";
 import useMediaQuery from "@/hooks/use-media-query";
 import ProjectUploadForm from "../forms/project-upload-form";
 
@@ -56,9 +62,18 @@ export default function MashupDialog({
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={handleClose}>
-        <DialogTrigger asChild>
-          <Button variant="outline">Mashup Project</Button>
-        </DialogTrigger>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <DialogTrigger asChild>
+              <Button variant="outline" size="icon">
+                <Shuffle className="h-4 w-4" />
+              </Button>
+            </DialogTrigger>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Mashup</p>
+          </TooltipContent>
+        </Tooltip>
         <DialogContent
           className={showUploadForm ? "sm:max-w-[700px]" : "sm:max-w-[425px]"}
         >
@@ -99,7 +114,10 @@ export default function MashupDialog({
   return (
     <Drawer open={open} onOpenChange={handleClose}>
       <DrawerTrigger asChild>
-        <Button variant="outline">Mashup Project</Button>
+        <Button variant="outline" className="gap-2">
+          <Shuffle className="h-4 w-4" />
+          <span>Mashup</span>
+        </Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left">

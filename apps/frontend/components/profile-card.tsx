@@ -87,33 +87,32 @@ export default function ProfileCard({
         </div>
 
         {currentUserId && currentUserId !== userProfile.id && (
-          <Button
-            onClick={handleFollowToggle}
-            disabled={isPending}
-            variant={userProfile.isFollowing ? "outline" : "default"}
-            className="w-full mt-1 flex items-center justify-center gap-2"
-          >
-            {userProfile.isFollowing ? (
-              <>
-                <UserCheck className="w-4 h-4" />
-                {isPending ? "Unfollowing..." : "Unfollow"}
-              </>
-            ) : (
-              <>
-                <UserPlus className="w-4 h-4" />
-                {isPending ? "Following..." : "Follow"}
-              </>
-            )}
-          </Button>
+          <div className="w-full flex items-center gap-2 mt-1">
+            <Button
+              onClick={handleFollowToggle}
+              disabled={isPending}
+              variant={userProfile.isFollowing ? "outline" : "default"}
+              className="flex-1 flex items-center justify-center gap-2"
+            >
+              {userProfile.isFollowing ? (
+                <>
+                  <UserCheck className="w-4 h-4" />
+                  {isPending ? "Unfollowing..." : "Unfollow"}
+                </>
+              ) : (
+                <>
+                  <UserPlus className="w-4 h-4" />
+                  {isPending ? "Following..." : "Follow"}
+                </>
+              )}
+            </Button>
+            <MashupDialog
+              collaboratorId={userProfile.id}
+              collaboratorName={userProfile.name ?? undefined}
+            />
+          </div>
         )}
       </div>
-
-      {currentUserId && currentUserId !== userProfile.id && (
-        <MashupDialog
-          collaboratorId={userProfile.id}
-          collaboratorName={userProfile.name ?? undefined}
-        />
-      )}
 
       <div className="px-5 pb-5">
         <div className="grid grid-cols-3 gap-2">
