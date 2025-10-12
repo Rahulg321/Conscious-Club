@@ -76,7 +76,7 @@ export default async function DiscoverPage({
               ? "Explore Profiles"
               : showMashups
                 ? "Explore Mashups"
-                : "Explore Projects"}
+                : "Explore Creations"}
           </h1>
           <Suspense
             fallback={<span className="text-gray-500">Loading...</span>}

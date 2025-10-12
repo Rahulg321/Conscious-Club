@@ -188,6 +188,10 @@ button {
   font-family: var(--font-poppins);
 }
 
+.itc-font {
+  font-family: var(--font-itc);
+}
+
 .parent-container {
   display: grid;
   min-height: 100dvh;

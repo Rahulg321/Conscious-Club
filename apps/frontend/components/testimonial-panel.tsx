@@ -4,7 +4,7 @@ export function TestimonialPanel({ imageUrl }: { imageUrl: string }) {
   return (
     <div className="w-full max-w-full mx-auto">
       {/* Use Tailwind’s aspect-ratio plugin (or a custom class) */}
-      <div className="relative w-full aspect-[3/4] overflow-hidden">
+      <div className="relative w-full h-full aspect-[3/4] overflow-hidden">
         <Image
           src={
             imageUrl ||
@@ -13,7 +13,7 @@ export function TestimonialPanel({ imageUrl }: { imageUrl: string }) {
           alt="Login testimonial"
           fill
           sizes="(min-width: 768px) 50vw, 100vw"
-          className="object-cover object-center"
+          className=""
           priority
         />
       </div>

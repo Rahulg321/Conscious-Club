@@ -1,4 +1,10 @@
 import { Prata, Urbanist, Poppins } from "next/font/google";
+import localFont from "next/font/local";
+
+export const itcFont = localFont({
+  src: "./itc-std.otf",
+  variable: "--font-itc",
+});
 
 export const prata = Prata({
   variable: "--font-prata",

@@ -78,7 +78,7 @@ const HeroSection = () => {
             </div>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-medium mb-6 max-w-4xl leading-tight">
+          <h1 className="text-3xl itc-font sm:text-4xl md:text-5xl font-medium mb-6 max-w-4xl leading-tight">
             Building the Creator economy of{" "}
             <span className="italic itc-font gradient-text">tomorrow.</span>
           </h1>
