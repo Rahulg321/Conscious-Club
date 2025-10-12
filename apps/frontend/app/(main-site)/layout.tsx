@@ -7,7 +7,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 
-import { itcFont } from "@/app/fonts";
+import { itcFont, inter } from "@/app/fonts";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -24,7 +24,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${prata.variable} ${poppins.variable} ${itcFont.variable} antialiased`}
+        className={`${prata.variable} ${poppins.variable} ${itcFont.variable} ${inter.variable} antialiased`}
       >
         <SessionProvider>
           <Header userSession={userSession} />

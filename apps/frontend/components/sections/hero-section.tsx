@@ -46,8 +46,8 @@ const HeroSection = () => {
         <FloatingCamera />
         <FloatingMicVocal />
 
-        <div className="container mx-auto px-4 flex flex-col items-center justify-center min-h-[70vh] text-center">
-          <div className="mb-8 border-2 border-gray-200 rounded-full px-4 py-2 flex items-center gap-2 shadow-sm">
+        <div className="container mx-auto px-2 flex flex-col items-center justify-start min-h-[65vh] text-center">
+          <div className="mb-8 mt-18 border-2 border-gray-200 rounded-full px-4 py-2 flex items-center gap-2 shadow-sm">
             <span
               className="text-white px-2 py-0.5 rounded-full text-xs font-semibold"
               style={{
@@ -78,9 +78,12 @@ const HeroSection = () => {
             </div>
           </div>
 
-          <h1 className="text-3xl itc-font sm:text-4xl md:text-5xl font-medium mb-6 max-w-4xl leading-tight">
-            Building the Creator economy of{" "}
-            <span className="italic itc-font gradient-text">tomorrow.</span>
+          <h1 className="text-3xl  inter-font sm:text-4xl md:text-5xl lg:text-6xl font-medium mb-6 max-w-4xl leading-[0.8]">
+            Building the{" "}
+            <span className="gradient-text itc-font lg:text-7xl italic">
+              Creator economy
+            </span>{" "}
+            of tomorrow.
           </h1>
 
           <p className="text-base sm:text-lg text-muted-foreground font-semibold mb-8 max-w-xl leading-relaxed">
