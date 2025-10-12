@@ -5,7 +5,7 @@ const ExplorersSections = async () => {
   return (
     <div className="block-space-mini">
       <div className="flex flex-col items-center justify-center text-center my-8">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3">
           Who is this for?
         </h2>
         <p className="text-base mt-4 text-muted-foreground">
