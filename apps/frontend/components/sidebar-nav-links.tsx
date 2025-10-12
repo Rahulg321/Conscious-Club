@@ -19,13 +19,13 @@ type NavLink = {
   activeColor: string;
 };
 
-export function SidebarNavLinks() {
+export function SidebarNavLinks({ userId }: { userId: string }) {
   const pathname = usePathname();
 
   const navLinks: NavLink[] = [
     {
       label: "Profile",
-      href: "/profile",
+      href: `/profile/${userId}`,
       leading: <User className="w-4 h-4" />,
       activeColor:
         "!bg-[#FEDADA] !text-pink-700 data-[active=true]:!bg-[#FEDADA] data-[active=true]:!text-pink-700",

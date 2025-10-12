@@ -148,6 +148,13 @@
       "when": 1760039459117,
       "tag": "0020_harsh_shadow_king",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1760258599596,
+      "tag": "0021_fair_bruce_banner",
+      "breakpoints": true
     }
   ]
 }

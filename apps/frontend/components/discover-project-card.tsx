@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import LikeButton from "./like-button";
 import { TAG_COLORS } from "@/lib/tag-colors";
+import ProjectCollabDialog from "./dialogs/project-collab-dialog";
 
 export default function DiscoverProjectCard({
   projectId,
@@ -37,10 +38,7 @@ export default function DiscoverProjectCard({
   };
 
   return (
-    <div
-      className="group bg-card rounded-lg border border-border overflow-hidden hover:shadow-md transition-shadow duration-200 "
-      onClick={openProject}
-    >
+    <div className="group bg-card rounded-lg border border-border overflow-hidden hover:shadow-md transition-shadow duration-200 ">
       <div className="aspect-video bg-muted overflow-hidden relative">
         <Image
           src={projectCoverImage}
@@ -66,16 +64,6 @@ export default function DiscoverProjectCard({
               initialIsLiked={isLiked}
             />
           </div>
-        </div>
-        <div className="mb-2">
-          <span
-            className={`inline-block px-2 py-1 text-xs font-medium text-white rounded-full ${
-              TAG_COLORS[tagName as keyof typeof TAG_COLORS] ||
-              "bg-primary/10 text-primary"
-            }`}
-          >
-            {tagName}
-          </span>
         </div>
         <p className="text-sm text-muted-foreground line-clamp-2">
           {projectDescription}

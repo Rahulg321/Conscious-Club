@@ -9,6 +9,7 @@ import { UserProfile } from "./forms/onboarding/types";
 import { followUser, unfollowUser } from "@/lib/actions/follow-action";
 import { useTransition } from "react";
 import { toast } from "sonner";
+import MashupDialog from "./dialogs/mashup-dialog";
 
 export default function ProfileCard({
   userProfile,
@@ -106,6 +107,13 @@ export default function ProfileCard({
           </Button>
         )}
       </div>
+
+      {currentUserId && currentUserId !== userProfile.id && (
+        <MashupDialog
+          collaboratorId={userProfile.id}
+          collaboratorName={userProfile.name ?? undefined}
+        />
+      )}
 
       <div className="px-5 pb-5">
         <div className="grid grid-cols-3 gap-2">

@@ -19,9 +19,7 @@ export default function PlayEarnRewards({ className }: { className?: string }) {
                 Take on fun challenges - rack up Bravos!
               </p>
 
-              {/* Game Buttons Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-                {/* Top Row */}
                 <Button className="bg-white text-[#6366f1] px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-medium hover:bg-white/90 whitespace-nowrap">
                   Selfie Style Challenge
                 </Button>
@@ -29,7 +27,6 @@ export default function PlayEarnRewards({ className }: { className?: string }) {
                   Lucky Spinner
                 </Button>
 
-                {/* Bottom Row */}
                 <Button className="bg-white text-[#6366f1] px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-medium hover:bg-white/90 whitespace-nowrap">
                   Give away
                 </Button>
@@ -40,7 +37,6 @@ export default function PlayEarnRewards({ className }: { className?: string }) {
             </div>
           </div>
 
-          {/* Right Illustration Section */}
           <div className="order-1 lg:order-2 relative h-[260px] sm:h-[300px] lg:h-full aspect-[4/3] lg:aspect-auto">
             <Image
               src={PlayEarnRewardsImage}

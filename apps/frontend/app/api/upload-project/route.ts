@@ -24,6 +24,8 @@ export const POST = async (req: NextRequest) => {
   const additionalImages = formData.getAll("additionalImages");
   const coverVideo = formData.get("coverVideo");
   const videoDuration = formData.get("videoDuration");
+  const isMashup = formData.get("isMashup");
+  const collaboratorId = formData.get("collaboratorId");
 
   if (!projectCover)
     return NextResponse.json({ error: "File is required" }, { status: 400 });
@@ -117,6 +119,8 @@ export const POST = async (req: NextRequest) => {
         dedicatedToBrand: validatedData.data.dedicatedToBrand || null,
         dedicatedToCause: validatedData.data.dedicatedToCause || null,
         userId: userSession.user.id,
+        isMashup: isMashup === "true",
+        collaboratorId: collaboratorId ? String(collaboratorId) : null,
       })
       .returning();
 

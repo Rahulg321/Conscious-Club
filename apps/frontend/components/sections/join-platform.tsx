@@ -57,7 +57,7 @@ const JoinPlatform = () => {
   );
 
   return (
-    <div className="">
+    <div className="mt-16">
       <div className="box-section" ref={container}>
         <div>
           <div className="flex flex-col items-center justify-center text-center my-8">

@@ -15,6 +15,7 @@ import {
   blogCategories,
 } from "@repo/db/schema";
 import { eq, and, or, ilike, inArray, desc, count, sql, ne } from "drizzle-orm";
+import { alias } from "drizzle-orm/pg-core";
 import { generateHashedPassword } from "./utils";
 import {
   ProjectProfile,
@@ -210,6 +211,44 @@ export async function getUserProjects(userId: string) {
     return await db.select().from(project).where(eq(project.userId, userId));
   } catch (error) {
     console.log("An error occured trying to get user projects", error);
+    return null;
+  }
+}
+
+/**
+ * Get a user's mashup projects (projects where user is creator or collaborator)
+ * @param userId - The id of the user
+ * @returns The user's mashup projects with both creator and collaborator info
+ */
+export async function getUserMashupProjects(userId: string) {
+  try {
+    // Create aliases for creator and collaborator users
+    const creator = alias(user, "creator");
+    const collaborator = alias(user, "collaborator");
+
+    // Get projects where user is either the creator or the collaborator
+    const mashupProjects = await db
+      .select({
+        project: project,
+        creatorName: creator.name,
+        creatorImage: creator.image,
+        collaboratorName: collaborator.name,
+        collaboratorImage: collaborator.image,
+      })
+      .from(project)
+      .leftJoin(creator, eq(project.userId, creator.id))
+      .leftJoin(collaborator, eq(project.collaboratorId, collaborator.id))
+      .where(
+        and(
+          eq(project.isMashup, true),
+          or(eq(project.userId, userId), eq(project.collaboratorId, userId))
+        )
+      )
+      .orderBy(desc(project.createdAt));
+
+    return mashupProjects;
+  } catch (error) {
+    console.log("An error occured trying to get user mashup projects", error);
     return null;
   }
 }

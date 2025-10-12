@@ -202,6 +202,10 @@ export const project = pgTable("project", {
   userId: uuid("userId")
     .references(() => user.id, { onDelete: "cascade" })
     .notNull(),
+  isMashup: boolean("isMashup").notNull().default(false),
+  collaboratorId: uuid("collaboratorId").references(() => user.id, {
+    onDelete: "cascade",
+  }),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt").notNull().defaultNow(),
 });

@@ -3,6 +3,7 @@ import {
   getAllTags,
   getUserFollowCounts,
   getUserProjects,
+  getUserMashupProjects,
 } from "@/lib/queries";
 import ProjectUploadDialog from "@/components/dialogs/project-upload-dialog";
 import { Button } from "@/components/ui/button";
@@ -143,6 +144,18 @@ const ProfilePage = async ({ params }: Props) => {
             <DisplayUserProjectWork currentUserId={userSession.user.id} />
           </Suspense>
         </div>
+
+        <div className="text-center mt-12">
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center py-12">
+                <Loader2 className="size-10 animate-spin" />
+              </div>
+            }
+          >
+            <DisplayUserMashupProjects currentUserId={userSession.user.id} />
+          </Suspense>
+        </div>
       </div>
     </div>
   );
@@ -202,6 +215,74 @@ async function DisplayUserProjectWork({
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+async function DisplayUserMashupProjects({
+  currentUserId,
+}: {
+  currentUserId: string;
+}) {
+  const mashupProjects = await getUserMashupProjects(currentUserId);
+
+  if (!mashupProjects || mashupProjects.length === 0) {
+    return (
+      <div className="mt-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
+          <h3 className="text-xl font-semibold text-[#171c21]">
+            Mashup Projects
+          </h3>
+        </div>
+        <div className="text-center py-12 px-4">
+          <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full flex items-center justify-center">
+            <Sparkles className="w-8 h-8 text-purple-600" />
+          </div>
+          <h4 className="text-lg font-medium text-[#171c21] mb-2">
+            No mashup projects yet
+          </h4>
+          <p className="text-[#667085] mb-4">
+            Collaborate with other users to create amazing mashup projects
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
+        <h3 className="text-xl font-semibold text-[#171c21] flex items-center gap-2">
+          <Sparkles className="w-5 h-5 text-purple-600" />
+          Mashup Projects
+        </h3>
+      </div>
+
+      <div className="overflow-x-auto">
+        <div className="flex gap-6 pb-4 min-w-max">
+          {mashupProjects.map((mashup) => {
+            const project = mashup.project;
+
+            // Determine which name to show: if current user is creator, show collaborator; if current user is collaborator, show creator
+            const isCreator = project.userId === currentUserId;
+            const partnerName = isCreator
+              ? mashup.collaboratorName
+              : mashup.creatorName;
+
+            return (
+              <div key={project.id} className="relative">
+                <ProjectCard project={project} />
+                {partnerName && (
+                  <div className="absolute top-2 right-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
+                    <Sparkles className="w-3 h-3" />
+                    <span>with {partnerName}</span>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }

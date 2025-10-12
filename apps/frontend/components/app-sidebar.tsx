@@ -42,7 +42,7 @@ export function AppSidebar({ user, pinnedBravo }: AppSidebarProps) {
       </SidebarHeader>
 
       <SidebarContent className="p-2">
-        <SidebarNavLinks />
+        <SidebarNavLinks userId={user?.id ?? ""} />
       </SidebarContent>
 
       <SidebarFooter className="mt-auto">

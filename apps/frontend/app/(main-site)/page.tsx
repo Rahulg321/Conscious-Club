@@ -18,7 +18,7 @@ const HomePage = async () => {
   return (
     <div>
       <HeroSection />
-      <JoinPlatform />
+        <JoinPlatform />
       <ExplorersSections />
       <AheadSection />
       {/* <TestimonialsSection /> */}

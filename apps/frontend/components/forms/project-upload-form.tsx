@@ -26,8 +26,12 @@ import { useRouter } from "next/navigation";
 
 function ProjectUploadForm({
   setDialogOpen,
+  isMashup = false,
+  collaboratorId,
 }: {
   setDialogOpen: (open: boolean) => void;
+  isMashup?: boolean;
+  collaboratorId?: string;
 }) {
   const [isSubmitting, startTransition] = useTransition();
   const router = useRouter();
@@ -83,6 +87,10 @@ function ProjectUploadForm({
         formData.append("dedicatedToPerson", data.dedicatedToPerson || "");
         formData.append("dedicatedToBrand", data.dedicatedToBrand || "");
         formData.append("dedicatedToCause", data.dedicatedToCause || "");
+        formData.append("isMashup", isMashup.toString());
+        if (collaboratorId) {
+          formData.append("collaboratorId", collaboratorId);
+        }
 
         // Append additional images if any
         if (data.additionalImages && data.additionalImages.length > 0) {
