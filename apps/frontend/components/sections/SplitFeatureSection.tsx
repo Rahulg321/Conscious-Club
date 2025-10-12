@@ -51,12 +51,6 @@ const SplitFeatureSection: React.FC<SplitFeatureSectionProps> = ({
 
           {/* Content Container */}
           <div className="flex flex-col space-y-4 sm:space-y-6 md:space-y-8 w-full lg:w-auto lg:flex-1 lg:max-w-xl">
-            {eyebrow && (
-              <p className="text-sm sm:text-base md:text-lg text-gray-600 uppercase tracking-wide">
-                {eyebrow}
-              </p>
-            )}
-
             <h1
               className={`font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl ${accentClassName} leading-tight`}
             >

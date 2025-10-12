@@ -19,7 +19,7 @@ const HeroMarqueeSection = () => {
 
   return (
     <div>
-      <Marquee className="[--gap:1rem]">
+      <Marquee className="[--gap:0.7rem]">
         {images.map((image, index) => (
           <div key={index} className="relative w-64 md:w-80 aspect-[3/4]">
             <Image

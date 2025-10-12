@@ -86,11 +86,12 @@ const HeroSection = () => {
 
           <p className="text-base sm:text-lg text-muted-foreground font-semibold mb-8 max-w-xl leading-relaxed">
             Join the platform that connects curious minds and creative talent
-            through self- expression, play and rewards.
+            through self- expression, play and rewards
           </p>
 
           <Button
-            className="bg-black hover:bg-gray-800 text-white px-6 py-4 text-base font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-200"
+            size={"xl"}
+            className="bg-black hover:bg-gray-800 text-white "
             asChild
           >
             <Link href="/login">Join the Clubb</Link>
@@ -103,7 +104,7 @@ const HeroSection = () => {
           <Image
             src={RolloutCenter}
             alt="Rollout Center"
-            className="object-cover w-auto h-80 md:h-[28rem] xl:h-[30rem] max-h-[90vh] rounded-xl"
+            className="object-cover w-auto h-[22rem] md:h-[26rem] xl:h-[36rem] max-h-[90vh] rounded-xl"
           />
         </div>
 
