@@ -35,38 +35,55 @@ const SplitFeatureSection: React.FC<SplitFeatureSectionProps> = ({
     orientation === "row-reverse" ? "lg:flex-row-reverse" : "lg:flex-row";
 
   return (
-    <div>
-      <div className="flex flex-col items-center justify-center px-4 py-6">
+    <div className="w-full">
+      <div className="flex flex-col items-center justify-center px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 py-8 sm:py-12 md:py-16 lg:py-20">
         <div
-          className={`flex flex-col ${containerDirectionClass} items-center justify-center gap-8 lg:gap-12 max-w-5xl w-full`}
+          className={`flex flex-col ${containerDirectionClass} items-center justify-center gap-8 sm:gap-10 md:gap-12 lg:gap-16 xl:gap-20 max-w-7xl w-full`}
         >
-          <div className="flex-shrink-0">
+          {/* Image Container */}
+          <div className="flex-shrink-0 w-full sm:w-auto">
             <img
               src={image.src}
               alt={image.alt}
-              className="w-full max-w-xs lg:max-w-md h-auto"
+              className="w-full max-w-[280px] sm:max-w-[320px] md:max-w-[380px] lg:max-w-[440px] xl:max-w-[500px] h-auto mx-auto"
             />
           </div>
 
-          <div className="flex flex-col space-y-6 max-w-md">
+          {/* Content Container */}
+          <div className="flex flex-col space-y-4 sm:space-y-6 md:space-y-8 w-full lg:w-auto lg:flex-1 lg:max-w-xl">
+            {eyebrow && (
+              <p className="text-sm sm:text-base md:text-lg text-gray-600 uppercase tracking-wide">
+                {eyebrow}
+              </p>
+            )}
+
             <h1
-              className={`font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl ${accentClassName} mb-6 leading-tight`}
+              className={`font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl ${accentClassName} leading-tight`}
             >
               {title}
             </h1>
 
-            <div className="space-y-6">
+            {subtitle && (
+              <p className="text-base sm:text-lg md:text-xl text-gray-700 leading-relaxed">
+                {subtitle}
+              </p>
+            )}
+
+            {/* Features List */}
+            <div className="space-y-4 sm:space-y-5 md:space-y-6 pt-2 sm:pt-4">
               {features.map((feature, index) => (
                 <div
-                  className="flex items-start gap-4"
+                  className="flex items-start gap-3 sm:gap-4 md:gap-5"
                   key={`${index}-${feature.text}`}
                 >
-                  <div className="flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 mt-1">
+                  <div className="flex-shrink-0 mt-0.5 sm:mt-1">
                     <PiStarFourFill
-                      className={`size-3 ${iconClassName} md:size-4 lg:size-6`}
+                      className={`w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 ${iconClassName}`}
                     />
                   </div>
-                  <p className="text-base sm:text-lg">{feature.text}</p>
+                  <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-800 leading-relaxed">
+                    {feature.text}
+                  </p>
                 </div>
               ))}
             </div>

@@ -3,7 +3,7 @@ import { TextAnimate } from "@/components/ui/text-animate";
 
 const AheadSection = () => {
   return (
-    <div className="block-space big-container">
+    <div className="block-space-mini big-container">
       <div className="flex justify-center items-center min-h-[85vh] px-4 py-12 md:py-16">
         <TextAnimate animation="blurIn" as="h3" className="text-center">
           We're just getting started… here's what's ahead.

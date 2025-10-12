@@ -53,13 +53,11 @@ const HeroSection = () => {
               style={{
                 background:
                   "linear-gradient(90deg, #FCB35C -0.08%, #DF60C3 51.36%, #825BF3 99.92%)",
-                boxShadow:
-                  "inset 0px 4px 6px 2px #FFFFFF9E, inset 0px -2px 6px 2px #00000026, 0px 2px 4.7px 0px #00000047",
               }}
             >
               2000+
             </span>
-            <span className="text-gray-700 font-medium text-sm">
+            <span className="text-gray-700 text-xs sm:text-sm font-medium">
               People have onboarded
             </span>
             <div className="flex -space-x-2">
@@ -83,7 +81,7 @@ const HeroSection = () => {
             <span className="gradient-text itc-font lg:text-7xl italic">
               Creator economy
             </span>{" "}
-            of tomorrow.
+            of tomorrow
           </h1>
 
           <p className="text-base sm:text-lg text-muted-foreground font-semibold mb-8 max-w-xl leading-relaxed">

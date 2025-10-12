@@ -3,12 +3,12 @@ import SplitFeatureSection from "./SplitFeatureSection";
 
 const ExplorersSections = async () => {
   return (
-    <div>
+    <div className="block-space">
       <div className="flex flex-col items-center justify-center text-center my-8">
-        <h2 className="text-2xl sm:text-3xl font-bold mb-2">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">
           Who is this for?
         </h2>
-        <p className="text-base text-muted-foreground">
+        <p className="text-base mt-4 text-muted-foreground">
           For all those who have a zest for life
         </p>
       </div>
