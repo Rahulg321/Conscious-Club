@@ -4,6 +4,7 @@ import {
   getAllTags,
   getFilteredProjects,
   getFilteredUserProfiles,
+  getFilteredMashupProjects,
 } from "@/lib/queries";
 import ProjectTagsFilter from "@/components/project-tag-filters";
 import { Suspense } from "react";
@@ -15,6 +16,7 @@ import ProjectCardSkeleton from "@/components/skeletons/project-card-skeleton";
 import ProfileCard from "@/components/profile-card";
 import ProfileCardSkeleton from "@/components/skeletons/profile-card-skeleton";
 import ProjectSheet from "@/components/project-sheet";
+import { Sparkles } from "lucide-react";
 
 export const metadata = {
   title: "Discover Projects",
@@ -37,6 +39,7 @@ export default async function DiscoverPage({
   const currentPage = Number(page) || 1;
 
   const showProfiles = type && type === "profiles" ? true : false;
+  const showMashups = type && type === "mashups" ? true : false;
 
   const selectedTags =
     typeof tags === "string"
@@ -69,13 +72,19 @@ export default async function DiscoverPage({
       <main className="max-w-7xl mx-auto px-6 py-8">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-2xl font-semibold text-gray-900">
-            {showProfiles ? "Explore Profiles" : "Explore Projects"}
+            {showProfiles
+              ? "Explore Profiles"
+              : showMashups
+                ? "Explore Mashups"
+                : "Explore Projects"}
           </h1>
           <Suspense
             fallback={<span className="text-gray-500">Loading...</span>}
           >
             {showProfiles ? (
               <ProfileCount personSearchQuery={projectSearchQuery || ""} />
+            ) : showMashups ? (
+              <MashupCount projectSearchQuery={projectSearchQuery || ""} />
             ) : (
               <ProjectCount
                 tags={selectedTags}
@@ -103,6 +112,26 @@ export default async function DiscoverPage({
               limit={limit}
               offset={offset}
               currentUserId={userSession.user.id}
+            />
+          </Suspense>
+        ) : showMashups ? (
+          <Suspense
+            fallback={
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <ProjectCardSkeleton />
+                <ProjectCardSkeleton />
+                <ProjectCardSkeleton />
+                <ProjectCardSkeleton />
+                <ProjectCardSkeleton />
+                <ProjectCardSkeleton />
+              </div>
+            }
+          >
+            <FetchAndDisplayMashupProjects
+              limit={limit}
+              offset={offset}
+              projectSearchQuery={projectSearchQuery || ""}
+              userId={userSession.user.id}
             />
           </Suspense>
         ) : (
@@ -164,6 +193,24 @@ async function ProfileCount({
   return (
     <span className="text-gray-500">
       {totalUsers} {totalUsers === 1 ? "profile" : "profiles"}
+    </span>
+  );
+}
+
+async function MashupCount({
+  projectSearchQuery,
+}: {
+  projectSearchQuery: string;
+}) {
+  const { totalMashups } = await getFilteredMashupProjects(
+    projectSearchQuery,
+    0,
+    1
+  );
+
+  return (
+    <span className="text-gray-500">
+      {totalMashups} {totalMashups === 1 ? "mashup" : "mashups"}
     </span>
   );
 }
@@ -241,6 +288,57 @@ async function FetchAndDisplayUserProfiles({
             />
           </div>
         ))}
+      </div>
+
+      <ProjectPagination totalPages={totalPages} />
+    </div>
+  );
+}
+
+async function FetchAndDisplayMashupProjects({
+  projectSearchQuery,
+  limit,
+  offset,
+  userId,
+}: {
+  projectSearchQuery: string | undefined;
+  limit: number;
+  offset: number;
+  userId: string;
+}) {
+  const { mashupProjects, totalPages, totalMashups } =
+    await getFilteredMashupProjects(projectSearchQuery, offset, limit, userId);
+
+  return (
+    <div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {mashupProjects?.map((mashup) => {
+          // Determine which collaborator name to show based on current user
+          const isCreator = mashup.userId === userId;
+          const partnerName = isCreator
+            ? mashup.collaboratorName
+            : mashup.creatorName;
+
+          return (
+            <div key={mashup.id} className="relative">
+              <DiscoverProjectCard
+                projectId={mashup.id}
+                projectCoverImage={mashup.coverImage}
+                projectName={mashup.name}
+                tagName="" // Mashups don't have tags in this view
+                projectDescription={mashup.description}
+                likeCount={mashup.likeCount}
+                isLiked={mashup.isLiked}
+              />
+              {partnerName && (
+                <div className="absolute top-2 right-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 shadow-lg">
+                  <Sparkles className="w-3 h-3" />
+                  <span>with {partnerName}</span>
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
 
       <ProjectPagination totalPages={totalPages} />

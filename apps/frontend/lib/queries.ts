@@ -254,6 +254,92 @@ export async function getUserMashupProjects(userId: string) {
 }
 
 /**
+ * Get filtered mashup projects with pagination
+ * @param query - The search query for project name or description
+ * @param offset - The offset for pagination
+ * @param limit - The limit for pagination
+ * @param userId - The current user ID to check like status
+ * @returns The filtered mashup projects with pagination info
+ */
+export async function getFilteredMashupProjects(
+  query?: string,
+  offset?: number,
+  limit?: number,
+  userId?: string
+) {
+  try {
+    // Create aliases for creator and collaborator users
+    const creator = alias(user, "creator");
+    const collaborator = alias(user, "collaborator");
+
+    const conditions = [eq(project.isMashup, true)];
+
+    if (query) {
+      const searchOr = or(
+        ilike(project.name, `%${query}%`),
+        ilike(project.description, `%${query}%`)
+      );
+      if (searchOr) conditions.push(searchOr);
+    }
+
+    const whereClause =
+      conditions.length > 0 ? and(...conditions) : eq(project.isMashup, true);
+
+    // Get filtered mashup projects with their creator and collaborator info
+    const mashupProjects = await db
+      .select({
+        id: project.id,
+        name: project.name,
+        link: project.link,
+        description: project.description,
+        coverImage: project.coverImage,
+        logoImage: project.logoImage,
+        userId: project.userId,
+        collaboratorId: project.collaboratorId,
+        createdAt: project.createdAt,
+        updatedAt: project.updatedAt,
+        creatorName: creator.name,
+        creatorImage: creator.image,
+        collaboratorName: collaborator.name,
+        collaboratorImage: collaborator.image,
+        likeCount: sql<number>`COALESCE((${sql`SELECT COUNT(*) FROM ${projectLikes} WHERE ${projectLikes.projectId} = ${project.id}`}), 0)`,
+        commentsCount: sql<number>`COALESCE((${sql`SELECT COUNT(*) FROM ${projectComments} WHERE ${projectComments.projectId} = ${project.id}`}), 0)`,
+        isLiked: userId
+          ? sql<boolean>`EXISTS(SELECT 1 FROM ${projectLikes} WHERE ${projectLikes.projectId} = ${project.id} AND ${projectLikes.userId} = ${userId})`
+          : sql<boolean>`false`,
+      })
+      .from(project)
+      .leftJoin(creator, eq(project.userId, creator.id))
+      .leftJoin(collaborator, eq(project.collaboratorId, collaborator.id))
+      .where(whereClause)
+      .orderBy(desc(project.createdAt))
+      .limit(limit ?? 10)
+      .offset(offset ?? 0);
+
+    // Get total count for pagination
+    const totalResult = await db
+      .select({ total: count() })
+      .from(project)
+      .where(whereClause);
+
+    const total = totalResult[0]?.total ?? 0;
+    const totalPages = Math.ceil(Number(total) / (limit ?? 10));
+
+    return {
+      mashupProjects,
+      totalPages,
+      totalMashups: total,
+    };
+  } catch (error) {
+    console.error(
+      "An error occurred trying to get filtered mashup projects",
+      error
+    );
+    return { mashupProjects: [], totalPages: 0, totalMashups: 0 };
+  }
+}
+
+/**
  * Get all tags
  * @returns
  */
@@ -346,7 +432,7 @@ export async function getAllProjectsWithTagsGrouped() {
 }
 
 /**
- * Get filtered projects by tags and search query
+ * Get filtered projects by tags and search query (excludes mashup projects)
  * @param filterTags - The tag IDs to filter by (string or array of strings)
  * @param query - The search query for project name or description
  * @param offset - The offset for pagination
@@ -371,6 +457,9 @@ export async function getFilteredProjects(
           : [];
 
     const conditions = [];
+
+    // Exclude mashup projects from regular projects
+    conditions.push(eq(project.isMashup, false));
 
     if (query) {
       conditions.push(

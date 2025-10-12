@@ -35,6 +35,7 @@ const ProjectProfileTabs = () => {
     <Tabs value={currentType} onValueChange={handleTabChange} className="">
       <TabsList>
         <TabsTrigger value="projects">Projects</TabsTrigger>
+        <TabsTrigger value="mashups">Mashups</TabsTrigger>
         <TabsTrigger value="profiles">Profiles</TabsTrigger>
       </TabsList>
     </Tabs>
