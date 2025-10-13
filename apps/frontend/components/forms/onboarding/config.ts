@@ -38,8 +38,8 @@ export const getStepsForRole = (userRole: UserRole): OnboardingStep[] => {
       },
       {
         id: 4,
-        title: "Upload Project (Optional)",
-        description: "Share a project to showcase your work",
+        title: "Add Creation",
+        description: "Bring your magic to the playground*",
       },
     ];
   }
