@@ -250,12 +250,12 @@ function ProjectUploadForm({
                               <img
                                 src={preview.url}
                                 alt={`Media ${index + 1}`}
-                                className="w-full h-24 object-cover rounded-md"
+                                className="w-full h-24 object-contain rounded-md bg-muted"
                               />
                             ) : (
                               <video
                                 src={preview.url}
-                                className="w-full h-24 object-cover rounded-md"
+                                className="w-full h-24 object-contain rounded-md bg-muted"
                                 controls
                               />
                             )}
