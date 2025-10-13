@@ -4,7 +4,7 @@ const imageFileSchema = z
   .instanceof(File)
   .refine(
     (file) => file.size <= 5 * 1024 * 1024,
-    "File size must be less than 5MB"
+    "Image size must be less than 5MB"
   )
   .refine(
     (file) =>
@@ -26,8 +26,26 @@ const videoFileSchema = z
     "Only MP4, WebM, and MOV video files are allowed"
   );
 
+const mediaFileSchema = z
+  .instanceof(File)
+  .refine((file) => {
+    const imageTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+    const videoTypes = ["video/mp4", "video/webm", "video/quicktime"];
+    return [...imageTypes, ...videoTypes].includes(file.type);
+  }, "Only images (JPEG, JPG, PNG, WebP) or videos (MP4, WebM, MOV) are allowed")
+  .refine((file) => {
+    const videoTypes = ["video/mp4", "video/webm", "video/quicktime"];
+    if (videoTypes.includes(file.type)) {
+      return file.size <= 50 * 1024 * 1024; // 50MB for videos
+    }
+    return file.size <= 5 * 1024 * 1024; // 5MB for images
+  }, "File size exceeds the maximum allowed size (5MB for images, 50MB for videos)");
+
 export const projectUploadSchema = z.object({
-  projectCover: imageFileSchema,
+  media: z
+    .array(mediaFileSchema)
+    .min(1, "At least one media file is required")
+    .max(4, "You can upload up to 4 media files"),
   projectName: z
     .string()
     .min(1, "Project name is required")
@@ -57,12 +75,10 @@ export const projectUploadSchema = z.object({
     .string()
     .max(100, "Cause name must be less than 100 characters")
     .optional(),
-  additionalImages: z
-    .array(imageFileSchema)
-    .max(5, "You can upload up to 5 additional images")
+  dedicationReason: z
+    .string()
+    .max(200, "Dedication reason must be less than 200 characters")
     .optional(),
-  coverVideo: videoFileSchema.optional(),
-  videoDuration: z.number().optional(),
 });
 
 export type ProjectUploadFormData = z.infer<typeof projectUploadSchema>;

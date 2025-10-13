@@ -116,15 +116,25 @@ export default function ProfileCard({
 
       <div className="px-5 pb-5">
         <div className="grid grid-cols-3 gap-2">
-          {userProfile.projects.slice(0, 3).map((item) => (
-            <div key={item.id} className="relative overflow-hidden rounded-md">
-              <img
-                src={item.coverImage || "/placeholder.svg"}
-                alt={item.name}
-                className="w-full h-20 object-cover"
-              />
-            </div>
-          ))}
+          {userProfile.projects.slice(0, 3).map((item) => {
+            // Get first media item (prefer images over videos)
+            const firstMedia =
+              item.media && item.media.length > 0
+                ? item.media[0]
+                : "/placeholder.svg";
+            return (
+              <div
+                key={item.id}
+                className="relative overflow-hidden rounded-md"
+              >
+                <img
+                  src={firstMedia}
+                  alt={item.name}
+                  className="w-full h-20 object-cover"
+                />
+              </div>
+            );
+          })}
 
           {Array.from({
             length: Math.max(0, 3 - (userProfile.projects?.length || 0)),

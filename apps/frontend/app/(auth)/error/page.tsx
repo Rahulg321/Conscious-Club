@@ -10,6 +10,12 @@ import {
   Settings,
 } from "lucide-react";
 
+export const metadata = {
+  title: "Auth Error ",
+  description:
+    "There's a problem with the authentication configuration. Please contact support or try again later.",
+};
+
 interface ErrorConfig {
   icon: React.ReactNode;
   title: string;

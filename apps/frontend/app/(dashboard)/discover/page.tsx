@@ -239,18 +239,25 @@ async function FetchAndDisplayProjects({
   return (
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {projects?.map((project) => (
-          <DiscoverProjectCard
-            key={project.id}
-            projectId={project.id}
-            projectCoverImage={project.coverImage}
-            projectName={project.name}
-            tagName={project.tags?.[0] || ""}
-            projectDescription={project.description}
-            likeCount={project.likeCount}
-            isLiked={project.isLiked}
-          />
-        ))}
+        {projects?.map((project) => {
+          // Get first media item for preview (prefer images)
+          const firstMedia =
+            project.media && project.media.length > 0
+              ? project.media[0]
+              : "/placeholder.svg";
+          return (
+            <DiscoverProjectCard
+              key={project.id}
+              projectId={project.id}
+              projectCoverImage={firstMedia}
+              projectName={project.name}
+              tagName={project.tags?.[0] || ""}
+              projectDescription={project.description}
+              likeCount={project.likeCount}
+              isLiked={project.isLiked}
+            />
+          );
+        })}
       </div>
 
       <ProjectPagination totalPages={totalPages} />
@@ -319,11 +326,17 @@ async function FetchAndDisplayMashupProjects({
             ? mashup.collaboratorName
             : mashup.creatorName;
 
+          // Get first media item for preview
+          const firstMedia =
+            (mashup.media && mashup.media.length > 0
+              ? mashup.media[0]
+              : "/placeholder.svg") || "/placeholder.svg";
+
           return (
             <div key={mashup.id} className="relative">
               <DiscoverProjectCard
                 projectId={mashup.id}
-                projectCoverImage={mashup.coverImage}
+                projectCoverImage={firstMedia}
                 projectName={mashup.name}
                 tagName="" // Mashups don't have tags in this view
                 projectDescription={mashup.description}

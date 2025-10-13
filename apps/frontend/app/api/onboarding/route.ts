@@ -151,7 +151,7 @@ export const POST = async (req: NextRequest) => {
         await db.insert(project).values({
           name: projectName,
           description: projectDescription,
-          coverImage: projectCoverImageUrl,
+          media: [projectCoverImageUrl],
           link: projectLink || null,
           userId: userSession.user.id,
         });

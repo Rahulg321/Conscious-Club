@@ -49,7 +49,7 @@ export async function GET(
       id: p.id,
       name: p.name,
       description: p.description,
-      coverImage: p.coverImage,
+      media: p.media,
       logoImage: p.logoImage,
       link: p.link,
       tags: tagRows.map((t) => t.name).filter(Boolean) as string[],

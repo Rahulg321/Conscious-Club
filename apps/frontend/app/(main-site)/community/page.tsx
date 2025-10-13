@@ -182,18 +182,25 @@ async function FetchAndDisplayProjects({
   return (
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {projects?.map((project) => (
-          <CommunityProjectCard
-            key={project.id}
-            projectId={project.id}
-            projectCoverImage={project.coverImage}
-            projectName={project.name}
-            tagName={project.tags?.[0] || ""}
-            projectDescription={project.description}
-            likeCount={project.likeCount}
-            isLiked={project.isLiked}
-          />
-        ))}
+        {projects?.map((project) => {
+          // Get first media item for preview
+          const firstMedia =
+            project.media && project.media.length > 0
+              ? project.media[0]
+              : "/placeholder.svg";
+          return (
+            <CommunityProjectCard
+              key={project.id}
+              projectId={project.id}
+              projectCoverImage={firstMedia}
+              projectName={project.name}
+              tagName={project.tags?.[0] || ""}
+              projectDescription={project.description}
+              likeCount={project.likeCount}
+              isLiked={project.isLiked}
+            />
+          );
+        })}
       </div>
 
       <ProjectPagination totalPages={totalPages} />

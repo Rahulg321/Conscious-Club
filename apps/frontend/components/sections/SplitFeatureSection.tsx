@@ -17,9 +17,6 @@ type SplitFeatureSectionProps = {
   orientation?: "row" | "row-reverse";
 };
 
-const defaultStarPath =
-  "M12 2L15.09 8.26L22 9L17 14L18.18 21L12 17.77L5.82 21L7 14L2 9L8.91 8.26L12 2Z";
-
 const SplitFeatureSection: React.FC<SplitFeatureSectionProps> = ({
   eyebrow,
   title,

@@ -192,13 +192,12 @@ export const project = pgTable("project", {
   name: text("name").notNull(),
   link: text("link"),
   description: text("description").notNull(),
-  coverImage: text("coverImage").notNull(),
-  coverVideo: text("coverVideo"),
+  media: text("media").array().notNull(),
   logoImage: text("logoImage"),
-  additionalImages: text("additionalImages").array(),
   dedicatedToPerson: text("dedicatedToPerson"),
   dedicatedToBrand: text("dedicatedToBrand"),
   dedicatedToCause: text("dedicatedToCause"),
+  dedicationReason: text("dedicationReason"),
   userId: uuid("userId")
     .references(() => user.id, { onDelete: "cascade" })
     .notNull(),

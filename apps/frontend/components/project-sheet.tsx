@@ -18,12 +18,17 @@ type ProjectDetails = {
   id: string;
   name: string;
   description: string | null;
-  coverImage: string | null;
+  media: string[] | null;
   logoImage: string | null;
   link: string | null;
   tags: string[];
   likeCount: number;
   isLiked: boolean;
+};
+
+// Helper function to check if URL is a video
+const isVideo = (url: string) => {
+  return /\.(mp4|webm|mov)(\?|$)/i.test(url);
 };
 
 export default function ProjectSheet() {
@@ -125,20 +130,38 @@ export default function ProjectSheet() {
 
         <div className="flex-1 overflow-y-auto px-6 pb-6">
           <div className="mt-6 grid grid-cols-1 md:grid-cols-12 gap-6">
-            {/* Media */}
-            <div className="md:col-span-7">
-              {project?.coverImage ? (
-                <div className="relative w-full aspect-video rounded-lg overflow-hidden border border-border bg-muted">
-                  <Image
-                    src={project.coverImage}
-                    alt={project.name || "Project cover"}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    className="object-cover"
-                  />
-                </div>
+            {/* Media Gallery */}
+            <div className="md:col-span-7 space-y-4">
+              {project?.media && project.media.length > 0 ? (
+                project.media.map((mediaUrl, index) => {
+                  const isMediaVideo = isVideo(mediaUrl);
+                  return (
+                    <div
+                      key={index}
+                      className="relative w-full aspect-video rounded-lg overflow-hidden border border-border bg-muted"
+                    >
+                      {isMediaVideo ? (
+                        <video
+                          src={mediaUrl}
+                          controls
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <Image
+                          src={mediaUrl}
+                          alt={`${project.name} - media ${index + 1}`}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                          className="object-cover"
+                        />
+                      )}
+                    </div>
+                  );
+                })
               ) : (
-                <div className="w-full aspect-video rounded-lg border border-dashed border-border bg-muted/40" />
+                <div className="w-full aspect-video rounded-lg border border-dashed border-border bg-muted/40 flex items-center justify-center text-muted-foreground">
+                  No media available
+                </div>
               )}
             </div>
 

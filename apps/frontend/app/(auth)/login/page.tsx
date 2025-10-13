@@ -3,6 +3,12 @@ import { LoginForm } from "@/components/forms/login-form";
 import { ProviderButtons } from "@/components/provider-buttons";
 import { TestimonialPanel } from "@/components/testimonial-panel";
 import { redirect } from "next/navigation";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Login",
+  description: "Login to your account",
+};
 
 export default async function LoginPage({
   searchParams,

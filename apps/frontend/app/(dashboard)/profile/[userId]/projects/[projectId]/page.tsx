@@ -4,7 +4,15 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { getProjectById, getProjectByIdWithStats } from "@/lib/queries";
-import { Heart, MessageCircle } from "lucide-react";
+import { Heart, MessageCircle, Award } from "lucide-react";
+import { isVideo } from "@/lib/utils";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 type PageProps = {
   params: Promise<{ userId: string; projectId: string }>;
@@ -28,23 +36,60 @@ async function ProjectPage({ params }: PageProps) {
     notFound();
   }
 
-  // Guard the route to ensure the URL's userId matches the project's owner
   if (project.userId !== userId) {
     return notFound();
   }
 
+  // Check if there are any dedications
+  const hasDedications =
+    project.dedicatedToPerson ||
+    project.dedicatedToBrand ||
+    project.dedicatedToCause;
+
   return (
     <div className="px-4 md:px-8 py-6">
-      <div className="flex justify-center">
-        <div className="relative w-full max-w-2xl aspect-video bg-[var(--color-muted)] rounded-xl overflow-hidden border border-[var(--color-border)]">
-          <Image
-            src={project.coverImage}
-            alt={project.name}
-            fill
-            className="object-cover"
-            priority
-          />
-        </div>
+      {/* Media Carousel */}
+      <div className="flex justify-center mb-6">
+        {project.media && project.media.length > 0 ? (
+          <Carousel className="w-full max-w-3xl">
+            <CarouselContent>
+              {project.media.map((mediaUrl, index) => {
+                const isMediaVideo = isVideo(mediaUrl);
+                return (
+                  <CarouselItem key={index}>
+                    <div className="relative w-full aspect-video bg-[var(--color-muted)] rounded-xl overflow-hidden border border-[var(--color-border)]">
+                      {isMediaVideo ? (
+                        <video
+                          src={mediaUrl}
+                          controls
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <Image
+                          src={mediaUrl}
+                          alt={`${project.name} - ${index + 1}`}
+                          fill
+                          className="object-cover"
+                          priority={index === 0}
+                        />
+                      )}
+                    </div>
+                  </CarouselItem>
+                );
+              })}
+            </CarouselContent>
+            {project.media.length > 1 && (
+              <>
+                <CarouselPrevious className="left-2" />
+                <CarouselNext className="right-2" />
+              </>
+            )}
+          </Carousel>
+        ) : (
+          <div className="relative w-full max-w-3xl aspect-video bg-[var(--color-muted)] rounded-xl overflow-hidden border border-[var(--color-border)] flex items-center justify-center text-muted-foreground">
+            No media available
+          </div>
+        )}
       </div>
 
       <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -131,6 +176,73 @@ async function ProjectPage({ params }: PageProps) {
               </div>
             </div>
           </div>
+
+          {/* Dedications Section */}
+          {hasDedications && (
+            <div
+              className="mt-6 rounded-xl border p-5 md:p-6"
+              style={{
+                background: "var(--color-card)",
+                borderColor: "var(--color-border)",
+              }}
+            >
+              <div className="flex items-center gap-2 mb-4">
+                <Award className="h-5 w-5 text-[var(--color-primary)]" />
+                <h2
+                  className="text-lg font-semibold"
+                  style={{ color: "var(--color-card-foreground)" }}
+                >
+                  Dedications
+                </h2>
+              </div>
+
+              <div className="space-y-3 text-sm">
+                {project.dedicatedToPerson && (
+                  <div>
+                    <span className="font-medium text-[var(--color-card-foreground)]">
+                      Dedicated to:{" "}
+                    </span>
+                    <span className="text-[var(--color-muted-foreground)]">
+                      {project.dedicatedToPerson}
+                    </span>
+                  </div>
+                )}
+
+                {project.dedicatedToBrand && (
+                  <div>
+                    <span className="font-medium text-[var(--color-card-foreground)]">
+                      Brand:{" "}
+                    </span>
+                    <span className="text-[var(--color-muted-foreground)]">
+                      {project.dedicatedToBrand}
+                    </span>
+                  </div>
+                )}
+
+                {project.dedicatedToCause && (
+                  <div>
+                    <span className="font-medium text-[var(--color-card-foreground)]">
+                      Cause:{" "}
+                    </span>
+                    <span className="text-[var(--color-muted-foreground)]">
+                      {project.dedicatedToCause}
+                    </span>
+                  </div>
+                )}
+
+                {project.dedicationReason && (
+                  <div className="pt-2 border-t border-[var(--color-border)]">
+                    <span className="font-medium text-[var(--color-card-foreground)] block mb-1">
+                      Why this dedication:
+                    </span>
+                    <p className="text-[var(--color-muted-foreground)] leading-relaxed">
+                      {project.dedicationReason}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
         <div>

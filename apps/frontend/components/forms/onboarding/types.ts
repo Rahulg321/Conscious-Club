@@ -46,7 +46,7 @@ export type ProjectProfile = {
   name: string;
   link: string;
   description: string;
-  coverImage: string;
+  media: string[];
   logoImage: string | null;
   createdAt: Date;
 };

@@ -24,3 +24,19 @@ export function generateHashedPassword(password: string) {
 
   return hash;
 }
+
+// Helper function to check if URL is a video
+export const isVideo = (url: string) => {
+  return /\.(mp4|webm|mov)(\?|$)/i.test(url);
+};
+
+// Helper function to get first image from media array, or first item if no images
+export const getPreviewMedia = (media: string[] | null) => {
+  if (!media || media.length === 0) return null;
+
+  // Try to find first image
+  const firstImage = media.find((url) => !isVideo(url));
+
+  // Return first image if found, otherwise return first item (could be video)
+  return firstImage || media[0];
+};
