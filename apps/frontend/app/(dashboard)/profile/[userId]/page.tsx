@@ -230,9 +230,7 @@ async function DisplayUserMashupProjects({
     return (
       <div className="mt-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
-          <h3 className="text-xl font-semibold text-[#171c21]">
-            Mashup Projects
-          </h3>
+          <h3 className="text-xl font-semibold text-[#171c21]">Mashups</h3>
         </div>
         <div className="text-center py-12 px-4">
           <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full flex items-center justify-center">
@@ -263,22 +261,17 @@ async function DisplayUserMashupProjects({
           {mashupProjects.map((mashup) => {
             const project = mashup.project;
 
-            // Determine which name to show: if current user is creator, show collaborator; if current user is collaborator, show creator
-            const isCreator = project.userId === currentUserId;
-            const partnerName = isCreator
-              ? mashup.collaboratorName
-              : mashup.creatorName;
+            // Show both creator and collaborator names
+            const creatorName = mashup.creatorName || "Unknown";
+            const collaboratorName = mashup.collaboratorName || "Unknown";
 
             return (
-              <div key={project.id} className="relative">
-                <ProjectCard project={project} />
-                {partnerName && (
-                  <div className="absolute top-2 right-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
-                    <Sparkles className="w-3 h-3" />
-                    <span>with {partnerName}</span>
-                  </div>
-                )}
-              </div>
+              <ProjectCard
+                key={project.id}
+                project={project}
+                creatorName={creatorName}
+                collaboratorName={collaboratorName}
+              />
             );
           })}
         </div>

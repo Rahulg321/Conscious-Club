@@ -4,10 +4,20 @@ import DeleteProjectAlert from "./buttons/delete-project-alert";
 import Image from "next/image";
 import { getPreviewMedia } from "@/lib/utils";
 import { isVideo } from "@/lib/utils";
+import { Sparkles } from "lucide-react";
 
-export default function ProjectCard({ project }: { project: any }) {
+export default function ProjectCard({
+  project,
+  creatorName,
+  collaboratorName,
+}: {
+  project: any;
+  creatorName?: string;
+  collaboratorName?: string;
+}) {
   const previewMedia = getPreviewMedia(project.media);
   const isPreviewVideo = previewMedia ? isVideo(previewMedia) : false;
+  const isMashup = project.isMashup && creatorName && collaboratorName;
 
   return (
     <div className="group flex-shrink-0 w-80">
@@ -43,6 +53,17 @@ export default function ProjectCard({ project }: { project: any }) {
           <h4 className="font-semibold text-lg text-[var(--color-card-foreground)] line-clamp-1 group-hover:text-[var(--color-primary)] transition-colors duration-200">
             {project.name}
           </h4>
+
+          {/* Mashup Collaborators */}
+          {isMashup && (
+            <div className="flex items-center gap-1.5 text-sm text-[var(--color-muted-foreground)]">
+              <Sparkles className="w-4 h-4 text-purple-500" />
+              <span className="font-medium">
+                {creatorName} <span className="text-purple-500">×</span>{" "}
+                {collaboratorName}
+              </span>
+            </div>
+          )}
 
           {/* Description */}
           <p className="text-sm text-[var(--color-muted-foreground)] line-clamp-2 leading-relaxed min-h-[2.5rem]">

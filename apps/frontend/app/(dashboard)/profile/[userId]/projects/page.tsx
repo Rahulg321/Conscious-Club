@@ -8,6 +8,10 @@ import { redirect } from "next/navigation";
 import React from "react";
 import { Metadata } from "next";
 import { getCachedUserById } from "@/lib/cached-queries";
+import { Sparkles } from "lucide-react";
+import { db } from "@repo/db";
+import { user } from "@repo/db/schema";
+import { eq } from "drizzle-orm";
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { userId } = await params;
@@ -33,6 +37,28 @@ const ProjectsPage = async ({ params }: Props) => {
 
   const projects = await getUserProjects(userId);
 
+  // For mashup projects, fetch collaborator information
+  const projectsWithCollaborators = await Promise.all(
+    (projects || []).map(async (project) => {
+      if (project.isMashup && project.collaboratorId) {
+        const [collaborator] = await db
+          .select({ name: user.name })
+          .from(user)
+          .where(eq(user.id, project.collaboratorId));
+        const [creator] = await db
+          .select({ name: user.name })
+          .from(user)
+          .where(eq(user.id, project.userId));
+        return {
+          ...project,
+          collaboratorName: collaborator?.name,
+          creatorName: creator?.name,
+        };
+      }
+      return project;
+    })
+  );
+
   return (
     <div className="px-4 md:px-8 py-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
@@ -50,7 +76,7 @@ const ProjectsPage = async ({ params }: Props) => {
         </div>
       </div>
 
-      {!projects || projects.length === 0 ? (
+      {!projectsWithCollaborators || projectsWithCollaborators.length === 0 ? (
         <div className="text-center py-12 px-4">
           <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
             <svg
@@ -74,8 +100,21 @@ const ProjectsPage = async ({ params }: Props) => {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
+          {projectsWithCollaborators.map((project) => (
+            <ProjectCard
+              key={project.id}
+              project={project}
+              creatorName={
+                project.isMashup && "creatorName" in project
+                  ? project.creatorName || undefined
+                  : undefined
+              }
+              collaboratorName={
+                project.isMashup && "collaboratorName" in project
+                  ? project.collaboratorName || undefined
+                  : undefined
+              }
+            />
           ))}
         </div>
       )}

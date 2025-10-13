@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import LikeButton from "./like-button";
 import { TAG_COLORS } from "@/lib/tag-colors";
 import ProjectCollabDialog from "./dialogs/project-collab-dialog";
+import { Sparkles } from "lucide-react";
 
 export default function DiscoverProjectCard({
   projectId,
@@ -14,6 +15,8 @@ export default function DiscoverProjectCard({
   tagName,
   likeCount = 0,
   isLiked = false,
+  creatorName,
+  collaboratorName,
 }: {
   projectId: string;
   projectCoverImage: string;
@@ -22,6 +25,8 @@ export default function DiscoverProjectCard({
   tagName: string;
   likeCount?: number;
   isLiked?: boolean;
+  creatorName?: string;
+  collaboratorName?: string;
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -36,6 +41,8 @@ export default function DiscoverProjectCard({
   const onLikeButtonClick = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
+
+  const isMashup = creatorName && collaboratorName;
 
   return (
     <div className="group bg-card rounded-lg border border-border overflow-hidden hover:shadow-md transition-shadow duration-200 ">
@@ -65,6 +72,15 @@ export default function DiscoverProjectCard({
             />
           </div>
         </div>
+        {isMashup && (
+          <div className="mb-2 flex items-center gap-1.5 text-sm text-muted-foreground">
+            <Sparkles className="w-4 h-4 text-purple-500" />
+            <span className="font-medium">
+              {creatorName} <span className="text-purple-500">×</span>{" "}
+              {collaboratorName}
+            </span>
+          </div>
+        )}
         <p className="text-sm text-muted-foreground line-clamp-2">
           {projectDescription}
         </p>

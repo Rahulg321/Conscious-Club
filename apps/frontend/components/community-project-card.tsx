@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import LikeButton from "./like-button";
 import { TAG_COLORS } from "@/lib/tag-colors";
+import { Sparkles } from "lucide-react";
 
 export default function CommunityProjectCard({
   projectId,
@@ -13,6 +14,8 @@ export default function CommunityProjectCard({
   tagName,
   likeCount = 0,
   isLiked = false,
+  creatorName,
+  collaboratorName,
 }: {
   projectId: string;
   projectCoverImage: string;
@@ -21,6 +24,8 @@ export default function CommunityProjectCard({
   tagName: string;
   likeCount?: number;
   isLiked?: boolean;
+  creatorName?: string;
+  collaboratorName?: string;
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -35,6 +40,8 @@ export default function CommunityProjectCard({
   const onLikeButtonClick = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
+
+  const isMashup = creatorName && collaboratorName;
 
   return (
     <div
@@ -68,14 +75,24 @@ export default function CommunityProjectCard({
           </div>
         </div>
         <div className="mb-2">
-          <span
-            className={`inline-block px-2 py-1 text-xs font-medium primary rounded-full text-white ${
-              TAG_COLORS[tagName as keyof typeof TAG_COLORS] ||
-              "bg-primary/10 text-primary"
-            }`}
-          >
-            {tagName}
-          </span>
+          {isMashup ? (
+            <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+              <Sparkles className="w-4 h-4 text-purple-500" />
+              <span className="font-medium">
+                {creatorName} <span className="text-purple-500">×</span>{" "}
+                {collaboratorName}
+              </span>
+            </div>
+          ) : (
+            <span
+              className={`inline-block px-2 py-1 text-xs font-medium primary rounded-full text-white ${
+                TAG_COLORS[tagName as keyof typeof TAG_COLORS] ||
+                "bg-primary/10 text-primary"
+              }`}
+            >
+              {tagName}
+            </span>
+          )}
         </div>
         <p className="text-sm text-muted-foreground line-clamp-2">
           {projectDescription}

@@ -321,11 +321,9 @@ async function FetchAndDisplayMashupProjects({
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {mashupProjects?.map((mashup) => {
-          // Determine which collaborator name to show based on current user
-          const isCreator = mashup.userId === userId;
-          const partnerName = isCreator
-            ? mashup.collaboratorName
-            : mashup.creatorName;
+          // Show both creator and collaborator names
+          const creatorName = mashup.creatorName || "Unknown";
+          const collaboratorName = mashup.collaboratorName || "Unknown";
 
           // Get first media item for preview
           const firstMedia =
@@ -334,23 +332,18 @@ async function FetchAndDisplayMashupProjects({
               : "/placeholder.svg") || "/placeholder.svg";
 
           return (
-            <div key={mashup.id} className="relative">
-              <DiscoverProjectCard
-                projectId={mashup.id}
-                projectCoverImage={firstMedia}
-                projectName={mashup.name}
-                tagName="" // Mashups don't have tags in this view
-                projectDescription={mashup.description}
-                likeCount={mashup.likeCount}
-                isLiked={mashup.isLiked}
-              />
-              {partnerName && (
-                <div className="absolute top-2 right-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 shadow-lg">
-                  <Sparkles className="w-3 h-3" />
-                  <span>with {partnerName}</span>
-                </div>
-              )}
-            </div>
+            <DiscoverProjectCard
+              key={mashup.id}
+              projectId={mashup.id}
+              projectCoverImage={firstMedia}
+              projectName={mashup.name}
+              tagName="" // Mashups don't have tags in this view
+              projectDescription={mashup.description}
+              likeCount={mashup.likeCount}
+              isLiked={mashup.isLiked}
+              creatorName={creatorName}
+              collaboratorName={collaboratorName}
+            />
           );
         })}
       </div>
