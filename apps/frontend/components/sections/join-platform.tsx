@@ -10,6 +10,12 @@ import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
+import BenefitCard1 from "@/public/benefit-cards/CC_BenefitCards1.png";
+import BenefitCard2 from "@/public/benefit-cards/CC_BenefitCards2.png";
+import BenefitCard3 from "@/public/benefit-cards/CC_BenefitCards3.png";
+import BenefitCard4 from "@/public/benefit-cards/CC_BenefitCards4.png";
+import BenefitCard5 from "@/public/benefit-cards/CC_BenefitCards5.png";
+import Image from "next/image";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger); // register the hook to avoid React version discrepancies
 
@@ -70,15 +76,34 @@ const JoinPlatform = () => {
             </p>
           </div>
           <div className="boxes space-y-12">
-            <MonetizeContentSection className="box1 box " />
-            <CollabBrandsSection className="box2 box " />
-            <PlayEarnRewards className="box3 box " />
-            <ExclusivePerks className="box4 box " />
-            <CommunityBanner className="box5 box " />
+            <div className="box box1">
+              <div>
+                <Image src={BenefitCard1} alt="Benefit Card 1" />
+              </div>
+            </div>
+            <div className="box box2">
+              <div>
+                <Image src={BenefitCard2} alt="Benefit Card 2" />
+              </div>
+            </div>
+            <div className="box box3">
+              <div>
+                <Image src={BenefitCard3} alt="Benefit Card 3" />
+              </div>
+            </div>
+            <div className="box box4">
+              <div>
+                <Image src={BenefitCard4} alt="Benefit Card 4" />
+              </div>
+            </div>
+            <div className="box box5">
+              <div>
+                <Image src={BenefitCard5} alt="Benefit Card 5" />
+              </div>
+            </div>
           </div>
-          <div className="following-content"></div>
-          <div className="spacer"></div>
-          <div className="spacer"></div>
+          <div className="spacer "></div>
+          <div className="spacer "></div>
         </div>
       </div>
     </div>
