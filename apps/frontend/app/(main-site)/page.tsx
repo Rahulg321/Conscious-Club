@@ -17,13 +17,6 @@ export const metadata: Metadata = {
 };
 
 const HomePage = async () => {
-  const userSession = await auth();
-
-  if (userSession && !userSession.user.onboardingCompleted) {
-    console.log("Redirecting to onboarding inside home page");
-    redirect("onboarding");
-  }
-
   return (
     <div>
       <HeroSection />
