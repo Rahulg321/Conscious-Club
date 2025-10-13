@@ -11,8 +11,12 @@ export interface OnboardingFormData {
   fun: string;
   projectName: string;
   projectDescription: string;
-  projectCoverImage: File | null;
+  projectMedia: File[];
   projectLink: string;
+  dedicatedToPerson: string;
+  dedicatedToBrand: string;
+  dedicatedToCause: string;
+  dedicationReason: string;
 }
 
 export interface OnboardingStep {

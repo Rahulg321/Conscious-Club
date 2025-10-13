@@ -15,13 +15,10 @@ export function OnboardingPageContent({ step }: { step: number }) {
 
   return (
     <main className="h-screen grid grid-cols-1 md:grid-cols-2 overflow-hidden">
-      <section className="relative overflow-y-auto">
-        <div className="absolute left-4 top-4 md:left-8 md:top-8 z-10">
-          <Link href="/">
-            <Image src={CClogo} alt="ConsciousClub Logo" />
-          </Link>
+      <section className="relative overflow-y-auto scrollbar-thin">
+        <div className="min-h-full">
+          <OnboardingForm />
         </div>
-        <OnboardingForm />
       </section>
 
       <aside className="hidden md:block relative">

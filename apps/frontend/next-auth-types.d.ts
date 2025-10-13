@@ -8,12 +8,14 @@ declare module "next-auth" {
       id: string;
       accessToken?: string;
       isAdmin?: boolean;
+      onboardingCompleted?: boolean;
     } & DefaultSession["user"];
   }
 
   interface User extends DefaultUser {
     accessToken?: string;
     isAdmin?: boolean;
+    onboardingCompleted?: boolean;
   }
 }
 
@@ -22,5 +24,6 @@ declare module "next-auth/jwt" {
     id?: string;
     accessToken?: string;
     isAdmin?: boolean;
+    onboardingCompleted?: boolean;
   }
 }

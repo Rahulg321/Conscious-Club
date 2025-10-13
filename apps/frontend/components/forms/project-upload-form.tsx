@@ -21,7 +21,7 @@ import {
   type ProjectUploadFormData,
 } from "@/lib/schemas/project-upload-schema";
 import { toast } from "sonner";
-import { X, Plus, Upload } from "lucide-react";
+import { X, Plus, Upload, PlusCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface MediaPreview {
@@ -164,14 +164,14 @@ function ProjectUploadForm({
           name="media"
           render={({ field: { onChange, value, ...field } }) => (
             <FormItem>
-              <FormLabel className="text-sm font-medium">
+              <FormLabel className="text-sm font-medium ">
                 Upload Media
               </FormLabel>
-              <FormDescription className="text-xs">
-                Upload up to 4 images or videos. Videos must be 5-10 seconds.
+              <FormDescription className="text-xs mt-0 p-0 ">
+                Upload up to 4 images or videos. Videos can be upto 10 seconds.
               </FormDescription>
               <FormControl>
-                <div className="space-y-2">
+                <div className="space-y-2 mt-2">
                   <input
                     {...field}
                     ref={mediaRef}
@@ -234,8 +234,7 @@ function ProjectUploadForm({
                       className="w-full"
                       size="sm"
                     >
-                      <Upload className="mr-2 h-3 w-3" />
-                      Upload Media (Images or Videos)
+                      <PlusCircle className="mr-2 h-3 w-3" />
                     </Button>
                   )}
 
@@ -340,29 +339,8 @@ function ProjectUploadForm({
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="projectLink"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-sm font-medium">
-                Add Link (Optional)
-              </FormLabel>
-              <FormControl>
-                <Input
-                  type="url"
-                  placeholder="https://example.com"
-                  {...field}
-                  className="h-9"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
         <div className="space-y-3">
-          <div className="space-y-1">
+          <div className="">
             <FormLabel className="text-sm font-medium">
               Dedications (Optional)
             </FormLabel>
@@ -431,9 +409,7 @@ function ProjectUploadForm({
             name="dedicationReason"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-sm">
-                  Why do you want to dedicate this?
-                </FormLabel>
+                <FormLabel className="text-sm">Why?</FormLabel>
                 <FormControl>
                   <Textarea
                     placeholder="Tell us why this dedication is meaningful to you..."

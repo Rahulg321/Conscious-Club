@@ -7,6 +7,8 @@ import JoinPlatform from "@/components/sections/join-platform";
 import HeroSection from "@/components/sections/hero-section";
 import TitleHighlight from "@/components/title-highlight";
 import AheadSection from "@/components/sections/ahead-section";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "ConsciousClubb — Create, Explore, Earn Bravos",
@@ -15,6 +17,13 @@ export const metadata: Metadata = {
 };
 
 const HomePage = async () => {
+  const userSession = await auth();
+
+  if (userSession && !userSession.user.onboardingCompleted) {
+    console.log("Redirecting to onboarding inside home page");
+    redirect("onboarding");
+  }
+
   return (
     <div>
       <HeroSection />

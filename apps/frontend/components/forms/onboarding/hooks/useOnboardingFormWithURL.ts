@@ -17,8 +17,12 @@ const initialFormData: OnboardingFormData = {
   fun: "",
   projectName: "",
   projectDescription: "",
-  projectCoverImage: null,
+  projectMedia: [],
   projectLink: "",
+  dedicatedToPerson: "",
+  dedicatedToBrand: "",
+  dedicatedToCause: "",
+  dedicationReason: "",
 };
 
 export const useOnboardingFormWithURL = () => {
@@ -41,7 +45,7 @@ export const useOnboardingFormWithURL = () => {
 
   const updateFormData = (
     field: keyof OnboardingFormData,
-    value: string | boolean | File | null
+    value: string | boolean | File | File[] | null
   ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     // Clear step errors when user updates form data
@@ -153,7 +157,7 @@ export const useOnboardingFormWithURL = () => {
 
   const handleFileUpload = (
     event: React.ChangeEvent<HTMLInputElement>,
-    field: "profilePicture" | "projectCoverImage"
+    field: "profilePicture"
   ) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -173,7 +177,14 @@ export const useOnboardingFormWithURL = () => {
         Object.entries(formData).forEach(([key, value]) => {
           if (value instanceof File) {
             formDataToSubmit.append(key, value);
-          } else if (value !== null && value !== "") {
+          } else if (Array.isArray(value) && key === "projectMedia") {
+            // Handle projectMedia array
+            value.forEach((file) => {
+              if (file instanceof File) {
+                formDataToSubmit.append("projectMedia", file);
+              }
+            });
+          } else if (value !== null && value !== "" && !Array.isArray(value)) {
             formDataToSubmit.append(key, String(value));
           }
         });

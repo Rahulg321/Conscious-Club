@@ -35,14 +35,14 @@ export function OnboardingForm() {
     stepErrors[currentStep] && (stepErrors[currentStep]?.length ?? 0) > 0;
 
   return (
-    <div className="">
+    <div className="pb-16">
       <div className="px-4 py-4 space-y-4 ">
         <ProgressIndicator steps={steps} currentStep={currentStep} />
         <StepHeader step={currentStepData} />
         <Separator />
       </div>
 
-      <div className="px-4 md:px-8 lg:px-12 py-4">
+      <div className="px-4 md:px-8 lg:px-12 py-4 pb-16">
         {/* Error display */}
         {submitError && (
           <div className="rounded-md bg-red-50 p-4">
@@ -85,7 +85,6 @@ export function OnboardingForm() {
             <ProjectUploadStep
               formData={formData}
               updateFormData={updateFormData}
-              handleFileUpload={handleFileUpload}
             />
           )}
         </div>
@@ -109,7 +108,7 @@ export function OnboardingForm() {
         </div>
 
         {/* Navigation buttons */}
-        <div className="flex items-center justify-between pt-4 mt-4 border-t border-gray-200">
+        <div className="flex items-center justify-between pt-6 mt-8 border-t border-gray-200 pb-8">
           <Button
             variant="outline"
             onClick={prevStep}

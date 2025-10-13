@@ -19,18 +19,18 @@ export async function middleware(request: NextRequest) {
   // Get the session using the auth function
   const session = await auth();
 
-  // Log the session
-  console.log("=== MIDDLEWARE SESSION LOG ===");
-  console.log("Path:", pathname);
-  console.log("Session exists:", !!session);
-  console.log("User ID:", session?.user?.id);
-  console.log("User Email:", session?.user?.email);
-  console.log("Is Admin:", (session?.user as any)?.isAdmin);
-  console.log(
-    "Onboarding Completed:",
-    (session?.user as any)?.onboardingCompleted
-  );
-  console.log("==============================");
+  // // Log the session
+  // console.log("=== MIDDLEWARE SESSION LOG ===");
+  // console.log("Path:", pathname);
+  // console.log("Session exists:", !!session);
+  // console.log("User ID:", session?.user?.id);
+  // console.log("User Email:", session?.user?.email);
+  // console.log("Is Admin:", (session?.user as any)?.isAdmin);
+  // console.log(
+  //   "Onboarding Completed:",
+  //   (session?.user as any)?.onboardingCompleted
+  // );
+  // console.log("==============================");
 
   // If user is not logged in, let Next.js auth handle it
   if (!session?.user) {

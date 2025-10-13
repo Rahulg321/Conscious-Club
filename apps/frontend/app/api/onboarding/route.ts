@@ -28,8 +28,12 @@ export const POST = async (req: NextRequest) => {
     const discipline = formData.get("discipline") as string;
     const projectName = formData.get("projectName") as string;
     const projectDescription = formData.get("projectDescription") as string;
-    const projectCoverImage = formData.get("projectCoverImage") as File;
+    const projectMedia = formData.getAll("projectMedia") as File[];
     const projectLink = formData.get("projectLink") as string;
+    const dedicatedToPerson = formData.get("dedicatedToPerson") as string;
+    const dedicatedToBrand = formData.get("dedicatedToBrand") as string;
+    const dedicatedToCause = formData.get("dedicatedToCause") as string;
+    const dedicationReason = formData.get("dedicationReason") as string;
 
     // Validate required fields based on user role
     if (!name || !gender || !location || !dateOfBirth || !userRole) {
@@ -124,34 +128,44 @@ export const POST = async (req: NextRequest) => {
 
     // Handle project creation for creators (optional)
     if (userRole !== "explorer" && projectName && projectDescription) {
-      let projectCoverImageUrl = null;
+      const projectMediaUrls: string[] = [];
 
-      // Handle project cover image upload if provided
-      if (projectCoverImage && projectCoverImage.size > 0) {
+      // Handle project media upload if provided
+      if (projectMedia && projectMedia.length > 0) {
         try {
-          projectCoverImageUrl = await uploadFile(projectCoverImage);
-          if (!projectCoverImageUrl) {
-            return NextResponse.json(
-              { error: "Failed to upload project cover image" },
-              { status: 500 }
-            );
+          // Upload all media files
+          for (const mediaFile of projectMedia) {
+            if (mediaFile && mediaFile.size > 0) {
+              const mediaUrl = await uploadFile(mediaFile);
+              if (!mediaUrl) {
+                return NextResponse.json(
+                  { error: "Failed to upload project media" },
+                  { status: 500 }
+                );
+              }
+              projectMediaUrls.push(mediaUrl);
+            }
           }
         } catch (error) {
-          console.error("Error uploading project cover image:", error);
+          console.error("Error uploading project media:", error);
           return NextResponse.json(
-            { error: "Failed to upload project cover image" },
+            { error: "Failed to upload project media" },
             { status: 500 }
           );
         }
       }
 
       // Create project if all required fields are present
-      if (projectCoverImageUrl) {
+      if (projectMediaUrls.length > 0) {
         await db.insert(project).values({
           name: projectName,
           description: projectDescription,
-          media: [projectCoverImageUrl],
+          media: projectMediaUrls,
           link: projectLink || null,
+          dedicatedToPerson: dedicatedToPerson || null,
+          dedicatedToBrand: dedicatedToBrand || null,
+          dedicatedToCause: dedicatedToCause || null,
+          dedicationReason: dedicationReason || null,
           userId: userSession.user.id,
         });
       }

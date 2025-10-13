@@ -38,7 +38,7 @@ export default function ProjectUploadDialog() {
             <Plus className="w-4 h-4" />
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[700px]">
+        <DialogContent className="">
           <ScrollArea className="max-h-[600px] pr-4">
             <ProjectUploadForm setDialogOpen={setOpen} />
           </ScrollArea>

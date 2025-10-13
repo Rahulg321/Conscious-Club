@@ -8,11 +8,11 @@ interface ProfileCompletionStepProps {
   formData: OnboardingFormData;
   updateFormData: (
     field: keyof OnboardingFormData,
-    value: string | boolean | File | null
+    value: string | boolean | File | File[] | null
   ) => void;
   handleFileUpload: (
     event: React.ChangeEvent<HTMLInputElement>,
-    field: "profilePicture" | "projectCoverImage"
+    field: "profilePicture"
   ) => void;
 }
 

@@ -10,13 +10,13 @@ interface OnboardingContextType {
   formData: OnboardingFormData;
   updateFormData: (
     field: keyof OnboardingFormData,
-    value: string | boolean | File | null
+    value: string | boolean | File | File[] | null
   ) => void;
   nextStep: (maxSteps: number) => void;
   prevStep: () => void;
   handleFileUpload: (
     event: React.ChangeEvent<HTMLInputElement>,
-    field: "profilePicture" | "projectCoverImage"
+    field: "profilePicture"
   ) => void;
   submitOnboarding: () => void;
   isSubmitting: boolean;
