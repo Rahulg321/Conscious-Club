@@ -160,7 +160,7 @@
   }
 
   .box {
-    @apply mx-auto container px-4 sm:px-6 lg:px-8 py-14 lg:py-16;
+    @apply mx-auto container px-4 sm:px-6 lg:px-8 py-10 lg:py-16;
   }
 }
 
@@ -232,8 +232,20 @@ button {
 } */
 
 .spacer {
-  height: 40vh;
+  height: 25vh;
   position: relative;
+}
+
+@media (min-width: 1024px) {
+  .spacer {
+    height: 50vh;
+  }
+}
+
+@media (min-width: 1280px) {
+  .spacer {
+    height: 60vh;
+  }
 }
 
 .itc-font {

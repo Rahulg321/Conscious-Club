@@ -19,7 +19,9 @@ const HomePage = async () => {
     <div>
       <HeroSection />
       <JoinPlatform />
-      <ExplorersSections />
+      <div className="mt-0 lg:mt-[200px] xl:mt-[300px] 2xl:mt-[400px]">
+        <ExplorersSections />
+      </div>
       <AheadSection />
       <FAQSection />
       <JoinClubSection />

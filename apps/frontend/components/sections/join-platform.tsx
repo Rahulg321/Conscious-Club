@@ -47,7 +47,7 @@ const JoinPlatform = () => {
           pin: true,
           start: "top " + stackHeight,
           endTrigger: ".following-content",
-          end: "top " + (stackHeight + 100),
+          end: "top " + (stackHeight + 60),
           pinSpacing: false,
         });
       });
@@ -72,34 +72,32 @@ const JoinPlatform = () => {
           </div>
           <div className="boxes space-y-12">
             <div className="box box1">
-              <div>
+              <div className="flex justify-center">
                 <Image src={BenefitCard1} alt="Benefit Card 1" />
               </div>
             </div>
             <div className="box box2">
-              <div>
+              <div className="flex justify-center">
                 <Image src={BenefitCard2} alt="Benefit Card 2" />
               </div>
             </div>
             <div className="box box3">
-              <div>
+              <div className="flex justify-center">
                 <Image src={BenefitCard3} alt="Benefit Card 3" />
               </div>
             </div>
             <div className="box box4">
-              <div>
+              <div className="flex justify-center">
                 <Image src={BenefitCard4} alt="Benefit Card 4" />
               </div>
             </div>
             <div className="box box5">
-              <div>
+              <div className="flex justify-center">
                 <Image src={BenefitCard5} alt="Benefit Card 5" />
               </div>
             </div>
           </div>
           <div className="spacer following-content "></div>
-
-          <div className="spacer "></div>
         </div>
       </div>
     </div>

@@ -3,7 +3,7 @@ import SplitFeatureSection from "./SplitFeatureSection";
 
 const ExplorersSections = async () => {
   return (
-    <div className="block-space-mini">
+    <div className="block-space">
       <div className="flex flex-col items-center justify-center text-center my-8">
         <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3">
           Who is this for?
