@@ -20,7 +20,7 @@ export default function ProjectCard({
   const isMashup = project.isMashup && creatorName && collaboratorName;
 
   return (
-    <div className="group flex-shrink-0 w-80">
+    <div className="group w-full">
       <div className="h-full bg-[var(--color-card)] rounded-xl border border-[var(--color-border)] overflow-hidden hover:shadow-lg hover:border-[var(--color-primary)]/20 transition-all duration-300">
         {/* Media Container */}
         <div className="aspect-video relative bg-gradient-to-br from-[var(--color-muted)] to-[var(--color-muted)]/60 overflow-hidden">
@@ -29,13 +29,13 @@ export default function ProjectCard({
               src={previewMedia}
               alt={project.name}
               fill
-              className="object-contain group-hover:scale-110 transition-transform duration-500 ease-out"
+              className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           ) : previewMedia ? (
             <video
               src={previewMedia}
-              className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500 ease-out"
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
               muted
               loop
               playsInline

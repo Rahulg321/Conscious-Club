@@ -69,19 +69,19 @@ async function ProjectPage({ params }: PageProps) {
                 const isMediaVideo = isVideo(mediaUrl);
                 return (
                   <CarouselItem key={index}>
-                    <div className="relative w-full aspect-video bg-[var(--color-muted)] rounded-xl overflow-hidden border border-[var(--color-border)]">
+                    <div className="relative w-full aspect-video bg-gradient-to-br from-[var(--color-muted)] to-[var(--color-muted)]/60 rounded-xl overflow-hidden border border-[var(--color-border)] flex items-center justify-center">
                       {isMediaVideo ? (
                         <video
                           src={mediaUrl}
                           controls
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-contain"
                         />
                       ) : (
                         <Image
                           src={mediaUrl}
                           alt={`${project.name} - ${index + 1}`}
                           fill
-                          className="object-cover"
+                          className="object-contain p-2"
                           priority={index === 0}
                         />
                       )}

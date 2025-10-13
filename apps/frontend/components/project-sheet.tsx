@@ -157,7 +157,7 @@ export default function ProjectSheet() {
                             <video
                               src={mediaUrl}
                               controls
-                              className="w-full h-full object-cover"
+                              className="w-full h-full object-contain"
                             />
                           ) : (
                             <Image
@@ -165,7 +165,7 @@ export default function ProjectSheet() {
                               alt={`${project.name} - media ${index + 1}`}
                               fill
                               sizes="(max-width: 768px) 100vw, 50vw"
-                              className="object-cover"
+                              className="object-contain"
                             />
                           )}
                         </div>
