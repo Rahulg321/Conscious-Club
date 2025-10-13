@@ -125,12 +125,12 @@ export default function ProfileCard({
             return (
               <div
                 key={item.id}
-                className="relative overflow-hidden rounded-md"
+                className="relative overflow-hidden rounded-md bg-muted"
               >
                 <img
                   src={firstMedia}
                   alt={item.name}
-                  className="w-full h-20 object-cover"
+                  className="w-full h-20 object-contain"
                 />
               </div>
             );

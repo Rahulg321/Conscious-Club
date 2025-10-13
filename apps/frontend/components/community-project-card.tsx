@@ -53,7 +53,7 @@ export default function CommunityProjectCard({
           src={projectCoverImage}
           alt={projectName}
           fill
-          className="object-cover group-hover:scale-105 transition-transform duration-200"
+          className="object-contain group-hover:scale-105 transition-transform duration-200"
         />
       </div>
       <div className="p-4">

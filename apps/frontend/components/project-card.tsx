@@ -29,13 +29,13 @@ export default function ProjectCard({
               src={previewMedia}
               alt={project.name}
               fill
-              className="object-cover group-hover:scale-110 transition-transform duration-500 ease-out"
+              className="object-contain group-hover:scale-110 transition-transform duration-500 ease-out"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           ) : previewMedia ? (
             <video
               src={previewMedia}
-              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-out"
+              className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500 ease-out"
               muted
               loop
               playsInline
