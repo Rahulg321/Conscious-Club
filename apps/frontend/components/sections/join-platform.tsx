@@ -1,11 +1,6 @@
 "use client";
 
 import React from "react";
-import MonetizeContentSection from "./monetize-content";
-import CollabBrandsSection from "./collab-brands-section";
-import PlayEarnRewards from "./play-earn-rewards";
-import ExclusivePerks from "./exclusive-perks";
-import CommunityBanner from "./community-banner";
 import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";

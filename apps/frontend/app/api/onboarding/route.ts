@@ -44,8 +44,7 @@ export const POST = async (req: NextRequest) => {
       if (!discipline || !role) {
         return NextResponse.json(
           {
-            error:
-              "Discipline and role are required for creators and organizers",
+            error: "Discipline and role are required for creators",
           },
           { status: 400 }
         );
@@ -87,7 +86,7 @@ export const POST = async (req: NextRequest) => {
       location,
       socialUrl: socialMediaUrl || null,
       dateOfBirth: new Date(dateOfBirth),
-      type: userRole as "explorer" | "creator" | "organizer",
+      type: userRole as "explorer" | "creator",
       updatedAt: new Date(),
     };
 
@@ -123,7 +122,7 @@ export const POST = async (req: NextRequest) => {
       userSession.user.id
     );
 
-    // Handle project creation for creators and organizers (optional)
+    // Handle project creation for creators (optional)
     if (userRole !== "explorer" && projectName && projectDescription) {
       let projectCoverImageUrl = null;
 

@@ -96,9 +96,4 @@ export const USER_ROLES = [
     description:
       "Share your content, projects, and creative work with the community",
   },
-  {
-    value: "organizer" as UserRole,
-    title: "Organizer",
-    description: "Plan and host events, workshops, and community activities",
-  },
 ] as const;
