@@ -97,7 +97,8 @@ const JoinPlatform = () => {
               </div>
             </div>
           </div>
-          <div className="spacer "></div>
+          <div className="spacer following-content "></div>
+
           <div className="spacer "></div>
         </div>
       </div>
