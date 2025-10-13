@@ -26,9 +26,7 @@ export const useOnboardingFormWithURL = () => {
   const searchParams = useSearchParams();
   const { data: session, update: updateSession } = useSession();
 
-  // Get current step from URL params, default to 1
   const currentStep = parseInt(searchParams.get("step") || "1", 10);
-
   const [formData, setFormData] = useState<OnboardingFormData>(initialFormData);
   const [isSubmitting, isSubmittingTransition] = useTransition();
   const [submitError, setSubmitError] = useState<string | null>(null);

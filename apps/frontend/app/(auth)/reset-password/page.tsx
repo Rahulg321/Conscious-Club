@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
 import { toast } from "sonner";
+import Image from "next/image";
+import CClogo from "@/public/cc-home-logo.png";
 
 import { SubmitButton } from "@/components/buttons/submit-button";
 
@@ -57,6 +59,11 @@ export default function Page() {
 
   return (
     <div className="flex h-dvh w-screen items-start pt-12 md:pt-0 md:items-center justify-center bg-background">
+      <div className="absolute left-4 top-4 md:left-8 md:top-8">
+        <Link href="/">
+          <Image src={CClogo} alt="ConsciousClub Logo" />
+        </Link>
+      </div>
       <div className="w-full max-w-md overflow-hidden rounded-2xl flex flex-col gap-12">
         <div className="flex flex-col items-center justify-center gap-2 px-4 text-center sm:px-16 pt-12">
           <h3 className="text-xl font-semibold text-foreground">

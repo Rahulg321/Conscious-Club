@@ -49,14 +49,6 @@ export function ContactUsForm() {
 
   return (
     <div className="space-y-6">
-      <div className="text-center mb-6 md:mb-8 space-y-4">
-        <h2 className="font-bold">Get in Touch</h2>
-        <p className="text-muted-foreground">
-          We'd love to hear from you. Send us a message and we'll respond as
-          soon as possible.
-        </p>
-      </div>
-
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -9,6 +9,8 @@ import {
   Link as LinkIcon,
   Settings,
 } from "lucide-react";
+import Image from "next/image";
+import CClogo from "@/public/cc-home-logo.png";
 
 export const metadata = {
   title: "Auth Error ",
@@ -124,6 +126,11 @@ const ErrorPage = async ({
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 px-4">
+      <div className="absolute left-4 top-4 md:left-8 md:top-8">
+        <Link href="/">
+          <Image src={CClogo} alt="ConsciousClub Logo" />
+        </Link>
+      </div>
       <section
         className={`bg-white rounded-xl shadow-xl p-8 max-w-lg w-full text-center border ${colors.border}`}
       >

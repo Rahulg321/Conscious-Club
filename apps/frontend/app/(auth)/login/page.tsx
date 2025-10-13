@@ -4,6 +4,9 @@ import { ProviderButtons } from "@/components/provider-buttons";
 import { TestimonialPanel } from "@/components/testimonial-panel";
 import { redirect } from "next/navigation";
 import { Metadata } from "next";
+import Link from "next/link";
+import Image from "next/image";
+import CClogo from "@/public/cc-home-logo.png";
 
 export const metadata: Metadata = {
   title: "Login",
@@ -69,7 +72,11 @@ export default async function LoginPage({
     <main className="min-h-screen grid grid-cols-1 md:grid-cols-2">
       {/* Left: Auth panel with soft light gradient */}
       <section className="relative flex items-center justify-center bg-white ">
-        <div className="absolute left-4 top-4 md:left-8 md:top-8"></div>
+        <div className="absolute left-4 top-4 md:left-8 md:top-8">
+          <Link href="/">
+            <Image src={CClogo} alt="ConsciousClub Logo" />
+          </Link>
+        </div>
 
         <div className="w-full max-w-md px-4 py-12 md:px-8">
           <div className="text-center mb-6">

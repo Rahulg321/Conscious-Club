@@ -1,6 +1,8 @@
 import { getPasswordResetTokenByToken } from "@/lib/queries";
 import Link from "next/link";
 import NewPasswordFormSection from "./new-password-form-section";
+import Image from "next/image";
+import CClogo from "@/public/cc-home-logo.png";
 
 const ResetPasswordPage = async (props: {
   params: Promise<{ token: string }>;
@@ -17,6 +19,11 @@ const ResetPasswordPage = async (props: {
   if (!dbToken) {
     return (
       <div className="flex h-dvh w-screen items-start pt-12 md:pt-0 md:items-center justify-center bg-background">
+        <div className="absolute left-4 top-4 md:left-8 md:top-8">
+          <Link href="/">
+            <Image src={CClogo} alt="ConsciousClub Logo" />
+          </Link>
+        </div>
         <div className="w-full max-w-md overflow-hidden rounded-2xl flex flex-col gap-6">
           <div className="flex flex-col items-center justify-center gap-2 px-4 text-center sm:px-16">
             <h3 className="text-xl font-semibold">Invalid Token</h3>
@@ -40,6 +47,11 @@ const ResetPasswordPage = async (props: {
 
   return (
     <div className="flex h-dvh w-screen items-start pt-12 md:pt-0 md:items-center justify-center bg-background">
+      <div className="absolute left-4 top-4 md:left-8 md:top-8">
+        <Link href="/">
+          <Image src={CClogo} alt="ConsciousClub Logo" />
+        </Link>
+      </div>
       <div className="w-full max-w-md overflow-hidden rounded-2xl flex flex-col gap-12">
         <div className="flex flex-col items-center justify-center gap-2 px-4 pt-12 text-center sm:px-16">
           <h3 className="text-xl font-semibold">Set up a new Password</h3>

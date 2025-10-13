@@ -3,6 +3,9 @@ import { RegisterForm } from "@/components/forms/register-form";
 import { ProviderButtons } from "@/components/provider-buttons";
 import { TestimonialPanel } from "@/components/testimonial-panel";
 import { redirect } from "next/navigation";
+import Link from "next/link";
+import Image from "next/image";
+import CClogo from "@/public/cc-home-logo.png";
 
 export default async function RegisterPage() {
   const userSession = await auth();
@@ -13,7 +16,9 @@ export default async function RegisterPage() {
     <main className="min-h-screen grid grid-cols-1 md:grid-cols-2">
       <section className="relative flex items-center justify-center bg-white md:bg-[radial-gradient(60%_60%_at_0%_0%,rgba(109,92,255,0.12),transparent_60%),radial-gradient(60%_60%_at_100%_100%,rgba(255,255,255,0.85),transparent_50%)]">
         <div className="absolute left-4 top-4 md:left-8 md:top-8">
-          {/* <Logo /> */}
+          <Link href="/">
+            <Image src={CClogo} alt="ConsciousClub Logo" />
+          </Link>
         </div>
 
         <div className="w-full max-w-md px-4 py-12 md:px-8">
