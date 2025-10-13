@@ -5,14 +5,7 @@ import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { useState } from "react";
 import { Button } from "./ui/button";
-import {
-  FiPlus,
-  FiList,
-  FiCheckSquare,
-  FiEdit,
-  FiTrendingUp,
-  FiSearch,
-} from "react-icons/fi";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -126,7 +119,7 @@ export default function Header({
             isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
           }`}
         >
-          <div className="p-6">
+          <div className="p-6 h-full flex flex-col">
             {/* Close button */}
             <div className="flex justify-end mb-8">
               <button
@@ -138,57 +131,77 @@ export default function Header({
               </button>
             </div>
 
-            <nav className="flex flex-col gap-6">
-              {navLinks.map(({ label, href }) => (
-                <Link
-                  key={`mobile-${label}`}
-                  href={href}
-                  className={`transition-colors text-lg py-2 ${
-                    pathname === href
-                      ? "text-[#cf5b8d] font-medium"
-                      : "text-[#3e4a5b] hover:text-[#cf5b8d]"
-                  }`}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  {label}
-                </Link>
-              ))}
-
-              {/* Mobile Auth Section */}
-              <div className="flex flex-col gap-4 mt-8 pt-8 border-t border-gray-100">
-                {userSession ? (
-                  <div className="flex flex-col gap-4">
-                    <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                      <Avatar className="w-8 h-8">
-                        <AvatarImage
-                          src={
-                            userSession.user?.image ||
-                            "https://github.com/shadcn.png"
-                          }
-                          alt="@shadcn"
-                        />
-                        <AvatarFallback>CN</AvatarFallback>
-                      </Avatar>
-                      <div className="flex flex-col">
-                        <span className="text-sm font-medium text-[#3e4a5b]">
-                          {userSession.user?.name || "User"}
-                        </span>
-                        <span className="text-xs text-gray-500">
-                          {userSession.user?.email}
-                        </span>
-                      </div>
+            <nav className="flex flex-col gap-6 flex-1">
+              {userSession ? (
+                <>
+                  {/* User info at the top */}
+                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                    <Avatar className="w-8 h-8">
+                      <AvatarImage
+                        src={
+                          userSession.user?.image ||
+                          "https://github.com/shadcn.png"
+                        }
+                        alt="@shadcn"
+                      />
+                      <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-medium text-[#3e4a5b]">
+                        {userSession.user?.name || "User"}
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        {userSession.user?.email}
+                      </span>
                     </div>
-                    <button
-                      className="text-left text-[#3e4a5b] hover:text-[#cf5b8d] transition-colors text-lg py-2"
-                      onClick={() => {
-                        router.push(`/profile/${userSession.user?.id}`);
-                        setIsMobileMenuOpen(false);
-                      }}
+                  </div>
+
+                  {/* Profile link at the top */}
+                  <button
+                    className="text-left text-[#3e4a5b] hover:text-[#cf5b8d] transition-colors text-lg py-2"
+                    onClick={() => {
+                      router.push(`/profile/${userSession.user?.id}`);
+                      setIsMobileMenuOpen(false);
+                    }}
+                  >
+                    Profile
+                  </button>
+
+                  <div className="border-t border-gray-100 pt-6">
+                    {/* Home link */}
+                    <Link
+                      href="/"
+                      className={`transition-colors text-lg py-2 block ${
+                        pathname === "/"
+                          ? "text-[#cf5b8d] font-medium"
+                          : "text-[#3e4a5b] hover:text-[#cf5b8d]"
+                      }`}
+                      onClick={() => setIsMobileMenuOpen(false)}
                     >
-                      Profile
-                    </button>
+                      Home
+                    </Link>
+
+                    {/* Other nav links */}
+                    {navLinks.map(({ label, href }) => (
+                      <Link
+                        key={`mobile-${label}`}
+                        href={href}
+                        className={`transition-colors text-lg py-2 block ${
+                          pathname === href
+                            ? "text-[#cf5b8d] font-medium"
+                            : "text-[#3e4a5b] hover:text-[#cf5b8d]"
+                        }`}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        {label}
+                      </Link>
+                    ))}
+                  </div>
+
+                  {/* Logout at the bottom */}
+                  <div className="mt-auto pt-8 border-t border-gray-100">
                     <button
-                      className="text-left text-[#3e4a5b] hover:text-[#cf5b8d] transition-colors text-lg py-2"
+                      className="text-left text-[#3e4a5b] hover:text-[#cf5b8d] transition-colors text-lg py-2 w-full"
                       onClick={() => {
                         signOut();
                         setIsMobileMenuOpen(false);
@@ -197,8 +210,40 @@ export default function Header({
                       Logout
                     </button>
                   </div>
-                ) : (
-                  <>
+                </>
+              ) : (
+                <>
+                  {/* Home link */}
+                  <Link
+                    href="/"
+                    className={`transition-colors text-lg py-2 ${
+                      pathname === "/"
+                        ? "text-[#cf5b8d] font-medium"
+                        : "text-[#3e4a5b] hover:text-[#cf5b8d]"
+                    }`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Home
+                  </Link>
+
+                  {/* Other nav links */}
+                  {navLinks.map(({ label, href }) => (
+                    <Link
+                      key={`mobile-${label}`}
+                      href={href}
+                      className={`transition-colors text-lg py-2 ${
+                        pathname === href
+                          ? "text-[#cf5b8d] font-medium"
+                          : "text-[#3e4a5b] hover:text-[#cf5b8d]"
+                      }`}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      {label}
+                    </Link>
+                  ))}
+
+                  {/* Mobile Auth Section at bottom */}
+                  <div className="flex flex-col gap-4 mt-auto pt-8 border-t border-gray-100">
                     <a
                       href="/login"
                       className="text-[#3e4a5b] hover:text-[#cf5b8d] transition-colors text-lg py-2"
@@ -215,9 +260,9 @@ export default function Header({
                     >
                       Sign-up
                     </button>
-                  </>
-                )}
-              </div>
+                  </div>
+                </>
+              )}
             </nav>
           </div>
         </div>
