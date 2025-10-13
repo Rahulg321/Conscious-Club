@@ -11,7 +11,6 @@ import { Edit, Heart, Loader2, Share, Sparkles } from "lucide-react";
 import { redirect } from "next/navigation";
 import React, { Suspense } from "react";
 import Image from "next/image";
-import BannerUploadDialog from "@/components/dialogs/banner-upload-dialog";
 import ProfilePicUploadDialog from "@/components/dialogs/profile-pic-upload-dialog";
 import ProjectCard from "@/components/project-card";
 import { Metadata } from "next";
@@ -51,25 +50,11 @@ const ProfilePage = async ({ params }: Props) => {
 
   return (
     <div>
-      <div className="relative h-32 md:h-48 bg-gradient-to-r from-[#4d83c9] to-[#42354a] overflow-hidden">
-        {currentUser.bannerImage && (
-          <Image
-            src={currentUser.bannerImage}
-            fill
-            alt="Profile banner"
-            className="w-full h-full object-cover"
-          />
-        )}
-        <div className="absolute top-2 md:top-4 right-2 md:right-4">
-          <BannerUploadDialog />
-        </div>
-      </div>
-
-      <div className="px-4 md:px-8 py-4 md:py-6">
+      <div className="px-4 md:px-8 py-6 md:py-8">
         <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-6 gap-4">
           <div className="flex flex-col md:flex-row md:items-start gap-4 md:gap-6">
             <div className="relative self-center md:self-start">
-              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full border-4 border-white shadow-lg -mt-8 md:-mt-12 relative">
+              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full border-4 border-gray-100 shadow-lg relative">
                 <Image
                   src={currentUser.image || "/user-placeholder.png"}
                   fill
