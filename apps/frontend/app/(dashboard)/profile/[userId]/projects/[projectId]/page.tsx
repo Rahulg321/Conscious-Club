@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { getProjectById, getProjectByIdWithStats } from "@/lib/queries";
 import { Heart, MessageCircle, Award } from "lucide-react";
@@ -13,6 +13,8 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { auth } from "@/auth";
+import { ja } from "date-fns/locale";
 
 type PageProps = {
   params: Promise<{ userId: string; projectId: string }>;
@@ -28,6 +30,16 @@ export async function generateMetadata({ params }: PageProps) {
 }
 
 async function ProjectPage({ params }: PageProps) {
+  const userSession = await auth();
+
+  if (!userSession) {
+    redirect("/login");
+  }
+
+  if (userSession.user.id !== (await params).userId) {
+    redirect("/");
+  }
+
   const { userId, projectId } = await params;
 
   const project = await getProjectByIdWithStats(projectId);

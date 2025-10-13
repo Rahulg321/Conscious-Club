@@ -10,9 +10,18 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import LikeButton from "./like-button";
 import ProjectCommentForm from "./forms/project-comment-form";
 import ProjectCommentsList from "./project-comments-list";
+import { isVideo } from "@/lib/utils";
+import { Award } from "lucide-react";
 
 type ProjectDetails = {
   id: string;
@@ -21,14 +30,13 @@ type ProjectDetails = {
   media: string[] | null;
   logoImage: string | null;
   link: string | null;
+  dedicatedToPerson: string | null;
+  dedicatedToBrand: string | null;
+  dedicatedToCause: string | null;
+  dedicationReason: string | null;
   tags: string[];
   likeCount: number;
   isLiked: boolean;
-};
-
-// Helper function to check if URL is a video
-const isVideo = (url: string) => {
-  return /\.(mp4|webm|mov)(\?|$)/i.test(url);
 };
 
 export default function ProjectSheet() {
@@ -109,6 +117,12 @@ export default function ProjectSheet() {
     }
   };
 
+  // Check if there are any dedications
+  const hasDedications =
+    project?.dedicatedToPerson ||
+    project?.dedicatedToBrand ||
+    project?.dedicatedToCause;
+
   return (
     <Sheet open={open} onOpenChange={handleOpenChange}>
       <SheetContent
@@ -129,98 +143,154 @@ export default function ProjectSheet() {
         </div>
 
         <div className="flex-1 overflow-y-auto px-6 pb-6">
-          <div className="mt-6 grid grid-cols-1 md:grid-cols-12 gap-6">
-            {/* Media Gallery */}
-            <div className="md:col-span-7 space-y-4">
-              {project?.media && project.media.length > 0 ? (
-                project.media.map((mediaUrl, index) => {
-                  const isMediaVideo = isVideo(mediaUrl);
-                  return (
-                    <div
-                      key={index}
-                      className="relative w-full aspect-video rounded-lg overflow-hidden border border-border bg-muted"
-                    >
-                      {isMediaVideo ? (
-                        <video
-                          src={mediaUrl}
-                          controls
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <Image
-                          src={mediaUrl}
-                          alt={`${project.name} - media ${index + 1}`}
-                          fill
-                          sizes="(max-width: 768px) 100vw, 50vw"
-                          className="object-cover"
-                        />
-                      )}
-                    </div>
-                  );
-                })
-              ) : (
-                <div className="w-full aspect-video rounded-lg border border-dashed border-border bg-muted/40 flex items-center justify-center text-muted-foreground">
-                  No media available
-                </div>
-              )}
-            </div>
-
-            {/* Meta / Details */}
-            <div className="md:col-span-5">
-              <div className="space-y-4">
-                {project?.tags?.length ? (
-                  <div className="flex flex-wrap gap-2">
-                    {project.tags.map((t) => (
-                      <span
-                        key={t}
-                        className="inline-block px-2 py-1 text-xs font-medium text-primary bg-primary/10 rounded-full"
-                      >
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                ) : null}
-
-                {project && (
-                  <div className="flex items-center gap-2">
-                    <LikeButton
-                      projectId={project.id}
-                      initialLikeCount={likeCount}
-                      initialIsLiked={isLiked}
-                      onLikeToggle={handleLikeToggle}
-                    />
-                  </div>
+          {/* Media Carousel */}
+          <div className="mt-6 mb-6">
+            {project?.media && project.media.length > 0 ? (
+              <Carousel className="w-full">
+                <CarouselContent>
+                  {project.media.map((mediaUrl, index) => {
+                    const isMediaVideo = isVideo(mediaUrl);
+                    return (
+                      <CarouselItem key={index}>
+                        <div className="relative w-full aspect-video rounded-lg overflow-hidden border border-border bg-muted">
+                          {isMediaVideo ? (
+                            <video
+                              src={mediaUrl}
+                              controls
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <Image
+                              src={mediaUrl}
+                              alt={`${project.name} - media ${index + 1}`}
+                              fill
+                              sizes="(max-width: 768px) 100vw, 50vw"
+                              className="object-cover"
+                            />
+                          )}
+                        </div>
+                      </CarouselItem>
+                    );
+                  })}
+                </CarouselContent>
+                {project.media.length > 1 && (
+                  <>
+                    <CarouselPrevious className="left-2" />
+                    <CarouselNext className="right-2" />
+                  </>
                 )}
+              </Carousel>
+            ) : (
+              <div className="w-full aspect-video rounded-lg border border-dashed border-border bg-muted/40 flex items-center justify-center text-muted-foreground">
+                No media available
               </div>
-            </div>
+            )}
           </div>
 
-          {/* Long description section */}
-          {project?.description ? (
-            <div className="mt-8">
-              <h3 className="text-sm font-medium text-muted-foreground mb-2">
-                About this project
-              </h3>
-              <p className="text-sm leading-6 text-card-foreground/90 whitespace-pre-line">
-                {project.description}
-              </p>
-            </div>
-          ) : null}
+          <div className="space-y-6">
+            {/* Tags and Like Section */}
+            {project?.tags?.length ? (
+              <div className="flex flex-wrap gap-2">
+                {project.tags.map((t) => (
+                  <span
+                    key={t}
+                    className="inline-block px-2 py-1 text-xs font-medium text-primary bg-primary/10 rounded-full"
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+            ) : null}
 
-          {projectId && (
-            <div className="mt-8 space-y-6">
-              <ProjectCommentsList
-                key={`comments-${projectId}`}
-                projectId={projectId}
-                onCommentAdded={handleCommentAdded}
-              />
-              <ProjectCommentForm
-                key={`form-${projectId}`}
-                projectId={projectId}
-                onCommentAdded={handleCommentAdded}
-              />
-            </div>
-          )}
+            {project && (
+              <div className="flex items-center gap-2">
+                <LikeButton
+                  projectId={project.id}
+                  initialLikeCount={likeCount}
+                  initialIsLiked={isLiked}
+                  onLikeToggle={handleLikeToggle}
+                />
+              </div>
+            )}
+
+            {/* Description section */}
+            {project?.description && (
+              <div>
+                <h3 className="text-sm font-medium text-muted-foreground mb-2">
+                  About this project
+                </h3>
+                <p className="text-sm leading-6 text-card-foreground/90 whitespace-pre-line">
+                  {project.description}
+                </p>
+              </div>
+            )}
+
+            {/* Dedications Section */}
+            {hasDedications && (
+              <div className="rounded-lg border border-border bg-card p-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <Award className="h-4 w-4 text-primary" />
+                  <h3 className="text-sm font-semibold">Dedications</h3>
+                </div>
+
+                <div className="space-y-2 text-sm">
+                  {project.dedicatedToPerson && (
+                    <div>
+                      <span className="font-medium">Dedicated to: </span>
+                      <span className="text-muted-foreground">
+                        {project.dedicatedToPerson}
+                      </span>
+                    </div>
+                  )}
+
+                  {project.dedicatedToBrand && (
+                    <div>
+                      <span className="font-medium">Brand: </span>
+                      <span className="text-muted-foreground">
+                        {project.dedicatedToBrand}
+                      </span>
+                    </div>
+                  )}
+
+                  {project.dedicatedToCause && (
+                    <div>
+                      <span className="font-medium">Cause: </span>
+                      <span className="text-muted-foreground">
+                        {project.dedicatedToCause}
+                      </span>
+                    </div>
+                  )}
+
+                  {project.dedicationReason && (
+                    <div className="pt-2 border-t border-border">
+                      <span className="font-medium block mb-1">
+                        Why this dedication:
+                      </span>
+                      <p className="text-muted-foreground leading-relaxed">
+                        {project.dedicationReason}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Comments Section */}
+            {projectId && (
+              <div className="space-y-6">
+                <ProjectCommentsList
+                  key={`comments-${projectId}`}
+                  projectId={projectId}
+                  onCommentAdded={handleCommentAdded}
+                />
+                <ProjectCommentForm
+                  key={`form-${projectId}`}
+                  projectId={projectId}
+                  onCommentAdded={handleCommentAdded}
+                />
+              </div>
+            )}
+          </div>
         </div>
       </SheetContent>
     </Sheet>
