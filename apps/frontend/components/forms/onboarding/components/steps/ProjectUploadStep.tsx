@@ -152,8 +152,8 @@ export const ProjectUploadStep = ({
             onClick={() => mediaRef.current?.click()}
             className="w-full"
           >
-            <Upload className="mr-2 h-4 w-4" />
-            Upload Media (Images or Videos)
+            <Plus className="mr-2 h-3 w-3" />
+            Add More Media ({formData.projectMedia?.length || 0}/4)
           </Button>
         )}
 
@@ -205,7 +205,7 @@ export const ProjectUploadStep = ({
 
       {/* Project Name */}
       <div className="space-y-2">
-        <Label htmlFor="projectName">Project Name</Label>
+        <Label htmlFor="projectName">Title</Label>
         <Input
           id="projectName"
           value={formData.projectName}
@@ -216,7 +216,7 @@ export const ProjectUploadStep = ({
 
       {/* Project Description */}
       <div className="space-y-2">
-        <Label htmlFor="projectDescription">Project Description</Label>
+        <Label htmlFor="projectDescription">Caption</Label>
         <Textarea
           id="projectDescription"
           value={formData.projectDescription}
@@ -280,7 +280,7 @@ export const ProjectUploadStep = ({
         {/* Dedication Reason */}
         <div className="space-y-2">
           <Label htmlFor="dedicationReason" className="text-sm">
-            Why do you want to dedicate this?
+            And Why?
           </Label>
           <Textarea
             id="dedicationReason"

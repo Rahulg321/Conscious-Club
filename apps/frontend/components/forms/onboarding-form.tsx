@@ -136,7 +136,7 @@ export function OnboardingForm() {
               disabled={isSubmitting}
               className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50"
             >
-              {isSubmitting ? "Submitting..." : "Get Started"}
+              {isSubmitting ? "Saving..." : "Save"}
             </Button>
           )}
         </div>
