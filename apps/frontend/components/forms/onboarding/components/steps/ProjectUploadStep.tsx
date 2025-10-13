@@ -226,20 +226,6 @@ export const ProjectUploadStep = ({
         />
       </div>
 
-      {/* Project Link */}
-      <div className="space-y-2">
-        <Label htmlFor="projectLink">Project Link (Optional)</Label>
-        <Input
-          id="projectLink"
-          value={formData.projectLink}
-          onChange={(e) => updateFormData("projectLink", e.target.value)}
-          placeholder="https://your-project.com or https://github.com/username/project"
-        />
-        <p className="text-sm text-muted-foreground">
-          Add a link to your project website, GitHub repository, or demo
-        </p>
-      </div>
-
       {/* Dedications Section */}
       <div className="space-y-3">
         <div className="space-y-1">

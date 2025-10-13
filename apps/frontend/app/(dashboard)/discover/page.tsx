@@ -31,6 +31,7 @@ export default async function DiscoverPage({
   const userSession = await auth();
 
   if (!userSession) redirect("/login");
+  if (!userSession.user.onboardingCompleted) redirect("/onboarding");
   const projectTags = await getAllTags();
 
   const { page, query, tags, type } = await searchParams;

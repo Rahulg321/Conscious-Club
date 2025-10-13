@@ -40,12 +40,12 @@ type Props = {
 
 const ProfilePage = async ({ params }: Props) => {
   const { userId } = await params;
-  if (!userId) redirect("/");
   const userSession = await auth();
   if (!userSession) redirect("/login");
   if (userSession.user.id !== userId) redirect("/");
   const currentUser = await getCachedUserById(userId);
   if (!currentUser) redirect("/");
+  if (!currentUser.onboardingCompleted) redirect("/onboarding");
 
   const { followers, following } = await getUserFollowCounts(userId);
 
