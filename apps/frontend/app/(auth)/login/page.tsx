@@ -69,7 +69,7 @@ export default async function LoginPage({
   const errorInfo = getErrorMessage(error);
 
   return (
-    <main className="min-h-screen grid grid-cols-1 md:grid-cols-2">
+    <main className="min-h-svh grid grid-cols-1 md:grid-cols-2">
       {/* Left: Auth panel with soft light gradient */}
       <section className="relative flex items-center justify-center bg-white ">
         <div className="absolute left-4 top-4 md:left-8 md:top-8">

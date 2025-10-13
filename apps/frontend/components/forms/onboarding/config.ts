@@ -39,7 +39,7 @@ export const getStepsForRole = (userRole: UserRole): OnboardingStep[] => {
       {
         id: 4,
         title: "Add Creation",
-        description: "Bring your magic to the playground*",
+        description: "Bring your magic to the playground⭐️",
       },
     ];
   }
