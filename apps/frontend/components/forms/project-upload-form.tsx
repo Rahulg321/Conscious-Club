@@ -409,7 +409,7 @@ function ProjectUploadForm({
             name="dedicationReason"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-sm">Why?</FormLabel>
+                <FormLabel className="text-sm">And Why?</FormLabel>
                 <FormControl>
                   <Textarea
                     placeholder="Tell us why this dedication is meaningful to you..."
@@ -424,7 +424,7 @@ function ProjectUploadForm({
         </div>
 
         <Button type="submit" disabled={isSubmitting} className="h-9">
-          {isSubmitting ? "Uploading..." : "Upload Project"}
+          {isSubmitting ? "Saving..." : "Save"}
         </Button>
       </form>
     </Form>
