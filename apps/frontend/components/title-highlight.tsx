@@ -10,12 +10,12 @@ const TitleHighlight = () => {
             md:text-[72px]
             lg:text-[96px]
             xl:text-[108px]
-            text-[rgba(212,110,154,1)]
+            text-red-600
             leading-none
             font-semibold
           "
       >
-        Conscious Clubb
+        ConsciousClubb
       </h1>
     </div>
   );
