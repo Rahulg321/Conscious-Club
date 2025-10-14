@@ -20,8 +20,8 @@ export default function ContactUsPage() {
               Get in Touch
             </h1>
             <p className="mt-3 text-base text-gray-600">
-              We'd love to hear from you. Send us a message and we'll respond as
-              soon as possible.
+              We'd love to hear from you. Send us a message and we'll respond
+              within 24 hours as possible.
             </p>
           </div>
 

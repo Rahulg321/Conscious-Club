@@ -11,7 +11,6 @@ import {
   updateUserEmailVerification,
 } from "./lib/queries";
 
-// Define admin emails - you can move this to environment variables for better security
 const ADMIN_EMAILS = [
   "admin@consciousclub.com",
   "rahul@consciousclub.com",
@@ -20,10 +19,8 @@ const ADMIN_EMAILS = [
   "rahul@darkalphacapital.com",
   "info@ravisi.ms",
   "manavi@ravisi.ms",
-  // Add more admin emails as needed
 ];
 
-// Helper function to check if email is admin
 const isAdminEmail = (email: string): boolean => {
   return ADMIN_EMAILS.includes(email.toLowerCase());
 };
