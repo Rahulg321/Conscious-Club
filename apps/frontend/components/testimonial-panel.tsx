@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export function TestimonialPanel({ imageUrl }: { imageUrl: string }) {
   return (
-    <div className="relative w-full h-full  overflow-hidden">
+    <div className="relative w-full h-full overflow-hidden">
       <Image
         src={
           imageUrl ||

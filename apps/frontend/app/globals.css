@@ -156,7 +156,7 @@
   }
 
   p {
-    @apply leading-4;
+    @apply leading-8;
   }
 
   .box {
