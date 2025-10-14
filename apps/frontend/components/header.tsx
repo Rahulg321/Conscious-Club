@@ -276,7 +276,7 @@ function ProfileMenu({ session }: { session: Session }) {
   console.log("session", session);
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex items-center gap-2">
+      <DropdownMenuTrigger className="flex cursor-pointer items-center gap-2">
         <Avatar>
           <AvatarImage
             src={session.user?.image || "https://github.com/shadcn.png"}
@@ -290,6 +290,7 @@ function ProfileMenu({ session }: { session: Session }) {
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem
+          className="cursor-pointer"
           onClick={() => {
             router.push(`/profile/${session.user?.id}`);
           }}
@@ -297,6 +298,7 @@ function ProfileMenu({ session }: { session: Session }) {
           Profile
         </DropdownMenuItem>
         <DropdownMenuItem
+          className="cursor-pointer"
           onClick={() => {
             signOut();
           }}
