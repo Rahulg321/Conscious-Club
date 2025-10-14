@@ -52,7 +52,7 @@ export default function ProjectSearchFilter({
       )}
       <Input
         className="h-8 pl-8 w-full "
-        placeholder={showProfiles ? "Search Creators" : "Search Creations"}
+        placeholder={"Search"}
         onChange={(e) => {
           handleSearch(e.target.value);
         }}
