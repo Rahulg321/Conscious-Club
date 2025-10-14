@@ -277,7 +277,14 @@ export async function getFilteredMashupProjects(
     if (query) {
       const searchOr = or(
         ilike(project.name, `%${query}%`),
-        ilike(project.description, `%${query}%`)
+        ilike(project.description, `%${query}%`),
+        ilike(project.link, `%${query}%`),
+        ilike(project.dedicatedToPerson, `%${query}%`),
+        ilike(project.dedicatedToBrand, `%${query}%`),
+        ilike(project.dedicatedToCause, `%${query}%`),
+        ilike(project.dedicationReason, `%${query}%`),
+        ilike(creator.name, `%${query}%`),
+        ilike(collaborator.name, `%${query}%`)
       );
       if (searchOr) conditions.push(searchOr);
     }
@@ -465,7 +472,13 @@ export async function getFilteredProjects(
       conditions.push(
         or(
           ilike(project.name, `%${query}%`),
-          ilike(project.description, `%${query}%`)
+          ilike(project.description, `%${query}%`),
+          ilike(project.link, `%${query}%`),
+          ilike(project.dedicatedToPerson, `%${query}%`),
+          ilike(project.dedicatedToBrand, `%${query}%`),
+          ilike(project.dedicatedToCause, `%${query}%`),
+          ilike(project.dedicationReason, `%${query}%`),
+          ilike(tags.name, `%${query}%`)
         )
       );
     }
@@ -592,9 +605,12 @@ export async function getFilteredUserProfiles(
       conditions.push(
         or(
           ilike(user.name, `%${query}%`),
+          ilike(user.bio, `%${query}%`),
           ilike(user.location, `%${query}%`),
           ilike(user.discipline, `%${query}%`),
-          ilike(user.role, `%${query}%`)
+          ilike(user.role, `%${query}%`),
+          ilike(user.socialUrl, `%${query}%`),
+          ilike(user.fun, `%${query}%`)
         )
       );
     }

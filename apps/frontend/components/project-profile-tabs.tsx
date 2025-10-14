@@ -34,9 +34,15 @@ const ProjectProfileTabs = () => {
   return (
     <Tabs value={currentType} onValueChange={handleTabChange} className="">
       <TabsList>
-        <TabsTrigger value="projects">Projects</TabsTrigger>
-        <TabsTrigger value="mashups">Mashups</TabsTrigger>
-        <TabsTrigger value="profiles">Profiles</TabsTrigger>
+        <TabsTrigger className="cursor-pointer" value="projects">
+          Creations
+        </TabsTrigger>
+        <TabsTrigger className="cursor-pointer" value="mashups">
+          Mashups
+        </TabsTrigger>
+        <TabsTrigger className="cursor-pointer" value="profiles">
+          Profiles
+        </TabsTrigger>
       </TabsList>
     </Tabs>
   );
