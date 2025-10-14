@@ -72,13 +72,6 @@ export default async function DiscoverPage({
 
       <main className="max-w-7xl mx-auto px-6 py-8">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-2xl font-semibold text-gray-900">
-            {showProfiles
-              ? "Explore Profiles"
-              : showMashups
-                ? "Explore Mashups"
-                : "Explore Creations"}
-          </h1>
           <Suspense
             fallback={<span className="text-gray-500">Loading...</span>}
           >
