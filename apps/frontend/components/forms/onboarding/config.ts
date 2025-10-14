@@ -46,35 +46,19 @@ export const getStepsForRole = (userRole: UserRole): OnboardingStep[] => {
 };
 
 export const DISCIPLINES = [
-  "Writing & Storytelling",
-  "Performance & Audio",
-  "Tech & Digital Creation",
-  "Visual Arts & Design",
-  "Video & Motion Media",
+  "Visuals",
+  "Motion",
+  "Writing",
+  "Performance",
+  "Digital",
 ] as const;
 
 export const DISCIPLINE_TO_ROLES: Record<string, string[]> = {
-  "Writing & Storytelling": ["Copywriting", "Blogging", "Storytelling"],
-  "Performance & Audio": [
-    "Dance",
-    "Music",
-    "Voice Actor",
-    "Podcasting",
-    "Theatre",
-    "Fitness",
-  ],
-  "Tech & Digital Creation": [
-    "AI Art & Generative Content",
-    "Code-based Creativity",
-    "3D Modelling",
-  ],
-  "Visual Arts & Design": [
-    "Art & Mixed Media",
-    "Illustration",
-    "Graphic Design",
-    "Photography",
-  ],
-  "Video & Motion Media": ["Reels", "Vlogging", "Animation", "AR/VR"],
+  Visuals: ["Art & Mixed Media", "Illustration & Design", "Photography"],
+  Motion: ["Reels", "Vlogging", "Animation"],
+  Writing: ["Copywriting", "Blogging", "Storytelling"],
+  Performance: ["Dance", "Music", "Verbal Art", "Theatre", "Fitness"],
+  Digital: ["AI Art & Generative Content", "Creative Coding", "3D Modelling"],
 };
 
 export const GENDER_OPTIONS = [
