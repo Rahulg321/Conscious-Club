@@ -13,7 +13,9 @@ app.use("/upload-project", uploadProjectRouter);
 app.get("/", (req, res) => {
   console.log("Root request received");
 
-  res.status(200).json({ message: "Hello World" });
+  res
+    .status(200)
+    .json({ message: "Hello World", timestamp: new Date().toISOString() });
 });
 
 app.get("/health", (req, res) => {
