@@ -13,6 +13,9 @@ import ProfileCard from "@/components/profile-card";
 import ProfileCardSkeleton from "@/components/skeletons/profile-card-skeleton";
 import CommunityProjectCard from "@/components/community-project-card";
 import ProjectSheet from "../../../components/project-sheet";
+import { Session } from "next-auth";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 export const metadata = {
   title: "Community",
@@ -24,6 +27,10 @@ export default async function CommunityPage({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
+  const userSession = await auth();
+
+  if (!userSession) redirect("/login");
+  if (!userSession.user.onboardingCompleted) redirect("/onboarding");
   const projectTags = await getAllTags();
 
   const { page, query, tags, type } = await searchParams;
@@ -94,6 +101,7 @@ export default async function CommunityPage({
               personSearchQuery={projectSearchQuery || ""}
               limit={limit}
               offset={offset}
+              userSession={userSession as Session}
             />
           </Suspense>
         ) : (
@@ -209,10 +217,12 @@ async function FetchAndDisplayUserProfiles({
   personSearchQuery,
   limit,
   offset,
+  userSession,
 }: {
   personSearchQuery: string | undefined;
   limit: number;
   offset: number;
+  userSession: Session;
 }) {
   const { userProfiles, totalPages } = await getFilteredUserProfiles(
     personSearchQuery,
@@ -225,7 +235,7 @@ async function FetchAndDisplayUserProfiles({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {userProfiles?.map((userProfile) => (
           <div key={userProfile.id}>
-            <ProfileCard userProfile={userProfile} />
+            <ProfileCard userProfile={userProfile} userSession={userSession} />
           </div>
         ))}
       </div>

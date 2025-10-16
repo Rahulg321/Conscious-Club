@@ -30,13 +30,16 @@ import {
 import { Shuffle } from "lucide-react";
 import useMediaQuery from "@/hooks/use-media-query";
 import ProjectUploadForm from "../forms/project-upload-form";
+import { Session } from "next-auth";
 
 export default function MashupDialog({
   collaboratorId,
   collaboratorName,
+  userSession,
 }: {
   collaboratorId: string;
   collaboratorName?: string;
+  userSession: Session;
 }) {
   const [open, setOpen] = React.useState(false);
   const [showUploadForm, setShowUploadForm] = React.useState(false);
@@ -94,6 +97,7 @@ export default function MashupDialog({
                 setDialogOpen={setOpen}
                 isMashup={true}
                 collaboratorId={collaboratorId}
+                userSession={userSession}
               />
             </ScrollArea>
           ) : (
@@ -137,6 +141,7 @@ export default function MashupDialog({
               setDialogOpen={setOpen}
               isMashup={true}
               collaboratorId={collaboratorId}
+              userSession={userSession}
             />
           </ScrollArea>
         ) : (

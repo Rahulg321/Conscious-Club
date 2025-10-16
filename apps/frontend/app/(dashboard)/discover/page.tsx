@@ -17,6 +17,7 @@ import ProfileCard from "@/components/profile-card";
 import ProfileCardSkeleton from "@/components/skeletons/profile-card-skeleton";
 import ProjectSheet from "@/components/project-sheet";
 import { Sparkles } from "lucide-react";
+import { Session } from "next-auth";
 
 export const metadata = {
   title: "Discover Projects",
@@ -106,6 +107,7 @@ export default async function DiscoverPage({
               limit={limit}
               offset={offset}
               currentUserId={userSession.user.id}
+              userSession={userSession}
             />
           </Suspense>
         ) : showMashups ? (
@@ -264,11 +266,13 @@ async function FetchAndDisplayUserProfiles({
   limit,
   offset,
   currentUserId,
+  userSession,
 }: {
   personSearchQuery: string | undefined;
   limit: number;
   offset: number;
   currentUserId: string;
+  userSession: Session;
 }) {
   const { userProfiles, totalPages, totalUsers } =
     await getFilteredUserProfiles(
@@ -286,6 +290,7 @@ async function FetchAndDisplayUserProfiles({
             <ProfileCard
               userProfile={userProfile}
               currentUserId={currentUserId}
+              userSession={userSession}
             />
           </div>
         ))}

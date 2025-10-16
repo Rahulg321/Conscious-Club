@@ -23,6 +23,7 @@ import {
 import { toast } from "sonner";
 import { X, Plus, Upload, PlusCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Session } from "next-auth";
 
 interface MediaPreview {
   url: string;
@@ -34,9 +35,11 @@ function ProjectUploadForm({
   setDialogOpen,
   isMashup = false,
   collaboratorId,
+  userSession,
 }: {
   setDialogOpen: (open: boolean) => void;
   isMashup?: boolean;
+  userSession: Session;
   collaboratorId?: string;
 }) {
   const [isSubmitting, startTransition] = useTransition();
@@ -124,10 +127,16 @@ function ProjectUploadForm({
           formData.append("media", file);
         });
 
-        const response = await fetch("/api/upload-project", {
-          method: "POST",
-          body: formData,
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/upload-project`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${userSession.user.accessToken}`,
+            },
+            body: formData,
+          }
+        );
 
         if (!response.ok) {
           console.log(response);

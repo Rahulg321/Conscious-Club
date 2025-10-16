@@ -17,6 +17,7 @@ import { Metadata } from "next";
 import { getCachedUserById } from "@/lib/cached-queries";
 import Link from "next/link";
 import ProfileEditDialog from "@/components/dialogs/profile-edit-dialog";
+import { Session } from "next-auth";
 
 export async function generateMetadata({
   params,
@@ -126,7 +127,10 @@ const ProfilePage = async ({ params }: Props) => {
               </div>
             }
           >
-            <DisplayUserProjectWork currentUserId={userSession.user.id} />
+            <DisplayUserProjectWork
+              currentUserId={userSession.user.id}
+              userSession={userSession}
+            />
           </Suspense>
         </div>
 
@@ -150,8 +154,10 @@ export default ProfilePage;
 
 async function DisplayUserProjectWork({
   currentUserId,
+  userSession,
 }: {
   currentUserId: string;
+  userSession: Session;
 }) {
   const projects = await getUserProjects(currentUserId);
 
@@ -163,7 +169,7 @@ async function DisplayUserProjectWork({
             <Link href={`/profile/${currentUserId}/projects`}>View All</Link>
           </Button>
 
-          <ProjectUploadDialog />
+          <ProjectUploadDialog userSession={userSession} />
         </div>
       </div>
 

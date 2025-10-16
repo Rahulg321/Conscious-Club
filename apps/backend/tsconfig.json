@@ -14,6 +14,15 @@
     "verbatimModuleSyntax": true,
     "noEmit": true,
 
+    // Path mapping for clean imports
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"],
+      "@/lib/*": ["./lib/*"],
+      "@/middleware/*": ["./middleware/*"],
+      "@/routes/*": ["./routes/*"]
+    },
+
     // Best practices
     "strict": true,
     "skipLibCheck": true,

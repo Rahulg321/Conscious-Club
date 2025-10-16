@@ -18,8 +18,13 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import ProjectUploadForm from "../forms/project-upload-form";
 import useMediaQuery from "@/hooks/use-media-query";
 import { Plus } from "lucide-react";
+import { Session } from "next-auth";
 
-export default function ProjectUploadDialog() {
+export default function ProjectUploadDialog({
+  userSession,
+}: {
+  userSession: Session;
+}) {
   const [open, setOpen] = React.useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
@@ -35,7 +40,10 @@ export default function ProjectUploadDialog() {
             </DialogTrigger>
             <DialogContent className="">
               <ScrollArea className="max-h-[600px] pr-4">
-                <ProjectUploadForm setDialogOpen={setOpen} />
+                <ProjectUploadForm
+                  setDialogOpen={setOpen}
+                  userSession={userSession}
+                />
               </ScrollArea>
             </DialogContent>
           </div>
@@ -59,7 +67,10 @@ export default function ProjectUploadDialog() {
           </DrawerDescription>
         </DrawerHeader>
         <ScrollArea className="max-h-[500px] px-4">
-          <ProjectUploadForm setDialogOpen={setOpen} />
+          <ProjectUploadForm
+            setDialogOpen={setOpen}
+            userSession={userSession}
+          />
         </ScrollArea>
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>

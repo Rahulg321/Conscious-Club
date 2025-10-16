@@ -10,13 +10,16 @@ import { followUser, unfollowUser } from "@/lib/actions/follow-action";
 import { useTransition } from "react";
 import { toast } from "sonner";
 import MashupDialog from "./dialogs/mashup-dialog";
+import { Session } from "next-auth";
 
 export default function ProfileCard({
   userProfile,
   currentUserId,
+  userSession,
 }: {
   userProfile: UserProfile;
   currentUserId?: string;
+  userSession: Session;
 }) {
   const [isPending, startTransition] = useTransition();
 
@@ -109,6 +112,7 @@ export default function ProfileCard({
             <MashupDialog
               collaboratorId={userProfile.id}
               collaboratorName={userProfile.name ?? undefined}
+              userSession={userSession}
             />
           </div>
         )}
