@@ -10,6 +10,12 @@ app.use(cors());
 
 app.use("/upload-project", uploadProjectRouter);
 
+app.use("/health", (req, res) => {
+  console.log("Health check request received");
+
+  res.status(200).json({ message: "OK" });
+});
+
 const port = parseInt(process.env.PORT || "8080");
 
 app.listen(port, "0.0.0.0", () => {
