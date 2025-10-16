@@ -6,7 +6,7 @@ on:
       - main
 
 env:
-  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  PROJECT_ID: conscious-club
   SERVICE_NAME: cc-server
   REGION: us-central1
 
