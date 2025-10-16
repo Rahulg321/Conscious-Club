@@ -10,7 +10,13 @@ app.use(cors());
 
 app.use("/upload-project", uploadProjectRouter);
 
-app.use("/health", (req, res) => {
+app.get("/", (req, res) => {
+  console.log("Root request received");
+
+  res.status(200).json({ message: "Hello World" });
+});
+
+app.get("/health", (req, res) => {
   console.log("Health check request received");
 
   res.status(200).json({ message: "OK" });
