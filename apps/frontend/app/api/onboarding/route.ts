@@ -43,23 +43,14 @@ export const POST = async (req: NextRequest) => {
       );
     }
 
-    // Validate role-specific fields
-    if (userRole !== "explorer") {
-      if (!discipline || !role) {
-        return NextResponse.json(
-          {
-            error: "Discipline and role are required for creators",
-          },
-          { status: 400 }
-        );
-      }
-    } else {
-      if (!fun) {
-        return NextResponse.json(
-          { error: "Interests are required for explorers" },
-          { status: 400 }
-        );
-      }
+    // Validate role-specific fields for creators
+    if (!discipline || !role) {
+      return NextResponse.json(
+        {
+          error: "Discipline and role are required for creators",
+        },
+        { status: 400 }
+      );
     }
 
     // Handle profile picture upload if provided
@@ -90,22 +81,14 @@ export const POST = async (req: NextRequest) => {
       location,
       socialUrl: socialMediaUrl || null,
       dateOfBirth: new Date(dateOfBirth),
-      type: userRole as "explorer" | "creator",
+      type: userRole as "creator",
       updatedAt: new Date(),
     };
 
-    // Add role-specific fields
-    if (userRole === "explorer") {
-      userUpdateData.fun = fun;
-      // Clear discipline and role for explorers
-      userUpdateData.discipline = null;
-      userUpdateData.role = null;
-    } else {
-      userUpdateData.discipline = discipline;
-      userUpdateData.role = role;
-      // Clear fun for non-explorers
-      userUpdateData.fun = null;
-    }
+    // Add role-specific fields for creators
+    userUpdateData.discipline = discipline;
+    userUpdateData.role = role;
+    userUpdateData.fun = null;
 
     // Add profile picture URL if uploaded
     if (profilePictureUrl) {
@@ -127,7 +110,7 @@ export const POST = async (req: NextRequest) => {
     );
 
     // Handle project creation for creators (optional)
-    if (userRole !== "explorer" && projectName && projectDescription) {
+    if (projectName && projectDescription) {
       const projectMediaUrls: string[] = [];
 
       // Handle project media upload if provided

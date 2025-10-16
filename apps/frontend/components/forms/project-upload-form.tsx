@@ -120,7 +120,6 @@ function ProjectUploadForm({
           formData.append("collaboratorId", collaboratorId);
         }
 
-        // Append all media files
         data.media.forEach((file) => {
           formData.append("media", file);
         });

@@ -25,7 +25,7 @@ export interface OnboardingStep {
   description: string;
 }
 
-export type UserRole = "explorer" | "creator";
+export type UserRole = "creator";
 
 // Type definitions for getFilteredUserProfiles
 export type UserProfile = {
@@ -34,7 +34,7 @@ export type UserProfile = {
   email: string;
   image: string | null;
   bannerImage: string | null;
-  type: "explorer" | "creator" | null;
+  type: "creator" | null;
   location: string | null;
   discipline: string | null;
   role: string | null;

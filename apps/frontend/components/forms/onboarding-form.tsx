@@ -9,7 +9,6 @@ import { StepHeader } from "./onboarding/components/StepHeader";
 import { ProgressIndicator } from "./onboarding/components/ProgressIndicator";
 import { RoleSelectionStep } from "./onboarding/components/steps/RoleSelectionStep";
 import { ProfileCompletionStep } from "./onboarding/components/steps/ProfileCompletionStep";
-import { InterestsStep } from "./onboarding/components/steps/InterestsStep";
 import { DisciplineRoleStep } from "./onboarding/components/steps/DisciplineRoleStep";
 import { ProjectUploadStep } from "./onboarding/components/steps/ProjectUploadStep";
 
@@ -67,21 +66,14 @@ export function OnboardingForm() {
             />
           )}
 
-          {currentStep === 3 && formData.userRole === "explorer" && (
-            <InterestsStep
-              formData={formData}
-              updateFormData={updateFormData}
-            />
-          )}
-
-          {currentStep === 3 && formData.userRole !== "explorer" && (
+          {currentStep === 3 && (
             <DisciplineRoleStep
               formData={formData}
               updateFormData={updateFormData}
             />
           )}
 
-          {currentStep === 4 && formData.userRole !== "explorer" && (
+          {currentStep === 4 && (
             <ProjectUploadStep
               formData={formData}
               updateFormData={updateFormData}

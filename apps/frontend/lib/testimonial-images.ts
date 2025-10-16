@@ -1,7 +1,6 @@
 import { UserRole } from "@/components/forms/onboarding/types";
 
 export const TESTIMONIAL_IMAGES: Record<UserRole, string> = {
-  explorer: "/onboarding/CC_Onboarding_Explorer.png",
   creator: "/onboarding/CC_Onboarding_Creator.png",
 };
 

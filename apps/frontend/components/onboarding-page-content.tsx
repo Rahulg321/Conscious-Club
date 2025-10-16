@@ -4,9 +4,6 @@ import { OnboardingForm } from "@/components/forms/onboarding-form";
 import { TestimonialPanel } from "@/components/testimonial-panel";
 import { getTestimonialImage } from "@/lib/testimonial-images";
 import { useOnboardingContext } from "@/components/forms/onboarding/context/OnboardingContext";
-import Link from "next/link";
-import Image from "next/image";
-import CClogo from "@/public/cc-home-logo.png";
 
 export function OnboardingPageContent({ step }: { step: number }) {
   const { formData } = useOnboardingContext();

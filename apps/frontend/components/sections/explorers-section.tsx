@@ -12,7 +12,7 @@ const ExplorersSections = async () => {
           For all those who have a zest for life
         </p>
       </div>
-
+      {/* 
       <SplitFeatureSection
         eyebrow="Who is this for?"
         title="Explorers"
@@ -28,7 +28,7 @@ const ExplorersSections = async () => {
         accentClassName="text-[rgba(81,74,219,1)]"
         iconClassName="text-purple-600"
         orientation="row"
-      />
+      /> */}
 
       <SplitFeatureSection
         eyebrow="Who is this for?"
@@ -47,7 +47,7 @@ const ExplorersSections = async () => {
         orientation="row-reverse"
       />
 
-      <SplitFeatureSection
+      {/* <SplitFeatureSection
         eyebrow="Who is this for?"
         title="Organizers"
         image={{
@@ -62,7 +62,7 @@ const ExplorersSections = async () => {
         accentClassName="text-purple-600"
         iconClassName="text-[rgba(255,153,0,1)]"
         orientation="row"
-      />
+      /> */}
     </div>
   );
 };

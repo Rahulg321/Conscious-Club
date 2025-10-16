@@ -5,7 +5,7 @@ import { OnboardingFormData } from "../types";
 import { toast } from "sonner";
 
 const initialFormData: OnboardingFormData = {
-  userRole: "",
+  userRole: "creator",
   profilePicture: null,
   name: "",
   gender: "",
@@ -60,11 +60,8 @@ export const useOnboardingFormWithURL = () => {
 
   // Validation functions for each step
   const validateStep1 = (data: OnboardingFormData): string[] => {
-    const errors: string[] = [];
-    if (!data.userRole) {
-      errors.push("Please select a role");
-    }
-    return errors;
+    // Since userRole is pre-set to "creator", no validation needed for step 1
+    return [];
   };
 
   const validateStep2 = (data: OnboardingFormData): string[] => {
@@ -84,22 +81,13 @@ export const useOnboardingFormWithURL = () => {
     return errors;
   };
 
-  const validateStep3 = (
-    data: OnboardingFormData,
-    userRole: string
-  ): string[] => {
+  const validateStep3 = (data: OnboardingFormData): string[] => {
     const errors: string[] = [];
-    if (userRole === "explorer") {
-      if (!data.fun.trim()) {
-        errors.push("Please tell us what interests you most");
-      }
-    } else {
-      if (!data.discipline) {
-        errors.push("Please select a discipline");
-      }
-      if (!data.role.trim()) {
-        errors.push("Please enter your role");
-      }
+    if (!data.discipline) {
+      errors.push("Please select a discipline");
+    }
+    if (!data.role.trim()) {
+      errors.push("Please enter your role");
     }
     return errors;
   };
@@ -120,7 +108,7 @@ export const useOnboardingFormWithURL = () => {
         errors.push(...validateStep2(formData));
         break;
       case 3:
-        errors.push(...validateStep3(formData, formData.userRole));
+        errors.push(...validateStep3(formData));
         break;
       case 4:
         errors.push(...validateStep4(formData));

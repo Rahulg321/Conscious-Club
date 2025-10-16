@@ -3,14 +3,7 @@
 import * as React from "react";
 
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import {
   Drawer,
   DrawerClose,
@@ -33,16 +26,20 @@ export default function ProjectUploadDialog() {
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <Button variant="default" size={"icon"}>
-            <Plus className="w-4 h-4" />
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="">
-          <ScrollArea className="max-h-[600px] pr-4">
-            <ProjectUploadForm setDialogOpen={setOpen} />
-          </ScrollArea>
-        </DialogContent>
+        <div className="overflow-hidden">
+          <div className="relative overflow-hidden">
+            <DialogTrigger asChild>
+              <Button variant="default" size={"icon"}>
+                <Plus className="w-4 h-4" />
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="">
+              <ScrollArea className="max-h-[600px] pr-4">
+                <ProjectUploadForm setDialogOpen={setOpen} />
+              </ScrollArea>
+            </DialogContent>
+          </div>
+        </div>
       </Dialog>
     );
   }
