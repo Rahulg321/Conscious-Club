@@ -42,31 +42,29 @@ jobs:
 
       - name: Build and push Docker image (apps/backend)
         working-directory: apps/backend
+        env:
+          PROJECT_ID: ${{ env.PROJECT_ID }}
+          REPO_HOST: ${{ env.REPO_HOST }}
+          REPO_NAME: ${{ env.REPO_NAME }}
+          SERVICE_NAME: ${{ env.SERVICE_NAME }}
         run: |
-          IMAGE_URI=${{ env.REPO_HOST }}/${{ env.PROJECT_ID }}/${{ env.REPO_NAME }}/${{ env.SERVICE_NAME }}:${{ github.sha }}
-          echo "Building image $IMAGE_URI from apps/backend"
-          docker buildx build \
-            --cache-from type=gha \
-            --cache-to type=gha,mode=max \
-            -t $IMAGE_URI \
-            --push \
-            .
+          IMAGE_URI="$REPO_HOST/$PROJECT_ID/$REPO_NAME/$SERVICE_NAME:${GITHUB_SHA}"
+          docker buildx build -t "$IMAGE_URI" --push .
           echo "IMAGE_URI=$IMAGE_URI" >> $GITHUB_ENV
 
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy ${{ env.SERVICE_NAME }} \
-            --image $IMAGE_URI \
+            --image "$IMAGE_URI" \
             --platform managed \
             --region ${{ env.REGION }} \
             --allow-unauthenticated \
             --port 8080 \
-            --timeout=900s \
             --set-env-vars "\
               NODE_ENV=production,\
               AUTH_SECRET=${{ secrets.AUTH_SECRET }},\
               DATABASE_URL=${{ secrets.DATABASE_URL }},\
-              GCLOUD_PROJECT_ID=${{ secrets.GCLOUD_PROJECT_ID }},\
+              GCLOUD_PROJECT_ID=${{ env.PROJECT_ID }},\
               GCLOUD_BUCKET=${{ secrets.GCLOUD_BUCKET }},\
               GCS_CLIENT_EMAIL=${{ secrets.GCS_CLIENT_EMAIL }},\
               GCS_PRIVATE_KEY=${{ secrets.GCS_PRIVATE_KEY }}\
