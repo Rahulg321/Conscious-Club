@@ -44,7 +44,9 @@ export function RegisterForm() {
     startTransition(async () => {
       const response = await registerAction(values);
       if (response.success) {
-        toast.success("Account created successfully");
+        toast.success(
+          "Account created, Please check your email for verification"
+        );
       } else {
         toast.error(response.message || "error creating account");
       }

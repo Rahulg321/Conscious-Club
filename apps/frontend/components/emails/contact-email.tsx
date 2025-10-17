@@ -35,7 +35,7 @@ export default function ContactMessageEmail({
 
           <Text style={text}>
             You have received a new message through the contact form on the
-            Diligence Dark Alpha website.
+            ConsciousClubb website.
           </Text>
 
           <Hr style={hr} />
@@ -61,7 +61,7 @@ export default function ContactMessageEmail({
           </Text>
 
           <Text style={footer}>
-            ©2024 Diligence Dark Alpha. All rights reserved.
+            ©2024 ConsciousClubb. All rights reserved.
           </Text>
         </Container>
       </Body>

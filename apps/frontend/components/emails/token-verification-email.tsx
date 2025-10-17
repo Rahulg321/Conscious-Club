@@ -20,10 +20,10 @@ export const TokenVerificationEmail: React.FC<
 > = ({ tokenConfirmLink }) => (
   <Html>
     <Head />
-    <Preview>Verify your email address for Diligence Dark Alpha</Preview>
+    <Preview>Verify your email address for ConsciousClubb</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Heading style={h1}>Welcome to Diligence Dark Alpha</Heading>
+        <Heading style={h1}>Welcome to ConsciousClubb</Heading>
         <Text style={text}>
           Please click the button below to verify your email address and
           complete your account setup.
@@ -37,9 +37,7 @@ export const TokenVerificationEmail: React.FC<
           If you didn&apos;t request this email, there&apos;s nothing to worry
           about; you can safely ignore it.
         </Text>
-        <Text style={footer}>
-          ©2024 Diligence Dark Alpha. All rights reserved.
-        </Text>
+        <Text style={footer}>©2024 ConsciousClubb. All rights reserved.</Text>
       </Container>
     </Body>
   </Html>

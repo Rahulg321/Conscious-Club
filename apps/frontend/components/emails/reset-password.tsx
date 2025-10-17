@@ -23,13 +23,13 @@ export const ResetPasswordEmail: React.FC<
 > = ({ resetPasswordLink }) => (
   <Html>
     <Head />
-    <Preview>Reset your password for Diligence Dark Alpha</Preview>
+    <Preview>Reset your password for ConsciousClubb</Preview>
     <Body style={main}>
       <Container style={container}>
         <Heading style={h1}>Reset Your Password</Heading>
         <Text style={text}>
-          You&apos;ve requested to reset your password for your Diligence Dark
-          Alpha account. Click the button below to set a new password.
+          You&apos;ve requested to reset your password for your ConsciousClubb
+          account. Click the button below to set a new password.
         </Text>
         <Section style={buttonContainer}>
           <Button style={button} href={resetPasswordLink}>
@@ -40,9 +40,7 @@ export const ResetPasswordEmail: React.FC<
           If you didn&apos;t request a password reset, please ignore this email
           or contact support if you have concerns.
         </Text>
-        <Text style={footer}>
-          ©2024 Diligence Dark Alpha. All rights reserved.
-        </Text>
+        <Text style={footer}>©2024 ConsciousClubb. All rights reserved.</Text>
       </Container>
     </Body>
   </Html>

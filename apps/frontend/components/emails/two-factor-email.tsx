@@ -24,8 +24,8 @@ export const TwoFactorEmail: React.FC<Readonly<TwoFactorEmailProps>> = ({
       <Container style={container}>
         <Heading style={h1}>Two-Factor Authentication</Heading>
         <Text style={text}>
-          Here is your two-factor authentication code for your Diligence Dark
-          Alpha account:
+          Here is your two-factor authentication code for your ConsciousClubb
+          account:
         </Text>
         <Section style={codeBox}>
           <Text style={codeText}>{token}</Text>
@@ -34,9 +34,7 @@ export const TwoFactorEmail: React.FC<Readonly<TwoFactorEmailProps>> = ({
           If you didn&apos;t request this code, please ignore this email or
           contact support if you have concerns.
         </Text>
-        <Text style={footer}>
-          ©2024 Diligence Dark Alpha. All rights reserved.
-        </Text>
+        <Text style={footer}>©2024 ConsciousClubb. All rights reserved.</Text>
       </Container>
     </Body>
   </Html>
