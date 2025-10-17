@@ -54,7 +54,7 @@ const BlogCard = ({
     <Link href={`/blog/${slug}`}>
       <Card className="h-full flex flex-col overflow-hidden cursor-pointer group">
         {featuredImage && (
-          <div className="relative w-full h-48 overflow-hidden bg-gray-100">
+          <div className="relative w-full h-40 overflow-hidden bg-gray-100">
             <Image
               src={featuredImage}
               alt={featuredImageAlt || title}
@@ -65,48 +65,53 @@ const BlogCard = ({
           </div>
         )}
 
-        <CardHeader className="pb-3">
-          <div className="flex items-center gap-2 mb-2 flex-wrap">
+        <CardHeader className="p-4 pb-2">
+          <div className="flex items-center gap-2 mb-1 flex-wrap">
             {categoryName && (
-              <Badge variant="secondary" className="bg-primary/10 text-primary">
+              <Badge
+                variant="secondary"
+                className="bg-primary/10 text-primary text-xs px-2 py-0.5"
+              >
                 {categoryName}
               </Badge>
             )}
           </div>
-          <h3 className="text-xl font-semibold line-clamp-2">{title}</h3>
+          <h3 className="text-lg font-semibold line-clamp-2 leading-tight">
+            {title}
+          </h3>
         </CardHeader>
 
-        <CardContent className="flex-1 pb-3">
+        <CardContent className="px-4 pb-2 flex-1">
           {excerpt && (
-            <p className="text-sm text-muted-foreground line-clamp-3">
+            <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed mb-2">
               {excerpt}
             </p>
           )}
 
           {tags && tags.length > 0 && (
-            <div className="flex flex-wrap gap-1 mt-3">
-              {tags.slice(0, 3).map((tag) => (
+            <div className="flex flex-wrap gap-1">
+              {tags.slice(0, 2).map((tag) => (
                 <Badge
                   key={tag.id}
                   variant="outline"
-                  className="text-xs flex items-center gap-1"
+                  className="text-xs px-1.5 py-0.5 h-5 flex items-center gap-1"
                 >
-                  <TagIcon className="h-2.5 w-2.5" />
+                  <TagIcon className="h-2 w-2" />
                   {tag.name}
                 </Badge>
               ))}
-              {tags.length > 3 && (
-                <Badge variant="outline" className="text-xs">
-                  +{tags.length - 3}
+              {tags.length > 2 && (
+                <Badge variant="outline" className="text-xs px-1.5 py-0.5 h-5">
+                  +{tags.length - 2}
                 </Badge>
               )}
             </div>
           )}
         </CardContent>
 
-        <CardFooter className="pt-3 border-t">
+        <CardFooter className="px-4 py-2 border-t">
           <div className="flex items-center justify-between w-full text-xs text-muted-foreground">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <div className="flex items-center gap-1">
                 <Calendar className="h-3 w-3" />
                 <span>{formatDate(publishedAt)}</span>
@@ -114,7 +119,7 @@ const BlogCard = ({
               {readingTime && (
                 <div className="flex items-center gap-1">
                   <Clock className="h-3 w-3" />
-                  <span>{readingTime} min</span>
+                  <span>{readingTime}min</span>
                 </div>
               )}
             </div>

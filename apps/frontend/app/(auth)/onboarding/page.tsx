@@ -3,10 +3,26 @@ import { OnboardingPageContent } from "@/components/onboarding-page-content";
 import { OnboardingProvider } from "@/components/forms/onboarding/context/OnboardingContext";
 import { redirect } from "next/navigation";
 
-export const metadata = {
-  title: "Welcome to Conscious Club - Complete Your Profile",
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Complete Your Profile | Conscious Club",
   description:
-    "Complete your profile setup to get started with Conscious Club. Share your interests, skills, and connect with like-minded creators and explorers.",
+    "Complete your Conscious Club profile setup to get started! Share your interests, skills, and connect with like-minded creators and explorers in our conscious community.",
+  keywords: [
+    "profile setup",
+    "onboarding",
+    "conscious club",
+    "create profile",
+    "get started",
+  ],
+  robots: "noindex, nofollow", // Don't index onboarding pages
+  openGraph: {
+    title: "Complete Your Profile | Conscious Club",
+    description:
+      "Complete your Conscious Club profile setup to get started with our creative community.",
+    type: "website",
+  },
 };
 
 export default async function OnboardingPage({

@@ -6,6 +6,33 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import CClogo from "@/public/cc-home-logo.png";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Sign Up | Conscious Club",
+  description:
+    "Join Conscious Club today! Create your free account to start sharing your creative projects, discovering inspiring content, and connecting with a community of conscious creators and explorers.",
+  keywords: [
+    "sign up",
+    "register",
+    "conscious club",
+    "creative community",
+    "join",
+    "free account",
+  ],
+  openGraph: {
+    title: "Sign Up | Conscious Club",
+    description:
+      "Join Conscious Club today! Create your free account to start sharing creative projects and connecting with conscious creators.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Sign Up | Conscious Club",
+    description:
+      "Join Conscious Club today! Create your free account to start sharing creative projects and connecting with conscious creators.",
+  },
+};
 
 export default async function RegisterPage() {
   const userSession = await auth();

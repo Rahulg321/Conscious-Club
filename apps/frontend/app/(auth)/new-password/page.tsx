@@ -3,6 +3,27 @@ import Link from "next/link";
 import NewPasswordFormSection from "./new-password-form-section";
 import Image from "next/image";
 import CClogo from "@/public/cc-home-logo.png";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Set New Password | Conscious Club",
+  description:
+    "Create a new password for your Conscious Club account. Use the secure link sent to your email to reset your password and regain access to your account.",
+  keywords: [
+    "new password",
+    "set password",
+    "conscious club",
+    "account security",
+    "password reset",
+  ],
+  robots: "noindex, nofollow", // Don't index password reset pages
+  openGraph: {
+    title: "Set New Password | Conscious Club",
+    description:
+      "Create a new password for your Conscious Club account securely.",
+    type: "website",
+  },
+};
 
 const ResetPasswordPage = async (props: {
   params: Promise<{ token: string }>;

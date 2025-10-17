@@ -9,8 +9,28 @@ import Image from "next/image";
 import CClogo from "@/public/cc-home-logo.png";
 
 export const metadata: Metadata = {
-  title: "Login",
-  description: "Login to your account",
+  title: "Sign In | Conscious Club",
+  description:
+    "Sign in to your Conscious Club account to discover creative projects, connect with like-minded creators, and explore a community of conscious explorers.",
+  keywords: [
+    "login",
+    "sign in",
+    "conscious club",
+    "creative community",
+    "account access",
+  ],
+  openGraph: {
+    title: "Sign In | Conscious Club",
+    description:
+      "Sign in to your Conscious Club account to discover creative projects and connect with like-minded creators.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Sign In | Conscious Club",
+    description:
+      "Sign in to your Conscious Club account to discover creative projects and connect with like-minded creators.",
+  },
 };
 
 export default async function LoginPage({
@@ -109,6 +129,13 @@ export default async function LoginPage({
           )}
 
           <ProviderButtons />
+          <div className="my-6 flex items-center gap-3">
+            <div className="flex-grow border-t border-muted" />
+            <span className="text-xs text-muted-foreground font-medium">
+              or
+            </span>
+            <div className="flex-grow border-t border-muted" />
+          </div>
           <LoginForm />
         </div>
       </section>

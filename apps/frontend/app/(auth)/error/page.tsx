@@ -12,10 +12,26 @@ import {
 import Image from "next/image";
 import CClogo from "@/public/cc-home-logo.png";
 
-export const metadata = {
-  title: "Auth Error ",
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Authentication Error | Conscious Club",
   description:
-    "There's a problem with the authentication configuration. Please contact support or try again later.",
+    "There was an authentication error with your Conscious Club account. Please try again or contact our support team for assistance.",
+  keywords: [
+    "authentication error",
+    "login error",
+    "conscious club",
+    "account error",
+    "support",
+  ],
+  robots: "noindex, nofollow", // Don't index error pages
+  openGraph: {
+    title: "Authentication Error | Conscious Club",
+    description:
+      "There was an authentication error with your Conscious Club account.",
+    type: "website",
+  },
 };
 
 interface ErrorConfig {

@@ -6,8 +6,23 @@ import Image from "next/image";
 import CClogo from "@/public/cc-home-logo.png";
 
 export const metadata: Metadata = {
-  title: "New Verification",
-  description: "Verify your email address",
+  title: "Verify Email | Conscious Club",
+  description:
+    "Verify your email address to complete your Conscious Club account setup. Check your inbox for the verification link and click it to activate your account.",
+  keywords: [
+    "email verification",
+    "verify email",
+    "conscious club",
+    "account activation",
+    "email confirmation",
+  ],
+  robots: "noindex, nofollow", // Don't index verification pages
+  openGraph: {
+    title: "Verify Email | Conscious Club",
+    description:
+      "Verify your email address to complete your Conscious Club account setup.",
+    type: "website",
+  },
 };
 
 const NewVerificationPage = () => {
