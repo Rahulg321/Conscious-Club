@@ -71,6 +71,12 @@ function ProjectUploadForm({
 
   const validateVideoDuration = (file: File): Promise<boolean> => {
     return new Promise((resolve) => {
+      console.log("🎬 [FRONTEND] Validating video duration for:", {
+        fileName: file.name,
+        fileSize: file.size,
+        fileType: file.type,
+      });
+
       const videoElement = document.createElement("video");
       videoElement.preload = "metadata";
 
@@ -78,15 +84,34 @@ function ProjectUploadForm({
         window.URL.revokeObjectURL(videoElement.src);
         const duration = videoElement.duration;
 
+        console.log("🎬 [FRONTEND] Video metadata loaded:", {
+          fileName: file.name,
+          duration: duration,
+          isValid: duration >= 5 && duration <= 10,
+        });
+
         if (duration < 5 || duration > 10) {
+          console.error("❌ [FRONTEND] Video duration validation failed:", {
+            fileName: file.name,
+            duration: duration,
+            required: "5-10 seconds",
+          });
           toast.error("Video must be between 5 and 10 seconds long");
           resolve(false);
         } else {
+          console.log(
+            "✅ [FRONTEND] Video duration validation passed:",
+            file.name
+          );
           resolve(true);
         }
       };
 
-      videoElement.onerror = () => {
+      videoElement.onerror = (error) => {
+        console.error("❌ [FRONTEND] Error loading video file:", {
+          fileName: file.name,
+          error: error,
+        });
         toast.error("Error loading video file");
         resolve(false);
       };
@@ -96,19 +121,37 @@ function ProjectUploadForm({
   };
 
   const onSubmit = async (data: ProjectUploadFormData) => {
+    console.log("🚀 [FRONTEND] Starting project upload process");
+
     // Validate all videos have correct duration
     const videoFiles = data.media.filter((file) =>
       file.type.startsWith("video/")
     );
 
+    console.log("🎬 [FRONTEND] Video validation:", {
+      totalVideos: videoFiles.length,
+      videoFiles: videoFiles.map((f) => ({
+        name: f.name,
+        size: f.size,
+        type: f.type,
+      })),
+    });
+
     for (const videoFile of videoFiles) {
       const isValid = await validateVideoDuration(videoFile);
       if (!isValid) {
+        console.error(
+          "❌ [FRONTEND] Video validation failed for:",
+          videoFile.name
+        );
         return;
       }
     }
 
     startTransition(async () => {
+      const startTime = Date.now();
+      console.log("📤 [FRONTEND] Starting file upload to backend");
+
       try {
         const formData = new FormData();
         formData.append("projectName", data.projectName);
@@ -123,30 +166,81 @@ function ProjectUploadForm({
           formData.append("collaboratorId", collaboratorId);
         }
 
-        data.media.forEach((file) => {
+        console.log("📋 [FRONTEND] Form data prepared:", {
+          projectName: data.projectName,
+          projectDescription:
+            data.projectDescription?.substring(0, 100) + "...",
+          projectLink: data.projectLink,
+          isMashup,
+          collaboratorId,
+          mediaCount: data.media.length,
+        });
+
+        data.media.forEach((file, index) => {
+          console.log(`📎 [FRONTEND] Adding file ${index + 1}:`, {
+            name: file.name,
+            size: file.size,
+            type: file.type,
+          });
           formData.append("media", file);
         });
 
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_SERVER_URL}/upload-project`,
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${userSession.user.accessToken}`,
-            },
-            body: formData,
-          }
-        );
+        const uploadUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/upload-project`;
+        console.log("🌐 [FRONTEND] Making request to:", uploadUrl);
+
+        const response = await fetch(uploadUrl, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${userSession.user.accessToken}`,
+          },
+          body: formData,
+        });
+
+        console.log("📡 [FRONTEND] Response received:", {
+          status: response.status,
+          statusText: response.statusText,
+          ok: response.ok,
+          headers: Object.fromEntries(response.headers.entries()),
+        });
 
         if (!response.ok) {
-          console.log(response);
-          throw new Error("Failed to upload project");
+          let errorData;
+          try {
+            errorData = await response.json();
+            console.error(
+              "❌ [FRONTEND] Error response from server:",
+              errorData
+            );
+          } catch (parseError) {
+            console.error(
+              "❌ [FRONTEND] Failed to parse error response:",
+              parseError
+            );
+            errorData = { error: "Unknown error occurred" };
+          }
+
+          const errorMessage =
+            errorData?.details ||
+            errorData?.error ||
+            "Failed to upload project";
+          const errorCode = errorData?.code || "UNKNOWN_ERROR";
+
+          toast.error(`Upload failed: ${errorMessage}`);
+          throw new Error(
+            `Server error (${response.status}): ${errorMessage} [${errorCode}]`
+          );
         }
 
         const result = await response.json();
-        console.log("Project uploaded successfully:", result);
+        const processingTime = Date.now() - startTime;
 
-        toast.success("uploaded successfully");
+        console.log("✅ [FRONTEND] Project uploaded successfully:", {
+          result,
+          processingTime: `${processingTime}ms`,
+          projectId: result.insertedProject?.id,
+        });
+
+        toast.success("Project uploaded successfully!");
 
         // Reset form on success
         form.reset();
@@ -155,8 +249,18 @@ function ProjectUploadForm({
         setDialogOpen(false);
         router.refresh();
       } catch (error) {
-        console.error("Error uploading project:", error);
-        toast.error("error uploading file");
+        const processingTime = Date.now() - startTime;
+        console.error("❌ [FRONTEND] Error uploading project:", {
+          error: error instanceof Error ? error.message : String(error),
+          stack: error instanceof Error ? error.stack : undefined,
+          processingTime: `${processingTime}ms`,
+          userAgent: navigator.userAgent,
+          url: window.location.href,
+        });
+
+        const errorMessage =
+          error instanceof Error ? error.message : "Unknown error occurred";
+        toast.error(`Upload failed: ${errorMessage}`);
       }
     });
   };
@@ -191,24 +295,71 @@ function ProjectUploadForm({
                       const files = Array.from(e.target.files || []);
                       const currentMedia = value || [];
 
+                      console.log("📁 [FRONTEND] File selection changed:", {
+                        newFiles: files.length,
+                        currentMedia: currentMedia.length,
+                        totalAfterAdd: currentMedia.length + files.length,
+                        files: files.map((f) => ({
+                          name: f.name,
+                          size: f.size,
+                          type: f.type,
+                        })),
+                      });
+
                       // Check if total count exceeds 4
                       if (currentMedia.length + files.length > 4) {
+                        console.error(
+                          "❌ [FRONTEND] Too many files selected:",
+                          {
+                            current: currentMedia.length,
+                            new: files.length,
+                            total: currentMedia.length + files.length,
+                            max: 4,
+                          }
+                        );
                         toast.error("You can only upload up to 4 media files");
                         return;
                       }
 
                       // Validate video durations before adding
                       const validFiles: File[] = [];
+                      console.log(
+                        "🎬 [FRONTEND] Starting video validation for new files"
+                      );
+
                       for (const file of files) {
                         if (file.type.startsWith("video/")) {
+                          console.log(
+                            "🎬 [FRONTEND] Validating video file:",
+                            file.name
+                          );
                           const isValid = await validateVideoDuration(file);
                           if (isValid) {
                             validFiles.push(file);
+                            console.log(
+                              "✅ [FRONTEND] Video validation passed:",
+                              file.name
+                            );
+                          } else {
+                            console.error(
+                              "❌ [FRONTEND] Video validation failed:",
+                              file.name
+                            );
                           }
                         } else {
+                          console.log(
+                            "🖼️ [FRONTEND] Image file added:",
+                            file.name
+                          );
                           validFiles.push(file);
                         }
                       }
+
+                      console.log("📁 [FRONTEND] File validation complete:", {
+                        totalFiles: files.length,
+                        validFiles: validFiles.length,
+                        rejectedFiles: files.length - validFiles.length,
+                      });
 
                       if (validFiles.length > 0) {
                         const newMedia = [...currentMedia, ...validFiles];
@@ -225,6 +376,11 @@ function ProjectUploadForm({
                           })
                         );
                         setMediaPreviews((prev) => [...prev, ...newPreviews]);
+
+                        console.log("✅ [FRONTEND] Media previews updated:", {
+                          totalPreviews: newMedia.length,
+                          newPreviews: newPreviews.length,
+                        });
                       }
 
                       // Reset input
