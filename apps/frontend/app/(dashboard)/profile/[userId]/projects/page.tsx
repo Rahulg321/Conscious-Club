@@ -72,7 +72,7 @@ const ProjectsPage = async ({ params }: Props) => {
           <Button variant="outline" asChild>
             <Link href={`/profile/${userId}`}>Back to Profile</Link>
           </Button>
-          <ProjectUploadDialog />
+          <ProjectUploadDialog userSession={userSession} />
         </div>
       </div>
 
