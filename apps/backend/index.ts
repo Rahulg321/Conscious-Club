@@ -18,6 +18,12 @@ app.get("/", (req, res) => {
     .json({ message: "Hello World", timestamp: new Date().toISOString() });
 });
 
+app.get("/test", (req, res) => {
+  console.log("Test request received");
+
+  res.status(200).json({ message: "Test" });
+});
+
 app.get("/health", (req, res) => {
   console.log("Health check request received");
 
