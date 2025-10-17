@@ -19,6 +19,8 @@ export default function ProjectCard({
   const isPreviewVideo = previewMedia ? isVideo(previewMedia) : false;
   const isMashup = project.isMashup && creatorName && collaboratorName;
 
+  console.log("preview media", previewMedia);
+
   return (
     <div className="group w-full">
       <div className="h-full bg-white rounded-2xl border border-gray-200 overflow-hidden">

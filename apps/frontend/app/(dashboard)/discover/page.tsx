@@ -18,6 +18,7 @@ import ProfileCardSkeleton from "@/components/skeletons/profile-card-skeleton";
 import ProjectSheet from "@/components/project-sheet";
 import { Sparkles } from "lucide-react";
 import { Session } from "next-auth";
+import { getPreviewMedia } from "@/lib/utils";
 
 export const metadata = {
   title: "Discover Projects",
@@ -237,10 +238,7 @@ async function FetchAndDisplayProjects({
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {projects?.map((project) => {
           // Get first media item for preview (prefer images)
-          const firstMedia =
-            project.media && project.media.length > 0
-              ? project.media[0]
-              : "/placeholder.svg";
+          const firstMedia = getPreviewMedia(project.media);
           return (
             <DiscoverProjectCard
               key={project.id}

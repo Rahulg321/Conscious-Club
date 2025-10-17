@@ -16,6 +16,7 @@ import ProjectSheet from "../../../components/project-sheet";
 import { Session } from "next-auth";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import { getPreviewMedia } from "@/lib/utils";
 
 export const metadata = {
   title: "Community",
@@ -189,10 +190,7 @@ async function FetchAndDisplayProjects({
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {projects?.map((project) => {
           // Get first media item for preview
-          const firstMedia =
-            project.media && project.media.length > 0
-              ? project.media[0]
-              : "/placeholder.svg";
+          const firstMedia = getPreviewMedia(project.media);
           return (
             <CommunityProjectCard
               key={project.id}
