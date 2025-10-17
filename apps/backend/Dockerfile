@@ -1,24 +1,12 @@
-FROM oven/bun:1.2
+FROM oven/bun:1.1.13
 
 WORKDIR /app
 
-# Copy workspace files
-COPY package.json bun.lock turbo.json ./
-COPY packages ./packages
-COPY apps/backend ./apps/backend
+COPY package.json bun.lock ./
+RUN bun install
 
-# Install dependencies
-RUN bun install --frozen-lockfile
+COPY . .
 
-WORKDIR /app/apps/backend
-
-# Build the backend
-RUN bun run build
-
-# Expose port
 EXPOSE 8080
 
-# Run the built backend
-CMD ["bun", "run", "./dist/index.js"]
-
-
+CMD ["bun", "index.ts"]
