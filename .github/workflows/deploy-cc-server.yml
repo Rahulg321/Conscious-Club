@@ -40,7 +40,7 @@ jobs:
       - name: Build and push Docker image
         run: |
           docker buildx build --cache-from type=gha --cache-to type=gha,mode=max \
-            -f apps/backend/Dockerfile \
+            -f Dockerfile \
             -t us-central1-docker.pkg.dev/${{ env.PROJECT_ID }}/cc-server/cc-server:${{ github.sha }} \
             --push \
             .
