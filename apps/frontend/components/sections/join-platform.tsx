@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
@@ -17,10 +17,55 @@ gsap.registerPlugin(useGSAP, ScrollTrigger); // register the hook to avoid React
 const JoinPlatform = () => {
   const container = useRef(null);
 
+  // Add resize handler to recalculate on window resize
+  useEffect(() => {
+    const handleResize = () => {
+      ScrollTrigger.refresh();
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   useGSAP(
     () => {
       let cards: HTMLElement[] = gsap.utils.toArray(".box");
-      let stackHeight = window.innerHeight * 0.01;
+
+      // Responsive calculations based on screen size
+      const isSmallScreen = window.innerWidth < 768; // md breakpoint
+      const isMediumScreen =
+        window.innerWidth >= 768 && window.innerWidth < 1024; // lg breakpoint
+
+      // Adjust stack height based on screen size
+      let stackHeight: number;
+      if (isSmallScreen) {
+        stackHeight = 20; // Fixed pixel value for small screens
+      } else if (isMediumScreen) {
+        stackHeight = window.innerHeight * 0.02;
+      } else {
+        stackHeight = window.innerHeight * 0.01; // Original for large screens
+      }
+
+      // Adjust animation distance based on screen size
+      let animationDistance: number;
+      if (isSmallScreen) {
+        animationDistance = window.innerHeight * 1.5; // Shorter animation for small screens
+      } else if (isMediumScreen) {
+        animationDistance = window.innerHeight * 1.8;
+      } else {
+        animationDistance = window.innerHeight * 2; // Original for large screens
+      }
+
+      // Adjust spacing based on screen size
+      let spacing: number;
+      if (isSmallScreen) {
+        spacing = 40; // Smaller spacing for small screens
+      } else if (isMediumScreen) {
+        spacing = 50;
+      } else {
+        spacing = 60; // Original spacing for large screens
+      }
+
       console.log(gsap.utils.checkPrefix("filter"));
       cards.forEach((card, i) => {
         gsap.fromTo(
@@ -33,7 +78,7 @@ const JoinPlatform = () => {
               trigger: card,
               scrub: true,
               start: "top " + stackHeight,
-              end: "+=" + window.innerHeight * 2,
+              end: "+=" + animationDistance,
               invalidateOnRefresh: true,
               id: `card-${i}`,
             },
@@ -47,7 +92,7 @@ const JoinPlatform = () => {
           pin: true,
           start: "top " + stackHeight,
           endTrigger: ".following-content",
-          end: "top " + (stackHeight + 60),
+          end: "top " + (stackHeight + spacing),
           pinSpacing: false,
         });
       });

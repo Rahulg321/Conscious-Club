@@ -179,7 +179,7 @@ async function DisplayUserProjectWork({
             <Plus className="w-8 h-8 text-gray-400" />
           </div>
           <h4 className="text-lg font-medium text-[#171c21] mb-2">
-            No projects yet
+            No Creations yet
           </h4>
           <p className="text-[#667085] mb-4">
             Upload your first project to showcase your work
@@ -214,10 +214,10 @@ async function DisplayUserMashupProjects({
             <Sparkles className="w-8 h-8 text-purple-600" />
           </div>
           <h4 className="text-lg font-medium text-[#171c21] mb-2">
-            No mashup projects yet
+            No Mashups yet
           </h4>
           <p className="text-[#667085] mb-4">
-            Collaborate with other users to create amazing mashup projects
+            Collaborate with other users to create amazing Mashups
           </p>
         </div>
       </div>

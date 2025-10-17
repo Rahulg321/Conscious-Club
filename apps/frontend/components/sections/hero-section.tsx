@@ -46,7 +46,7 @@ const HeroSection = () => {
         <FloatingCamera />
         <FloatingMicVocal />
 
-        <div className="container mx-auto px-2 flex flex-col items-center justify-start min-h-[65vh] text-center">
+        <div className="container mx-auto px-2 sm:px-4 md:px-6 lg:px-8 flex flex-col items-center justify-start min-h-[65vh] text-center">
           <div className="mb-8 mt-18 border-2 border-gray-200 rounded-full px-4 py-2 flex items-center gap-2 shadow-sm">
             <span
               className="text-white px-2 py-0.5 rounded-full text-xs font-semibold"
@@ -76,15 +76,15 @@ const HeroSection = () => {
             </div>
           </div>
 
-          <h1 className="text-3xl  inter-font sm:text-4xl md:text-5xl lg:text-6xl font-medium mb-6 max-w-4xl leading-[0.8]">
+          <h1 className="text-3xl inter-font sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-medium mb-6 max-w-4xl lg:max-w-5xl xl:max-w-6xl leading-[0.8]">
             Building the{" "}
-            <span className="gradient-text itc-font lg:text-7xl italic">
+            <span className="gradient-text itc-font lg:text-7xl xl:text-8xl 2xl:text-9xl italic">
               Creator economy
             </span>{" "}
             of tomorrow
           </h1>
 
-          <p className="text-base sm:text-lg text-muted-foreground font-semibold mb-8 max-w-xl leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-muted-foreground font-semibold mb-8 max-w-xl lg:max-w-2xl xl:max-w-3xl leading-relaxed">
             Join the platform that connects curious minds and creative talent
             through self- expression, play and rewards
           </p>
@@ -99,12 +99,12 @@ const HeroSection = () => {
         </div>
       </div>
 
-      <div className="relative py-8">
+      <div className="relative py-8 px-4">
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
           <Image
             src={RolloutCenter}
             alt="Rollout Center"
-            className="object-cover w-auto h-[22rem] md:h-[26rem] xl:h-[36rem] max-h-[90vh] rounded-xl"
+            className="object-cover w-auto h-[18rem] sm:h-[22rem] md:h-[26rem] lg:h-[30rem] xl:h-[36rem] 2xl:h-[42rem] 3xl:h-[48rem] max-h-[90vh] rounded-xl"
           />
         </div>
 
