@@ -65,7 +65,7 @@ function PinBravoDialog({ onPin, isPinned }: PinBravoDialogProps) {
           variant="outline"
           size="sm"
           className={cn(
-            "h-8 w-8 p-0 bg-white/90 hover:bg-white",
+            "h-8 w-8 p-0 bg-white/90",
             isPinned && "bg-green-100 border-green-300"
           )}
         >

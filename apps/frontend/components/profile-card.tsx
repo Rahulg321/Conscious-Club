@@ -51,7 +51,7 @@ export default function ProfileCard({
     });
   };
   return (
-    <Card className="w-full mx-auto overflow-hidden border hover:shadow-md transition-shadow">
+    <Card className="w-full mx-auto overflow-hidden border">
       <div className="p-5 flex flex-col items-center text-center gap-3">
         <Avatar className="w-16 h-16">
           <AvatarImage

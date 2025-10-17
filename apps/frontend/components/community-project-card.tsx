@@ -45,7 +45,7 @@ export default function CommunityProjectCard({
 
   return (
     <div
-      className="group bg-card rounded-lg border border-border overflow-hidden hover:shadow-md transition-shadow duration-200 "
+      className="group bg-card rounded-lg border border-border overflow-hidden"
       onClick={openProject}
     >
       <div className="aspect-video bg-muted overflow-hidden relative">
@@ -53,16 +53,13 @@ export default function CommunityProjectCard({
           src={projectCoverImage}
           alt={projectName}
           fill
-          className="object-contain group-hover:scale-105 transition-transform duration-200"
+          className="object-contain"
         />
       </div>
       <div className="p-4">
         <div className="flex items-start justify-between mb-2">
           <h4 className="font-medium text-card-foreground line-clamp-1 flex-1">
-            <button
-              className="text-left hover:underline cursor-pointer"
-              onClick={openProject}
-            >
+            <button className="text-left cursor-pointer" onClick={openProject}>
               {projectName}
             </button>
           </h4>

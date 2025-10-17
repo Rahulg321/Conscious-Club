@@ -18,7 +18,7 @@ export default function TestimonialCard({
   text,
 }: Testimonial) {
   return (
-    <Card className="relative bg-[radial-gradient(circle,_rgba(0,0,0,0.08)_1.2px,_transparent_1.2px)] bg-[length:12px_12px] bg-repeat rounded-2xl p-6 bg-[#F8FAFC] border border-[#dee5ed] shadow-sm hover:shadow-md transition-shadow">
+    <Card className="relative bg-[radial-gradient(circle,_rgba(0,0,0,0.08)_1.2px,_transparent_1.2px)] bg-[length:12px_12px] bg-repeat rounded-2xl p-6 bg-[#F8FAFC] border border-[#dee5ed] shadow-sm">
       {/* Top blur gradient overlay */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-12 backdrop-blur-[2px] [mask-image:linear-gradient(to_bottom,black,transparent)]" />
       <div className="absolute top-4 right-4">

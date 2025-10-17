@@ -21,7 +21,7 @@ export default function ProjectCard({
 
   return (
     <div className="group w-full">
-      <div className="h-full bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-xl hover:border-gray-300 transition-all duration-300 hover:-translate-y-1">
+      <div className="h-full bg-white rounded-2xl border border-gray-200 overflow-hidden">
         {/* Media Container */}
         <div className="aspect-video relative bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
           {previewMedia && !isPreviewVideo ? (
@@ -29,13 +29,13 @@ export default function ProjectCard({
               src={previewMedia}
               alt={project.name}
               fill
-              className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+              className="object-cover"
               sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
             />
           ) : previewMedia ? (
             <video
               src={previewMedia}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+              className="w-full h-full object-cover"
               muted
               loop
               playsInline
@@ -65,7 +65,7 @@ export default function ProjectCard({
         {/* Content Container */}
         <div className="p-6 space-y-4">
           {/* Title */}
-          <h4 className="font-semibold text-lg text-gray-900 line-clamp-1 group-hover:text-purple-600 transition-colors duration-200">
+          <h4 className="font-semibold text-lg text-gray-900 line-clamp-1">
             {project.name}
           </h4>
 
@@ -90,7 +90,7 @@ export default function ProjectCard({
             <Button
               variant="outline"
               asChild
-              className="flex-1 border-gray-200 hover:border-purple-300 hover:bg-purple-50 hover:text-purple-700 transition-all duration-200"
+              className="flex-1 border-gray-200"
             >
               <Link href={`/profile/${project.userId}/projects/${project.id}`}>
                 View Project

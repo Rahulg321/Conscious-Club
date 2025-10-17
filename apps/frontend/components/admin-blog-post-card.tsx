@@ -163,7 +163,7 @@ const AdminBlogPostCard = ({
   };
 
   return (
-    <Card className="flex flex-col hover:shadow-lg transition-shadow">
+    <Card className="flex flex-col">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-2 mb-2">
           <div className="flex items-center gap-2 flex-1">

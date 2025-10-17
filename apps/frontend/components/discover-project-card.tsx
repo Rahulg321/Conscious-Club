@@ -45,22 +45,19 @@ export default function DiscoverProjectCard({
   const isMashup = creatorName && collaboratorName;
 
   return (
-    <div className="group bg-card rounded-lg border border-border overflow-hidden hover:shadow-md transition-shadow duration-200 ">
+    <div className="group bg-card rounded-lg border border-border overflow-hidden">
       <div className="aspect-video bg-muted overflow-hidden relative">
         <Image
           src={projectCoverImage}
           alt={projectName}
           fill
-          className="object-contain group-hover:scale-105 transition-transform duration-200"
+          className="object-contain"
         />
       </div>
       <div className="p-4">
         <div className="flex items-start justify-between mb-2">
           <h4 className="font-medium text-card-foreground line-clamp-1 flex-1">
-            <button
-              className="text-left hover:underline cursor-pointer"
-              onClick={openProject}
-            >
+            <button className="text-left cursor-pointer" onClick={openProject}>
               {projectName}
             </button>
           </h4>

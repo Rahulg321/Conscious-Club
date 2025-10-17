@@ -52,14 +52,14 @@ const BlogCard = ({
 
   return (
     <Link href={`/blog/${slug}`}>
-      <Card className="h-full flex flex-col overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer group">
+      <Card className="h-full flex flex-col overflow-hidden cursor-pointer group">
         {featuredImage && (
           <div className="relative w-full h-48 overflow-hidden bg-gray-100">
             <Image
               src={featuredImage}
               alt={featuredImageAlt || title}
               fill
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
+              className="object-cover"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           </div>
@@ -68,17 +68,12 @@ const BlogCard = ({
         <CardHeader className="pb-3">
           <div className="flex items-center gap-2 mb-2 flex-wrap">
             {categoryName && (
-              <Badge
-                variant="secondary"
-                className="bg-primary/10 text-primary hover:bg-primary/20"
-              >
+              <Badge variant="secondary" className="bg-primary/10 text-primary">
                 {categoryName}
               </Badge>
             )}
           </div>
-          <h3 className="text-xl font-semibold line-clamp-2 group-hover:text-primary transition-colors">
-            {title}
-          </h3>
+          <h3 className="text-xl font-semibold line-clamp-2">{title}</h3>
         </CardHeader>
 
         <CardContent className="flex-1 pb-3">
