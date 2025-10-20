@@ -1,24 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { cn } from "@/lib/utils";
 
 const faqData = [
   {
     question: "Why the extra 'b' in ConsciousClubb?",
-    answer:
-      "Because one ‘b’ wasn’t enough. The extra b = bravos + benefits + more bang for your creativity + more clubB!",
-  },
-  {
-    question: "Who can be an explorer on CC?",
-    answer:
-      "Doesn't matter if you're into matcha, checkered boxers, K-dramas, Marvel, or cat memes. If you love trying trends before they're cool, you belong here. (p.s. if shopping is your guilty pleasure - congrats, you qualify.)",
+    answer: "Because we're extra - in the best way. ;) The extra b = bravos + benefits + belonging + more bang for your creativity + more clubB!",
   },
   {
     question: "Do I need to be a professional creator to join?",
@@ -26,24 +15,31 @@ const faqData = [
   },
   {
     question: "Is there a cost to join?",
-    answer:
-      "Joining CC is completely free! We believe in making creativity accessible to everyone :)",
+    answer: "Joining CC is completely free! We believe in making creativity accessible to everyone :)",
   },
   {
     question: "What are CC Bravos? How to earn them?",
-    answer:
-      "Bravos are CC’s tokens of celebration and achievement. They’re how you show off your vibe, your style, your wins, and your community cred — while also unlocking real perks along the way.",
+    answer: "Bravos are CC tokens of celebration and achievement. There are 2 Types: Flex Bravos & Buzz Bravos",
   },
+  // {
+  //   question: "What are CC Bravos? How to earn them?",
+  //   answer:
+  //     "Bravos are CC’s tokens of celebration and achievement. They’re how you show off your vibe, your style, your wins, and your community cred — while also unlocking real perks along the way.",
+  // },
   {
     question: "What are the different Types of Bravos?",
     answer:
       "Flex Bravos — Pin them on your profile to show your personality, your vibe, flex your style, or start a conversation!..Utility Bravos — They are earned through challenges, collabs or hitting task milestones. They are your power- ups that unlock exclusive goodies n surprises.",
   },
   {
-    question: "When will brands come onboard?",
-    answer:
-      "We're actively partnering with exciting brands and expect to have our first brand collaborations launching soon. Early explorers will get first access to these opportunities!",
+    question: "How to earn Buzz Bravos?",
+    answer: "Creating the most liked entries, Creating the most liked Mashups, ",
   },
+  // {
+  //   question: "When will brands come onboard?",
+  //   answer:
+  //     "We're actively partnering with exciting brands and expect to have our first brand collaborations launching soon. Early explorers will get first access to these opportunities!",
+  // },
 ];
 
 export function FAQSection() {
@@ -51,37 +47,20 @@ export function FAQSection() {
   return (
     <section className="w-full max-w-4xl mx-auto px-4 py-12 md:py-16">
       <div className="text-center mb-8">
-        <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-3 text-balance">
-          Your curiosity, answered.
-        </h2>
-        <p className="text-muted-foreground text-base mt-4">
-          We're here to answer your all questions.
-        </p>
+        <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-3 text-balance">Your curiosity, answered.</h2>
+        <p className="text-muted-foreground text-base mt-4">We're here to answer your all questions.</p>
       </div>
 
       <div className="max-w-3xl mx-auto">
-        <Accordion
-          type="single"
-          collapsible
-          value={openItem}
-          onValueChange={setOpenItem}
-          className="space-y-2"
-        >
+        <Accordion type="single" collapsible value={openItem} onValueChange={setOpenItem} className="space-y-2">
           {faqData.map((faq, index) => (
             <AccordionItem
               key={index}
               value={`item-${index}`}
-              className={cn(
-                "rounded-lg border-none px-4 py-1",
-                openItem === `item-${index}` ? "bg-muted" : "bg-card"
-              )}
+              className={cn("rounded-lg border-none px-4 py-1", openItem === `item-${index}` ? "bg-muted" : "bg-card")}
             >
-              <AccordionTrigger className="text-left text-sm md:text-base font-medium hover:no-underline py-4">
-                {faq.question}
-              </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground text-sm leading-relaxed pb-4">
-                {faq.answer}
-              </AccordionContent>
+              <AccordionTrigger className="text-left text-sm md:text-base font-medium hover:no-underline py-4">{faq.question}</AccordionTrigger>
+              <AccordionContent className="text-muted-foreground text-sm leading-relaxed pb-4">{faq.answer}</AccordionContent>
             </AccordionItem>
           ))}
         </Accordion>
