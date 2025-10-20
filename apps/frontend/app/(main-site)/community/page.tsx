@@ -195,7 +195,9 @@ async function FetchAndDisplayProjects({
             <CommunityProjectCard
               key={project.id}
               projectId={project.id}
-              projectCoverImage={firstMedia}
+              projectCoverImage={
+                firstMedia || project.media?.[0] || "/placeholder.svg"
+              }
               projectName={project.name}
               tagName={project.tags?.[0] || ""}
               projectDescription={project.description}
