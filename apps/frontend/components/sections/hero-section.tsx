@@ -49,10 +49,10 @@ const HeroSection = () => {
         <FloatingMicVocal />
 
         <div className="py-6 mx-auto px-2 pt-24 sm:px-4 md:px-6 lg:px-8 flex flex-col items-center justify-start md:min-h-[65vh] text-center">
-          <h1 className=" text-3xl inter-font sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-medium mb-6 max-w-4xl lg:max-w-5xl xl:max-w-6xl leading-[0.8]">
+          <h1 className="font-medium font- text-3xl inter-font sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl  mb-6 max-w-4xl lg:max-w-5xl xl:max-w-6xl leading-[0.8]">
             Building the{" "}
             {/* <span className="gradient-text  itc-font text-4xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl italic">Creator economy</span> */}
-            <span className="bg-gradient-to-tr from-yellow-500 via-pink-400 to-purple-800 inline-block text-transparent bg-clip-text  itc-font text-4xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl italic">
+            <span className="bg-gradient-to-r from-orange-400 via-purple-500  to-red-400 inline-block text-transparent bg-clip-text  itc-font text-4xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl italic">
               Creator economy
             </span>{" "}
             of tomorrow

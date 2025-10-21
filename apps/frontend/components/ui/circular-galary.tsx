@@ -455,23 +455,23 @@ class App {
     const defaultItems = [
       {
         image: `/CC_ROLLOUT_1.png`,
-        text: "Bridge",
+        text: "",
       },
       {
         image: `/CC_ROLLOUT_2.png`,
-        text: "Desk Setup",
+        text: "",
       },
       {
         image: `/CC_ROLLOUT_3.png`,
-        text: "Waterfall",
+        text: "",
       },
       {
         image: `/CC_ROLLOUT_4.png`,
-        text: "Strawberries",
+        text: "",
       },
       {
         image: `/CC_ROLLOUT_5.png`,
-        text: "Deep Diving",
+        text: "",
       },
     ];
 
