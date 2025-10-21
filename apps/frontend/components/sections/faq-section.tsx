@@ -7,34 +7,35 @@ import { cn } from "@/lib/utils";
 const faqData = [
   {
     question: "Why the extra 'b' in ConsciousClubb?",
-    answer: "Because we're extra - in the best way. ;) The extra b = bravos + benefits + belonging + more bang for your creativity + more clubB!",
+    answer: ["Because we're extra - in the best way. ;) The extra b = bravos + benefits + belonging + more bang for your creativity + more clubB!"],
   },
   {
     question: "Do I need to be a professional creator to join?",
-    answer: "Not at all! Creators of all levels are welcome.",
+    answer: ["Not at all! Creators of all levels are welcome."],
   },
   {
     question: "Is there a cost to join?",
-    answer: "Joining CC is completely free! We believe in making creativity accessible to everyone :)",
+    answer: ["Joining CC is completely free! We believe in making creativity accessible to everyone :)"],
   },
   {
     question: "What are CC Bravos? How to earn them?",
-    answer: "Bravos are CC tokens of celebration and achievement. There are 2 Types: Flex Bravos & Buzz Bravos",
+    answer: [
+      "Bravos are CC's currency for celebration and achievement. There are 2 Types: Flex Bravos & Buzz Bravos.",
+      "Flex Bravos show off your vibe, your style, your mood. They are available in the Bravo shelf to choose and pin on your profile. Imagine this like a social currency of CC.",
+      "Buzz Bravos - coming soon - are CC's reward currency. They are earned through challenges which unlock perks",
+      // "Creating the most liked entries, Creating the most liked Mashups"
+    ],
   },
   // {
-  //   question: "What are CC Bravos? How to earn them?",
-  //   answer:
-  //     "Bravos are CC’s tokens of celebration and achievement. They’re how you show off your vibe, your style, your wins, and your community cred — while also unlocking real perks along the way.",
+  //   question: "What are the different Types of Bravos?",
+  //   answer: [
+  //     "Flex Bravos — Pin them on your profile to show your personality, your vibe, flex your style, or start a conversation!..Utility Bravos — They are earned through challenges, collabs or hitting task milestones. They are your power- ups that unlock exclusive goodies n surprises.",
+  //   ],
   // },
-  {
-    question: "What are the different Types of Bravos?",
-    answer:
-      "Flex Bravos — Pin them on your profile to show your personality, your vibe, flex your style, or start a conversation!..Utility Bravos — They are earned through challenges, collabs or hitting task milestones. They are your power- ups that unlock exclusive goodies n surprises.",
-  },
-  {
-    question: "How to earn Buzz Bravos?",
-    answer: "Creating the most liked entries, Creating the most liked Mashups, ",
-  },
+  // {
+  //   question: "How to earn Buzz Bravos?",
+  //   answer: [],
+  // },
   // {
   //   question: "When will brands come onboard?",
   //   answer:
@@ -60,7 +61,14 @@ export function FAQSection() {
               className={cn("rounded-lg border-none px-4 py-1", openItem === `item-${index}` ? "bg-muted" : "bg-card")}
             >
               <AccordionTrigger className="text-left text-sm md:text-base font-medium hover:no-underline py-4">{faq.question}</AccordionTrigger>
-              <AccordionContent className="text-muted-foreground text-sm leading-relaxed pb-4">{faq.answer}</AccordionContent>
+              {faq.answer.map((ans: string, idx: any) => {
+                return (
+                  <AccordionContent key={idx} className="text-muted-foreground text-sm leading-relaxed pb-4">
+                    {ans}
+                  </AccordionContent>
+                );
+              })}
+              {/* <AccordionContent className="text-muted-foreground text-sm leading-relaxed pb-4">{faq.answer}</AccordionContent> */}
             </AccordionItem>
           ))}
         </Accordion>

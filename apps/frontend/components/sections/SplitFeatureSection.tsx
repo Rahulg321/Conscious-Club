@@ -1,5 +1,6 @@
 import React from "react";
 import { PiStarFourFill } from "react-icons/pi";
+import { SparklesText } from "@/components/ui/sparkles-text";
 
 type FeatureItem = {
   text: string;
@@ -45,8 +46,8 @@ const SplitFeatureSection: React.FC<SplitFeatureSectionProps> = ({
 
           {/* Content Container */}
           <div className="flex flex-col justify-center items-center lg:items-start space-y-4 sm:space-y-6 md:space-y-8 w-full lg:w-auto lg:flex-1 lg:max-w-xl">
-            <h1 className={`font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl } leading-tight`}>{title}</h1>
-
+            {/* <h1 className={`font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl } leading-tight`}>{title}</h1> */}
+            <SparklesText>{title}</SparklesText>
             {subtitle && <p className="text-base sm:text-lg md:text-xl text-gray-700 leading-relaxed">{subtitle}</p>}
 
             {/* Features List */}

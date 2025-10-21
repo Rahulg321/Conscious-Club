@@ -192,9 +192,9 @@ export const MobileNavToggle = ({ isOpen, onClick }: { isOpen: boolean; onClick:
 
 export const NavbarLogo = () => {
   return (
-    <a href="/" className="relative z-20 mr-4 flex items-center space-x-2 px-2 py-1 text-sm font-normal text-black">
+    <a href="/" className="relative z-20  flex items-center  px-2 py-1 text-sm font-normal text-black">
       <img src="/CC_Logo_Favicon.png" alt="logo" width={50} height={50} />
-      <span className="font-medium text-red-500">ConsiousClub</span>
+      <span className="text-red-500 text-xl font-semibold">ConsiousClubb</span>
     </a>
   );
 };

@@ -69,7 +69,7 @@ const HeroSection = () => {
       <div className="relative md:py-8 px-4 mt-[-80px] md:mt-0">
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
           <CardContainer className="inter-var">
-            <CardItem translateZ="100" className="w-full">
+            <CardItem translateZ="100" className="w-max">
               <Image
                 src={RolloutCenter}
                 alt="Rollout Center"

@@ -160,7 +160,7 @@
   }
 
   .box {
-    @apply mx-auto container px-4 sm:px-6 lg:px-8 py-10 lg:py-16;
+    @apply mx-auto container px-4 sm:px-6 lg:px-8 py-4 lg:py-8;
   }
 }
 
