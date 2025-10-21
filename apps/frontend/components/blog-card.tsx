@@ -51,7 +51,7 @@ const BlogCard = ({
   };
 
   return (
-    <Link href={`/blog/${slug}`}>
+    <Link href={`/stories/${slug}`}>
       <Card className="h-full flex flex-col overflow-hidden cursor-pointer group">
         {featuredImage && (
           <div className="relative w-full h-40 overflow-hidden bg-gray-100">
