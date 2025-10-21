@@ -81,6 +81,7 @@
         "date-fns": "^4.1.0",
         "drizzle-orm": "^0.44.5",
         "embla-carousel-react": "^8.6.0",
+        "gsap": "^3.13.0",
         "input-otp": "^1.4.2",
         "jsonwebtoken": "^9.0.2",
         "lucide-react": "^0.542.0",
@@ -88,6 +89,7 @@
         "next": "15.5.2",
         "next-auth": "^5.0.0-beta.29",
         "next-themes": "^0.4.6",
+        "ogl": "^1.0.11",
         "react": "workspace:*",
         "react-day-picker": "^9.9.0",
         "react-dom": "workspace:*",
@@ -1391,6 +1393,8 @@
     "object.fromentries": ["object.fromentries@2.0.8", "", { "dependencies": { "call-bind": "^1.0.7", "define-properties": "^1.2.1", "es-abstract": "^1.23.2", "es-object-atoms": "^1.0.0" } }, "sha512-k6E21FzySsSK5a21KRADBd/NGneRegFO5pLHfdQLpRDETUNJueLXs3WCzyQ3tFRDYgbq3KHGXfTbi2bs8WQ6rQ=="],
 
     "object.values": ["object.values@1.2.1", "", { "dependencies": { "call-bind": "^1.0.8", "call-bound": "^1.0.3", "define-properties": "^1.2.1", "es-object-atoms": "^1.0.0" } }, "sha512-gXah6aZrcUxjWg2zR2MwouP2eHlCBzdV4pygudehaKXSGW4v2AsRQUK+lwwXhii6KFZcunEnmSUoYp5CXibxtA=="],
+
+    "ogl": ["ogl@1.0.11", "", {}, "sha512-kUpC154AFfxi16pmZUK4jk3J+8zxwTWGPo03EoYA8QPbzikHoaC82n6pNTbd+oEaJonaE8aPWBlX7ad9zrqLsA=="],
 
     "oidc-token-hash": ["oidc-token-hash@5.1.1", "", {}, "sha512-D7EmwxJV6DsEB6vOFLrBM2OzsVgQzgPWyHlV2OOAVj772n+WTXpudC9e9u5BVKQnYwaD30Ivhi9b+4UeBcGu9g=="],
 

@@ -43,6 +43,7 @@
   --radius-xl: calc(var(--radius) + 4px);
   --animate-marquee: marquee var(--duration) infinite linear;
   --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
+
   @keyframes marquee {
     from {
       transform: translateX(0);
@@ -253,12 +254,7 @@ button {
 
 /* Gradient text utility */
 .gradient-text {
-  background: linear-gradient(
-    to bottom,
-    #fcb35c 22.34%,
-    #dd5cc8 44.5%,
-    #6156d3 67.08%
-  );
+  background: linear-gradient(to bottom, #6156d3 22.34%, #dd5cc8 44.5%, #fcb35c 67.08%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;

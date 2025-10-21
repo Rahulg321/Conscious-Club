@@ -1,311 +1,118 @@
 "use client";
 
-import { ChevronDown, Crown, Menu, X } from "lucide-react";
-import Link from "next/link";
+import {
+  Navbar,
+  NavBody,
+  NavItems,
+  MobileNav,
+  NavbarLogo,
+  NavbarButton,
+  MobileNavHeader,
+  MobileNavToggle,
+  MobileNavMenu,
+} from "@/components/ui/navbar";
+import { Menu } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import { useState } from "react";
-import { Button } from "./ui/button";
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Session } from "next-auth";
-import { signOut } from "next-auth/react";
-import Image from "next/image";
-import CClogo from "@/public/cc-home-logo.png";
+import HoverBorder from "./ui/hover-btn";
 
-export default function Header({
-  userSession,
-}: {
-  userSession: Session | null;
-}) {
+export default function Header({ userSession }: { userSession: Session | null }) {
   const router = useRouter();
-  const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const navLinks = [
-    { label: "Blog", href: "/blog" },
-    { label: "Community", href: "/community" },
-    { label: "Contact Us", href: "/contact-us" },
-  ] satisfies ReadonlyArray<{
-    label: string;
-    href: string;
-    icon?: typeof Crown;
-  }>;
+  const navItems = [
+    {
+      name: "Stories",
+      link: "/stories",
+    },
+    {
+      name: "Community",
+      link: "/community",
+    },
+    {
+      name: "Contact Us",
+      link: "/contact-us",
+    },
+  ];
 
   return (
-    <header className="w-full bg-white border-b border-gray-100">
-      <div className="max-w-7xl mx-auto px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <Link href="/">
-              <Image src={CClogo} alt="ConsciousClub Logo" />
-            </Link>
+    <div className="w-full sticky top-0 z-50">
+      <Navbar>
+        {/* Desktop Navigation */}
+        <NavBody>
+          <NavbarLogo />
+          <NavItems items={navItems} />
+          <div className="flex items-center gap-4 z-50">
+            <NavbarButton
+              className="text-purple-900 underline underline-offset-2"
+              variant="secondary"
+              onClick={() => {
+                router.push("/login");
+              }}
+            >
+              Login
+            </NavbarButton>
+            <HoverBorder
+              containerClassName="rounded-full h-12 w-24 cursor-pointer font-bold text-purple-900"
+              highlightColor="#D0FFF9"
+              onClick={() => {
+                router.push("/login");
+              }}
+            >
+              Sign Up
+            </HoverBorder>
           </div>
+        </NavBody>
 
-          {/* Desktop Navigation Menu */}
-          <nav className="hidden md:flex items-center gap-8">
-            {navLinks.map(({ label, href }) => (
-              <Link
-                key={label}
-                href={href}
-                className={`transition-colors ${
-                  pathname === href
-                    ? "text-[#cf5b8d] font-medium"
-                    : "text-[#3e4a5b] hover:text-[#cf5b8d]"
-                }`}
+        {/* Mobile Navigation */}
+        <MobileNav>
+          <MobileNavHeader>
+            <NavbarLogo />
+            <MobileNavToggle isOpen={isMobileMenuOpen} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} />
+          </MobileNavHeader>
+
+          <MobileNavMenu isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)}>
+            {navItems.map((item, idx) => (
+              <a
+                key={`mobile-link-${idx}`}
+                href={item.link}
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                }}
+                className="relative text-neutral-600 dark:text-neutral-300"
               >
-                {label}
-              </Link>
+                <span className="block">{item.name}</span>
+              </a>
             ))}
-          </nav>
-
-          {/* Desktop Auth Buttons */}
-          <div className="hidden md:flex items-center gap-6">
-            {userSession ? (
-              <ProfileMenu session={userSession} />
-            ) : (
-              <>
-                <a
-                  href="/login"
-                  className="text-[#3e4a5b] hover:text-[#cf5b8d] transition-colors"
-                >
-                  Login
-                </a>
-                <Button
-                  onClick={() => {
-                    router.push("/login");
-                  }}
-                  className=""
-                >
-                  Sign-up
-                </Button>
-              </>
-            )}
-          </div>
-
-          <button
-            className="md:hidden p-2 text-[#3e4a5b] hover:text-[#cf5b8d] transition-colors"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="Toggle mobile menu"
-          >
-            {isMobileMenuOpen ? (
-              <X className="w-6 h-6" />
-            ) : (
-              <Menu className="w-6 h-6" />
-            )}
-          </button>
-        </div>
-      </div>
-
-      <div
-        className={`md:hidden fixed inset-0 z-50 transition-opacity duration-300 ${
-          isMobileMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"
-        }`}
-      >
-        {/* Backdrop */}
-        <div
-          className="absolute inset-0 bg-black bg-opacity-50"
-          onClick={() => setIsMobileMenuOpen(false)}
-        />
-
-        {/* Slide-out menu */}
-        <div
-          className={`absolute right-0 top-0 h-full w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${
-            isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
-          }`}
-        >
-          <div className="p-6 h-full flex flex-col">
-            {/* Close button */}
-            <div className="flex justify-end mb-8">
-              <button
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="p-2 text-[#3e4a5b] hover:text-[#cf5b8d] transition-colors"
-                aria-label="Close menu"
+            <div className="flex w-full flex-col gap-4">
+              <NavbarButton
+                onClick={() => {
+                  router.push("/login");
+                  setIsMobileMenuOpen(false);
+                }}
+                variant="primary"
+                className="w-full"
               >
-                <X className="w-6 h-6" />
-              </button>
+                Login
+              </NavbarButton>
+              <NavbarButton
+                onClick={() => {
+                  router.push("/login");
+                  setIsMobileMenuOpen(false);
+                }}
+                variant="secondary"
+                className="w-full"
+              >
+                Sign Up
+              </NavbarButton>
             </div>
+          </MobileNavMenu>
+        </MobileNav>
+      </Navbar>
+      {/* <DummyContent /> */}
 
-            <nav className="flex flex-col gap-6 flex-1">
-              {userSession ? (
-                <>
-                  {/* User info at the top */}
-                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                    <Avatar className="w-8 h-8">
-                      <AvatarImage
-                        src={
-                          userSession.user?.image ||
-                          "https://github.com/shadcn.png"
-                        }
-                        alt="@shadcn"
-                      />
-                      <AvatarFallback>CN</AvatarFallback>
-                    </Avatar>
-                    <div className="flex flex-col">
-                      <span className="text-sm font-medium text-[#3e4a5b]">
-                        {userSession.user?.name || "User"}
-                      </span>
-                      <span className="text-xs text-gray-500">
-                        {userSession.user?.email}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Profile link at the top */}
-                  <button
-                    className="text-left text-[#3e4a5b] hover:text-[#cf5b8d] transition-colors text-lg py-2"
-                    onClick={() => {
-                      router.push(`/profile/${userSession.user?.id}`);
-                      setIsMobileMenuOpen(false);
-                    }}
-                  >
-                    Profile
-                  </button>
-
-                  <div className="border-t border-gray-100 pt-6">
-                    {/* Home link */}
-                    <Link
-                      href="/"
-                      className={`transition-colors text-lg py-2 block ${
-                        pathname === "/"
-                          ? "text-[#cf5b8d] font-medium"
-                          : "text-[#3e4a5b] hover:text-[#cf5b8d]"
-                      }`}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      Home
-                    </Link>
-
-                    {/* Other nav links */}
-                    {navLinks.map(({ label, href }) => (
-                      <Link
-                        key={`mobile-${label}`}
-                        href={href}
-                        className={`transition-colors text-lg py-2 block ${
-                          pathname === href
-                            ? "text-[#cf5b8d] font-medium"
-                            : "text-[#3e4a5b] hover:text-[#cf5b8d]"
-                        }`}
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        {label}
-                      </Link>
-                    ))}
-                  </div>
-
-                  {/* Logout at the bottom */}
-                  <div className="mt-auto pt-8 border-t border-gray-100">
-                    <button
-                      className="text-left text-[#3e4a5b] hover:text-[#cf5b8d] transition-colors text-lg py-2 w-full"
-                      onClick={() => {
-                        signOut();
-                        setIsMobileMenuOpen(false);
-                      }}
-                    >
-                      Logout
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <>
-                  {/* Home link */}
-                  <Link
-                    href="/"
-                    className={`transition-colors text-lg py-2 ${
-                      pathname === "/"
-                        ? "text-[#cf5b8d] font-medium"
-                        : "text-[#3e4a5b] hover:text-[#cf5b8d]"
-                    }`}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    Home
-                  </Link>
-
-                  {/* Other nav links */}
-                  {navLinks.map(({ label, href }) => (
-                    <Link
-                      key={`mobile-${label}`}
-                      href={href}
-                      className={`transition-colors text-lg py-2 ${
-                        pathname === href
-                          ? "text-[#cf5b8d] font-medium"
-                          : "text-[#3e4a5b] hover:text-[#cf5b8d]"
-                      }`}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      {label}
-                    </Link>
-                  ))}
-
-                  {/* Mobile Auth Section at bottom */}
-                  <div className="flex flex-col gap-4 mt-auto pt-8 border-t border-gray-100">
-                    <a
-                      href="/login"
-                      className="text-[#3e4a5b] hover:text-[#cf5b8d] transition-colors text-lg py-2"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      Login
-                    </a>
-                    <button
-                      className="bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors text-lg"
-                      onClick={() => {
-                        router.push("/login");
-                        setIsMobileMenuOpen(false);
-                      }}
-                    >
-                      Sign-up
-                    </button>
-                  </div>
-                </>
-              )}
-            </nav>
-          </div>
-        </div>
-      </div>
-    </header>
-  );
-}
-
-function ProfileMenu({ session }: { session: Session }) {
-  const router = useRouter();
-  console.log("session", session);
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger className="flex cursor-pointer items-center gap-2">
-        <Avatar>
-          <AvatarImage
-            src={session.user?.image || "https://github.com/shadcn.png"}
-            alt="@shadcn"
-          />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar>
-        <span className="text-base flex items-center font-medium">
-          Account <ChevronDown />
-        </span>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuItem
-          className="cursor-pointer"
-          onClick={() => {
-            router.push(`/profile/${session.user?.id}`);
-          }}
-        >
-          Profile
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          className="cursor-pointer"
-          onClick={() => {
-            signOut();
-          }}
-        >
-          Logout
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+      {/* Navbar */}
+    </div>
   );
 }

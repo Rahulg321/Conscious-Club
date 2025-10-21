@@ -33,8 +33,7 @@ const JoinPlatform = () => {
 
       // Responsive calculations based on screen size
       const isSmallScreen = window.innerWidth < 768; // md breakpoint
-      const isMediumScreen =
-        window.innerWidth >= 768 && window.innerWidth < 1024; // lg breakpoint
+      const isMediumScreen = window.innerWidth >= 768 && window.innerWidth < 1024; // lg breakpoint
 
       // Adjust stack height based on screen size
       let stackHeight: number;
@@ -107,15 +106,10 @@ const JoinPlatform = () => {
       <div className="box-section" ref={container}>
         <div>
           <div className="flex flex-col items-center justify-center text-center my-8">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3">
-              Why Join Our Platform?
-            </h2>
-            <p className="text-base text-muted-foreground max-w-xl">
-              Because we’re the global playground for creativity, fun and
-              Bravos.
-            </p>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3">Why Join Our Platform?</h2>
+            <p className="text-base text-muted-foreground max-w-xl">Because we’re the global playground for creativity, fun and Bravos.</p>
           </div>
-          <div className="boxes space-y-12">
+          <div className="boxes space-y-12 mt-8">
             <div className="box box1">
               <div className="flex justify-center">
                 <Image src={BenefitCard1} alt="Benefit Card 1" />
@@ -131,14 +125,15 @@ const JoinPlatform = () => {
                 <Image src={BenefitCard3} alt="Benefit Card 3" />
               </div>
             </div>
-            <div className="box box4">
-              <div className="flex justify-center">
-                <Image src={BenefitCard4} alt="Benefit Card 4" />
-              </div>
-            </div>
+
             <div className="box box5">
               <div className="flex justify-center">
                 <Image src={BenefitCard5} alt="Benefit Card 5" />
+              </div>
+            </div>
+            <div className="box box4">
+              <div className="flex justify-center">
+                <Image src={BenefitCard4} alt="Benefit Card 4" />
               </div>
             </div>
           </div>

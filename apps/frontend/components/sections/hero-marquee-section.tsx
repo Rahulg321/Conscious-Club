@@ -21,10 +21,7 @@ const HeroMarqueeSection = () => {
     <div className="w-full">
       <Marquee className="[--gap:0.5rem] sm:[--gap:0.7rem] md:[--gap:1rem] lg:[--gap:1.2rem]">
         {images.map((image, index) => (
-          <div
-            key={index}
-            className="relative w-48 sm:w-56 md:w-64 lg:w-72 xl:w-80 2xl:w-96 aspect-[3/4]"
-          >
+          <div key={index} className="skew-y-2 relative w-48 sm:w-56 md:w-64 lg:w-72 xl:w-80 2xl:w-96 aspect-[3/4]">
             <Image
               src={image.src}
               alt={image.alt}

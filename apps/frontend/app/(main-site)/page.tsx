@@ -5,11 +5,13 @@ import { FAQSection } from "@/components/sections/faq-section";
 import ExplorersSections from "@/components/sections/explorers-section";
 import JoinPlatform from "@/components/sections/join-platform";
 import HeroSection from "@/components/sections/hero-section";
-import TitleHighlight from "@/components/title-highlight";
+// import SplashCursor from "@/components/ui/splash-cursor";
 import AheadSection from "@/components/sections/ahead-section";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-
+{
+  /* <TitleHighlight /> */
+}
 export const metadata: Metadata = {
   title: "ConsciousClubb — Create, Explore, Earn Bravos",
   description:
@@ -20,14 +22,14 @@ const HomePage = async () => {
   return (
     <div>
       <HeroSection />
+      <ExplorersSections />
       <JoinPlatform />
-      <div className="mt-0 lg:mt-[200px] xl:mt-[300px] 2xl:mt-[400px]">
-        <ExplorersSections />
-      </div>
+
+      {/* <div className="mt-0 lg:mt-[200px] xl:mt-[300px] 2xl:mt-[400px]">
+      </div> */}
       <AheadSection />
       <FAQSection />
-      <JoinClubSection />
-      <TitleHighlight />
+      {/* <JoinClubSection /> */}
     </div>
   );
 };

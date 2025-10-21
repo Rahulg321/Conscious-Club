@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { PenTool, Database, Camera, MicVocal } from "lucide-react";
 import Link from "next/link";
 
@@ -9,7 +8,10 @@ import { useRef } from "react";
 
 import RolloutCenter from "@/public/CC_LandingPage_RolloutCentre.png";
 import Image from "next/image";
-import HeroMarqueeSection from "./hero-marquee-section";
+// import HeroMarqueeSection from "./hero-marquee-section";
+import { ShinyButton } from "@/components/ui/shiny-btn";
+import { CardContainer, CardItem } from "@/components/ui/3d-card";
+import CircularGallery from "../ui/circular-galary";
 
 // Floating Icon Components
 const FloatingPenTool = () => (
@@ -40,76 +42,47 @@ const HeroSection = () => {
 
   return (
     <div ref={container}>
-      <div className="relative overflow-hidden">
+      <div className="relative overflow-hidden z-2">
         <FloatingPenTool />
         <FloatingDatabase />
         <FloatingCamera />
         <FloatingMicVocal />
 
-        <div className="container mx-auto px-2 sm:px-4 md:px-6 lg:px-8 flex flex-col items-center justify-start min-h-[65vh] text-center">
-          <div className="mb-8 mt-18 border-2 border-gray-200 rounded-full px-4 py-2 flex items-center gap-2 shadow-sm">
-            <span
-              className="text-white px-2 py-0.5 rounded-full text-xs font-semibold"
-              style={{
-                background:
-                  "linear-gradient(90deg, #FCB35C -0.08%, #DF60C3 51.36%, #825BF3 99.92%)",
-              }}
-            >
-              2000+
-            </span>
-            <span className="text-gray-700 text-xs sm:text-sm font-medium">
-              People have onboarded
-            </span>
-            <div className="flex -space-x-2">
-              <Avatar className="size-6 border-2 border-white">
-                <AvatarImage src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
-                <AvatarFallback className="text-xs">U1</AvatarFallback>
-              </Avatar>
-              <Avatar className="size-6 border-2 border-white">
-                <AvatarImage src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
-                <AvatarFallback className="text-xs">U2</AvatarFallback>
-              </Avatar>
-              <Avatar className="size-6 border-2 border-white">
-                <AvatarImage src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
-                <AvatarFallback className="text-xs">U3</AvatarFallback>
-              </Avatar>
-            </div>
-          </div>
-
-          <h1 className="text-3xl inter-font sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-medium mb-6 max-w-4xl lg:max-w-5xl xl:max-w-6xl leading-[0.8]">
+        <div className="py-6 mx-auto px-2 pt-24 sm:px-4 md:px-6 lg:px-8 flex flex-col items-center justify-start md:min-h-[65vh] text-center">
+          <h1 className="font-medium font- text-3xl inter-font sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl  mb-6 max-w-4xl lg:max-w-5xl xl:max-w-6xl leading-[0.8]">
             Building the{" "}
-            <span className="gradient-text itc-font lg:text-7xl xl:text-8xl 2xl:text-9xl italic">
+            {/* <span className="gradient-text  itc-font text-4xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl italic">Creator economy</span> */}
+            <span className="bg-gradient-to-r from-orange-400 via-purple-500  to-red-400 inline-block text-transparent bg-clip-text  itc-font text-4xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl italic">
               Creator economy
             </span>{" "}
             of tomorrow
           </h1>
 
           <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-muted-foreground font-semibold mb-8 max-w-xl lg:max-w-2xl xl:max-w-3xl leading-relaxed">
-            Join the platform that connects curious minds and creative talent
-            through self- expression, play and rewards
+            Join the platform that connects curious minds and creative talent through self- expression, play and rewards
           </p>
 
-          <Button
-            size={"xl"}
-            className="bg-black hover:bg-gray-800 text-white "
-            asChild
-          >
-            <Link href="/login">Join the Clubb</Link>
-          </Button>
+          <ShinyButton className="cursor-point">Join the Clubb</ShinyButton>
         </div>
       </div>
 
-      <div className="relative py-8 px-4">
+      <div className="relative md:py-8 px-4 mt-[-80px] md:mt-0">
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
-          <Image
-            src={RolloutCenter}
-            alt="Rollout Center"
-            className="object-cover w-auto h-[18rem] sm:h-[22rem] md:h-[26rem] lg:h-[30rem] xl:h-[36rem] 2xl:h-[42rem] 3xl:h-[48rem] max-h-[90vh] rounded-xl"
-          />
+          <CardContainer className="inter-var">
+            <CardItem translateZ="100" className="w-full">
+              <Image
+                src={RolloutCenter}
+                alt="Rollout Center"
+                className="object-cover w-auto h-[18rem] sm:h-[22rem] md:h-[26rem] lg:h-[30rem] xl:h-[36rem] 2xl:h-[42rem] 3xl:h-[48rem] max-h-[90vh] rounded-xl"
+              />
+            </CardItem>
+          </CardContainer>
         </div>
-
-        <HeroMarqueeSection />
+        <div style={{ height: "500px", position: "relative" }}>
+          <CircularGallery bend={3} textColor="#ffffff" borderRadius={0.05} scrollEase={0.02} />
+        </div>
       </div>
+      {/* <LightRays /> */}
     </div>
   );
 };

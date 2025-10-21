@@ -1,22 +1,19 @@
 import React from "react";
 import SplitFeatureSection from "./SplitFeatureSection";
+import SplashCursor from "@/components/ui/splash-cursor";
 
 const ExplorersSections = async () => {
   return (
-    <div className="block-space">
-      <div className="flex flex-col items-center justify-center text-center my-4">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2">
-          Who is this for?
-        </h2>
-        <p className="text-base mt-2 text-muted-foreground">
-          For all those who have a zest for life
-        </p>
+    <div className="md:py-8">
+      <div className="flex flex-col items-center justify-center text-center">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold">Who is this for?</h2>
+        <p className="text-base text-muted-foreground">For all those who have a zest for life</p>
       </div>
       <SplitFeatureSection
         eyebrow="Who is this for?"
         title="Creators"
         image={{
-          src: "creators.png",
+          src: "creatorIMG_LP.png",
           alt: "Explorers app interface with person using phone",
         }}
         features={[
@@ -28,6 +25,7 @@ const ExplorersSections = async () => {
         iconClassName="text-[rgba(224,30,90,1)]"
         orientation="row-reverse"
       />
+      <SplashCursor />
     </div>
   );
 };
