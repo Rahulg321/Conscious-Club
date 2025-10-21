@@ -5,6 +5,10 @@ import React from "react";
 
 const NotFoundPage = () => {
   console.log("Not Found Page");
+  console.log("Not Found Page");
+  console.log("Not Found Page");
+  console.log("Not Found Page");
+  console.log("Not Found Page");
 
   return (
     <div>
