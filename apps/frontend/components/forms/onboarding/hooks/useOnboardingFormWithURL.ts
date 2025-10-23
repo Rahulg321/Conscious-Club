@@ -183,13 +183,47 @@ export const useOnboardingFormWithURL = () => {
         }
 
         // Make API call to submit onboarding data
-        const response = await fetch("/api/onboarding", {
-          method: "POST",
-          body: formDataToSubmit,
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/onboarding`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${session?.user?.accessToken}`,
+            },
+            body: formDataToSubmit,
+          }
+        ).catch((networkError) => {
+          console.error("❌ [FRONTEND] Network error:", networkError);
+          throw new Error(
+            "Network error: Unable to connect to server. Please check your internet connection."
+          );
         });
 
         if (!response.ok) {
-          throw new Error("Failed to submit onboarding data");
+          let errorData;
+          try {
+            errorData = await response.json();
+            console.error(
+              "❌ [FRONTEND] Error response from server:",
+              errorData
+            );
+          } catch (parseError) {
+            console.error(
+              "❌ [FRONTEND] Failed to parse error response:",
+              parseError
+            );
+            errorData = { error: "Unknown error occurred" };
+          }
+
+          const errorMessage =
+            errorData?.details ||
+            errorData?.error ||
+            "Failed to submit onboarding data";
+          const errorCode = errorData?.code || "UNKNOWN_ERROR";
+
+          throw new Error(
+            `Server error (${response.status}): ${errorMessage} [${errorCode}]`
+          );
         }
 
         const result = await response.json();
@@ -210,13 +244,57 @@ export const useOnboardingFormWithURL = () => {
         }, 100);
       } catch (error) {
         console.error("Error submitting onboarding:", error);
-        toast.error("Error submitting form", {
-          description: "Please try again later",
+
+        // Extract error message and code from the error
+        const errorMessage =
+          error instanceof Error ? error.message : "An error occurred";
+        const errorCode = errorMessage.includes("[")
+          ? errorMessage.split("[")[1]?.replace("]", "")
+          : "UNKNOWN_ERROR";
+
+        // Determine user-friendly error message based on error code
+        let userFriendlyMessage = "Error submitting form";
+        let userFriendlyDescription = "Please try again later";
+
+        if (errorCode === "VALIDATION_ERROR") {
+          userFriendlyMessage = "Validation Error";
+          userFriendlyDescription = "Please check your form data and try again";
+        } else if (errorCode === "AUTH_ERROR") {
+          userFriendlyMessage = "Authentication Error";
+          userFriendlyDescription = "Please log in again and try again";
+        } else if (
+          errorCode === "PROFILE_PICTURE_UPLOAD_FAILED" ||
+          errorCode === "PROFILE_PICTURE_UPLOAD_ERROR"
+        ) {
+          userFriendlyMessage = "Profile Picture Upload Failed";
+          userFriendlyDescription =
+            "Please try uploading your profile picture again";
+        } else if (errorCode === "PROJECT_MEDIA_UPLOAD_ERROR") {
+          userFriendlyMessage = "Project Media Upload Failed";
+          userFriendlyDescription =
+            "Please try uploading your project media again";
+        } else if (errorCode === "USER_UPDATE_ERROR") {
+          userFriendlyMessage = "Profile Update Failed";
+          userFriendlyDescription = "Please try again or contact support";
+        } else if (errorCode === "PROJECT_CREATION_ERROR") {
+          userFriendlyMessage = "Project Creation Failed";
+          userFriendlyDescription =
+            "Your profile was updated but project creation failed";
+        } else if (errorCode === "INTERNAL_ERROR") {
+          userFriendlyMessage = "Server Error";
+          userFriendlyDescription =
+            "Something went wrong on our end. Please try again";
+        } else if (errorMessage.includes("Network error")) {
+          userFriendlyMessage = "Connection Error";
+          userFriendlyDescription =
+            "Unable to connect to server. Please check your internet connection and try again";
+        }
+
+        toast.error(userFriendlyMessage, {
+          description: userFriendlyDescription,
         });
 
-        setSubmitError(
-          error instanceof Error ? error.message : "An error occurred"
-        );
+        setSubmitError(errorMessage);
       }
     });
   };
