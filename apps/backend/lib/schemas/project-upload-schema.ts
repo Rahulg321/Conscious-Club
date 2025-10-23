@@ -17,10 +17,10 @@ const mediaFileSchema = z
   .refine((file) => {
     const videoTypes = ["video/mp4", "video/webm", "video/quicktime"];
     if (videoTypes.includes(file.mimetype)) {
-      return file.size <= 100 * 1024 * 1024; // 100MB for videos
+      return file.size <= 200 * 1024 * 1024; // 200MB for videos
     }
-    return file.size <= 5 * 1024 * 1024; // 5MB for images
-  }, "File size exceeds the maximum allowed size (5MB for images, 100MB for videos)");
+    return file.size <= 20 * 1024 * 1024; // 20MB for images
+  }, "File size exceeds the maximum allowed size (20MB for images, 200MB for videos)");
 
 export const projectUploadSchema = z.object({
   media: z

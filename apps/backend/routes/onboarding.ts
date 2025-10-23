@@ -10,7 +10,7 @@ import { eq } from "drizzle-orm";
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
-    fileSize: 100 * 1024 * 1024, // 100MB max file size
+    fileSize: 200 * 1024 * 1024, // 200MB max file size
     files: 5, // Max 5 files (1 profile picture + 4 project media)
   },
 });

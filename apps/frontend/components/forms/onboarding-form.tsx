@@ -42,13 +42,6 @@ export function OnboardingForm() {
       </div>
 
       <div className="px-4 md:px-8 lg:px-12 py-4 pb-16">
-        {/* Error display */}
-        {submitError && (
-          <div className="rounded-md bg-red-50 p-4">
-            <div className="text-sm text-red-700">{submitError}</div>
-          </div>
-        )}
-
         {/* Step content */}
         <div className="space-y-4">
           {currentStep === 1 && (
@@ -81,7 +74,15 @@ export function OnboardingForm() {
           )}
         </div>
 
-        <div className="mt-4">
+        <div className="mt-4 space-y-4">
+          {/* Submit error display */}
+          {submitError && (
+            <div className="rounded-md bg-red-50 p-4">
+              <div className="text-sm text-red-700">{submitError}</div>
+            </div>
+          )}
+
+          {/* Step validation errors */}
           {stepErrors[currentStep] &&
             (stepErrors[currentStep]?.length ?? 0) > 0 && (
               <div className="rounded-md bg-red-50 p-4">

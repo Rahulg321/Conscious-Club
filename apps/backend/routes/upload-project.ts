@@ -9,7 +9,7 @@ import authenticateToken from "@/middleware/authenticate-token";
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
-    fileSize: 100 * 1024 * 1024, // 100MB max file size
+    fileSize: 200 * 1024 * 1024, // 200MB max file size
     files: 4, // Max 4 files
   },
 });

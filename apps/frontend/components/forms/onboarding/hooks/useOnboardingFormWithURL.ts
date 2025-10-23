@@ -229,19 +229,25 @@ export const useOnboardingFormWithURL = () => {
         const result = await response.json();
 
         console.log("Onboarding submitted successfully:", result);
-        toast.success("Successfully, completed onboarding", {
-          description: "You can now start exploring the platform",
+        toast.success("Successfully completed onboarding!", {
+          description: "Redirecting to dashboard...",
         });
 
-        console.log("🔄 Forcing session update...");
-        await updateSession();
-        console.log("✅ Session updated, redirecting to dashboard...");
+        // Update session and redirect immediately
+        try {
+          console.log("🔄 Updating session...");
+          await updateSession();
+          console.log("✅ Session updated, redirecting to dashboard...");
 
-        router.push("/dashboard");
-
-        setTimeout(() => {
-          router.refresh();
-        }, 100);
+          // Use replace instead of push to prevent back navigation
+          router.replace("/dashboard");
+        } catch (sessionError) {
+          console.error(
+            "Session update failed, but continuing with redirect:",
+            sessionError
+          );
+          router.replace("/dashboard");
+        }
       } catch (error) {
         console.error("Error submitting onboarding:", error);
 

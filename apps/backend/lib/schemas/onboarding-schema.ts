@@ -17,10 +17,10 @@ const mediaFileSchema = z
   .refine((file) => {
     const videoTypes = ["video/mp4", "video/webm", "video/quicktime"];
     if (videoTypes.includes(file.mimetype)) {
-      return file.size <= 100 * 1024 * 1024; // 100MB for videos
+      return file.size <= 200 * 1024 * 1024; // 200MB for videos
     }
-    return file.size <= 5 * 1024 * 1024; // 5MB for images
-  }, "File size exceeds the maximum allowed size (5MB for images, 100MB for videos)");
+    return file.size <= 20 * 1024 * 1024; // 20MB for images
+  }, "File size exceeds the maximum allowed size (20MB for images, 200MB for videos)");
 
 export const onboardingSchema = z.object({
   // User profile data
@@ -50,9 +50,9 @@ export const onboardingSchema = z.object({
     .refine((val) => {
       const date = new Date(val);
       const now = new Date();
-      const age = now.getFullYear() - date.getFullYear();
-      return age >= 13 && age <= 120;
-    }, "You must be at least 13 years old"),
+      // Just check if it's a valid date and not in the future
+      return date instanceof Date && !isNaN(date.getTime()) && date <= now;
+    }, "Please enter a valid date of birth"),
   userRole: z.enum(["creator"], {
     message: "User role is required",
   }),

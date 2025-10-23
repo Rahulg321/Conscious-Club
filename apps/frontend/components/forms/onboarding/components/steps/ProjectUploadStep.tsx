@@ -134,7 +134,7 @@ export const ProjectUploadStep = ({
         <Label className="text-sm font-medium">Upload Media</Label>
         <p className="text-xs text-muted-foreground mb-2">
           Upload up to 4 images or videos. Videos must be 5-20 seconds and up to
-          100MB.
+          200MB. Images up to 20MB.
         </p>
 
         <input

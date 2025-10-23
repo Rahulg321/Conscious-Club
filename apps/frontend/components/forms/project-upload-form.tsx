@@ -281,7 +281,7 @@ function ProjectUploadForm({
               </FormLabel>
               <FormDescription className="text-xs mt-0 p-0 ">
                 Upload up to 4 images or videos. Videos can be up to 20 seconds
-                and 100MB.
+                and 200MB. Images up to 20MB.
               </FormDescription>
               <FormControl>
                 <div className="space-y-2 mt-2">
