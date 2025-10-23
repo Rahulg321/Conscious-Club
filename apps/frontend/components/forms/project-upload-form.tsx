@@ -87,16 +87,16 @@ function ProjectUploadForm({
         console.log("🎬 [FRONTEND] Video metadata loaded:", {
           fileName: file.name,
           duration: duration,
-          isValid: duration >= 5 && duration <= 10,
+          isValid: duration >= 5 && duration <= 20,
         });
 
-        if (duration < 5 || duration > 10) {
+        if (duration < 5 || duration > 20) {
           console.error("❌ [FRONTEND] Video duration validation failed:", {
             fileName: file.name,
             duration: duration,
-            required: "5-10 seconds",
+            required: "5-20 seconds",
           });
-          toast.error("Video must be between 5 and 10 seconds long");
+          toast.error("Video must be between 5 and 20 seconds long");
           resolve(false);
         } else {
           console.log(
@@ -280,7 +280,8 @@ function ProjectUploadForm({
                 Upload Media
               </FormLabel>
               <FormDescription className="text-xs mt-0 p-0 ">
-                Upload up to 4 images or videos. Videos can be upto 10 seconds.
+                Upload up to 4 images or videos. Videos can be up to 20 seconds
+                and 100MB.
               </FormDescription>
               <FormControl>
                 <div className="space-y-2 mt-2">

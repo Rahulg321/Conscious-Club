@@ -46,8 +46,8 @@ export const ProjectUploadStep = ({
         window.URL.revokeObjectURL(videoElement.src);
         const duration = videoElement.duration;
 
-        if (duration < 5 || duration > 10) {
-          toast.error("Video must be between 5 and 10 seconds long");
+        if (duration < 5 || duration > 20) {
+          toast.error("Video must be between 5 and 20 seconds long");
           resolve(false);
         } else {
           resolve(true);
@@ -133,7 +133,8 @@ export const ProjectUploadStep = ({
       <div className="space-y-2">
         <Label className="text-sm font-medium">Upload Media</Label>
         <p className="text-xs text-muted-foreground mb-2">
-          Upload up to 4 images or videos. Videos must be 5-10 seconds.
+          Upload up to 4 images or videos. Videos must be 5-20 seconds and up to
+          100MB.
         </p>
 
         <input
