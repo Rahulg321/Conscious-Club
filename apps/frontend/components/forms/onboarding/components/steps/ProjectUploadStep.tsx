@@ -30,6 +30,28 @@ export const ProjectUploadStep = ({
   const [mediaPreviews, setMediaPreviews] = useState<MediaPreview[]>([]);
   const mediaRef = useRef<HTMLInputElement>(null);
 
+  // Sync media previews with form data when component mounts or form data changes
+  useEffect(() => {
+    if (formData.projectMedia && formData.projectMedia.length > 0) {
+      const newPreviews: MediaPreview[] = formData.projectMedia.map((file) => ({
+        url: URL.createObjectURL(file),
+        type: file.type.startsWith("video/") ? "video" : "image",
+        file,
+      }));
+      setMediaPreviews((prevPreviews) => {
+        // Clean up old preview URLs
+        prevPreviews.forEach((preview) => URL.revokeObjectURL(preview.url));
+        return newPreviews;
+      });
+    } else {
+      setMediaPreviews((prevPreviews) => {
+        // Clean up old preview URLs
+        prevPreviews.forEach((preview) => URL.revokeObjectURL(preview.url));
+        return [];
+      });
+    }
+  }, [formData.projectMedia]);
+
   // Revoke object URLs on unmount
   useEffect(() => {
     return () => {
@@ -89,14 +111,7 @@ export const ProjectUploadStep = ({
     if (validFiles.length > 0) {
       const newMedia = [...currentMedia, ...validFiles];
       updateFormData("projectMedia", newMedia);
-
-      // Create preview URLs
-      const newPreviews: MediaPreview[] = validFiles.map((file) => ({
-        url: URL.createObjectURL(file),
-        type: file.type.startsWith("video/") ? "video" : "image",
-        file,
-      }));
-      setMediaPreviews((prev) => [...prev, ...newPreviews]);
+      // Preview URLs will be created automatically by the useEffect
     }
 
     // Reset input
@@ -109,15 +124,7 @@ export const ProjectUploadStep = ({
     const newMedia = [...formData.projectMedia];
     newMedia.splice(index, 1);
     updateFormData("projectMedia", newMedia);
-
-    // Revoke and update previews
-    const preview = mediaPreviews[index];
-    if (preview) {
-      URL.revokeObjectURL(preview.url);
-    }
-    const newPreviews = [...mediaPreviews];
-    newPreviews.splice(index, 1);
-    setMediaPreviews(newPreviews);
+    // Preview updates will be handled automatically by the useEffect
   };
 
   return (
