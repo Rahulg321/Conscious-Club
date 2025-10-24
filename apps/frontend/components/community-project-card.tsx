@@ -59,9 +59,7 @@ export default function CommunityProjectCard({
       <div className="p-4">
         <div className="flex items-start justify-between mb-2">
           <h4 className="font-medium text-card-foreground line-clamp-1 flex-1">
-            <button className="text-left cursor-pointer" onClick={openProject}>
-              {projectName}
-            </button>
+            {projectName}
           </h4>
           <div onClick={onLikeButtonClick}>
             <LikeButton
