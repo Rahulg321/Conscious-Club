@@ -17,7 +17,7 @@ import React, { useState, useTransition } from "react";
 import { deleteProject } from "@/lib/actions/delete-project";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
+import { Loader2, Trash2 } from "lucide-react";
 
 const DeleteProjectAlert = ({ projectId }: { projectId: string }) => {
   const [open, setOpen] = useState(false);
@@ -41,7 +41,13 @@ const DeleteProjectAlert = ({ projectId }: { projectId: string }) => {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger>
-        <Button variant={"destructive"}>Delete</Button>
+        <Button
+          variant="outline"
+          size="icon"
+          className="h-9 w-9 border-gray-200 hover:bg-red-50 hover:border-red-200 hover:text-red-600"
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

@@ -1,68 +1,72 @@
-import { NextResponse } from "next/server";
-import { db } from "@repo/db";
-import { project, projectTags, tags, projectLikes } from "@repo/db/schema";
-import { eq, and, sql } from "drizzle-orm";
+import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
+import { getProjectByIdWithStats } from "@/lib/queries";
 
 export async function GET(
-  _request: Request,
-  context: { params: Promise<{ projectId: string }> }
+  request: NextRequest,
+  { params }: { params: { projectId: string } }
 ) {
-  const { projectId } = await context.params;
-
   try {
-    const [p] = await db
-      .select()
-      .from(project)
-      .where(eq(project.id, projectId));
-    if (!p) return NextResponse.json({ error: "Not found" }, { status: 404 });
+    const session = await auth();
 
-    const tagRows = await db
-      .select({ name: tags.name })
-      .from(projectTags)
-      .leftJoin(tags, eq(projectTags.tagId, tags.id))
-      .where(eq(projectTags.projectId, projectId));
-
-    const [likesRow] = await db
-      .select({ count: sql<number>`COUNT(*)` })
-      .from(projectLikes)
-      .where(eq(projectLikes.projectId, projectId));
-
-    // Get user session to check if user has liked this project
-    const userSession = await auth();
-    let isLiked = false;
-
-    if (userSession?.user?.id) {
-      const [userLike] = await db
-        .select()
-        .from(projectLikes)
-        .where(
-          and(
-            eq(projectLikes.projectId, projectId),
-            eq(projectLikes.userId, userSession.user.id)
-          )
-        );
-      isLiked = !!userLike;
+    if (!session?.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const payload = {
-      id: p.id,
-      name: p.name,
-      description: p.description,
-      media: p.media,
-      logoImage: p.logoImage,
-      link: p.link,
-      dedicatedToPerson: p.dedicatedToPerson,
-      dedicatedToBrand: p.dedicatedToBrand,
-      dedicatedToCause: p.dedicatedToCause,
-      dedicationReason: p.dedicationReason,
-      tags: tagRows.map((t) => t.name).filter(Boolean) as string[],
-      likeCount: Number(likesRow?.count || 0),
-      isLiked,
-    };
+    const { projectId } = params;
+    const project = await getProjectByIdWithStats(projectId);
 
-    return NextResponse.json({ project: payload });
-  } catch (e) {
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+    if (!project) {
+      return NextResponse.json({ error: "Project not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ project });
+  } catch (error) {
+    console.error("Error fetching project:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { projectId: string } }
+) {
+  try {
+    const session = await auth();
+
+    if (!session?.user?.accessToken) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { projectId } = params;
+    const formData = await request.formData();
+
+    // Forward the request to the backend
+    const backendUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/update-project/${projectId}`;
+
+    const response = await fetch(backendUrl, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${session.user.accessToken}`,
+      },
+      body: formData,
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return NextResponse.json(data, { status: response.status });
+    }
+
+    return NextResponse.json(data);
+  } catch (error) {
+    console.error("Error updating project:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }

@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import uploadProjectRouter from "@/routes/upload-project";
+import updateProjectRouter from "@/routes/update-project";
 import onboardingRouter from "@/routes/onboarding";
 
 const app = express();
@@ -10,6 +11,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 app.use("/upload-project", uploadProjectRouter);
+app.use("/update-project", updateProjectRouter);
 app.use("/onboarding", onboardingRouter);
 
 app.get("/", (req, res) => {

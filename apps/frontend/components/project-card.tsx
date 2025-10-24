@@ -4,7 +4,7 @@ import DeleteProjectAlert from "./buttons/delete-project-alert";
 import Image from "next/image";
 import { getPreviewMedia } from "@/lib/utils";
 import { isVideo } from "@/lib/utils";
-import { Sparkles, Eye } from "lucide-react";
+import { Sparkles, Eye, ExternalLink, Edit, Trash2 } from "lucide-react";
 
 export default function ProjectCard({
   project,
@@ -19,12 +19,9 @@ export default function ProjectCard({
   const isPreviewVideo = previewMedia ? isVideo(previewMedia) : false;
   const isMashup = project.isMashup && creatorName && collaboratorName;
 
-  console.log("preview media", previewMedia);
-
   return (
     <div className="group w-full">
       <div className="h-full bg-white rounded-2xl border border-gray-200 overflow-hidden">
-        {/* Media Container */}
         <div className="aspect-video relative bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
           {previewMedia && !isPreviewVideo ? (
             <Image
@@ -53,7 +50,6 @@ export default function ProjectCard({
             </div>
           )}
 
-          {/* Mashup Badge */}
           {isMashup && (
             <div className="absolute top-3 left-3">
               <div className="bg-purple-500/90 backdrop-blur-sm text-white px-2 py-1 rounded-lg flex items-center gap-1 text-xs font-medium">
@@ -64,14 +60,11 @@ export default function ProjectCard({
           )}
         </div>
 
-        {/* Content Container */}
         <div className="p-6 space-y-4">
-          {/* Title */}
           <h4 className="font-semibold text-lg text-gray-900 line-clamp-1">
             {project.name}
           </h4>
 
-          {/* Mashup Collaborators */}
           {isMashup && (
             <div className="flex items-center gap-2 text-sm text-gray-600 bg-purple-50 px-3 py-2 rounded-lg">
               <Sparkles className="w-4 h-4 text-purple-500" />
@@ -82,20 +75,31 @@ export default function ProjectCard({
             </div>
           )}
 
-          {/* Description */}
           <p className="text-sm text-gray-600 line-clamp-2 leading-relaxed min-h-[2.5rem]">
             {project.description}
           </p>
 
-          {/* Actions */}
-          <div className="flex items-center gap-3 pt-2">
+          <div className="flex items-center justify-end gap-2 pt-2">
             <Button
               variant="outline"
+              size="icon"
               asChild
-              className="flex-1 border-gray-200"
+              className="h-9 w-9 border-gray-200 hover:bg-gray-50"
             >
               <Link href={`/profile/${project.userId}/projects/${project.id}`}>
-                View Project
+                <ExternalLink className="h-4 w-4" />
+              </Link>
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-9 w-9 border-gray-200 hover:bg-gray-50"
+              asChild
+            >
+              <Link
+                href={`/profile/${project.userId}/projects/${project.id}/edit`}
+              >
+                <Edit className="h-4 w-4" />
               </Link>
             </Button>
             <DeleteProjectAlert projectId={project.id} />
