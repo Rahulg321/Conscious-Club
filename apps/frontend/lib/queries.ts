@@ -1095,7 +1095,6 @@ export async function getUserPinnedBravoImage(userId: string) {
       .leftJoin(bravos, eq(user.moodSelectedBravoId, bravos.id))
       .where(eq(user.id, userId));
 
-    // Return null if no pinned bravo is set
     if (!result?.bravoName || !result?.bravoImage) {
       return null;
     }

@@ -6,8 +6,12 @@ const ExplorersSections = async () => {
   return (
     <div className="md:py-8">
       <div className="flex flex-col items-center justify-center text-center">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold">Who is this for?</h2>
-        <p className="text-base text-muted-foreground">For all those who have a zest for life</p>
+        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold">
+          Who is this for?
+        </h2>
+        <p className="text-base text-muted-foreground">
+          For all those who have a zest for life
+        </p>
       </div>
       <SplitFeatureSection
         eyebrow="Who is this for?"
@@ -18,8 +22,8 @@ const ExplorersSections = async () => {
         }}
         features={[
           { text: "Flex your talent, globally" },
-          { text: "Create fun collabs that earn you bravos" },
-          { text: "Grow your community & unlock perks" },
+          { text: "Create fun collabs (a.k.a mashups) & grow your community" },
+          { text: "Discover creators & trends worldwide" },
         ]}
         accentClassName="text-[rgba(234,89,31,1)]"
         iconClassName="text-[rgba(224,30,90,1)]"

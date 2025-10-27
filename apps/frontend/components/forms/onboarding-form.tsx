@@ -42,7 +42,6 @@ export function OnboardingForm() {
       </div>
 
       <div className="px-4 md:px-8 lg:px-12 py-4 pb-16">
-        {/* Step content */}
         <div className="space-y-4">
           {currentStep === 1 && (
             <RoleSelectionStep

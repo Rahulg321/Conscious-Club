@@ -9,6 +9,7 @@ import HeroSection from "@/components/sections/hero-section";
 import AheadSection from "@/components/sections/ahead-section";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import SlideshowSection from "@/components/sections/slideshow-section";
 {
   /* <TitleHighlight /> */
 }
@@ -29,6 +30,7 @@ const HomePage = async () => {
       </div> */}
       <AheadSection />
       <FAQSection />
+      <SlideshowSection />
       {/* <JoinClubSection /> */}
     </div>
   );
