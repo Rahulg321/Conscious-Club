@@ -60,11 +60,6 @@ export const useOnboardingFormWithURL = () => {
 
   // Validation functions for each step
   const validateStep1 = (data: OnboardingFormData): string[] => {
-    // Since userRole is pre-set to "creator", no validation needed for step 1
-    return [];
-  };
-
-  const validateStep2 = (data: OnboardingFormData): string[] => {
     const errors: string[] = [];
     if (!data.name.trim()) {
       errors.push("Full name is required");
@@ -81,7 +76,7 @@ export const useOnboardingFormWithURL = () => {
     return errors;
   };
 
-  const validateStep3 = (data: OnboardingFormData): string[] => {
+  const validateStep2 = (data: OnboardingFormData): string[] => {
     const errors: string[] = [];
     if (!data.discipline) {
       errors.push("Please select a discipline");
@@ -92,8 +87,8 @@ export const useOnboardingFormWithURL = () => {
     return errors;
   };
 
-  const validateStep4 = (data: OnboardingFormData): string[] => {
-    // Step 4 is optional for project upload, so no validation needed
+  const validateStep3 = (data: OnboardingFormData): string[] => {
+    // Step 3 is optional for project upload, so no validation needed
     return [];
   };
 
@@ -109,9 +104,6 @@ export const useOnboardingFormWithURL = () => {
         break;
       case 3:
         errors.push(...validateStep3(formData));
-        break;
-      case 4:
-        errors.push(...validateStep4(formData));
         break;
     }
 

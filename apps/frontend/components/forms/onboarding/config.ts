@@ -4,21 +4,16 @@ export const getStepsForRole = (userRole: UserRole): OnboardingStep[] => {
   return [
     {
       id: 1,
-      title: "Tell us who you are",
-      description: "Choose your role in our community",
-    },
-    {
-      id: 2,
       title: "Complete Your Profile",
       description: "Tell us about yourself",
     },
     {
-      id: 3,
+      id: 2,
       title: "Choose your role",
       description: "Pick the main discipline that best represents your work",
     },
     {
-      id: 4,
+      id: 3,
       title: "Add Creation",
       description: "Bring your magic to the playground⭐️",
     },

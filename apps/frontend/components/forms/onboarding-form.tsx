@@ -7,7 +7,6 @@ import { useOnboardingContext } from "./onboarding/context/OnboardingContext";
 import { getStepsForRole } from "./onboarding/config";
 import { StepHeader } from "./onboarding/components/StepHeader";
 import { ProgressIndicator } from "./onboarding/components/ProgressIndicator";
-import { RoleSelectionStep } from "./onboarding/components/steps/RoleSelectionStep";
 import { ProfileCompletionStep } from "./onboarding/components/steps/ProfileCompletionStep";
 import { DisciplineRoleStep } from "./onboarding/components/steps/DisciplineRoleStep";
 import { ProjectUploadStep } from "./onboarding/components/steps/ProjectUploadStep";
@@ -44,13 +43,6 @@ export function OnboardingForm() {
       <div className="px-4 md:px-8 lg:px-12 py-4 pb-16">
         <div className="space-y-4">
           {currentStep === 1 && (
-            <RoleSelectionStep
-              formData={formData}
-              updateFormData={updateFormData}
-            />
-          )}
-
-          {currentStep === 2 && (
             <ProfileCompletionStep
               formData={formData}
               updateFormData={updateFormData}
@@ -58,14 +50,14 @@ export function OnboardingForm() {
             />
           )}
 
-          {currentStep === 3 && (
+          {currentStep === 2 && (
             <DisciplineRoleStep
               formData={formData}
               updateFormData={updateFormData}
             />
           )}
 
-          {currentStep === 4 && (
+          {currentStep === 3 && (
             <ProjectUploadStep
               formData={formData}
               updateFormData={updateFormData}
@@ -126,7 +118,7 @@ export function OnboardingForm() {
             <Button
               onClick={submitOnboarding}
               disabled={isSubmitting}
-              className="bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50"
+              className="bg-[#877DFE] hover:bg-[#877DFE]/90 disabled:opacity-50"
             >
               {isSubmitting ? "Saving..." : "Save"}
             </Button>

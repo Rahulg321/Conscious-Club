@@ -8,8 +8,6 @@ export const getTestimonialImage = (
   userRole: UserRole,
   step: number
 ): string => {
-  if (!userRole || step === 1) {
-    return "/onboarding/CC_Onboarding_Register.png"; // Default image
-  }
+  // Since we removed role selection step, all steps now show creator testimonial
   return TESTIMONIAL_IMAGES[userRole];
 };
