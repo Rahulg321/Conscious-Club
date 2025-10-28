@@ -34,11 +34,10 @@ const SlideshowSection = () => {
   }, [api]);
 
   return (
-    <section className="py-16 px-4 bg-gradient-to-br from-gray-50 to-white">
+    <section className="py-16 px-4 ">
       <div className="max-w-6xl mx-auto">
-        {/* Heading */}
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h2 className="text-4xl md:text-5xl italic font-semibold text-gray-900 mb-4">
             A Little Love Note from One Creator to Another
           </h2>
         </div>
