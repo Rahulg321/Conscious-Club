@@ -18,20 +18,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Menu, User, LogOut } from "lucide-react";
-import { useRouter, usePathname } from "next/navigation";
+import { User, LogOut, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Session } from "next-auth";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import HoverBorder from "./ui/hover-btn";
 import Image from "next/image";
 import { toast } from "sonner";
 
-export default function Header({
-  userSession,
-}: {
-  userSession: Session | null;
-}) {
+export default function Header({}: {}) {
+  const { data: session, status } = useSession();
+
   const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -58,22 +55,27 @@ export default function Header({
           <NavbarLogo />
           <NavItems items={navItems} />
           <div className="flex items-center gap-4 z-50">
-            {userSession ? (
+            {status === "loading" ? (
+              <div className="flex items-center gap-2 px-3 py-2">
+                <Loader2 className="h-5 w-5 animate-spin text-gray-500" />
+                <span className="text-sm text-gray-600">Loading...</span>
+              </div>
+            ) : session ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-100 transition-colors">
                     <Image
                       src={
-                        userSession.user?.image ??
-                        `https://avatar.vercel.sh/${userSession.user?.email}`
+                        session.user?.image ??
+                        `https://avatar.vercel.sh/${session.user?.email}`
                       }
-                      alt={userSession.user?.email ?? "User Avatar"}
+                      alt={session.user?.email ?? "User Avatar"}
                       width={32}
                       height={32}
                       className="rounded-full"
                     />
                     <span className="text-sm font-medium text-gray-700">
-                      {userSession.user?.name || userSession.user?.email}
+                      {session.user?.name || session.user?.email}
                     </span>
                   </button>
                 </DropdownMenuTrigger>
@@ -81,7 +83,7 @@ export default function Header({
                   <DropdownMenuItem
                     className="cursor-pointer"
                     onClick={() => {
-                      router.push(`/profile/${userSession.user?.id}`);
+                      router.push(`/profile/${session.user?.id}`);
                     }}
                   >
                     <User className="mr-2 h-4 w-4" />
@@ -154,31 +156,35 @@ export default function Header({
               </a>
             ))}
             <div className="flex w-full flex-col gap-4">
-              {userSession ? (
+              {status === "loading" ? (
+                <div className="flex items-center justify-center py-4">
+                  <Loader2 className="h-6 w-6 animate-spin text-gray-500" />
+                </div>
+              ) : session ? (
                 <>
                   <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                     <Image
                       src={
-                        userSession.user?.image ??
-                        `https://avatar.vercel.sh/${userSession.user?.email}`
+                        session.user?.image ??
+                        `https://avatar.vercel.sh/${session.user?.email}`
                       }
-                      alt={userSession.user?.email ?? "User Avatar"}
+                      alt={session.user?.email ?? "User Avatar"}
                       width={40}
                       height={40}
                       className="rounded-full"
                     />
                     <div className="flex-1">
                       <p className="text-sm font-medium text-gray-900">
-                        {userSession.user?.name || userSession.user?.email}
+                        {session.user?.name || session.user?.email}
                       </p>
                       <p className="text-xs text-gray-500">
-                        {userSession.user?.email}
+                        {session.user?.email}
                       </p>
                     </div>
                   </div>
                   <NavbarButton
                     onClick={() => {
-                      router.push(`/profile/${userSession.user?.id}`);
+                      router.push(`/profile/${session.user?.id}`);
                       setIsMobileMenuOpen(false);
                     }}
                     variant="primary"

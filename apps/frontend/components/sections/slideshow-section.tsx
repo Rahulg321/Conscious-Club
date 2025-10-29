@@ -7,11 +7,9 @@ import {
   CarouselItem,
   type CarouselApi,
 } from "@/components/ui/carousel";
-// @ts-ignore - embla-carousel-autoplay doesn't have types
 import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
 
-// Import all images dynamically
 const images = Array.from({ length: 10 }, (_, i) => ({
   src: `/slideshow/${i + 1}.png`,
   alt: `Creator testimonial ${i + 1}`,

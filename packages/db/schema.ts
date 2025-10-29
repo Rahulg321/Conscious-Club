@@ -12,7 +12,6 @@ import {
   index,
   pgEnum,
 } from "drizzle-orm/pg-core";
-import type { AdapterAccount } from "next-auth/adapters";
 
 export const userType = pgEnum("userType", [
   "explorer",
@@ -60,7 +59,7 @@ export const accounts = pgTable(
     userId: uuid("userId")
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
-    type: text("type").$type<AdapterAccount["type"]>().notNull(),
+    type: text("type").notNull(),
     provider: text("provider").notNull(),
     providerAccountId: text("providerAccountId").notNull(),
     refresh_token: text("refresh_token"),

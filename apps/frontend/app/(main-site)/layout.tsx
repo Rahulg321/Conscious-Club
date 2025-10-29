@@ -19,15 +19,13 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const userSession = await auth();
-
   return (
     <html lang="en">
       <body
         className={`${prata.variable} ${poppins.variable} ${itcFont.variable} ${inter.variable} antialiased`}
       >
         <SessionProvider>
-          <Header userSession={userSession} />
+          <Header />
           {children}
           <Footer />
         </SessionProvider>
