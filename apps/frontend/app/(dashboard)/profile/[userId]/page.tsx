@@ -18,6 +18,8 @@ import { getCachedUserById } from "@/lib/cached-queries";
 import Link from "next/link";
 import ProfileEditDialog from "@/components/dialogs/profile-edit-dialog";
 import { Session } from "next-auth";
+import { isFollowing } from "@/lib/actions/follow-action";
+import FollowButton from "@/components/buttons/follow-button";
 
 export async function generateMetadata({
   params,
@@ -42,12 +44,20 @@ const ProfilePage = async ({ params }: Props) => {
   const { userId } = await params;
   const userSession = await auth();
   if (!userSession) redirect("/login");
-  if (userSession.user.id !== userId) redirect("/");
+
   const currentUser = await getCachedUserById(userId);
   if (!currentUser) redirect("/");
-  if (!currentUser.onboardingCompleted) redirect("/onboarding");
+
+  // Check if viewing own profile
+  const isOwnProfile = userSession.user.id === userId;
+
+  // If viewing own profile, ensure onboarding is completed
+  if (isOwnProfile && !currentUser.onboardingCompleted) redirect("/onboarding");
 
   const { followers, following } = await getUserFollowCounts(userId);
+
+  // Get follow status if viewing someone else's profile
+  const isUserFollowing = isOwnProfile ? false : await isFollowing(userId);
 
   return (
     <div>
@@ -62,9 +72,11 @@ const ProfilePage = async ({ params }: Props) => {
                   alt={currentUser.name || "User"}
                   className="object-cover rounded-full"
                 />
-                <div className="absolute bottom-1 -right-2">
-                  <ProfilePicUploadDialog />
-                </div>
+                {isOwnProfile && (
+                  <div className="absolute bottom-1 -right-2">
+                    <ProfilePicUploadDialog />
+                  </div>
+                )}
               </div>
             </div>
 
@@ -96,17 +108,26 @@ const ProfilePage = async ({ params }: Props) => {
           </div>
 
           <div className="flex items-center gap-2">
-            <ProfileEditDialog
-              userId={userId}
-              name={currentUser.name || ""}
-              bio={currentUser.bio || ""}
-              location={currentUser.location || ""}
-            />
-
-            {/* <Button variant="outline" className="">
-              <Share /> Share
-            </Button>
-             */}
+            {isOwnProfile ? (
+              <>
+                <ProfileEditDialog
+                  userId={userId}
+                  name={currentUser.name || ""}
+                  bio={currentUser.bio || ""}
+                  location={currentUser.location || ""}
+                />
+                {/* <Button variant="outline" className="">
+                  <Share /> Share
+                </Button>
+                 */}
+              </>
+            ) : (
+              <FollowButton
+                userId={userId}
+                isFollowing={isUserFollowing}
+                className="flex items-center gap-2"
+              />
+            )}
           </div>
         </div>
 
@@ -128,8 +149,10 @@ const ProfilePage = async ({ params }: Props) => {
             }
           >
             <DisplayUserProjectWork
+              profileUserId={userId}
               currentUserId={userSession.user.id}
               userSession={userSession}
+              isOwnProfile={isOwnProfile}
             />
           </Suspense>
         </div>
@@ -142,7 +165,11 @@ const ProfilePage = async ({ params }: Props) => {
               </div>
             }
           >
-            <DisplayUserMashupProjects currentUserId={userSession.user.id} />
+            <DisplayUserMashupProjects
+              profileUserId={userId}
+              currentUserId={userSession.user.id}
+              isOwnProfile={isOwnProfile}
+            />
           </Suspense>
         </div>
       </div>
@@ -153,23 +180,27 @@ const ProfilePage = async ({ params }: Props) => {
 export default ProfilePage;
 
 async function DisplayUserProjectWork({
+  profileUserId,
   currentUserId,
   userSession,
+  isOwnProfile,
 }: {
+  profileUserId: string;
   currentUserId: string;
   userSession: Session;
+  isOwnProfile: boolean;
 }) {
-  const projects = await getUserProjects(currentUserId);
+  const projects = await getUserProjects(profileUserId);
 
   return (
     <div className="mt-8">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
         <div className="flex items-center gap-2">
           <Button variant="outline" asChild>
-            <Link href={`/profile/${currentUserId}/projects`}>View All</Link>
+            <Link href={`/profile/${profileUserId}/projects`}>View All</Link>
           </Button>
 
-          <ProjectUploadDialog userSession={userSession} />
+          {isOwnProfile && <ProjectUploadDialog userSession={userSession} />}
         </div>
       </div>
 
@@ -188,7 +219,11 @@ async function DisplayUserProjectWork({
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
+            <ProjectCard
+              key={project.id}
+              project={project}
+              isOwnProfile={isOwnProfile}
+            />
           ))}
         </div>
       )}
@@ -197,11 +232,15 @@ async function DisplayUserProjectWork({
 }
 
 async function DisplayUserMashupProjects({
+  profileUserId,
   currentUserId,
+  isOwnProfile,
 }: {
+  profileUserId: string;
   currentUserId: string;
+  isOwnProfile: boolean;
 }) {
-  const mashupProjects = await getUserMashupProjects(currentUserId);
+  const mashupProjects = await getUserMashupProjects(profileUserId);
 
   if (!mashupProjects || mashupProjects.length === 0) {
     return (
@@ -247,6 +286,7 @@ async function DisplayUserMashupProjects({
               project={project}
               creatorName={creatorName}
               collaboratorName={collaboratorName}
+              isOwnProfile={isOwnProfile}
             />
           );
         })}

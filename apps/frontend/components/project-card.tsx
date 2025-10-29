@@ -10,10 +10,12 @@ export default function ProjectCard({
   project,
   creatorName,
   collaboratorName,
+  isOwnProfile = false,
 }: {
   project: any;
   creatorName?: string;
   collaboratorName?: string;
+  isOwnProfile?: boolean;
 }) {
   const previewMedia = getPreviewMedia(project.media);
   const isPreviewVideo = previewMedia ? isVideo(previewMedia) : false;
@@ -90,19 +92,23 @@ export default function ProjectCard({
                 <ExternalLink className="h-4 w-4" />
               </Link>
             </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-9 w-9 border-gray-200 hover:bg-gray-50"
-              asChild
-            >
-              <Link
-                href={`/profile/${project.userId}/projects/${project.id}/edit`}
-              >
-                <Edit className="h-4 w-4" />
-              </Link>
-            </Button>
-            <DeleteProjectAlert projectId={project.id} />
+            {isOwnProfile && (
+              <>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-9 w-9 border-gray-200 hover:bg-gray-50"
+                  asChild
+                >
+                  <Link
+                    href={`/profile/${project.userId}/projects/${project.id}/edit`}
+                  >
+                    <Edit className="h-4 w-4" />
+                  </Link>
+                </Button>
+                <DeleteProjectAlert projectId={project.id} />
+              </>
+            )}
           </div>
         </div>
       </div>

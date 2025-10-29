@@ -50,6 +50,8 @@ export async function followUser(followingId: string) {
     // Revalidate relevant pages
     revalidatePath("/dashboard");
     revalidatePath("/discover");
+    revalidatePath("/community");
+    revalidatePath(`/profile/${followingId}`);
 
     return { success: "Successfully followed user" };
   } catch (error) {
@@ -101,6 +103,8 @@ export async function unfollowUser(followingId: string) {
     // Revalidate relevant pages
     revalidatePath("/dashboard");
     revalidatePath("/discover");
+    revalidatePath("/community");
+    revalidatePath(`/profile/${followingId}`);
 
     return { success: "Successfully unfollowed user" };
   } catch (error) {

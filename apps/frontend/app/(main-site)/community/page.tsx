@@ -221,7 +221,8 @@ async function FetchAndDisplayUserProfiles({
   const { userProfiles, totalPages } = await getFilteredUserProfiles(
     personSearchQuery,
     offset,
-    limit
+    limit,
+    userSession.user.id
   );
 
   return (
@@ -229,7 +230,11 @@ async function FetchAndDisplayUserProfiles({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {userProfiles?.map((userProfile) => (
           <div key={userProfile.id}>
-            <ProfileCard userProfile={userProfile} userSession={userSession} />
+            <ProfileCard
+              userProfile={userProfile}
+              currentUserId={userSession.user.id}
+              userSession={userSession}
+            />
           </div>
         ))}
       </div>
