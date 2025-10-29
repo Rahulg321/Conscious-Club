@@ -42,7 +42,6 @@ export const user = pgTable("user", {
   discipline: text("discipline"),
   role: text("role"),
   fun: text("fun"),
-
   moodSelectedBravoId: uuid("moodSelectedBravoId").references(() => bravos.id, {
     onDelete: "cascade",
   }),
@@ -192,6 +191,8 @@ export const project = pgTable("project", {
   link: text("link"),
   description: text("description").notNull(),
   media: text("media").array().notNull(),
+  // Simple string tag for a project; intended to mirror the creator's role at creation time
+  tag: text("tag"),
   logoImage: text("logoImage"),
   dedicatedToPerson: text("dedicatedToPerson"),
   dedicatedToBrand: text("dedicatedToBrand"),

@@ -1,33 +1,41 @@
 "use client";
 
-import React from "react";
+import React, { useMemo } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTransition } from "react";
 import { Button } from "./ui/button";
 import { Filter, Loader2 } from "lucide-react";
-import { Tags } from "@repo/db/schema";
+import { DISCIPLINE_TO_ROLES } from "./forms/onboarding/config";
 
-const ProjectTagsFilter = ({ filterTags }: { filterTags: Tags[] }) => {
+// Extract all unique roles from DISCIPLINE_TO_ROLES
+const getAllRoles = (): string[] => {
+  return Object.values(DISCIPLINE_TO_ROLES).flat();
+};
+
+const ProjectTagsFilter = () => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
   const [isPending, startTransition] = useTransition();
 
+  // Get all available roles
+  const allRoles = useMemo(() => getAllRoles(), []);
+
   const selectedTags =
     searchParams.get("tags")?.split(",").filter(Boolean) || [];
 
-  const handleTagToggle = (tagId: string) => {
+  const handleTagToggle = (roleName: string) => {
     startTransition(() => {
       const params = new URLSearchParams(searchParams);
       const currentTags = params.get("tags")?.split(",").filter(Boolean) || [];
 
       let newTags;
-      if (currentTags.includes(tagId)) {
+      if (currentTags.includes(roleName)) {
         // Remove tag if already selected
-        newTags = currentTags.filter((id) => id !== tagId);
+        newTags = currentTags.filter((name) => name !== roleName);
       } else {
         // Add tag if not selected
-        newTags = [...currentTags, tagId];
+        newTags = [...currentTags, roleName];
       }
 
       if (newTags.length > 0) {
@@ -89,14 +97,14 @@ const ProjectTagsFilter = ({ filterTags }: { filterTags: Tags[] }) => {
 
         <div className="mt-2 -mx-1 overflow-x-auto scrollbar-hide">
           <div className="px-1 flex items-center gap-2">
-            {filterTags?.map((tag) => {
-              const isSelected = selectedTags.includes(tag.id);
+            {allRoles.map((roleName) => {
+              const isSelected = selectedTags.includes(roleName);
               return (
                 <Button
-                  key={tag.id}
+                  key={roleName}
                   variant={isSelected ? "secondary" : "outline"}
                   size="sm"
-                  onClick={() => handleTagToggle(tag.id)}
+                  onClick={() => handleTagToggle(roleName)}
                   className={`rounded-full px-3 py-1 h-8 whitespace-nowrap flex-shrink-0 transition-colors ${
                     isSelected
                       ? "bg-primary text-primary-foreground border-primary hover:bg-primary/90 hover:border-primary"
@@ -104,9 +112,9 @@ const ProjectTagsFilter = ({ filterTags }: { filterTags: Tags[] }) => {
                   }`}
                   disabled={isPending}
                   aria-pressed={isSelected}
-                  aria-label={`Filter by ${tag.name}`}
+                  aria-label={`Filter by ${roleName}`}
                 >
-                  {tag.name}
+                  {roleName}
                 </Button>
               );
             })}

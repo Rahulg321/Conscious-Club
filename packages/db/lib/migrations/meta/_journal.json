@@ -162,6 +162,13 @@
       "when": 1760349484011,
       "tag": "0022_flimsy_domino",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1761749249852,
+      "tag": "0023_superb_mastermind",
+      "breakpoints": true
     }
   ]
 }

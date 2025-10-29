@@ -1,7 +1,6 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import {
-  getAllTags,
   getFilteredProjects,
   getFilteredUserProfiles,
   getFilteredMashupProjects,
@@ -34,7 +33,6 @@ export default async function DiscoverPage({
 
   if (!userSession) redirect("/login");
   if (!userSession.user.onboardingCompleted) redirect("/onboarding");
-  const projectTags = await getAllTags();
 
   const { page, query, tags, type } = await searchParams;
 
@@ -68,9 +66,9 @@ export default async function DiscoverPage({
         </div>
       </header>
 
-      {/* <Suspense fallback={<div>Loading...</div>}>
-        <ProjectTagsFilter filterTags={projectTags!} />
-      </Suspense> */}
+      <Suspense fallback={<div>Loading...</div>}>
+        <ProjectTagsFilter />
+      </Suspense>
 
       <main className="max-w-7xl mx-auto px-6 py-8">
         <div className="flex items-center justify-between mb-8">
@@ -247,7 +245,7 @@ async function FetchAndDisplayProjects({
                 firstMedia || project.media?.[0] || "/placeholder.svg"
               }
               projectName={project.name}
-              tagName={project.tags?.[0] || ""}
+              tagName={project.tag || project.tags?.[0] || ""}
               projectDescription={project.description}
               likeCount={project.likeCount}
               isLiked={project.isLiked}

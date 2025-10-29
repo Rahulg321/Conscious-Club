@@ -2,9 +2,10 @@ import { auth } from "@/auth";
 import { uploadFile } from "@/lib/cloud-storage";
 import { projectUploadSchema } from "@/lib/schemas/project-upload-schema";
 import { db } from "@repo/db";
-import { project } from "@repo/db/schema";
+import { project, user } from "@repo/db/schema";
 import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
+import { eq } from "drizzle-orm";
 
 export const POST = async (req: NextRequest) => {
   const userSession = await auth();
@@ -85,6 +86,19 @@ export const POST = async (req: NextRequest) => {
   }
 
   try {
+    // Fetch user's role to assign as project tag
+    let creatorRole: string | null = null;
+    try {
+      const roleRows = await db
+        .select({ role: user.role })
+        .from(user)
+        .where(eq(user.id, userSession.user.id))
+        .limit(1);
+      creatorRole = roleRows[0]?.role ?? null;
+    } catch (e) {
+      console.warn("Could not fetch user role for project tag", e);
+    }
+
     const [insertedProject] = await db
       .insert(project)
       .values({
@@ -92,6 +106,7 @@ export const POST = async (req: NextRequest) => {
         link: validatedData.data.projectLink || null,
         description: validatedData.data.projectDescription,
         media: mediaUrls,
+        tag: creatorRole,
         dedicatedToPerson: validatedData.data.dedicatedToPerson || null,
         dedicatedToBrand: validatedData.data.dedicatedToBrand || null,
         dedicatedToCause: validatedData.data.dedicatedToCause || null,

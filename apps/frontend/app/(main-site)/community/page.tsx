@@ -1,9 +1,5 @@
 import React, { Suspense } from "react";
-import {
-  getAllTags,
-  getFilteredProjects,
-  getFilteredUserProfiles,
-} from "@/lib/queries";
+import { getFilteredProjects, getFilteredUserProfiles } from "@/lib/queries";
 import ProjectTagsFilter from "@/components/project-tag-filters";
 import ProjectSearchFilter from "@/components/project-search-filter";
 import ProjectPagination from "@/components/project-pagination";
@@ -32,8 +28,6 @@ export default async function CommunityPage({
 
   if (!userSession) redirect("/login");
   if (!userSession.user.onboardingCompleted) redirect("/onboarding");
-  const projectTags = await getAllTags();
-
   const { page, query, tags, type } = await searchParams;
 
   const projectSearchQuery = query as string;
@@ -64,10 +58,10 @@ export default async function CommunityPage({
           </div>
         </div>
       </div>
-      {/* 
+
       <Suspense fallback={<div>Loading...</div>}>
-        <ProjectTagsFilter filterTags={projectTags!} />
-      </Suspense> */}
+        <ProjectTagsFilter />
+      </Suspense>
 
       <main className="max-w-7xl mx-auto px-6 block-space">
         <div className="flex items-center justify-between mb-8">
@@ -199,7 +193,7 @@ async function FetchAndDisplayProjects({
                 firstMedia || project.media?.[0] || "/placeholder.svg"
               }
               projectName={project.name}
-              tagName={project.tags?.[0] || ""}
+              tagName={project.tag || project.tags?.[0] || ""}
               projectDescription={project.description}
               likeCount={project.likeCount}
               isLiked={project.isLiked}

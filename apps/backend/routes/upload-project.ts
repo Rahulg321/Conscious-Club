@@ -1,10 +1,11 @@
 import { Router, type Request, type Response } from "express";
 import multer from "multer";
 import { db } from "@repo/db";
-import { project } from "@repo/db/schema";
+import { project, user as userTable } from "@repo/db/schema";
 import { uploadFile } from "@/lib/cloud-storage";
 import { projectUploadSchema } from "@/lib/schemas/project-upload-schema";
 import authenticateToken from "@/middleware/authenticate-token";
+import { eq } from "drizzle-orm";
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -188,11 +189,25 @@ router.post(
       // Insert project into database
       console.log("💾 [UPLOAD-PROJECT] Starting database insertion");
       try {
+        // Load creator role to set as project tag
+        let creatorRole: string | null = null;
+        try {
+          const roleRows = await db
+            .select({ role: userTable.role })
+            .from(userTable)
+            .where(eq(userTable.id, user.id))
+            .limit(1);
+          creatorRole = roleRows[0]?.role ?? null;
+        } catch (e) {
+          console.warn("[UPLOAD-PROJECT] Could not fetch user role for tag", e);
+        }
+
         const projectData = {
           name: validatedData.data.projectName,
           link: validatedData.data.projectLink || null,
           description: validatedData.data.projectDescription,
           media: mediaUrls,
+          tag: creatorRole,
           dedicatedToPerson: validatedData.data.dedicatedToPerson || null,
           dedicatedToBrand: validatedData.data.dedicatedToBrand || null,
           dedicatedToCause: validatedData.data.dedicatedToCause || null,

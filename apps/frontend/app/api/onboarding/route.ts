@@ -144,6 +144,7 @@ export const POST = async (req: NextRequest) => {
           name: projectName,
           description: projectDescription,
           media: projectMediaUrls,
+          tag: role || null,
           link: projectLink || null,
           dedicatedToPerson: dedicatedToPerson || null,
           dedicatedToBrand: dedicatedToBrand || null,

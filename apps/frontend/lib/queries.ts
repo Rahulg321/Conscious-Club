@@ -455,8 +455,8 @@ export async function getFilteredProjects(
   userId?: string
 ) {
   try {
-    // Normalize filterTags to an array of tag ID strings
-    const tagIdArray: string[] =
+    // Normalize filterTags to an array of role name strings
+    const roleNameArray: string[] =
       typeof filterTags === "string"
         ? [filterTags]
         : Array.isArray(filterTags)
@@ -478,31 +478,19 @@ export async function getFilteredProjects(
           ilike(project.dedicatedToBrand, `%${query}%`),
           ilike(project.dedicatedToCause, `%${query}%`),
           ilike(project.dedicationReason, `%${query}%`),
-          ilike(tags.name, `%${query}%`)
+          ilike(project.tag, `%${query}%`)
         )
       );
     }
 
-    if (tagIdArray.length > 0) {
-      const projectIdsWithTags = await db
-        .selectDistinct({ projectId: projectTags.projectId })
-        .from(projectTags)
-        .where(inArray(projectTags.tagId, tagIdArray));
-
-      const projectIds = projectIdsWithTags
-        .map((p) => p.projectId)
-        .filter((id): id is string => id !== null);
-
-      if (projectIds.length > 0) {
-        conditions.push(inArray(project.id, projectIds));
-      } else {
-        return { projects: [], totalPages: 0, totalProjects: 0 };
-      }
+    // Filter by tag (role) field if tags are provided
+    if (roleNameArray.length > 0) {
+      conditions.push(inArray(project.tag, roleNameArray));
     }
 
     const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
-    // Get filtered projects with their tags and like counts
+    // Get filtered projects with their tag and like counts
     const filteredProjects = await db
       .select({
         id: project.id,
@@ -514,7 +502,7 @@ export async function getFilteredProjects(
         userId: project.userId,
         createdAt: project.createdAt,
         updatedAt: project.updatedAt,
-        tagName: tags.name,
+        tag: project.tag,
         likeCount: sql<number>`COALESCE((${sql`SELECT COUNT(*) FROM ${projectLikes} WHERE ${projectLikes.projectId} = ${project.id}`}), 0)`,
         commentsCount: sql<number>`COALESCE((${sql`SELECT COUNT(*) FROM ${projectComments} WHERE ${projectComments.projectId} = ${project.id}`}), 0)`,
         isLiked: userId
@@ -522,8 +510,6 @@ export async function getFilteredProjects(
           : sql<boolean>`false`,
       })
       .from(project)
-      .leftJoin(projectTags, eq(project.id, projectTags.projectId))
-      .leftJoin(tags, eq(projectTags.tagId, tags.id))
       .where(whereClause)
       .orderBy(desc(project.createdAt))
       .limit(limit ?? 10)
@@ -531,49 +517,33 @@ export async function getFilteredProjects(
 
     // Get total count for pagination
     const totalResult = await db
-      .select({ total: count(sql`DISTINCT ${project.id}`) })
+      .select({ total: count() })
       .from(project)
-      .leftJoin(projectTags, eq(project.id, projectTags.projectId))
-      .leftJoin(tags, eq(projectTags.tagId, tags.id))
       .where(whereClause);
 
     const total = totalResult[0]?.total ?? 0;
     const totalPages = Math.ceil(Number(total) / (limit ?? 10));
 
-    // Group projects with their tags
-    const groupedProjects = filteredProjects.reduce(
-      (acc, row) => {
-        const projectId = row.id;
-
-        if (!acc[projectId]) {
-          acc[projectId] = {
-            id: row.id,
-            name: row.name,
-            link: row.link,
-            description: row.description,
-            media: row.media,
-            logoImage: row.logoImage,
-            userId: row.userId,
-            createdAt: row.createdAt,
-            updatedAt: row.updatedAt,
-            tags: [],
-            likeCount: row.likeCount,
-            commentsCount: row.commentsCount,
-            isLiked: row.isLiked,
-          };
-        }
-
-        if (row.tagName) {
-          acc[projectId].tags.push(row.tagName);
-        }
-
-        return acc;
-      },
-      {} as Record<string, any>
-    );
+    // Map projects to include tag in the expected format
+    const projects = filteredProjects.map((row) => ({
+      id: row.id,
+      name: row.name,
+      link: row.link,
+      description: row.description,
+      media: row.media,
+      logoImage: row.logoImage,
+      userId: row.userId,
+      createdAt: row.createdAt,
+      updatedAt: row.updatedAt,
+      tag: row.tag,
+      tags: row.tag ? [row.tag] : [], // Keep tags array for backward compatibility
+      likeCount: row.likeCount,
+      commentsCount: row.commentsCount,
+      isLiked: row.isLiked,
+    }));
 
     return {
-      projects: Object.values(groupedProjects),
+      projects,
       totalPages,
       totalProjects: total,
     };

@@ -334,6 +334,7 @@ router.post(
               name: validatedData.data.projectName,
               description: validatedData.data.projectDescription,
               media: projectMediaUrls,
+              tag: validatedData.data.role || null,
               link: validatedData.data.projectLink || null,
               dedicatedToPerson: validatedData.data.dedicatedToPerson || null,
               dedicatedToBrand: validatedData.data.dedicatedToBrand || null,

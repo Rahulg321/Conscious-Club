@@ -29,10 +29,17 @@ export const DISCIPLINES = [
 ] as const;
 
 export const DISCIPLINE_TO_ROLES: Record<string, string[]> = {
-  Visuals: ["Art & Mixed Media", "Illustration & Design", "Photography"],
-  Motion: ["Reels", "Vlogging", "Animation"],
+  Visuals: ["Art & Mixed Media", "Illustration & Graphics", "Photography"],
+  Motion: ["Reels", "Vlogging", "Animation", "Filmmaking"],
   Writing: ["Copywriting", "Blogging", "Storytelling"],
-  Performance: ["Dance", "Music", "Verbal Art", "Theatre", "Fitness"],
+  Performance: [
+    "Dance",
+    "Music & Singing",
+    "Spoken Word",
+    "Theatre",
+    "Fitness",
+    "Culinary Arts",
+  ],
   Digital: ["AI Art & Generative Content", "Creative Coding", "3D Modelling"],
 };
 

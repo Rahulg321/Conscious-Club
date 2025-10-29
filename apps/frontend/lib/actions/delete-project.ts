@@ -23,11 +23,8 @@ export async function deleteProject(projectId: string) {
   }
 
   try {
-    // Only allow deleting projects owned by the user
     const deleted = await db.delete(project).where(eq(project.id, projectId));
 
-    // Optionally, you could check if a row was deleted
-    // and return a more specific message
     revalidatePath("/profile/" + userSession.user.id);
     revalidatePath("/discover");
 
