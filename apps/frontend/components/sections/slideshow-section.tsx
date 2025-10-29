@@ -1,15 +1,12 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  type CarouselApi,
-} from "@/components/ui/carousel";
+import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
+// @ts-ignore - embla-carousel-autoplay doesn't have types
 import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
 
+// Import all images dynamically
 const images = Array.from({ length: 10 }, (_, i) => ({
   src: `/slideshow/${i + 1}.png`,
   alt: `Creator testimonial ${i + 1}`,
@@ -35,9 +32,7 @@ const SlideshowSection = () => {
     <section className="py-16 px-4 ">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl italic font-semibold text-gray-900 mb-4">
-            A Little Love Note from One Creator to Another
-          </h2>
+          <h2 className="text-2xl md:text-5xl font-lavishly-yours italic font-extralight mb-4">A Little Love Note from One Creator to Another</h2>
         </div>
 
         {/* Slideshow */}
@@ -60,7 +55,7 @@ const SlideshowSection = () => {
             <CarouselContent>
               {images.map((image, index) => (
                 <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-                  <div className="relative rounded-lg overflow-hidden shadow-lg bg-gray-100">
+                  <div className="relative rounded-lg overflow-hidden ">
                     <Image
                       src={image.src}
                       alt={image.alt}
@@ -84,9 +79,7 @@ const SlideshowSection = () => {
               <button
                 key={index}
                 className={`w-2 h-2 rounded-full transition-colors duration-300 ${
-                  index === current - 1
-                    ? "bg-gray-900"
-                    : "bg-gray-300 hover:bg-gray-400"
+                  index === current - 1 ? "bg-gray-900" : "bg-gray-300 hover:bg-gray-400"
                 }`}
                 onClick={() => api?.scrollTo(index)}
                 aria-label={`Go to slide ${index + 1}`}
@@ -97,10 +90,8 @@ const SlideshowSection = () => {
 
         {/* Attribution */}
         <div className="text-center mt-12">
-          <p className="text-lg text-gray-600 italic">-🖤 Manavi</p>
-          <p className="text-sm text-gray-500 mt-1">
-            Artist & Founder, ConsciousClubb
-          </p>
+          <div className="text-lg text-gray-600 italic">-🖤 Manavi</div>
+          <div className="text-sm text-gray-500 ">Artist & Founder, ConsciousClubb</div>
         </div>
       </div>
     </section>

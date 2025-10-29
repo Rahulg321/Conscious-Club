@@ -1,10 +1,5 @@
 import { auth } from "@/auth";
-import {
-  getAllTags,
-  getUserFollowCounts,
-  getUserProjects,
-  getUserMashupProjects,
-} from "@/lib/queries";
+import { getAllTags, getUserFollowCounts, getUserProjects, getUserMashupProjects } from "@/lib/queries";
 import ProjectUploadDialog from "@/components/dialogs/project-upload-dialog";
 import { Button } from "@/components/ui/button";
 import { Edit, Heart, Loader2, Plus, Share, Sparkles } from "lucide-react";
@@ -21,10 +16,7 @@ import { Session } from "next-auth";
 import { isFollowing } from "@/lib/actions/follow-action";
 import FollowButton from "@/components/buttons/follow-button";
 
-export async function generateMetadata({
-  params,
-  searchParams,
-}: Props): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const { userId } = await params;
 
   const profileUser = await getCachedUserById(userId);
@@ -59,6 +51,13 @@ const ProfilePage = async ({ params }: Props) => {
   // Get follow status if viewing someone else's profile
   const isUserFollowing = isOwnProfile ? false : await isFollowing(userId);
 
+  // const disciplineColor = {
+  //   Digital: "bg-blue-300",
+  //   Visuals: "bg-[#cdff98]",
+  //   Writing: "bg-yellow-200",
+  //   Performance: "bg-orange-200",
+  //   Motion: "bg-purple-300",
+  // };
   return (
     <div>
       <div className="px-4 md:px-8 py-6 md:py-8">
@@ -81,22 +80,20 @@ const ProfilePage = async ({ params }: Props) => {
             </div>
 
             <div className="text-center md:text-left md:pt-4">
-              <h2 className="text-xl md:text-2xl font-semibold text-[#171c21] mb-1">
-                {currentUser.name || ""}
-              </h2>
-              <p className="text-[#666a6e] mb-4">
-                {currentUser.location || ""}
-              </p>
+              <h2 className="text-xl md:text-2xl font-semibold text-[#171c21] mb-1">{currentUser.name || ""}</h2>
+              <p className="text-[#666a6e] mb-4">{currentUser.location || ""}</p>
 
               <div className="flex flex-wrap gap-2 justify-center md:justify-start">
-                {currentUser.role && (
-                  <span className="px-3 py-1 bg-[#cdff98] text-[#42354a] text-sm font-medium rounded-full">
-                    {currentUser.role}
-                  </span>
-                )}
-                <span className="px-3 py-1 bg-[#f9fafb] text-[#666a6e] text-sm font-medium rounded-full border border-[#e2e3e6]">
-                  {currentUser.type || "Explorer"}
+                <span className="px-3 py-1 bg-[#cdff98] text-sm font-medium rounded-full border border-[#e2e3e6]">
+                  {currentUser.discipline || "Explorer"}
                 </span>
+                {/* ${disciplineColor[currentUser.discipline as keyof typeof disciplineColor]} */}
+                {/* <span className={`px-3 py-1 ${disciplineColor["Motion"]} text-sm font-medium rounded-full border border-[#e2e3e6]`}>
+                  {currentUser.discipline || "Explorer"}
+                </span> */}
+                {currentUser.role && (
+                  <span className="px-3 py-1 bg-[#cdff98] text-[#42354a] text-sm font-medium rounded-full">{currentUser.role}</span>
+                )}
                 <span className="px-3 py-1 bg-[#f9fafb] text-[#666a6e] text-sm font-medium rounded-full border border-[#e2e3e6]">
                   {followers} followers
                 </span>
@@ -110,23 +107,14 @@ const ProfilePage = async ({ params }: Props) => {
           <div className="flex items-center gap-2">
             {isOwnProfile ? (
               <>
-                <ProfileEditDialog
-                  userId={userId}
-                  name={currentUser.name || ""}
-                  bio={currentUser.bio || ""}
-                  location={currentUser.location || ""}
-                />
+                <ProfileEditDialog userId={userId} name={currentUser.name || ""} bio={currentUser.bio || ""} location={currentUser.location || ""} />
                 {/* <Button variant="outline" className="">
                   <Share /> Share
                 </Button>
                  */}
               </>
             ) : (
-              <FollowButton
-                userId={userId}
-                isFollowing={isUserFollowing}
-                className="flex items-center gap-2"
-              />
+              <FollowButton userId={userId} isFollowing={isUserFollowing} className="flex items-center gap-2" />
             )}
           </div>
         </div>
@@ -134,11 +122,7 @@ const ProfilePage = async ({ params }: Props) => {
         <div className="mb-8">
           <h3 className="text-lg font-semibold text-[#171c21] mb-3">About</h3>
 
-          {currentUser.bio ? (
-            <p>{currentUser.bio}</p>
-          ) : (
-            <p>Bio Not Available Yet</p>
-          )}
+          {currentUser.bio ? <p>{currentUser.bio}</p> : <p>Bio Not Available Yet</p>}
         </div>
         <div className="text-center">
           <Suspense
@@ -165,11 +149,7 @@ const ProfilePage = async ({ params }: Props) => {
               </div>
             }
           >
-            <DisplayUserMashupProjects
-              profileUserId={userId}
-              currentUserId={userSession.user.id}
-              isOwnProfile={isOwnProfile}
-            />
+            <DisplayUserMashupProjects profileUserId={userId} currentUserId={userSession.user.id} isOwnProfile={isOwnProfile} />
           </Suspense>
         </div>
       </div>
@@ -209,21 +189,13 @@ async function DisplayUserProjectWork({
           <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
             <Plus className="w-8 h-8 text-gray-400" />
           </div>
-          <h4 className="text-lg font-medium text-[#171c21] mb-2">
-            No Creations yet
-          </h4>
-          <p className="text-[#667085] mb-4">
-            Upload your first project to showcase your work
-          </p>
+          <h4 className="text-lg font-medium text-[#171c21] mb-2">No Creations yet</h4>
+          <p className="text-[#667085] mb-4">Upload your first project to showcase your work</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((project) => (
-            <ProjectCard
-              key={project.id}
-              project={project}
-              isOwnProfile={isOwnProfile}
-            />
+            <ProjectCard key={project.id} project={project} isOwnProfile={isOwnProfile} />
           ))}
         </div>
       )}
@@ -252,12 +224,8 @@ async function DisplayUserMashupProjects({
           <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full flex items-center justify-center">
             <Sparkles className="w-8 h-8 text-purple-600" />
           </div>
-          <h4 className="text-lg font-medium text-[#171c21] mb-2">
-            No Mashups yet
-          </h4>
-          <p className="text-[#667085] mb-4">
-            Collaborate with other users to create amazing Mashups
-          </p>
+          <h4 className="text-lg font-medium text-[#171c21] mb-2">No Mashups yet</h4>
+          <p className="text-[#667085] mb-4">Collaborate with other users to create amazing Mashups</p>
         </div>
       </div>
     );
