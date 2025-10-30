@@ -11,7 +11,9 @@ import Image from "next/image";
 // import HeroMarqueeSection from "./hero-marquee-section";
 import { ShinyButton } from "@/components/ui/shiny-btn";
 import { CardContainer, CardItem } from "@/components/ui/3d-card";
-import CircularGallery from "../ui/circular-galary";
+import CircularGallery from "@/components/ui/circular-galary";
+// import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import HeroMarqueeSection from "./hero-marquee-section";
 
 // Floating Icon Components
 const FloatingPenTool = () => (
@@ -66,7 +68,7 @@ const HeroSection = () => {
         </div>
       </div>
 
-      <div className="relative md:py-8 px-4 mt-[-80px] md:mt-0">
+      <div className="relative py-4 md:py-8 px-4 mt-2 md:mt-0">
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
           <CardContainer className="inter-var">
             <CardItem translateZ="100" className="w-max">
@@ -78,8 +80,11 @@ const HeroSection = () => {
             </CardItem>
           </CardContainer>
         </div>
-        <div style={{ height: "500px", position: "relative" }}>
+        <div className="hidden md:block" style={{ height: "500px", position: "relative" }}>
           <CircularGallery bend={3} textColor="#ffffff" borderRadius={0.05} scrollEase={0.02} />
+        </div>
+        <div className="block md:hidden">
+          <HeroMarqueeSection />
         </div>
       </div>
       {/* <LightRays /> */}
