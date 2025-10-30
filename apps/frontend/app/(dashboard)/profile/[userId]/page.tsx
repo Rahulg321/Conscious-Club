@@ -51,13 +51,19 @@ const ProfilePage = async ({ params }: Props) => {
   // Get follow status if viewing someone else's profile
   const isUserFollowing = isOwnProfile ? false : await isFollowing(userId);
 
-  // const disciplineColor = {
-  //   Digital: "bg-blue-300",
-  //   Visuals: "bg-[#cdff98]",
-  //   Writing: "bg-yellow-200",
-  //   Performance: "bg-orange-200",
-  //   Motion: "bg-purple-300",
-  // };
+  type Discipline = "Digital" | "Visuals" | "Writing" | "Performance" | "Motion";
+  const disciplineColor: Record<Discipline, { color: string; border: string; text: string }> = {
+    Digital: { color: "bg-blue-300", border: "border-blue-300", text: "text-blue-500" },
+    Visuals: { color: "bg-[#cdff98]", border: "border-[#cdff98]", text: "text-[#42354a]" },
+    Writing: { color: "bg-yellow-200", border: "border-yellow-200", text: "text-yellow-500" },
+    Performance: { color: "bg-orange-200", border: "border-orange-200", text: "text-orange-500" },
+    Motion: { color: "bg-purple-300", border: "border-purple-300", text: "text-purple-500" },
+  };
+
+  const isValidDiscipline = (d: unknown): d is Discipline =>
+    typeof d === "string" && ["Digital", "Visuals", "Writing", "Performance", "Motion"].includes(d as Discipline);
+
+  const disciplineKey: Discipline = isValidDiscipline(currentUser.discipline) ? (currentUser.discipline as Discipline) : "Digital";
   return (
     <div>
       <div className="px-4 md:px-8 py-6 md:py-8">
@@ -84,20 +90,22 @@ const ProfilePage = async ({ params }: Props) => {
               <p className="text-[#666a6e] mb-4">{currentUser.location || ""}</p>
 
               <div className="flex flex-wrap gap-2 justify-center md:justify-start">
-                <span className="px-3 py-1 bg-[#cdff98] text-sm font-medium rounded-full border border-[#e2e3e6]">
-                  {currentUser.discipline || "Explorer"}
+                <span
+                  className={`px-3 py-1 flex items-center justify-center ${disciplineColor[disciplineKey].color} text-sm font-medium rounded-full `}
+                >
+                  {currentUser.discipline || "Digital"}
                 </span>
-                {/* ${disciplineColor[currentUser.discipline as keyof typeof disciplineColor]} */}
-                {/* <span className={`px-3 py-1 ${disciplineColor["Motion"]} text-sm font-medium rounded-full border border-[#e2e3e6]`}>
-                  {currentUser.discipline || "Explorer"}
-                </span> */}
                 {currentUser.role && (
-                  <span className="px-3 py-1 bg-[#cdff98] text-[#42354a] text-sm font-medium rounded-full">{currentUser.role}</span>
+                  <span
+                    className={`px-3 py-1 flex items-center justify-center border-2 ${disciplineColor[disciplineKey].border} ${disciplineColor[disciplineKey].text} text-sm font-medium rounded-full`}
+                  >
+                    {currentUser.role}
+                  </span>
                 )}
-                <span className="px-3 py-1 bg-[#f9fafb] text-[#666a6e] text-sm font-medium rounded-full border border-[#e2e3e6]">
+                <span className="px-3 py-1 flex items-center justify-center bg-[#f9fafb] text-[#666a6e] text-sm font-medium rounded-full border border-[#e2e3e6]">
                   {followers} followers
                 </span>
-                <span className="px-3 py-1 bg-[#f9fafb] text-[#666a6e] text-sm font-medium rounded-full border border-[#e2e3e6]">
+                <span className="px-3 py-1 flex items-center justify-center bg-[#f9fafb] text-[#666a6e] text-sm font-medium rounded-full border border-[#e2e3e6]">
                   {following} following
                 </span>
               </div>
