@@ -1,12 +1,15 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
-// @ts-ignore - embla-carousel-autoplay doesn't have types
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  type CarouselApi,
+} from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
 
-// Import all images dynamically
 const images = Array.from({ length: 10 }, (_, i) => ({
   src: `/slideshow/${i + 1}.png`,
   alt: `Creator testimonial ${i + 1}`,
@@ -32,7 +35,9 @@ const SlideshowSection = () => {
     <section className="py-16 px-4 ">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-2xl md:text-5xl font-lavishly-yours italic font-extralight mb-4">A Little Love Note from One Creator to Another</h2>
+          <h2 className="text-2xl md:text-5xl font-lavishly-yours italic font-extralight mb-4">
+            A Little Love Note from One Creator to Another
+          </h2>
         </div>
 
         {/* Slideshow */}
@@ -79,7 +84,9 @@ const SlideshowSection = () => {
               <button
                 key={index}
                 className={`w-2 h-2 rounded-full transition-colors duration-300 ${
-                  index === current - 1 ? "bg-gray-900" : "bg-gray-300 hover:bg-gray-400"
+                  index === current - 1
+                    ? "bg-gray-900"
+                    : "bg-gray-300 hover:bg-gray-400"
                 }`}
                 onClick={() => api?.scrollTo(index)}
                 aria-label={`Go to slide ${index + 1}`}
@@ -91,7 +98,9 @@ const SlideshowSection = () => {
         {/* Attribution */}
         <div className="text-center mt-12">
           <div className="text-lg text-gray-600 italic">-🖤 Manavi</div>
-          <div className="text-sm text-gray-500 ">Artist & Founder, ConsciousClubb</div>
+          <div className="text-sm text-gray-500 ">
+            Artist & Founder, ConsciousClubb
+          </div>
         </div>
       </div>
     </section>

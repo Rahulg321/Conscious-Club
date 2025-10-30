@@ -1,13 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { cn } from "@/lib/utils";
 
 const faqData = [
   {
     question: "Why the extra 'b' in ConsciousClubb?",
-    answer: ["Because we're extra - in the best way. ;) The extra b = bravos + benefits + belonging + more bang for your creativity + more clubB!"],
+    answer: [
+      "Because we're extra - in the best way. ;) The extra b = bravos + benefits + belonging + more bang for your creativity + more clubB!",
+    ],
   },
   {
     question: "Do I need to be a professional creator to join?",
@@ -15,7 +22,9 @@ const faqData = [
   },
   {
     question: "Is there a cost to join?",
-    answer: ["Joining CC is completely free! We believe in making creativity accessible to everyone :)"],
+    answer: [
+      "Joining CC is completely free! We believe in making creativity accessible to everyone :)",
+    ],
   },
   {
     question: "What are CC Bravos? How to earn them?",
@@ -26,21 +35,6 @@ const faqData = [
       // "Creating the most liked entries, Creating the most liked Mashups"
     ],
   },
-  // {
-  //   question: "What are the different Types of Bravos?",
-  //   answer: [
-  //     "Flex Bravos — Pin them on your profile to show your personality, your vibe, flex your style, or start a conversation!..Utility Bravos — They are earned through challenges, collabs or hitting task milestones. They are your power- ups that unlock exclusive goodies n surprises.",
-  //   ],
-  // },
-  // {
-  //   question: "How to earn Buzz Bravos?",
-  //   answer: [],
-  // },
-  // {
-  //   question: "When will brands come onboard?",
-  //   answer:
-  //     "We're actively partnering with exciting brands and expect to have our first brand collaborations launching soon. Early explorers will get first access to these opportunities!",
-  // },
 ];
 
 export function FAQSection() {
@@ -48,22 +42,40 @@ export function FAQSection() {
   return (
     <section className="w-full max-w-4xl mx-auto px-4 py-12 md:py-16">
       <div className="text-center mb-8">
-        <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-3 text-balance">Your curiosity, answered.</h2>
-        <p className="text-muted-foreground text-base mt-4">We're here to answer your all questions.</p>
+        <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-3 text-balance">
+          Your curiosity, answered.
+        </h2>
+        <p className="text-muted-foreground text-base mt-4">
+          We're here to answer your all questions.
+        </p>
       </div>
 
       <div className="max-w-3xl mx-auto">
-        <Accordion type="single" collapsible value={openItem} onValueChange={setOpenItem} className="space-y-2">
+        <Accordion
+          type="single"
+          collapsible
+          value={openItem}
+          onValueChange={setOpenItem}
+          className="space-y-2"
+        >
           {faqData.map((faq, index) => (
             <AccordionItem
               key={index}
               value={`item-${index}`}
-              className={cn("rounded-lg border-none px-4 py-1", openItem === `item-${index}` ? "bg-muted" : "bg-card")}
+              className={cn(
+                "rounded-lg border-none px-4 py-1",
+                openItem === `item-${index}` ? "bg-muted" : "bg-card"
+              )}
             >
-              <AccordionTrigger className="text-left text-sm md:text-base font-medium hover:no-underline py-4">{faq.question}</AccordionTrigger>
+              <AccordionTrigger className="text-left text-sm md:text-base font-medium hover:no-underline py-4">
+                {faq.question}
+              </AccordionTrigger>
               {faq.answer.map((ans: string, idx: any) => {
                 return (
-                  <AccordionContent key={idx} className="text-muted-foreground text-sm leading-relaxed pb-4">
+                  <AccordionContent
+                    key={idx}
+                    className="text-muted-foreground text-sm leading-relaxed pb-4"
+                  >
                     {ans}
                   </AccordionContent>
                 );
