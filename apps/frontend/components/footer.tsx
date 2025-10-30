@@ -71,7 +71,7 @@ export function Footer() {
       <div className="flex flex-col justify-between items-center  pt-8 border-t border-gray-200">
         <a href="/" className="relative z-20 flex items-center px-2 py-1 text-sm font-normal text-black">
           <img src="/CC_Logo_Favicon.png" alt="logo" width={50} height={50} />
-          <span className="text-red-500 text-xl font-semibold">ConsiousClubb</span>
+          <span className="text-red-500 text-xl font-semibold">ConsciousClubb</span>
         </a>
         <Link href="/privacy-policy" className="text-gray-600 hover:text-gray-900 transition-colors text-sm">
           Privacy Policy

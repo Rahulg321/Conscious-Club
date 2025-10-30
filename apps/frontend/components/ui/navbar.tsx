@@ -194,7 +194,7 @@ export const NavbarLogo = () => {
   return (
     <a href="/" className="relative z-20  flex items-center  px-2 py-1 text-sm font-normal text-black">
       <img src="/CC_Logo_Favicon.png" alt="logo" width={50} height={50} />
-      <span className="text-red-500 text-xl font-semibold">ConsiousClubb</span>
+      <span className="text-red-500 text-xl font-semibold">ConsciousClubb</span>
     </a>
   );
 };

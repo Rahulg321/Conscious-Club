@@ -125,15 +125,14 @@ const JoinPlatform = () => {
                 <Image src={BenefitCard3} alt="Benefit Card 3" />
               </div>
             </div>
-
-            <div className="box box5">
-              <div className="flex justify-center">
-                <Image src={BenefitCard5} alt="Benefit Card 5" />
-              </div>
-            </div>
             <div className="box box4">
               <div className="flex justify-center">
                 <Image src={BenefitCard4} alt="Benefit Card 4" />
+              </div>
+            </div>
+            <div className="box box5">
+              <div className="flex justify-center">
+                <Image src={BenefitCard5} alt="Benefit Card 5" />
               </div>
             </div>
           </div>
