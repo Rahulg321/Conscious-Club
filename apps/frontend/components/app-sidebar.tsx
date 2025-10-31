@@ -15,6 +15,7 @@ import { Button } from "./ui/button";
 import { ArrowRight } from "lucide-react";
 import BearSticker from "@/public/stickers/bear-sticker.png";
 import Link from "next/link";
+import { CardContainer, CardItem } from "@/components/ui/3d-card";
 
 type AppSidebarProps = {
   user: User | null;
@@ -57,13 +58,24 @@ export function AppSidebar({ user, pinnedBravo }: AppSidebarProps) {
               />
             </div>
           ) : (
-            <div className="relative w-full max-w-[140px] aspect-square">
-              <Image
+            <div className="relative py-16 px-4  md:mt-0">
+              <div className="absolute  transform -translate-x-1/2 -translate-y-1/2 z-20 ">
+                <CardContainer className="inter-var">
+                  <CardItem translateZ="100" className="w-max">
+                    <Image
+                      src={BearSticker}
+                      alt="Rollout Center"
+                      className="object-cover w-auto  rounded-xl"
+                    />
+                  </CardItem>
+                </CardContainer>
+              </div>
+              {/* <Image
                 src={BearSticker}
                 alt="Bear Sticker"
                 fill
                 className="object-contain"
-              />
+              /> */}
             </div>
           )}
           <Button variant="link" asChild className="shrink-0">

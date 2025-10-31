@@ -10,7 +10,6 @@ import {
 import { User } from "lucide-react";
 import { FaCompass, FaHeart } from "react-icons/fa";
 import { FaHeadphones } from "react-icons/fa";
-import { FaUser } from "react-icons/fa";
 
 type NavLink = {
   label: string;
@@ -63,7 +62,7 @@ export function SidebarNavLinks({ userId }: { userId: string }) {
               isActive={isActive}
               className={
                 isActive
-                  ? item.activeColor
+                  ? "!text-pink-700 data-[active=true]:!text-pink-700"
                   : "text-[#666a6e] hover:bg-[#f9fafb]"
               }
               asChild

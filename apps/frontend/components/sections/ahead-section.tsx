@@ -1,7 +1,7 @@
 import React from "react";
 // import { Box, Search, Loader, Sparkles, Camera } from "lucide-react";
 import { GlowingEffect } from "@/components/ui/glowing-effect";
-import { PiStarFourFill } from "react-icons/pi";
+// import { PiStarFourFill } from "react-icons/pi";
 // import { MorphingText } from "@/components/ui/morph-text";
 // import { TextAnimate } from "@/components/ui/text-animate";
 
@@ -24,7 +24,7 @@ const AheadSection = () => {
         texts={["More Creator Mashup features", "Bravo ladder", "reator-led community building activities", "Exciting collab opportunities"]}
       /> */}
       <div className="gap-4">
-        <div className="flex flex-col justify-center items-center text-center">
+        <div className="flex flex-col justify-center items-center text-center text-muted-foreground">
           {textArray.map((text: string, idx: any) => (
             <div key={idx} className="">
               {text}

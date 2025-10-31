@@ -35,7 +35,7 @@ const SlideshowSection = () => {
     <section className="py-16 px-4 ">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-2xl md:text-5xl font-lavishly-yours italic font-extralight mb-4">
+          <h2 className="text-2xl md:text-5xl !font-lavish text-neutral-700 mb-4">
             A Little Love Note from One Creator to Another
           </h2>
         </div>
@@ -97,7 +97,14 @@ const SlideshowSection = () => {
 
         {/* Attribution */}
         <div className="text-center mt-12">
-          <div className="text-lg text-gray-600 italic">-🖤 Manavi</div>
+          <div className="flex items-center justify-center">
+            <div className="text-gray-600">-🖤</div>
+            <div className="ml-1 text-3xl text-gray-600 font-lavish">
+              {" "}
+              Manavi
+            </div>
+          </div>
+
           <div className="text-sm text-gray-500 ">
             Artist & Founder, ConsciousClubb
           </div>
