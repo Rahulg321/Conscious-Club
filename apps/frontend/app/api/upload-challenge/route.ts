@@ -35,7 +35,7 @@ export const POST = async (req: NextRequest) => {
     description: description || undefined,
     deadline,
     reward: reward || undefined,
-    prizePool: prizePool || "0",
+    prizePool: prizePool ? Number(prizePool) : 0,
     isActive: isActive === "true",
     bannerImage,
   });
@@ -68,7 +68,9 @@ export const POST = async (req: NextRequest) => {
         description: validatedData.data.description || null,
         deadline: new Date(validatedData.data.deadline),
         reward: validatedData.data.reward || null,
-        prizePool: validatedData.data.prizePool || 0,
+        prizePool: validatedData.data.prizePool
+          ? Number(validatedData.data.prizePool)
+          : 0,
         isActive: validatedData.data.isActive,
         bannerImage: url,
       })
@@ -86,4 +88,3 @@ export const POST = async (req: NextRequest) => {
     );
   }
 };
-

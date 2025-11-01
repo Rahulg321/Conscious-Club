@@ -6,7 +6,7 @@ import {
   getFilteredMashupProjects,
 } from "@/lib/queries";
 import ProjectTagsFilter from "@/components/project-tag-filters";
-import { Suspense } from "react";
+import React, { Suspense } from "react";
 import ProjectSearchFilter from "@/components/project-search-filter";
 import DiscoverProjectCard from "@/components/discover-project-card";
 import ProjectPagination from "@/components/project-pagination";

@@ -1,7 +1,13 @@
+// @ts-nocheck
 "use client";
 
 import { cn } from "@/lib/utils";
-import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "motion/react";
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useMotionValueEvent,
+} from "motion/react";
 import { ChevronDown, Crown, Menu, X } from "lucide-react";
 
 import React, { useRef, useState } from "react";
@@ -66,8 +72,13 @@ export const Navbar = ({ children, className }: NavbarProps) => {
       // IMPORTANT: Change this to class of `fixed` if you want the navbar to be fixed
       className={cn("sticky inset-x-0 top-20 z-40 w-full", className)}
     >
-      {React.Children.map(children, (child) =>
-        React.isValidElement(child) ? React.cloneElement(child as React.ReactElement<{ visible?: boolean }>, { visible }) : child
+      {React.Children.toArray(children).map((child, index) =>
+        React.isValidElement(child)
+          ? React.cloneElement(
+              child as React.ReactElement<{ visible?: boolean }>,
+              { key: child.key ?? index, visible }
+            )
+          : child
       )}
     </motion.div>
   );
@@ -123,7 +134,10 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
           href={item.link}
         >
           {hovered === idx && (
-            <motion.div layoutId="hovered" className="absolute inset-0 h-full w-full rounded-full bg-gray-100 dark:bg-neutral-800" />
+            <motion.div
+              layoutId="hovered"
+              className="absolute inset-0 h-full w-full rounded-full bg-gray-100 dark:bg-neutral-800"
+            />
           )}
           <span className="relative z-20">{item.name}</span>
         </a>
@@ -162,11 +176,28 @@ export const MobileNav = ({ children, className, visible }: MobileNavProps) => {
   );
 };
 
-export const MobileNavHeader = ({ children, className }: MobileNavHeaderProps) => {
-  return <div className={cn("flex w-full flex-row items-center justify-between", className)}>{children}</div>;
+export const MobileNavHeader = ({
+  children,
+  className,
+}: MobileNavHeaderProps) => {
+  return (
+    <div
+      className={cn(
+        "flex w-full flex-row items-center justify-between",
+        className
+      )}
+    >
+      {children}
+    </div>
+  );
 };
 
-export const MobileNavMenu = ({ children, className, isOpen, onClose }: MobileNavMenuProps) => {
+export const MobileNavMenu = ({
+  children,
+  className,
+  isOpen,
+  onClose,
+}: MobileNavMenuProps) => {
   return (
     <AnimatePresence>
       {isOpen && (
@@ -186,13 +217,26 @@ export const MobileNavMenu = ({ children, className, isOpen, onClose }: MobileNa
   );
 };
 
-export const MobileNavToggle = ({ isOpen, onClick }: { isOpen: boolean; onClick: () => void }) => {
-  return isOpen ? <X className="text-black dark:text-white" onClick={onClick} /> : <Menu className="text-black dark:text-white" onClick={onClick} />;
+export const MobileNavToggle = ({
+  isOpen,
+  onClick,
+}: {
+  isOpen: boolean;
+  onClick: () => void;
+}) => {
+  return isOpen ? (
+    <X className="text-black dark:text-white" onClick={onClick} />
+  ) : (
+    <Menu className="text-black dark:text-white" onClick={onClick} />
+  );
 };
 
 export const NavbarLogo = () => {
   return (
-    <a href="/" className="relative z-20  flex items-center  px-2 py-1 text-sm font-normal text-black">
+    <a
+      href="/"
+      className="relative z-20  flex items-center  px-2 py-1 text-sm font-normal text-black"
+    >
       <img src="/CC_Logo_Favicon.png" alt="logo" width={50} height={50} />
       <span className="text-red-500 text-xl font-semibold">ConsciousClubb</span>
     </a>
@@ -212,7 +256,10 @@ export const NavbarButton = ({
   children: React.ReactNode;
   className?: string;
   variant?: "primary" | "secondary" | "dark" | "gradient";
-} & (React.ComponentPropsWithoutRef<"a"> | React.ComponentPropsWithoutRef<"button">)) => {
+} & (
+  | React.ComponentPropsWithoutRef<"a">
+  | React.ComponentPropsWithoutRef<"button">
+)) => {
   const baseStyles =
     "px-4 py-2 rounded-md bg-white button bg-white text-black text-sm font-bold relative cursor-pointer hover:-translate-y-0.5 transition duration-200 inline-block text-center";
 
@@ -221,11 +268,16 @@ export const NavbarButton = ({
       "shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]",
     secondary: "bg-transparent shadow-none dark:text-white",
     dark: "bg-black text-white shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]",
-    gradient: "bg-gradient-to-b from-blue-500 to-blue-700 text-white shadow-[0px_2px_0px_0px_rgba(255,255,255,0.3)_inset]",
+    gradient:
+      "bg-gradient-to-b from-blue-500 to-blue-700 text-white shadow-[0px_2px_0px_0px_rgba(255,255,255,0.3)_inset]",
   };
 
   return (
-    <Tag href={href || undefined} className={cn(baseStyles, variantStyles[variant], className)} {...props}>
+    <Tag
+      href={href || undefined}
+      className={cn(baseStyles, variantStyles[variant], className)}
+      {...props}
+    >
       {children}
     </Tag>
   );

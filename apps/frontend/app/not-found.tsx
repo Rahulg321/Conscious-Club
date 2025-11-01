@@ -4,12 +4,6 @@ import { redirect } from "next/navigation";
 import React from "react";
 
 const NotFoundPage = () => {
-  console.log("Not Found Page");
-  console.log("Not Found Page");
-  console.log("Not Found Page");
-  console.log("Not Found Page");
-  console.log("Not Found Page");
-
   return (
     <div>
       <h2>Not Found</h2>

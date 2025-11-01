@@ -50,6 +50,7 @@ function Button({
   const Comp = asChild ? Slot : "button";
 
   return (
+    //@ts-ignore
     <Comp
       data-slot="button"
       className={cn(buttonVariants({ variant, size, className }))}

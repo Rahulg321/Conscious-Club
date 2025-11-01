@@ -15,9 +15,9 @@ interface TokenVerificationEmailProps {
   tokenConfirmLink: string;
 }
 
-export const TokenVerificationEmail: React.FC<
-  Readonly<TokenVerificationEmailProps>
-> = ({ tokenConfirmLink }) => (
+export const TokenVerificationEmail = ({
+  tokenConfirmLink,
+}: TokenVerificationEmailProps) => (
   <Html>
     <Head />
     <Preview>Verify your email address for ConsciousClubb</Preview>

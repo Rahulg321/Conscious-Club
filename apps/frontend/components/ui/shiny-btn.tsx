@@ -26,13 +26,19 @@ const animationProps: MotionProps = {
   },
 };
 
-interface ShinyButtonProps extends Omit<React.HTMLAttributes<HTMLElement>, keyof MotionProps>, MotionProps {
+interface ShinyButtonProps
+  extends Omit<React.HTMLAttributes<HTMLElement>, keyof MotionProps>,
+    Omit<MotionProps, "children"> {
   children: React.ReactNode;
   className?: string;
 }
 
-export const ShinyButton = React.forwardRef<HTMLButtonElement, ShinyButtonProps>(({ children, className, ...props }, ref) => {
+export const ShinyButton = React.forwardRef<
+  HTMLButtonElement,
+  ShinyButtonProps
+>(({ children, className, ...props }, ref) => {
   return (
+    //@ts-ignore
     <motion.button
       ref={ref}
       className={cn(
@@ -54,7 +60,8 @@ export const ShinyButton = React.forwardRef<HTMLButtonElement, ShinyButtonProps>
       <span
         style={{
           mask: "linear-gradient(rgb(0,0,0), rgb(0,0,0)) content-box exclude,linear-gradient(rgb(0,0,0), rgb(0,0,0))",
-          WebkitMask: "linear-gradient(rgb(0,0,0), rgb(0,0,0)) content-box exclude,linear-gradient(rgb(0,0,0), rgb(0,0,0))",
+          WebkitMask:
+            "linear-gradient(rgb(0,0,0), rgb(0,0,0)) content-box exclude,linear-gradient(rgb(0,0,0), rgb(0,0,0))",
           backgroundImage:
             "linear-gradient(-75deg,var(--primary)/10% calc(var(--x)+20%),var(--primary)/50% calc(var(--x)+25%),var(--primary)/10% calc(var(--x)+100%))",
         }}

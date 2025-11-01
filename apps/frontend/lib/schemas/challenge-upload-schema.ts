@@ -23,7 +23,7 @@ export const challengeUpdateSchema = z.object({
   deadline: z.string().min(1, "Deadline is required"),
   reward: z.string().optional(),
   prizePool: z.string().optional(),
-  isActive: z.boolean().default(true),
+  isActive: z.boolean(),
 });
 
 export type ChallengeUploadSchemaType = z.infer<typeof challengeUploadSchema>;

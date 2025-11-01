@@ -24,7 +24,7 @@ export const sendVerificationTokenEmail = async (
     from: `Conscious Club <Contact@consciousclubb.com>`,
     to: [email],
     subject: "Verify your account",
-    react: await TokenVerificationEmail({
+    react: TokenVerificationEmail({
       tokenConfirmLink: confirmLink,
     }),
   });
@@ -55,7 +55,7 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
     from: `Conscious Club <Contact@consciousclubb.com>`,
     to: [email],
     subject: "Reset your Password",
-    react: await ResetPasswordEmail({
+    react: ResetPasswordEmail({
       resetPasswordLink: resetLink,
     }),
   });

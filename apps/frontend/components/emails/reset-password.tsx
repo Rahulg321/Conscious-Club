@@ -18,9 +18,9 @@ interface ResetPasswordEmailProps {
 
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL || ""; // Or your specific base URL
 
-export const ResetPasswordEmail: React.FC<
-  Readonly<ResetPasswordEmailProps>
-> = ({ resetPasswordLink }) => (
+export const ResetPasswordEmail = ({
+  resetPasswordLink,
+}: ResetPasswordEmailProps) => (
   <Html>
     <Head />
     <Preview>Reset your password for ConsciousClubb</Preview>

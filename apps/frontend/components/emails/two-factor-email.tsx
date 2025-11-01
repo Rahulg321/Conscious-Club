@@ -14,9 +14,7 @@ interface TwoFactorEmailProps {
   token: string;
 }
 
-export const TwoFactorEmail: React.FC<Readonly<TwoFactorEmailProps>> = ({
-  token,
-}) => (
+export const TwoFactorEmail = ({ token }: TwoFactorEmailProps) => (
   <Html>
     <Head />
     <Preview>Your Two-Factor Authentication Code</Preview>

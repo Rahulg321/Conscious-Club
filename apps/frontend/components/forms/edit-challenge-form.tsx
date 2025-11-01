@@ -45,7 +45,7 @@ const EditChallengeForm = ({ challenge }: EditChallengeFormProps) => {
       .slice(0, 16);
   };
 
-  const form = useForm<ChallengeUpdateSchemaInputType>({
+  const form = useForm<ChallengeUpdateSchemaType>({
     resolver: zodResolver(challengeUpdateSchema),
     defaultValues: {
       name: challenge.name,
@@ -88,7 +88,10 @@ const EditChallengeForm = ({ challenge }: EditChallengeFormProps) => {
         formData.append("description", values.description || "");
         formData.append("deadline", values.deadline);
         formData.append("reward", values.reward || "");
-        formData.append("prizePool", String(values.prizePool || 0));
+        formData.append(
+          "prizePool",
+          String(values.prizePool ? Number(values.prizePool) : 0)
+        );
         formData.append("isActive", String(values.isActive));
 
         // Only append image if a new one was selected

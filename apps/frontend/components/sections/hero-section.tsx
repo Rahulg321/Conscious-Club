@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { PenTool, Database, Camera, MicVocal } from "lucide-react";
 import Link from "next/link";
 
-import { useRef } from "react";
+import React, { useRef } from "react";
 
 import RolloutCenter from "@/public/CC_LandingPage_RolloutCentre.png";
 import Image from "next/image";
