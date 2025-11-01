@@ -28,7 +28,7 @@ export function ChallengeEntryCard({
   const timeAgo = formatDistanceToNow(new Date(createdAt), { addSuffix: true });
 
   return (
-    <Card className="overflow-hidden">
+    <Card className="overflow-hidden p-0">
       <div className="aspect-video relative bg-muted overflow-hidden">
         {mediaUrl ? (
           isVideoFile ? (
@@ -55,7 +55,10 @@ export function ChallengeEntryCard({
       <div className="p-4 space-y-3">
         <div className="flex items-start gap-3">
           <Avatar className="h-8 w-8">
-            <AvatarImage src={userImage || undefined} alt={userName || "User"} />
+            <AvatarImage
+              src={userImage || undefined}
+              alt={userName || "User"}
+            />
             <AvatarFallback>
               {(userName || "U").slice(0, 2).toUpperCase()}
             </AvatarFallback>
@@ -70,4 +73,3 @@ export function ChallengeEntryCard({
     </Card>
   );
 }
-

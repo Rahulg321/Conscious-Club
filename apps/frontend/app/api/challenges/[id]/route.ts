@@ -78,10 +78,7 @@ export const PATCH = async (
     .limit(1);
 
   if (!existingChallenge) {
-    return NextResponse.json(
-      { error: "Challenge not found" },
-      { status: 404 }
-    );
+    return NextResponse.json({ error: "Challenge not found" }, { status: 404 });
   }
 
   // Validate the data (bannerImage is optional for updates)
@@ -126,7 +123,9 @@ export const PATCH = async (
         description: validatedData.data.description || null,
         deadline: new Date(validatedData.data.deadline),
         reward: validatedData.data.reward || null,
-        prizePool: validatedData.data.prizePool || 0,
+        prizePool: validatedData.data.prizePool
+          ? Number(validatedData.data.prizePool)
+          : 0,
         isActive: validatedData.data.isActive,
         bannerImage: bannerImageUrl,
         updatedAt: new Date(),
@@ -147,4 +146,3 @@ export const PATCH = async (
     );
   }
 };
-
