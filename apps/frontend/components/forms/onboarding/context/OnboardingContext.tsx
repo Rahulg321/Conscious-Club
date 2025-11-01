@@ -29,8 +29,10 @@ const OnboardingContext = createContext<OnboardingContextType | undefined>(
   undefined
 );
 
-export const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({
+export const OnboardingProvider = ({
   children,
+}: {
+  children: React.ReactNode;
 }) => {
   const onboardingData = useOnboardingFormWithURL();
 
