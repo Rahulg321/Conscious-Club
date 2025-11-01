@@ -4,6 +4,7 @@ import uploadProjectRouter from "@/routes/upload-project";
 import updateProjectRouter from "@/routes/update-project";
 import onboardingRouter from "@/routes/onboarding";
 import testRateLimitRouter from "@/routes/test-rate-limit";
+import submitChallengeEntryRouter from "@/routes/submit-challenge-entry";
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use("/upload-project", uploadProjectRouter);
 app.use("/update-project", updateProjectRouter);
 app.use("/onboarding", onboardingRouter);
 app.use("/test-rate-limit", testRateLimitRouter);
+app.use("/submit-challenge-entry", submitChallengeEntryRouter);
 
 app.get("/", (req, res) => {
   console.log("Root request received");

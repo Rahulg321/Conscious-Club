@@ -5,7 +5,7 @@ export const bravoUploadSchema = z.object({
     .string()
     .min(1, "Name is required")
     .max(64, "Name must be less than 64 characters"),
-  description: z.string().min(1, "Description is required"),
+  description: z.string().optional(),
   image: z.instanceof(File, { message: "Image is required" }),
   categoryId: z.string().min(1, "Please select a bravo category"),
 });

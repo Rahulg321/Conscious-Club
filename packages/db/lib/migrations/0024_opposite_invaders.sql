@@ -1,0 +1,1 @@
+ALTER TABLE "bravos" ALTER COLUMN "description" DROP NOT NULL;

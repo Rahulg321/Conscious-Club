@@ -7,7 +7,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { User } from "lucide-react";
+import { User, Trophy } from "lucide-react";
 import { FaCompass, FaHeart } from "react-icons/fa";
 import { FaHeadphones } from "react-icons/fa";
 
@@ -49,6 +49,13 @@ export function SidebarNavLinks({ userId }: { userId: string }) {
       leading: <FaHeart className="size-4" />,
       activeColor:
         "!bg-[#FEDADA] !text-pink-700 data-[active=true]:!bg-[#FEDADA] data-[active=true]:!text-pink-700",
+    },
+    {
+      label: "Challenges",
+      href: "/challenges",
+      leading: <Trophy className="w-4 h-4" />,
+      activeColor:
+        "!bg-[#FFF4CC] !text-amber-700 data-[active=true]:!bg-[#FFF4CC] data-[active=true]:!text-amber-700",
     },
   ];
 

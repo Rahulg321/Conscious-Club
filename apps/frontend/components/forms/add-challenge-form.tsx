@@ -15,35 +15,29 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Upload, X, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import {
-  bravoUploadSchema,
-  BravoUploadSchemaType,
-} from "@/lib/schemas/bravo-upload-schema";
+import { challengeUploadSchema } from "@/lib/schemas/challenge-upload-schema";
+import { z } from "zod";
 import { useRouter } from "next/navigation";
-import { BravoCategories } from "@repo/db/schema";
+import { Switch } from "@/components/ui/switch";
 
-const AddBravoForm = ({ categories }: { categories: BravoCategories[] }) => {
+const AddChallengeForm = () => {
   const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
   const [isUploading, startUploadTransition] = React.useTransition();
   const router = useRouter();
 
-  const form = useForm<BravoUploadSchemaType>({
-    resolver: zodResolver(bravoUploadSchema),
+  const form = useForm({
+    resolver: zodResolver(challengeUploadSchema),
     defaultValues: {
       name: "",
       description: "",
-      image: undefined,
-      categoryId: "",
+      bannerImage: undefined,
+      deadline: "",
+      reward: "",
+      prizePool: "",
+      isActive: true,
     },
   });
 
@@ -72,46 +66,51 @@ const AddBravoForm = ({ categories }: { categories: BravoCategories[] }) => {
     };
   }, [previewUrl]);
 
-  const onSubmit = async (values: BravoUploadSchemaType) => {
+  const onSubmit = async (values: z.infer<typeof challengeUploadSchema>) => {
     startUploadTransition(async () => {
       try {
-        if (!values.image) {
-          toast.error("Please upload an image");
+        if (!values.bannerImage) {
+          toast.error("Please upload a banner image");
           return;
         }
 
         const formData = new FormData();
         formData.append("name", values.name);
         formData.append("description", values.description || "");
-        formData.append("categoryId", values.categoryId);
-        formData.append("image", values.image);
+        formData.append("deadline", values.deadline);
+        formData.append("reward", values.reward || "");
+        formData.append("prizePool", values.prizePool || "0");
+        formData.append("isActive", String(values.isActive));
+        formData.append("bannerImage", values.bannerImage);
 
-        const response = await fetch("/api/upload-bravo", {
+        const response = await fetch("/api/upload-challenge", {
           method: "POST",
           body: formData,
         });
 
         if (!response.ok) {
-          toast.error("Failed to upload bravo");
+          const error = await response.json();
+          toast.error(error.error || "Failed to upload challenge");
           return;
         }
 
         const result = await response.json();
-        console.log("Bravo uploaded:", result);
+        console.log("Challenge uploaded:", result);
 
-        toast.success("Bravo uploaded successfully!");
+        toast.success("Challenge uploaded successfully!");
         form.reset();
         setPreviewUrl(null);
+        router.push("/admin/challenges");
         router.refresh();
       } catch (error) {
-        toast.error("Failed to upload bravo. Please try again.");
+        toast.error("Failed to upload challenge. Please try again.");
         console.error("Upload error:", error);
       }
     });
   };
 
   const removeFile = () => {
-    form.setValue("image", undefined as any);
+    form.setValue("bannerImage", undefined as any);
     if (previewUrl) {
       URL.revokeObjectURL(previewUrl);
     }
@@ -124,60 +123,27 @@ const AddBravoForm = ({ categories }: { categories: BravoCategories[] }) => {
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
-        <CardTitle>Add New Bravo</CardTitle>
+        <CardTitle>Add New Challenge</CardTitle>
       </CardHeader>
       <CardContent className="p-6">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter bravo name" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      The name of the bravo (max 64 characters)
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="categoryId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Bravo Category</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select bravo category" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {categories.map((category) => (
-                          <SelectItem key={category.id} value={category.id}>
-                            {category.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormDescription>
-                      Choose the category of bravo
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter challenge name" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    The name of the challenge (max 64 characters)
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <FormField
               control={form.control}
@@ -187,13 +153,76 @@ const AddBravoForm = ({ categories }: { categories: BravoCategories[] }) => {
                   <FormLabel>Description</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Enter bravo description"
+                      placeholder="Enter challenge description"
                       className="min-h-[100px]"
                       {...field}
                     />
                   </FormControl>
                   <FormDescription>
-                    Describe what this bravo represents
+                    Describe what this challenge is about
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FormField
+                control={form.control}
+                name="deadline"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Deadline</FormLabel>
+                    <FormControl>
+                      <Input type="datetime-local" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      When does this challenge end?
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="prizePool"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Prize Pool</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min="0"
+                        placeholder="0"
+                        {...field}
+                        onChange={(e) => field.onChange(e.target.value)}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Total prize pool amount (optional)
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <FormField
+              control={form.control}
+              name="reward"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Reward</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Enter reward description"
+                      className="min-h-[80px]"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    What do participants win? (optional)
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -202,10 +231,31 @@ const AddBravoForm = ({ categories }: { categories: BravoCategories[] }) => {
 
             <FormField
               control={form.control}
-              name="image"
+              name="isActive"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                  <div className="space-y-0.5">
+                    <FormLabel className="text-base">Active</FormLabel>
+                    <FormDescription>
+                      Make this challenge visible to users
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="bannerImage"
               render={({ field: { onChange, value, ...field } }) => (
                 <FormItem>
-                  <FormLabel>Bravo Image</FormLabel>
+                  <FormLabel>Banner Image</FormLabel>
                   <FormControl>
                     <div className="space-y-4">
                       {!previewUrl ? (
@@ -218,14 +268,14 @@ const AddBravoForm = ({ categories }: { categories: BravoCategories[] }) => {
                             Click to upload or drag and drop
                           </p>
                           <p className="text-xs text-gray-500">
-                            PNG, JPG, JPEG, WebP up to 5MB
+                            PNG, JPG, JPEG, WebP up to 10MB
                           </p>
                         </div>
                       ) : (
                         <div className="relative">
                           <img
                             src={previewUrl}
-                            alt="Bravo preview"
+                            alt="Challenge banner preview"
                             className="w-full h-48 object-cover rounded-lg"
                           />
                           <Button
@@ -259,13 +309,14 @@ const AddBravoForm = ({ categories }: { categories: BravoCategories[] }) => {
                           className="w-full"
                         >
                           <Upload className="mr-2 h-4 w-4" />
-                          Choose Image
+                          Choose Banner Image
                         </Button>
                       )}
                     </div>
                   </FormControl>
                   <FormDescription>
-                    Upload an image for the bravo. Recommended size: 400x400px
+                    Upload a banner image for the challenge. Recommended size:
+                    1200x400px
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -276,10 +327,10 @@ const AddBravoForm = ({ categories }: { categories: BravoCategories[] }) => {
               {isUploading ? (
                 <div className="flex items-center justify-center gap-2">
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Uploading Bravo...
+                  Uploading Challenge...
                 </div>
               ) : (
-                "Upload Bravo"
+                "Upload Challenge"
               )}
             </Button>
           </form>
@@ -289,4 +340,4 @@ const AddBravoForm = ({ categories }: { categories: BravoCategories[] }) => {
   );
 };
 
-export default AddBravoForm;
+export default AddChallengeForm;

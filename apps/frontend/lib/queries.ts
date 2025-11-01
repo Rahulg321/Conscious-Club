@@ -13,6 +13,8 @@ import {
   follows,
   blogTags,
   blogCategories,
+  challenges,
+  challengeEntries,
 } from "@repo/db/schema";
 import { eq, and, or, ilike, inArray, desc, count, sql, ne } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
@@ -1534,6 +1536,164 @@ export async function getRelatedBlogPosts(
     return posts.slice(0, limit);
   } catch (error) {
     console.error("error fetching related blog posts", error);
+    return [];
+  }
+}
+
+/**
+ * Get all active challenges (not completed) for user-facing page
+ * @returns All active challenges
+ */
+export async function getAllChallenges() {
+  try {
+    return await db
+      .select()
+      .from(challenges)
+      .where(
+        and(eq(challenges.isActive, true), eq(challenges.isCompleted, false))
+      )
+      .orderBy(desc(challenges.createdAt));
+  } catch (error) {
+    console.log("An error occurred trying to get all challenges", error);
+    return null;
+  }
+}
+
+/**
+ * Get all completed challenges for history section
+ * @returns All completed challenges
+ */
+export async function getCompletedChallenges() {
+  try {
+    return await db
+      .select()
+      .from(challenges)
+      // .where(
+      //   and(eq(challenges.isActive, true), eq(challenges.isCompleted, true))
+      // )
+      .where(and(eq(challenges.isCompleted, true)))
+      .orderBy(desc(challenges.updatedAt));
+  } catch (error) {
+    console.log("An error occurred trying to get completed challenges", error);
+    return null;
+  }
+}
+
+/**
+ * Get all challenges (including inactive ones) - for admin
+ * @returns All challenges
+ */
+export async function getAllChallengesAdmin() {
+  try {
+    return await db
+      .select({
+        id: challenges.id,
+        name: challenges.name,
+        slug: challenges.slug,
+        bannerImage: challenges.bannerImage,
+        deadline: challenges.deadline,
+        isActive: challenges.isActive,
+        isCompleted: challenges.isCompleted,
+        participantsCount: challenges.participantsCount,
+      })
+      .from(challenges)
+      .orderBy(desc(challenges.createdAt));
+  } catch (error) {
+    console.log("An error occurred trying to get all challenges", error);
+    return null;
+  }
+}
+
+/**
+ * Get a challenge by slug
+ * @param slug - The slug of the challenge
+ * @returns The challenge
+ */
+export async function getChallengeBySlug(slug: string) {
+  try {
+    const [challenge] = await db
+      .select()
+      .from(challenges)
+      .where(eq(challenges.slug, slug))
+      .limit(1);
+    return challenge || null;
+  } catch (error) {
+    console.log("An error occurred trying to get challenge by slug", error);
+    return null;
+  }
+}
+
+/**
+ * Get a challenge by ID
+ * @param id - The ID of the challenge
+ * @returns The challenge
+ */
+export async function getChallengeById(id: string) {
+  try {
+    const [challenge] = await db
+      .select()
+      .from(challenges)
+      .where(eq(challenges.id, id))
+      .limit(1);
+    return challenge || null;
+  } catch (error) {
+    console.log("An error occurred trying to get challenge by ID", error);
+    return null;
+  }
+}
+
+/**
+ * Get a user's challenge entry for a specific challenge
+ * @param challengeId - The ID of the challenge
+ * @param userId - The ID of the user
+ * @returns The challenge entry or null if not found
+ */
+export async function getUserChallengeEntry(
+  challengeId: string,
+  userId: string
+) {
+  try {
+    const [entry] = await db
+      .select()
+      .from(challengeEntries)
+      .where(
+        and(
+          eq(challengeEntries.challengeId, challengeId),
+          eq(challengeEntries.userId, userId)
+        )
+      )
+      .limit(1);
+    return entry || null;
+  } catch (error) {
+    console.log("An error occurred trying to get user challenge entry", error);
+    return null;
+  }
+}
+
+/**
+ * Get all challenge entries for a specific challenge with user information
+ * @param challengeId - The ID of the challenge
+ * @returns Array of challenge entries with user data
+ */
+export async function getChallengeEntries(challengeId: string) {
+  try {
+    return await db
+      .select({
+        id: challengeEntries.id,
+        challengeId: challengeEntries.challengeId,
+        caption: challengeEntries.caption,
+        media: challengeEntries.media,
+        createdAt: challengeEntries.createdAt,
+        userId: challengeEntries.userId,
+        userName: user.name,
+        userImage: user.image,
+      })
+      .from(challengeEntries)
+      .leftJoin(user, eq(challengeEntries.userId, user.id))
+      .where(eq(challengeEntries.challengeId, challengeId))
+      .orderBy(desc(challengeEntries.createdAt));
+  } catch (error) {
+    console.log("An error occurred trying to get challenge entries", error);
     return [];
   }
 }

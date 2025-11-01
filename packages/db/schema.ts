@@ -334,7 +334,7 @@ export const bravos = pgTable("bravos", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),
   name: varchar("name", { length: 64 }).notNull(),
   slug: varchar("slug", { length: 64 }).notNull().unique(),
-  description: text("description").notNull(),
+  description: text("description"),
   image: text("image").notNull(),
   categoryId: uuid("categoryId")
     .references(() => bravoCategories.id, { onDelete: "cascade" })
@@ -434,3 +434,52 @@ export const blogPostTags = pgTable(
 );
 
 export type BlogPostTags = InferSelectModel<typeof blogPostTags>;
+
+export const challenges = pgTable("challenges", {
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
+  name: varchar("name", { length: 64 }).notNull(),
+  slug: varchar("slug", { length: 64 }).notNull().unique(),
+  description: text("description"),
+  bannerImage: text("bannerImage").notNull(),
+  deadline: timestamp("deadline", { mode: "date" }).notNull(),
+  reward: text("reward"),
+  prizePool: integer("prizePool").notNull().default(0),
+  isActive: boolean("isActive").notNull().default(true),
+  isCompleted: boolean("isCompleted").notNull().default(false),
+  completedAt: timestamp("completedAt", { mode: "date" }),
+  participantsCount: integer("participantsCount").notNull().default(0),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+});
+
+export type Challenges = InferSelectModel<typeof challenges>;
+
+export const challengeEntries = pgTable(
+  "challenge_entries",
+  {
+    id: uuid("id").primaryKey().notNull().defaultRandom(),
+    challengeId: uuid("challengeId")
+      .notNull()
+      .references(() => challenges.id, { onDelete: "cascade" }),
+    caption: text("caption").notNull(),
+    media: text("media").array().notNull(),
+    userId: uuid("userId")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    createdAt: timestamp("createdAt").notNull().defaultNow(),
+  },
+  (table) => ({
+    // Unique constraint ensures one entry per challenge per user
+    challengeUserUnique: uniqueIndex(
+      "challenge_entries_challenge_user_unique"
+    ).on(table.challengeId, table.userId),
+    // Index for efficient querying by challenge
+    challengeIndex: index("challenge_entries_challenge_id_index").on(
+      table.challengeId
+    ),
+    // Index for efficient querying by user
+    userIndex: index("challenge_entries_user_id_index").on(table.userId),
+  })
+);
+
+export type ChallengeEntries = InferSelectModel<typeof challengeEntries>;
