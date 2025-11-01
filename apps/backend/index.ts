@@ -3,8 +3,13 @@ import cors from "cors";
 import uploadProjectRouter from "@/routes/upload-project";
 import updateProjectRouter from "@/routes/update-project";
 import onboardingRouter from "@/routes/onboarding";
+import testRateLimitRouter from "@/routes/test-rate-limit";
 
 const app = express();
+
+// Trust proxy for accurate IP addresses (important for rate limiting)
+// Set to true if behind a proxy/load balancer (e.g., on Railway, Heroku, etc.)
+app.set("trust proxy", true);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -13,6 +18,7 @@ app.use(cors());
 app.use("/upload-project", uploadProjectRouter);
 app.use("/update-project", updateProjectRouter);
 app.use("/onboarding", onboardingRouter);
+app.use("/test-rate-limit", testRateLimitRouter);
 
 app.get("/", (req, res) => {
   console.log("Root request received");

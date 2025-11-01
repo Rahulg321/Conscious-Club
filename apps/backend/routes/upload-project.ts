@@ -5,6 +5,7 @@ import { project, user as userTable } from "@repo/db/schema";
 import { uploadFile } from "@/lib/cloud-storage";
 import { projectUploadSchema } from "@/lib/schemas/project-upload-schema";
 import authenticateToken from "@/middleware/authenticate-token";
+import { uploadProjectRateLimit } from "@/middleware/rate-limit-upload";
 import { eq } from "drizzle-orm";
 
 const upload = multer({
@@ -20,6 +21,7 @@ const router = Router();
 router.post(
   "/",
   authenticateToken,
+  uploadProjectRateLimit,
   upload.array("media", 4),
   async (req: Request, res: Response) => {
     const startTime = Date.now();

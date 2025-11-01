@@ -157,14 +157,14 @@ export const authConfig = {
           process.env.AUTH_SECRET as string
         );
         token.accessToken = accessToken;
-        console.log(
-          "Created access token for user:",
-          user.email,
-          "isAdmin:",
-          token.isAdmin,
-          "onboardingCompleted:",
-          token.onboardingCompleted
-        );
+        // console.log(
+        //   "Created access token for user:",
+        //   user.email,
+        //   "isAdmin:",
+        //   token.isAdmin,
+        //   "onboardingCompleted:",
+        //   token.onboardingCompleted
+        // );
       }
 
       return token;
@@ -182,12 +182,12 @@ export const authConfig = {
           token.onboardingCompleted ?? false;
 
         // Debug log to verify onboarding status is being set
-        console.log(
-          "Session callback - User:",
-          session.user.email,
-          "onboardingCompleted:",
-          token.onboardingCompleted
-        );
+        // console.log(
+        //   "Session callback - User:",
+        //   session.user.email,
+        //   "onboardingCompleted:",
+        //   token.onboardingCompleted
+        // );
       }
       return session;
     },

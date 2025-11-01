@@ -5,6 +5,8 @@ import { resetPasswordFormSchema } from "../schemas/auth-schema";
 import { generatePasswordResetToken } from "../tokens";
 import { getUserByEmail } from "../queries";
 import { ZodError } from "zod";
+import { rateLimit } from "../redis";
+import { getClientIp } from "../utils/rate-limit";
 
 export interface ResetPasswordActionState {
   status:
@@ -14,7 +16,8 @@ export interface ResetPasswordActionState {
     | "failed"
     | "invalid_method"
     | "invalid_data"
-    | "user_not_found";
+    | "user_not_found"
+    | "rate_limit_exceeded";
 }
 
 export const resetPassword = async (
@@ -27,6 +30,18 @@ export const resetPassword = async (
     });
 
     console.log("validatedData", validatedData);
+
+    // Rate limiting: 3 password reset requests per hour per IP + email
+    const ip = await getClientIp();
+    const { ok, remaining, reset } = await rateLimit(
+      `reset-password:${ip}:${validatedData.email}`,
+      3, // 3 password reset requests per hour
+      60 * 60 * 1000 // 1 hour
+    );
+
+    if (!ok) {
+      return { status: "rate_limit_exceeded" };
+    }
 
     const existingUser = (await getUserByEmail(validatedData.email))?.[0];
 

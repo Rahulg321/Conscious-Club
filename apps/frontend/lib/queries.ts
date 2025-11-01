@@ -25,6 +25,23 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 
 /**
+ *
+ * @returns All user ids
+ */
+export async function getAllUserIds() {
+  try {
+    return await db
+      .select({
+        id: user.id,
+      })
+      .from(user);
+  } catch (error) {
+    console.log("An error occured trying to get all user routes", error);
+    return [];
+  }
+}
+
+/**
  * Create a user
  * @param email - The email of the user
  * @param password - The password of the user

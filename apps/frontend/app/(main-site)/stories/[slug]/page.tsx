@@ -73,22 +73,14 @@ const BlogPostPage = async ({ params }: Props) => {
     });
   };
 
-  const relatedPosts = await getRelatedBlogPosts(
-    post.id,
-    post.categoryId || null,
-    post.tags.map((t) => t.id),
-    3
-  );
-
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Back Button */}
-      <div className="bg-white border-b border-gray-200">
+    <div className="min-h-screen bg-background">
+      <div className="bg-card border-b border-border">
         <div className="max-w-4xl mx-auto px-6 py-4">
-          <Link href="/blog">
+          <Link href="/stories">
             <Button variant="ghost" size="sm">
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Blog
+              Back to Stories
             </Button>
           </Link>
         </div>
@@ -96,7 +88,7 @@ const BlogPostPage = async ({ params }: Props) => {
 
       {/* Featured Image */}
       {post.featuredImage && (
-        <div className="relative w-full h-[400px] bg-gray-200">
+        <div className="relative w-full h-[400px] bg-muted">
           <Image
             src={post.featuredImage || ""}
             alt={post.featuredImageAlt || post.title}
@@ -110,7 +102,7 @@ const BlogPostPage = async ({ params }: Props) => {
 
       {/* Main Content */}
       <article className="max-w-4xl mx-auto px-6 py-8">
-        <div className="bg-white rounded-lg shadow-sm p-8 mb-8">
+        <div className="bg-card rounded-lg shadow-sm p-8 mb-8">
           {/* Category */}
           {post.categoryName && (
             <div className="mb-4">
@@ -130,7 +122,7 @@ const BlogPostPage = async ({ params }: Props) => {
           )}
 
           {/* Title */}
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight">
+          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4 leading-tight">
             {post.title}
           </h1>
 
@@ -172,7 +164,7 @@ const BlogPostPage = async ({ params }: Props) => {
                 >
                   <Badge
                     variant="outline"
-                    className="hover:bg-gray-100 transition-colors"
+                    className="hover:bg-accent transition-colors"
                   >
                     <TagIcon className="h-3 w-3 mr-1" />
                     {tag.name}
@@ -190,7 +182,7 @@ const BlogPostPage = async ({ params }: Props) => {
 
           {/* Footer Metadata */}
           {post.wordCount && (
-            <div className="mt-8 pt-6 border-t">
+            <div className="mt-8 pt-6 border-t border-border">
               <p className="text-sm text-muted-foreground">
                 Word count: {post.wordCount} words
               </p>

@@ -5,6 +5,8 @@ import { db } from "@repo/db";
 import { project } from "@repo/db/schema";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { rateLimit } from "../redis";
+import { getClientIp } from "../utils/rate-limit";
 
 /**
  *
@@ -20,6 +22,22 @@ export async function deleteProject(projectId: string) {
 
   if (!projectId) {
     return { success: false, message: "project id is not defined" };
+  }
+
+  // Rate limiting: 10 project deletions per hour per user, with IP fallback
+  const ip = await getClientIp();
+  const { ok, remaining, reset } = await rateLimit(
+    `delete-project:${userSession.user.id}:${ip}`,
+    10, // 10 deletions per hour
+    60 * 60 * 1000 // 1 hour
+  );
+
+  if (!ok) {
+    return {
+      success: false,
+      message: "Rate limit exceeded. Please try again later.",
+      resetTime: new Date(reset).toISOString(),
+    };
   }
 
   try {

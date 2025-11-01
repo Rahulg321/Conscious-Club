@@ -4,6 +4,8 @@ import { eq } from "drizzle-orm";
 import { user } from "@repo/db/schema";
 import { getUserByEmail, getVerificationTokenByToken } from "../queries";
 import { db } from "@repo/db";
+import { rateLimit } from "../redis";
+import { getClientIp } from "../utils/rate-limit";
 
 export interface NewVerificationActionState {
   status:
@@ -13,7 +15,8 @@ export interface NewVerificationActionState {
     | "failed"
     | "invalid_token"
     | "expired_token"
-    | "user_not_found";
+    | "user_not_found"
+    | "rate_limit_exceeded";
 }
 
 /**
@@ -24,6 +27,18 @@ export interface NewVerificationActionState {
 export const newVerification = async (
   token: string
 ): Promise<NewVerificationActionState> => {
+  // Rate limiting: 10 verification attempts per hour per IP
+  const ip = await getClientIp();
+  const { ok, remaining, reset } = await rateLimit(
+    `verification:${ip}`, // Use IP for tracking
+    10, // 10 verification attempts per hour
+    60 * 60 * 1000 // 1 hour
+  );
+
+  if (!ok) {
+    return { status: "rate_limit_exceeded" };
+  }
+
   const foundVerificationToken = await getVerificationTokenByToken(token);
   if (!foundVerificationToken) {
     console.log("Token not found");

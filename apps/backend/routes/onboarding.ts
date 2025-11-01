@@ -5,6 +5,7 @@ import { user, project } from "@repo/db/schema";
 import { uploadFile } from "@/lib/cloud-storage";
 import { onboardingSchema } from "@/lib/schemas/onboarding-schema";
 import authenticateToken from "@/middleware/authenticate-token";
+import { onboardingRateLimit } from "@/middleware/rate-limit-onboarding";
 import { eq } from "drizzle-orm";
 
 const upload = multer({
@@ -20,6 +21,7 @@ const router = Router();
 router.post(
   "/",
   authenticateToken,
+  onboardingRateLimit,
   upload.fields([
     { name: "profilePicture", maxCount: 1 },
     { name: "projectMedia", maxCount: 4 },

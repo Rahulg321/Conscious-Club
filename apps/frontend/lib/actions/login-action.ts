@@ -5,6 +5,8 @@ import { loginFormSchema, LoginFormSchemaType } from "../schemas/auth-schema";
 import { getUserByEmail, hasCompletedOnboarding } from "../queries";
 import { signIn } from "@/auth";
 import { DEFAULT_LOGIN_REDIRECT, FIRST_LOGIN_REDIRECT } from "@/routes";
+import { rateLimit } from "../redis";
+import { getClientIp } from "../utils/rate-limit";
 
 /**
  *
@@ -20,6 +22,22 @@ export const loginAction = async (values: LoginFormSchemaType) => {
   }
 
   const { email, password } = validatedData.data;
+
+  // Rate limiting: 5 login attempts per 15 minutes per IP, with email fallback
+  const ip = await getClientIp();
+  const { ok, remaining, reset } = await rateLimit(
+    `login:${ip}:${email}`, // Use IP + email for better tracking
+    5, // 5 login attempts per 15 minutes
+    15 * 60 * 1000 // 15 minutes
+  );
+
+  if (!ok) {
+    return {
+      success: false,
+      message: "Too many login attempts. Please try again later.",
+      resetTime: new Date(reset).toISOString(),
+    };
+  }
 
   const existingUser = (await getUserByEmail(email))?.[0];
 

@@ -5,6 +5,7 @@ import { project } from "@repo/db/schema";
 import { uploadFile } from "@/lib/cloud-storage";
 import { projectUploadSchema } from "@/lib/schemas/project-upload-schema";
 import authenticateToken from "@/middleware/authenticate-token";
+import { updateProjectRateLimit } from "@/middleware/rate-limit-update-project";
 import { eq, and } from "drizzle-orm";
 import { z } from "zod";
 
@@ -92,6 +93,7 @@ router.get(
 router.put(
   "/:projectId",
   authenticateToken,
+  updateProjectRateLimit,
   upload.array("media", 4),
   async (req: Request, res: Response) => {
     const { projectId } = req.params;

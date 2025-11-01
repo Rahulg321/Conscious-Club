@@ -8,6 +8,8 @@ import { user } from "@repo/db/schema";
 import { generateHashedPassword } from "../utils";
 import { passwordResetToken } from "@repo/db/schema";
 import { ZodError } from "zod";
+import { rateLimit } from "../redis";
+import { getClientIp } from "../utils/rate-limit";
 
 export interface NewPasswordVerificationActionState {
   status:
@@ -18,7 +20,8 @@ export interface NewPasswordVerificationActionState {
     | "invalid_data"
     | "expired_token"
     | "invalid_token"
-    | "user_not_found";
+    | "user_not_found"
+    | "rate_limit_exceeded";
 }
 
 /**
@@ -39,6 +42,18 @@ export const newPasswordVerification = async (
     });
 
     const token = validatedData.token;
+
+    // Rate limiting: 5 password verification attempts per hour per IP
+    const ip = await getClientIp();
+    const { ok, remaining, reset } = await rateLimit(
+      `password-verification:${ip}`,
+      5, // 5 verification attempts per hour
+      60 * 60 * 1000 // 1 hour
+    );
+
+    if (!ok) {
+      return { status: "rate_limit_exceeded" };
+    }
 
     const foundPasswordResetToken = await getPasswordResetTokenByToken(token);
 

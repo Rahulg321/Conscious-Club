@@ -5,6 +5,8 @@ import { follows } from "@repo/db/schema";
 import { eq, and } from "drizzle-orm";
 import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
+import { rateLimit } from "../redis";
+import { getClientIp } from "../utils/rate-limit";
 
 /**
  * Follow a user
@@ -20,6 +22,21 @@ export async function followUser(followingId: string) {
     }
 
     const followerId = session.user.id;
+
+    // Rate limiting: 30 follows/unfollows per hour per user, with IP fallback
+    const ip = await getClientIp();
+    const { ok, remaining, reset } = await rateLimit(
+      `follow:${followerId}:${ip}`, // Use userId + IP for better tracking
+      30, // 30 follows/unfollows per hour
+      60 * 60 * 1000 // 1 hour
+    );
+
+    if (!ok) {
+      return {
+        error: "Rate limit exceeded. Please try again later.",
+        resetTime: new Date(reset).toISOString(),
+      };
+    }
 
     // Don't allow users to follow themselves
     if (followerId === followingId) {
@@ -74,6 +91,21 @@ export async function unfollowUser(followingId: string) {
     }
 
     const followerId = session.user.id;
+
+    // Rate limiting: 30 follows/unfollows per hour per user, with IP fallback
+    const ip = await getClientIp();
+    const { ok, remaining, reset } = await rateLimit(
+      `follow:${followerId}:${ip}`, // Use userId + IP for better tracking
+      30, // 30 follows/unfollows per hour
+      60 * 60 * 1000 // 1 hour
+    );
+
+    if (!ok) {
+      return {
+        error: "Rate limit exceeded. Please try again later.",
+        resetTime: new Date(reset).toISOString(),
+      };
+    }
 
     // Check if following relationship exists
     const existingFollow = await db

@@ -1,32 +1,41 @@
 "use server";
 
 import { sendContactFormEmail } from "../mail";
+import { rateLimit } from "../redis";
+import { headers } from "next/headers";
 
+/**
+ * Submits the contact form and sends an email to the user.
+ *
+ * @param values - The values of the contact form
+ * @returns {
+ *   status: boolean;
+ *   message: string;
+ *   resetTime: string;
+ * }
+ */
 export async function submitContactForm(values: {
   firstName: string;
   lastName: string;
   email: string;
   message: string;
 }) {
-  //   const ip =
-  //     (await headers()).get("x-real-ip") ||
-  //     (await headers()).get("x-forwarded-for");
+  const ip =
+    (await headers()).get("x-forwarded-for")?.split(",")[0]?.trim() || "anon";
+  const { ok, remaining, reset } = await rateLimit(
+    `api:contact-form:${ip}`,
+    5, // 5 requests per minute
+    60_000 // 1 minute
+  );
+  if (!ok) {
+    return {
+      status: false,
+      message: "Rate limit exceeded",
+      resetTime: new Date(reset).toISOString(),
+    };
+  }
 
-  //   const {
-  //     remaining,
-  //     limit,
-  //     success: limitReached,
-  //   } = await rateLimit.limit(ip!);
-
-  //   console.log({ remaining, limit, limitReached });
-
-  //   if (!limitReached) {
-  //     return {
-  //       status: false,
-  //       message:
-  //         "You have reached the limit of contact form submissions. Please try again later after 2 minutes",
-  //     };
-  //   }
+  console.log({ remaining, reset });
 
   try {
     console.log("Values", values);
