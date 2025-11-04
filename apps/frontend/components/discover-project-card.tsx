@@ -3,17 +3,14 @@
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import LikeButton from "./like-button";
-import { TAG_COLORS } from "@/lib/tag-colors";
-import ProjectCollabDialog from "./dialogs/project-collab-dialog";
+
 import { Sparkles } from "lucide-react";
-// import { BorderBeam } from "@/components/ui/border-beam";
 
 export default function DiscoverProjectCard({
   projectId,
   projectCoverImage,
   projectName,
   projectDescription,
-  tagName,
   likeCount = 0,
   isLiked = false,
   creatorName,
