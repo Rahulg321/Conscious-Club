@@ -52,15 +52,6 @@ const page = async ({
 
   return (
     <div className="block-space-mini big-container">
-      <div className="mb-8 text-center max-w-2xl mx-auto space-y-4">
-        <h1 className="text-4xl font-bold">Bravos</h1>
-        <p className="text-gray-600">
-          {selectedCategory && selectedCategoryObj
-            ? selectedCategoryObj.description
-            : "Bravos are the best way to show your support for your favorite projects. You can collect bravos by completing tasks, projects, and more."}
-        </p>
-      </div>
-
       <div className="mb-6 flex flex-wrap items-center gap-2">
         <Button
           size="sm"
@@ -84,8 +75,19 @@ const page = async ({
           );
         })}
       </div>
+      <div className="mb-8 max-w-2xl space-y-4">
+        {/* <h1 className="text-4xl font-bold">
+          {categories?.find((category) => category.slug === selectedCategory)
+            ?.name || ""}
+        </h1> */}
+        <p className="text-gray-600">
+          {selectedCategory && selectedCategoryObj
+            ? selectedCategoryObj.description
+            : "Bravos are the best way to show your support for your favorite projects. You can collect bravos by completing tasks, projects, and more."}
+        </p>
+      </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
         {bravos?.map((bravo) => (
           <BravoCard
             className="w-full"

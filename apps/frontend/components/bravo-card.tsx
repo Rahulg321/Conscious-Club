@@ -20,8 +20,7 @@ import { Button } from "@/components/ui/button";
 import { pinBravo } from "@/lib/actions/pin-bravo-action";
 import { toast } from "sonner";
 import { useTransition } from "react";
-import { useSession } from "next-auth/react";
-
+import { GlowingEffect } from "./ui/glowing-effect";
 type BravoCardProps = {
   className: string;
   id: string;
@@ -45,7 +44,7 @@ export function BravoImage({ src, alt, className }: BravoImageProps) {
       alt={alt}
       width={300}
       height={128}
-      className={cn("w-full object-cover", className)}
+      className={cn("w-full object-cover rounded-2xl", className)}
       // placeholder="blur"
       // blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
     />
@@ -118,15 +117,28 @@ export function BravoCard({
       }
     });
   };
-
+  // <div
+  //   key={id}
+  //   className={cn("overflow-hidden rounded-md border relative", {
+  //     "border-blue-500": bravoCategory === "mood",
+  //     "border-green-200 border-2": bravoCategory === "Flex Bravos",
+  //   })}
+  // >
   return (
     <div
       key={id}
-      className={cn("overflow-hidden rounded-md border relative", {
-        "border-blue-500": bravoCategory === "mood",
-        "border-green-200 border-2": bravoCategory === "Flex Bravos",
-      })}
+      className="relative h-full rounded-2xl border p-2 md:rounded-3xl md:p-3"
     >
+      {/* @ts-expect-error GlowingEffect JSX type issue */}
+      <GlowingEffect
+        blur={0}
+        borderWidth={3}
+        spread={80}
+        glow={true}
+        disabled={false}
+        proximity={64}
+        inactiveZone={0.01}
+      />
       {bravoCategory === "Flex Bravos" && (
         <div className="absolute top-2 right-2 z-10">
           <PinBravoDialog onPin={handlePinBravo} isPinned={isPinned} />

@@ -11,7 +11,7 @@ export function TestimonialPanel({ imageUrl }: { imageUrl: string }) {
         alt="Login testimonial"
         fill
         sizes="(min-width: 768px) 50vw, 100vw"
-        className=""
+        className="object-cover"
         priority
       />
     </div>

@@ -18,8 +18,8 @@ const HeroMarqueeSection = () => {
   ];
 
   return (
-    <div className="w-full">
-      <Marquee className="[--gap:0.5rem] sm:[--gap:0.7rem] md:[--gap:1rem] lg:[--gap:1.2rem]">
+    <div className="w-full  rotate-x-12 rotate-y-12 translate-z-12">
+      <Marquee className="[--gap:0.5rem] sm:[--gap:0.7rem] md:[--gap:1rem] lg:[--gap:1.2rem] ">
         {images.map((image, index) => (
           <div
             key={index}
