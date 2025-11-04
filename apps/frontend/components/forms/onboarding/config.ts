@@ -1,4 +1,5 @@
 import { OnboardingStep, UserRole } from "./types";
+import { type FilterFieldConfig } from "@/components/ui/filters";
 
 export const getStepsForRole = (userRole: UserRole): OnboardingStep[] => {
   return [
@@ -57,3 +58,178 @@ export const USER_ROLES = [
       "Share your content, projects, and creative work with the community",
   },
 ] as const;
+
+export const fields: FilterFieldConfig[] = [
+  {
+    group: "Tags",
+    fields: [
+      {
+        key: "visuals",
+        label: "Visuals",
+        icon: "🎨",
+        type: "multiselect",
+        searchable: false,
+        className: "w-[200px]",
+        options: [
+          {
+            value: "Art & Mixed Media",
+            label: "Art & Mixed Media",
+            icon: "",
+          },
+          {
+            value: "Illustration & Graphics",
+            label: "Illustration & Graphics",
+            icon: "",
+          },
+          {
+            value: "Photography",
+            label: "Photography",
+            icon: "",
+          },
+        ],
+      },
+      {
+        key: "motion",
+        label: "Motion",
+        icon: "🎬",
+        type: "multiselect",
+        searchable: false,
+        className: "w-[200px]",
+        options: [
+          {
+            value: "Reels",
+            label: "Reels",
+            icon: "",
+          },
+          {
+            value: "Vlogging",
+            label: "Vlogging",
+            icon: "",
+          },
+          {
+            value: "Animation",
+            label: "Animation",
+            icon: "",
+          },
+          {
+            value: "Filmmaking",
+            label: "Filmmaking",
+            icon: "",
+          },
+        ],
+      },
+      {
+        key: "writing",
+        label: "Writing",
+        icon: "📝",
+        type: "multiselect",
+        searchable: false,
+        className: "w-[200px]",
+        options: [
+          {
+            value: "Copywriting",
+            label: "Copywriting",
+            icon: "",
+          },
+          {
+            value: "Blogging",
+            label: "Blogging",
+            icon: "",
+          },
+          {
+            value: "Storytelling",
+            label: "Storytelling",
+            icon: "",
+          },
+        ],
+      },
+      {
+        key: "performance",
+        label: "Performance",
+        icon: "🎭",
+        type: "multiselect",
+        searchable: false,
+        className: "w-[200px]",
+        options: [
+          {
+            value: "Dance",
+            label: "Dance",
+            icon: "",
+          },
+          {
+            value: "Music & Singing",
+            label: "Music & Singing",
+            icon: "",
+          },
+          {
+            value: "Spoken Word",
+            label: "Spoken Word",
+            icon: "",
+          },
+          {
+            value: "Theatre",
+            label: "Theatre",
+            icon: "",
+          },
+          {
+            value: "Fitness",
+            label: "Fitness",
+            icon: "",
+          },
+          {
+            value: "Culinary Arts",
+            label: "Culinary Arts",
+            icon: "",
+          },
+        ],
+      },
+      {
+        key: "digital",
+        label: "Digital",
+        icon: "💻",
+        type: "multiselect",
+        searchable: false,
+        className: "w-[200px]",
+        options: [
+          {
+            value: "AI Art & Generative Content",
+            label: "AI Art & Generative Content",
+            icon: "",
+          },
+          {
+            value: "Creative Coding",
+            label: "Creative Coding",
+            icon: "",
+          },
+          {
+            value: "3D Modelling",
+            label: "3D Modelling",
+            icon: "",
+          },
+        ],
+      },
+    ],
+  },
+];
+
+export const filterMaping = [
+  { name: "visuals", value: "Art & Mixed Media" },
+  { name: "visuals", value: "Illustration & Graphics" },
+  { name: "visuals", value: "Photography" },
+  { name: "motion", value: "Reels" },
+  { name: "motion", value: "Vlogging" },
+  { name: "motion", value: "Animation" },
+  { name: "motion", value: "Filmmaking" },
+  { name: "writing", value: "Copywriting" },
+  { name: "writing", value: "Blogging" },
+  { name: "writing", value: "Storytelling" },
+  { name: "performance", value: "Dance" },
+  { name: "performance", value: "Music & Singing" },
+  { name: "performance", value: "Spoken Word" },
+  { name: "performance", value: "Theatre" },
+  { name: "performance", value: "Fitness" },
+  { name: "performance", value: "Culinary Arts" },
+  { name: "digital", value: "AI Art & Generative Content" },
+  { name: "digital", value: "Creative Coding" },
+  { name: "digital", value: "3D Modelling" },
+];

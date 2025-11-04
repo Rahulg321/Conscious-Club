@@ -15,7 +15,7 @@ import ProjectCardSkeleton from "@/components/skeletons/project-card-skeleton";
 import ProfileCard from "@/components/profile-card";
 import ProfileCardSkeleton from "@/components/skeletons/profile-card-skeleton";
 import ProjectSheet from "@/components/project-sheet";
-import { Sparkles } from "lucide-react";
+// import { Sparkles } from "lucide-react";
 import { Session } from "next-auth";
 import { getPreviewMedia } from "@/lib/utils";
 
@@ -173,7 +173,7 @@ async function ProjectCount({
 
   return (
     <span className="text-gray-500">
-      {totalProjects} {totalProjects === 1 ? "project" : "projects"}
+      {totalProjects} {totalProjects === 1 ? "creation" : "creations"}
     </span>
   );
 }
