@@ -29,9 +29,12 @@ export const onboardingSchema = z.object({
     .min(1, "Name is required")
     .min(2, "Name must be at least 2 characters")
     .max(100, "Name must be less than 100 characters"),
-  gender: z.enum(["male", "female", "prefer_not_to_say"], {
-    message: "Please select your gender",
-  }),
+  gender: z.enum(
+    ["male", "female", "non-binary", "other", "prefer_not_to_say"],
+    {
+      message: "Please select your gender",
+    }
+  ),
   location: z
     .string()
     .min(1, "Location is required")
