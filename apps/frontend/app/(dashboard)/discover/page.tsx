@@ -17,7 +17,6 @@ import ProfileCardSkeleton from "@/components/skeletons/profile-card-skeleton";
 import ProjectSheet from "@/components/project-sheet";
 import { Sparkles } from "lucide-react";
 import { Session } from "next-auth";
-import { getPreviewMedia } from "@/lib/utils";
 
 export const metadata = {
   title: "Discover Projects",
@@ -235,14 +234,12 @@ async function FetchAndDisplayProjects({
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {projects?.map((project) => {
-          // Get first media item for preview (prefer images)
-          const firstMedia = getPreviewMedia(project.media);
           return (
             <DiscoverProjectCard
               key={project.id}
               projectId={project.id}
               projectCoverImage={
-                firstMedia || project.media?.[0] || "/placeholder.svg"
+                project.coverImage || project.media?.[0] || "/placeholder.svg"
               }
               projectName={project.name}
               tagName={project.tag || project.tags?.[0] || ""}
@@ -321,17 +318,13 @@ async function FetchAndDisplayMashupProjects({
           const creatorName = mashup.creatorName || "Unknown";
           const collaboratorName = mashup.collaboratorName || "Unknown";
 
-          // Get first media item for preview
-          const firstMedia =
-            (mashup.media && mashup.media.length > 0
-              ? mashup.media[0]
-              : "/placeholder.svg") || "/placeholder.svg";
-
           return (
             <DiscoverProjectCard
               key={mashup.id}
               projectId={mashup.id}
-              projectCoverImage={firstMedia}
+              projectCoverImage={
+                mashup.coverImage || mashup.media?.[0] || "/placeholder.svg"
+              }
               projectName={mashup.name}
               tagName="" // Mashups don't have tags in this view
               projectDescription={mashup.description}

@@ -41,7 +41,22 @@ const mediaFileSchema = z
     return file.size <= 5 * 1024 * 1024; // 5MB for images
   }, "File size exceeds the maximum allowed size (5MB for images, 50MB for videos)");
 
+const coverImageFileSchema = z
+  .instanceof(File)
+  .refine(
+    (file) => file.size <= 20 * 1024 * 1024,
+    "Cover image size must be less than 20MB"
+  )
+  .refine(
+    (file) =>
+      ["image/jpeg", "image/jpg", "image/png", "image/webp"].includes(
+        file.type
+      ),
+    "Cover image must be JPEG, JPG, PNG, or WebP"
+  );
+
 export const projectUploadSchema = z.object({
+  coverImage: coverImageFileSchema,
   media: z
     .array(mediaFileSchema)
     .min(1, "At least one media file is required")

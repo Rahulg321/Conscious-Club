@@ -12,17 +12,21 @@ const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
     fileSize: 200 * 1024 * 1024, // 200MB max file size
-    files: 4, // Max 4 files
+    files: 5, // Max 5 files (4 media + 1 cover image)
   },
 });
 
 const router = Router();
 
+// Use fields to handle both coverImage (single) and media (array)
 router.post(
   "/",
   authenticateToken,
   uploadProjectRateLimit,
-  upload.array("media", 4),
+  upload.fields([
+    { name: "coverImage", maxCount: 1 },
+    { name: "media", maxCount: 4 },
+  ]),
   async (req: Request, res: Response) => {
     const startTime = Date.now();
     console.log("🚀 [UPLOAD-PROJECT] Starting project upload request");
@@ -53,8 +57,6 @@ router.post(
         dedicatedToBrand,
         dedicatedToCause,
         dedicationReason,
-        isMashup,
-        collaboratorId,
       } = req.body;
 
       console.log("📝 [UPLOAD-PROJECT] Form data received:", {
@@ -65,20 +67,42 @@ router.post(
         dedicatedToBrand,
         dedicatedToCause,
         dedicationReason: dedicationReason?.substring(0, 100) + "...",
-        isMashup,
-        collaboratorId,
       });
 
-      const mediaFiles = req.files as Express.Multer.File[];
-      console.log("📁 [UPLOAD-PROJECT] Media files received:", {
-        fileCount: mediaFiles?.length || 0,
-        files: mediaFiles?.map((file) => ({
-          originalname: file.originalname,
-          mimetype: file.mimetype,
-          size: file.size,
-          bufferLength: file.buffer?.length,
-        })),
+      const files = req.files as {
+        coverImage?: Express.Multer.File[];
+        media?: Express.Multer.File[];
+      };
+
+      const coverImageFile = files?.coverImage?.[0];
+      const mediaFiles = files?.media || [];
+
+      console.log("📁 [UPLOAD-PROJECT] Files received:", {
+        coverImage: coverImageFile
+          ? {
+              originalname: coverImageFile.originalname,
+              mimetype: coverImageFile.mimetype,
+              size: coverImageFile.size,
+            }
+          : null,
+        mediaFiles: {
+          fileCount: mediaFiles.length,
+          files: mediaFiles.map((file) => ({
+            originalname: file.originalname,
+            mimetype: file.mimetype,
+            size: file.size,
+            bufferLength: file.buffer?.length,
+          })),
+        },
       });
+
+      if (!coverImageFile) {
+        console.error("❌ [UPLOAD-PROJECT] No cover image provided");
+        return res.status(400).json({
+          error: "Cover image is required",
+          code: "NO_COVER_IMAGE",
+        });
+      }
 
       if (!mediaFiles || mediaFiles.length === 0) {
         console.error("❌ [UPLOAD-PROJECT] No media files provided");
@@ -91,6 +115,7 @@ router.post(
       // Validate the data
       console.log("✅ [UPLOAD-PROJECT] Starting data validation");
       const validatedData = projectUploadSchema.safeParse({
+        coverImage: coverImageFile,
         media: mediaFiles,
         projectName,
         projectDescription,
@@ -114,6 +139,38 @@ router.post(
       }
 
       console.log("✅ [UPLOAD-PROJECT] Data validation successful");
+
+      // Upload cover image first
+      console.log(
+        "☁️ [UPLOAD-PROJECT] Starting cover image upload to cloud storage"
+      );
+      let coverImageUrl: string | null = null;
+      try {
+        coverImageUrl = await uploadFile(
+          validatedData.data.coverImage.buffer,
+          validatedData.data.coverImage.originalname
+        );
+        if (!coverImageUrl) {
+          console.error("❌ [UPLOAD-PROJECT] Cover image upload failed");
+          return res.status(500).json({
+            error: "Failed to upload cover image to cloud storage",
+            code: "COVER_IMAGE_UPLOAD_FAILED",
+          });
+        }
+        console.log("✅ [UPLOAD-PROJECT] Cover image uploaded successfully:", {
+          coverImageUrl,
+        });
+      } catch (error) {
+        console.error("❌ [UPLOAD-PROJECT] Error uploading cover image:", {
+          error: error instanceof Error ? error.message : String(error),
+          stack: error instanceof Error ? error.stack : undefined,
+        });
+        return res.status(500).json({
+          error: "Failed to upload cover image to cloud storage",
+          details: error instanceof Error ? error.message : "Unknown error",
+          code: "COVER_IMAGE_UPLOAD_ERROR",
+        });
+      }
 
       // Upload all media files
       let mediaUrls: string[] = [];
@@ -208,6 +265,7 @@ router.post(
           name: validatedData.data.projectName,
           link: validatedData.data.projectLink || null,
           description: validatedData.data.projectDescription,
+          coverImage: coverImageUrl,
           media: mediaUrls,
           tag: creatorRole,
           dedicatedToPerson: validatedData.data.dedicatedToPerson || null,
@@ -215,8 +273,8 @@ router.post(
           dedicatedToCause: validatedData.data.dedicatedToCause || null,
           dedicationReason: validatedData.data.dedicationReason || null,
           userId: user.id,
-          isMashup: isMashup === "true",
-          collaboratorId: collaboratorId ? String(collaboratorId) : null,
+          isMashup: false,
+          collaboratorId: null,
         };
 
         console.log("💾 [UPLOAD-PROJECT] Project data for insertion:", {
@@ -244,6 +302,8 @@ router.post(
           projectId: insertedProject.id,
           processingTime: `${processingTime}ms`,
           mediaCount: mediaUrls.length,
+          isMashup: false,
+          collaboratorId: null,
         });
 
         res.json({

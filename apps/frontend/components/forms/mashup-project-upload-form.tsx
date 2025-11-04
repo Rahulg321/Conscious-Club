@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useTransition } from "react";
+import React, { useEffect, useRef, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/lib/utils";
@@ -17,9 +17,9 @@ import {
   FormDescription,
 } from "../ui/form";
 import {
-  projectUploadSchema,
-  type ProjectUploadFormData,
-} from "@/lib/schemas/project-upload-schema";
+  mashupProjectUploadSchema,
+  type MashupProjectUploadFormData,
+} from "@/lib/schemas/mashup-project-upload-schema";
 import { toast } from "sonner";
 import { X, Plus, Upload, PlusCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -36,18 +36,20 @@ interface CoverImagePreview {
   file: File;
 }
 
-function ProjectUploadForm({
+function MashupProjectUploadForm({
   setDialogOpen,
+  collaboratorId,
   userSession,
 }: {
   setDialogOpen: (open: boolean) => void;
   userSession: Session;
+  collaboratorId: string;
 }) {
   const [isSubmitting, startTransition] = useTransition();
   const router = useRouter();
 
-  const form = useForm<ProjectUploadFormData>({
-    resolver: zodResolver(projectUploadSchema),
+  const form = useForm<MashupProjectUploadFormData>({
+    resolver: zodResolver(mashupProjectUploadSchema),
     defaultValues: {
       projectName: "",
       projectDescription: "",
@@ -58,6 +60,7 @@ function ProjectUploadForm({
       dedicationReason: "",
       media: [],
       coverImage: undefined,
+      collaboratorId: collaboratorId,
     },
   });
 
@@ -67,7 +70,11 @@ function ProjectUploadForm({
   const mediaRef = useRef<HTMLInputElement>(null);
   const coverImageRef = useRef<HTMLInputElement>(null);
 
-  // Revoke object URLs on unmount
+  // Sync collaboratorId prop with form state
+  useEffect(() => {
+    form.setValue("collaboratorId", collaboratorId);
+  }, [collaboratorId, form]);
+
   useEffect(() => {
     return () => {
       mediaPreviews.forEach((preview) => URL.revokeObjectURL(preview.url));
@@ -79,47 +86,21 @@ function ProjectUploadForm({
 
   const validateVideoDuration = (file: File): Promise<boolean> => {
     return new Promise((resolve) => {
-      console.log("🎬 [FRONTEND] Validating video duration for:", {
-        fileName: file.name,
-        fileSize: file.size,
-        fileType: file.type,
-      });
-
       const videoElement = document.createElement("video");
       videoElement.preload = "metadata";
 
       videoElement.onloadedmetadata = () => {
         window.URL.revokeObjectURL(videoElement.src);
         const duration = videoElement.duration;
-
-        console.log("🎬 [FRONTEND] Video metadata loaded:", {
-          fileName: file.name,
-          duration: duration,
-          isValid: duration >= 5 && duration <= 20,
-        });
-
         if (duration < 5 || duration > 20) {
-          console.error("❌ [FRONTEND] Video duration validation failed:", {
-            fileName: file.name,
-            duration: duration,
-            required: "5-20 seconds",
-          });
           toast.error("Video must be between 5 and 20 seconds long");
           resolve(false);
         } else {
-          console.log(
-            "✅ [FRONTEND] Video duration validation passed:",
-            file.name
-          );
           resolve(true);
         }
       };
 
-      videoElement.onerror = (error) => {
-        console.error("❌ [FRONTEND] Error loading video file:", {
-          fileName: file.name,
-          error: error,
-        });
+      videoElement.onerror = () => {
         toast.error("Error loading video file");
         resolve(false);
       };
@@ -128,38 +109,10 @@ function ProjectUploadForm({
     });
   };
 
-  const onSubmit = async (data: ProjectUploadFormData) => {
-    console.log("🚀 [FRONTEND] Starting project upload process");
-
-    // Validate all videos have correct duration
-    const videoFiles = data.media.filter((file) =>
-      file.type.startsWith("video/")
-    );
-
-    console.log("🎬 [FRONTEND] Video validation:", {
-      totalVideos: videoFiles.length,
-      videoFiles: videoFiles.map((f) => ({
-        name: f.name,
-        size: f.size,
-        type: f.type,
-      })),
-    });
-
-    for (const videoFile of videoFiles) {
-      const isValid = await validateVideoDuration(videoFile);
-      if (!isValid) {
-        console.error(
-          "❌ [FRONTEND] Video validation failed for:",
-          videoFile.name
-        );
-        return;
-      }
-    }
-
+  const onSubmit = async (data: MashupProjectUploadFormData) => {
+    console.log("🚀 [MASHUP] On submit called with data:", data);
     startTransition(async () => {
       const startTime = Date.now();
-      console.log("📤 [FRONTEND] Starting file upload to backend");
-
       try {
         const formData = new FormData();
         formData.append("projectName", data.projectName);
@@ -169,35 +122,17 @@ function ProjectUploadForm({
         formData.append("dedicatedToBrand", data.dedicatedToBrand || "");
         formData.append("dedicatedToCause", data.dedicatedToCause || "");
         formData.append("dedicationReason", data.dedicationReason || "");
-        // Standalone project upload (no mashup fields)
+        formData.append("collaboratorId", collaboratorId);
 
-        // Append cover image
         if (data.coverImage) {
           formData.append("coverImage", data.coverImage);
         }
 
-        console.log("📋 [FRONTEND] Form data prepared:", {
-          projectName: data.projectName,
-          projectDescription:
-            data.projectDescription?.substring(0, 100) + "...",
-          projectLink: data.projectLink,
-          isMashup: false,
-          collaboratorId: undefined,
-          mediaCount: data.media.length,
-        });
-
-        data.media.forEach((file, index) => {
-          console.log(`📎 [FRONTEND] Adding file ${index + 1}:`, {
-            name: file.name,
-            size: file.size,
-            type: file.type,
-          });
+        data.media.forEach((file) => {
           formData.append("media", file);
         });
 
-        const uploadUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/upload-project`;
-        console.log("🌐 [FRONTEND] Making request to:", uploadUrl);
-
+        const uploadUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/upload-mashup-project`;
         const response = await fetch(uploadUrl, {
           method: "POST",
           headers: {
@@ -206,53 +141,22 @@ function ProjectUploadForm({
           body: formData,
         });
 
-        console.log("📡 [FRONTEND] Response received:", {
-          status: response.status,
-          statusText: response.statusText,
-          ok: response.ok,
-          headers: Object.fromEntries(response.headers.entries()),
-        });
-
         if (!response.ok) {
-          let errorData;
+          let errorData: any = undefined;
           try {
             errorData = await response.json();
-            console.error(
-              "❌ [FRONTEND] Error response from server:",
-              errorData
-            );
-          } catch (parseError) {
-            console.error(
-              "❌ [FRONTEND] Failed to parse error response:",
-              parseError
-            );
-            errorData = { error: "Unknown error occurred" };
-          }
-
+          } catch {}
           const errorMessage =
             errorData?.details ||
             errorData?.error ||
             "Failed to upload project";
-          const errorCode = errorData?.code || "UNKNOWN_ERROR";
-
           toast.error(`Upload failed: ${errorMessage}`);
-          throw new Error(
-            `Server error (${response.status}): ${errorMessage} [${errorCode}]`
-          );
+          throw new Error(`Server error (${response.status}): ${errorMessage}`);
         }
 
-        const result = await response.json();
-        const processingTime = Date.now() - startTime;
-
-        console.log("✅ [FRONTEND] Project uploaded successfully:", {
-          result,
-          processingTime: `${processingTime}ms`,
-          projectId: result.insertedProject?.id,
-        });
-
+        await response.json();
         toast.success("Project uploaded successfully!");
 
-        // Reset form on success
         form.reset();
         mediaPreviews.forEach((preview) => URL.revokeObjectURL(preview.url));
         setMediaPreviews([]);
@@ -263,18 +167,10 @@ function ProjectUploadForm({
         setDialogOpen(false);
         router.refresh();
       } catch (error) {
-        const processingTime = Date.now() - startTime;
-        console.error("❌ [FRONTEND] Error uploading project:", {
-          error: error instanceof Error ? error.message : String(error),
-          stack: error instanceof Error ? error.stack : undefined,
-          processingTime: `${processingTime}ms`,
-          userAgent: navigator.userAgent,
-          url: window.location.href,
-        });
-
         const errorMessage =
           error instanceof Error ? error.message : "Unknown error occurred";
         toast.error(`Upload failed: ${errorMessage}`);
+        console.error("Mashup upload error", error);
       }
     });
   };
@@ -282,13 +178,36 @@ function ProjectUploadForm({
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={(e) => {
+          console.log("📝 [MASHUP] Form onSubmit event fired!");
+          e.preventDefault();
+          form.handleSubmit(
+            (data) => {
+              console.log("✅ [MASHUP] Form validation passed:", data);
+              onSubmit(data);
+            },
+            (errors) => {
+              console.error("❌ [MASHUP] Form validation failed:", errors);
+              // Show first error
+              const firstError = Object.values(errors)[0];
+              if (firstError?.message) {
+                toast.error(firstError.message);
+              }
+            }
+          )();
+        }}
         className={cn("grid items-start gap-3 text-sm")}
       >
+        {/* Hidden field for collaboratorId - required by schema but not user input */}
+        <FormField
+          control={form.control}
+          name="collaboratorId"
+          render={({ field }) => <input type="hidden" {...field} />}
+        />
         <FormField
           control={form.control}
           name="coverImage"
-          render={({ field: { onChange, value, ...field } }) => (
+          render={({ field: { onChange, value, ref: rhfRef, ...field } }) => (
             <FormItem>
               <FormLabel className="text-sm font-medium">Cover Image</FormLabel>
               <FormDescription className="text-xs mt-0 p-0">
@@ -298,29 +217,34 @@ function ProjectUploadForm({
                 <div className="space-y-2 mt-2">
                   <input
                     {...field}
-                    ref={coverImageRef}
+                    ref={(e) => {
+                      console.log("🔗 [MASHUP] Cover input ref callback:", e);
+                      rhfRef(e);
+                      coverImageRef.current = e;
+                    }}
                     type="file"
                     accept="image/jpeg,image/jpg,image/png,image/webp"
-                    className="hidden"
+                    className=""
                     onChange={(e) => {
                       const file = e.target.files?.[0];
+                      console.log(
+                        "🖼️ [FRONTEND] Cover image selected:",
+                        e.target.files
+                      );
+
                       if (file) {
                         console.log("🖼️ [FRONTEND] Cover image selected:", {
                           name: file.name,
                           size: file.size,
                           type: file.type,
                         });
-                        onChange(file);
 
-                        // Create preview
+                        onChange(file);
                         if (coverImagePreview) {
                           URL.revokeObjectURL(coverImagePreview.url);
                         }
                         const previewUrl = URL.createObjectURL(file);
-                        setCoverImagePreview({
-                          url: previewUrl,
-                          file,
-                        });
+                        setCoverImagePreview({ url: previewUrl, file });
                       }
                     }}
                   />
@@ -329,7 +253,23 @@ function ProjectUploadForm({
                     <Button
                       type="button"
                       variant="outline"
-                      onClick={() => coverImageRef.current?.click()}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        console.log(
+                          "🖼️ [MASHUP] Cover button clicked, ref:",
+                          coverImageRef.current
+                        );
+                        if (coverImageRef.current) {
+                          // Use setTimeout to ensure browser treats it as user-initiated
+                          setTimeout(() => {
+                            coverImageRef.current?.click();
+                          }, 0);
+                        } else {
+                          console.error(
+                            "❌ [MASHUP] coverImageRef.current is null!"
+                          );
+                        }
+                      }}
                       className="w-full"
                       size="sm"
                     >
@@ -373,7 +313,7 @@ function ProjectUploadForm({
         <FormField
           control={form.control}
           name="media"
-          render={({ field: { onChange, value, ...field } }) => (
+          render={({ field: { onChange, value, ref: rhfRef, ...field } }) => (
             <FormItem>
               <FormLabel className="text-sm font-medium ">
                 Upload Media
@@ -386,86 +326,37 @@ function ProjectUploadForm({
                 <div className="space-y-2 mt-2">
                   <input
                     {...field}
-                    ref={mediaRef}
+                    ref={(e) => {
+                      console.log("🔗 [MASHUP] Media input ref callback:", e);
+                      rhfRef(e);
+                      mediaRef.current = e;
+                    }}
                     type="file"
                     accept="image/jpeg,image/jpg,image/png,image/webp,video/mp4,video/webm,video/quicktime"
                     multiple
-                    className="hidden"
+                    className=""
                     onChange={async (e) => {
                       const files = Array.from(e.target.files || []);
                       const currentMedia = value || [];
 
-                      console.log("📁 [FRONTEND] File selection changed:", {
-                        newFiles: files.length,
-                        currentMedia: currentMedia.length,
-                        totalAfterAdd: currentMedia.length + files.length,
-                        files: files.map((f) => ({
-                          name: f.name,
-                          size: f.size,
-                          type: f.type,
-                        })),
-                      });
-
-                      // Check if total count exceeds 4
                       if (currentMedia.length + files.length > 4) {
-                        console.error(
-                          "❌ [FRONTEND] Too many files selected:",
-                          {
-                            current: currentMedia.length,
-                            new: files.length,
-                            total: currentMedia.length + files.length,
-                            max: 4,
-                          }
-                        );
                         toast.error("You can only upload up to 4 media files");
                         return;
                       }
 
-                      // Validate video durations before adding
                       const validFiles: File[] = [];
-                      console.log(
-                        "🎬 [FRONTEND] Starting video validation for new files"
-                      );
-
                       for (const file of files) {
                         if (file.type.startsWith("video/")) {
-                          console.log(
-                            "🎬 [FRONTEND] Validating video file:",
-                            file.name
-                          );
                           const isValid = await validateVideoDuration(file);
-                          if (isValid) {
-                            validFiles.push(file);
-                            console.log(
-                              "✅ [FRONTEND] Video validation passed:",
-                              file.name
-                            );
-                          } else {
-                            console.error(
-                              "❌ [FRONTEND] Video validation failed:",
-                              file.name
-                            );
-                          }
+                          if (isValid) validFiles.push(file);
                         } else {
-                          console.log(
-                            "🖼️ [FRONTEND] Image file added:",
-                            file.name
-                          );
                           validFiles.push(file);
                         }
                       }
 
-                      console.log("📁 [FRONTEND] File validation complete:", {
-                        totalFiles: files.length,
-                        validFiles: validFiles.length,
-                        rejectedFiles: files.length - validFiles.length,
-                      });
-
                       if (validFiles.length > 0) {
                         const newMedia = [...currentMedia, ...validFiles];
                         onChange(newMedia);
-
-                        // Create preview URLs
                         const newPreviews: MediaPreview[] = validFiles.map(
                           (file) => ({
                             url: URL.createObjectURL(file),
@@ -476,11 +367,6 @@ function ProjectUploadForm({
                           })
                         );
                         setMediaPreviews((prev) => [...prev, ...newPreviews]);
-
-                        console.log("✅ [FRONTEND] Media previews updated:", {
-                          totalPreviews: newMedia.length,
-                          newPreviews: newPreviews.length,
-                        });
                       }
 
                       // Reset input
@@ -494,7 +380,23 @@ function ProjectUploadForm({
                     <Button
                       type="button"
                       variant="outline"
-                      onClick={() => mediaRef.current?.click()}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        console.log(
+                          "📁 [MASHUP] Media button clicked, ref:",
+                          mediaRef.current
+                        );
+                        if (mediaRef.current) {
+                          // Use setTimeout to ensure browser treats it as user-initiated
+                          setTimeout(() => {
+                            mediaRef.current?.click();
+                          }, 0);
+                        } else {
+                          console.error(
+                            "❌ [MASHUP] mediaRef.current is null!"
+                          );
+                        }
+                      }}
                       className="w-full"
                       size="sm"
                     >
@@ -532,8 +434,6 @@ function ProjectUploadForm({
                                 const newMedia = [...(value || [])];
                                 newMedia.splice(index, 1);
                                 onChange(newMedia);
-
-                                // Revoke and update previews
                                 URL.revokeObjectURL(preview.url);
                                 const newPreviews = [...mediaPreviews];
                                 newPreviews.splice(index, 1);
@@ -550,7 +450,23 @@ function ProjectUploadForm({
                         <Button
                           type="button"
                           variant="outline"
-                          onClick={() => mediaRef.current?.click()}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            console.log(
+                              "➕ [MASHUP] Add More button clicked, ref:",
+                              mediaRef.current
+                            );
+                            if (mediaRef.current) {
+                              // Use setTimeout to ensure browser treats it as user-initiated
+                              setTimeout(() => {
+                                mediaRef.current?.click();
+                              }, 0);
+                            } else {
+                              console.error(
+                                "❌ [MASHUP] mediaRef.current is null!"
+                              );
+                            }
+                          }}
                           className="w-full"
                           size="sm"
                         >
@@ -687,7 +603,20 @@ function ProjectUploadForm({
           />
         </div>
 
-        <Button type="submit" disabled={isSubmitting} className="h-9">
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+          className="h-9 w-full"
+          onClick={(e) => {
+            console.log("🔘 [MASHUP] Submit button clicked!");
+            console.log("🔘 [MASHUP] Form state:", {
+              isValid: form.formState.isValid,
+              errors: form.formState.errors,
+              values: form.getValues(),
+            });
+            // Don't prevent default - let form submission happen
+          }}
+        >
           {isSubmitting ? "Saving..." : "Save"}
         </Button>
       </form>
@@ -695,4 +624,4 @@ function ProjectUploadForm({
   );
 }
 
-export default ProjectUploadForm;
+export default MashupProjectUploadForm;

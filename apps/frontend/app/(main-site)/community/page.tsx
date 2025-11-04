@@ -12,7 +12,6 @@ import ProjectSheet from "../../../components/project-sheet";
 import { Session } from "next-auth";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import { getPreviewMedia } from "@/lib/utils";
 
 export const metadata = {
   title: "Community",
@@ -183,14 +182,12 @@ async function FetchAndDisplayProjects({
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {projects?.map((project) => {
-          // Get first media item for preview
-          const firstMedia = getPreviewMedia(project.media);
           return (
             <CommunityProjectCard
               key={project.id}
               projectId={project.id}
               projectCoverImage={
-                firstMedia || project.media?.[0] || "/placeholder.svg"
+                project.coverImage || project.media?.[0] || "/placeholder.svg"
               }
               projectName={project.name}
               tagName={project.tag || project.tags?.[0] || ""}

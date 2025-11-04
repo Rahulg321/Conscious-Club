@@ -1,46 +1,61 @@
 import { z } from "zod";
 
+const imageFileSchema = z
+  .instanceof(File)
+  .refine(
+    (file) => file.size <= 5 * 1024 * 1024,
+    "Image size must be less than 5MB"
+  )
+  .refine(
+    (file) =>
+      ["image/jpeg", "image/jpg", "image/png", "image/webp"].includes(
+        file.type
+      ),
+    "Only JPEG, JPG, PNG, and WebP files are allowed"
+  );
+
+const videoFileSchema = z
+  .instanceof(File)
+  .refine(
+    (file) => file.size <= 50 * 1024 * 1024,
+    "Video size must be less than 50MB"
+  )
+  .refine(
+    (file) =>
+      ["video/mp4", "video/webm", "video/quicktime"].includes(file.type),
+    "Only MP4, WebM, and MOV video files are allowed"
+  );
+
 const mediaFileSchema = z
-  .object({
-    fieldname: z.string(),
-    originalname: z.string(),
-    encoding: z.string(),
-    mimetype: z.string(),
-    buffer: z.instanceof(Buffer),
-    size: z.number(),
-  })
+  .instanceof(File)
   .refine((file) => {
     const imageTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
     const videoTypes = ["video/mp4", "video/webm", "video/quicktime"];
-    return [...imageTypes, ...videoTypes].includes(file.mimetype);
+    return [...imageTypes, ...videoTypes].includes(file.type);
   }, "Only images (JPEG, JPG, PNG, WebP) or videos (MP4, WebM, MOV) are allowed")
   .refine((file) => {
     const videoTypes = ["video/mp4", "video/webm", "video/quicktime"];
-    if (videoTypes.includes(file.mimetype)) {
-      return file.size <= 200 * 1024 * 1024; // 200MB for videos
+    if (videoTypes.includes(file.type)) {
+      return file.size <= 50 * 1024 * 1024; // 50MB for videos
     }
-    return file.size <= 20 * 1024 * 1024; // 20MB for images
-  }, "File size exceeds the maximum allowed size (20MB for images, 200MB for videos)");
+    return file.size <= 5 * 1024 * 1024; // 5MB for images
+  }, "File size exceeds the maximum allowed size (5MB for images, 50MB for videos)");
 
 const coverImageFileSchema = z
-  .object({
-    fieldname: z.string(),
-    originalname: z.string(),
-    encoding: z.string(),
-    mimetype: z.string(),
-    buffer: z.instanceof(Buffer),
-    size: z.number(),
-  })
-  .refine((file) => {
-    const imageTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
-    return imageTypes.includes(file.mimetype);
-  }, "Cover image must be JPEG, JPG, PNG, or WebP")
+  .instanceof(File)
   .refine(
     (file) => file.size <= 20 * 1024 * 1024,
     "Cover image size must be less than 20MB"
+  )
+  .refine(
+    (file) =>
+      ["image/jpeg", "image/jpg", "image/png", "image/webp"].includes(
+        file.type
+      ),
+    "Cover image must be JPEG, JPG, PNG, or WebP"
   );
 
-export const projectUploadSchema = z.object({
+export const mashupProjectUploadSchema = z.object({
   coverImage: coverImageFileSchema,
   media: z
     .array(mediaFileSchema)
@@ -79,6 +94,9 @@ export const projectUploadSchema = z.object({
     .string()
     .max(200, "Dedication reason must be less than 200 characters")
     .optional(),
+  collaboratorId: z.string().min(1, "Collaborator ID is required"),
 });
 
-export type ProjectUploadFormData = z.infer<typeof projectUploadSchema>;
+export type MashupProjectUploadFormData = z.infer<
+  typeof mashupProjectUploadSchema
+>;
