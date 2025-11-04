@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { GENDER_OPTIONS } from "../../config";
 import { OnboardingFormData } from "../../types";
+import AddressInputField from "@/components/address-input-field";
 
 interface ProfileCompletionStepProps {
   formData: OnboardingFormData;
@@ -89,10 +90,10 @@ export const ProfileCompletionStep = ({
       {/* Location Field */}
       <div className="space-y-2">
         <Label htmlFor="location">Location</Label>
-        <Input
+        <AddressInputField
           id="location"
           value={formData.location}
-          onChange={(e) => updateFormData("location", e.target.value)}
+          onChange={(value) => updateFormData("location", value)}
           placeholder="Enter your location (city, country)"
         />
       </div>
@@ -108,7 +109,6 @@ export const ProfileCompletionStep = ({
         />
       </div>
 
-      {/* Date of Birth */}
       <div className="space-y-2">
         <Label htmlFor="dateOfBirth">Date of Birth</Label>
         <Input
@@ -116,8 +116,20 @@ export const ProfileCompletionStep = ({
           type="date"
           value={formData.dateOfBirth}
           onChange={(e) => updateFormData("dateOfBirth", e.target.value)}
+          max={(() => {
+            const today = new Date();
+            const maxDate = new Date(
+              today.getFullYear() - 14,
+              today.getMonth(),
+              today.getDate()
+            );
+            return maxDate.toISOString().split("T")[0];
+          })()}
           className="w-full"
         />
+        <p className="text-xs text-muted-foreground">
+          You must be at least 14 years old to use this platform
+        </p>
       </div>
     </div>
   );

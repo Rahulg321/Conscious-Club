@@ -46,6 +46,8 @@ export const DISCIPLINE_TO_ROLES: Record<string, string[]> = {
 export const GENDER_OPTIONS = [
   { value: "male", label: "Male" },
   { value: "female", label: "Female" },
+  { value: "non-binary", label: "Non-binary" },
+  { value: "other", label: "Other" },
   { value: "prefer-not-to-say", label: "Prefer not to say" },
 ] as const;
 

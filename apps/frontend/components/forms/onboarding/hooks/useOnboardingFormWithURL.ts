@@ -72,6 +72,22 @@ export const useOnboardingFormWithURL = () => {
     }
     if (!data.dateOfBirth) {
       errors.push("Date of birth is required");
+    } else {
+      // Check if user is at least 14 years old
+      const birthDate = new Date(data.dateOfBirth);
+      const today = new Date();
+      const age = today.getFullYear() - birthDate.getFullYear();
+      const monthDiff = today.getMonth() - birthDate.getMonth();
+      const dayDiff = today.getDate() - birthDate.getDate();
+      
+      // Calculate actual age considering month and day
+      const actualAge = monthDiff < 0 || (monthDiff === 0 && dayDiff < 0) 
+        ? age - 1 
+        : age;
+      
+      if (actualAge < 14) {
+        errors.push("You must be at least 14 years old to use this platform");
+      }
     }
     return errors;
   };
