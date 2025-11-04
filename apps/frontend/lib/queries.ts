@@ -1172,7 +1172,11 @@ export async function getProjectByIdWithStats(
 
     // Check follow status for creator
     let creatorIsFollowing = false;
-    if (currentUserId && foundProject.creatorId && currentUserId !== foundProject.creatorId) {
+    if (
+      currentUserId &&
+      foundProject.creatorId &&
+      currentUserId !== foundProject.creatorId
+    ) {
       const creatorFollowCheck = await db
         .select()
         .from(follows)
@@ -1207,33 +1211,10 @@ export async function getProjectByIdWithStats(
     // Get follow counts for creator
     let creatorFollowersCount = { count: 0 };
     let creatorFollowingCount = { count: 0 };
-    if (foundProject.creatorId) {
-      [creatorFollowersCount] = await db
-        .select({ count: sql<number>`COUNT(*)` })
-        .from(follows)
-        .where(eq(follows.followingId, foundProject.creatorId));
-
-      [creatorFollowingCount] = await db
-        .select({ count: sql<number>`COUNT(*)` })
-        .from(follows)
-        .where(eq(follows.followerId, foundProject.creatorId));
-    }
 
     // Get follow counts for collaborator (if exists)
     let collaboratorFollowersCount = { count: 0 };
     let collaboratorFollowingCount = { count: 0 };
-    if (foundProject.collaboratorId) {
-      [collaboratorFollowersCount] = await db
-        .select({ count: sql<number>`COUNT(*)` })
-        .from(follows)
-        .where(eq(follows.followingId, foundProject.collaboratorId));
-
-      [collaboratorFollowingCount] = await db
-        .select({ count: sql<number>`COUNT(*)` })
-        .from(follows)
-        .where(eq(follows.followerId, foundProject.collaboratorId));
-    }
-
     // Check if current user liked this project
     let isLiked = false;
     if (currentUserId) {
