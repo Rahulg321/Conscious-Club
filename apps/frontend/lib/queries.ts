@@ -318,6 +318,7 @@ export async function getFilteredMashupProjects(
         name: project.name,
         link: project.link,
         description: project.description,
+        coverImage: project.coverImage,
         media: project.media,
         logoImage: project.logoImage,
         userId: project.userId,
@@ -516,6 +517,7 @@ export async function getFilteredProjects(
         name: project.name,
         link: project.link,
         description: project.description,
+        coverImage: project.coverImage,
         media: project.media,
         logoImage: project.logoImage,
         userId: project.userId,
@@ -549,6 +551,7 @@ export async function getFilteredProjects(
       name: row.name,
       link: row.link,
       description: row.description,
+      coverImage: row.coverImage,
       media: row.media,
       logoImage: row.logoImage,
       userId: row.userId,
@@ -1099,12 +1102,21 @@ export async function getUserPinnedBravoImage(userId: string) {
 }
 
 /**
- * Get a project by ID with likes and comments count
+ * Get a project by ID with likes and comments count, creator/collaborator info, and follow status
  * @param projectId - The ID of the project
- * @returns The project with likes and comments count
+ * @param currentUserId - The ID of the current user (for checking follow status)
+ * @returns The project with all related information
  */
-export async function getProjectByIdWithStats(projectId: string) {
+export async function getProjectByIdWithStats(
+  projectId: string,
+  currentUserId?: string
+) {
   try {
+    // Create aliases for creator and collaborator users
+    const creator = alias(user, "creator");
+    const collaborator = alias(user, "collaborator");
+
+    // Get project with creator and collaborator info
     const [foundProject] = await db
       .select({
         id: project.id,
@@ -1118,15 +1130,153 @@ export async function getProjectByIdWithStats(projectId: string) {
         dedicatedToCause: project.dedicatedToCause,
         dedicationReason: project.dedicationReason,
         userId: project.userId,
+        isMashup: project.isMashup,
+        collaboratorId: project.collaboratorId,
         createdAt: project.createdAt,
         updatedAt: project.updatedAt,
         likesCount: sql<number>`COALESCE((${sql`SELECT COUNT(*) FROM ${projectLikes} WHERE ${projectLikes.projectId} = ${project.id}`}), 0)`,
         commentsCount: sql<number>`COALESCE((${sql`SELECT COUNT(*) FROM ${projectComments} WHERE ${projectComments.projectId} = ${project.id}`}), 0)`,
+        // Creator info
+        creatorId: creator.id,
+        creatorName: creator.name,
+        creatorImage: creator.image,
+        creatorLocation: creator.location,
+        creatorRole: creator.role,
+        // Collaborator info
+        collaboratorName: collaborator.name,
+        collaboratorImage: collaborator.image,
+        collaboratorLocation: collaborator.location,
+        collaboratorRole: collaborator.role,
       })
       .from(project)
+      .leftJoin(creator, eq(project.userId, creator.id))
+      .leftJoin(collaborator, eq(project.collaboratorId, collaborator.id))
       .where(eq(project.id, projectId));
 
-    return foundProject;
+    if (!foundProject) {
+      return null;
+    }
+
+    // Get tags for the project
+    const projectTagsResult = await db
+      .select({
+        tagName: tags.name,
+      })
+      .from(projectTags)
+      .leftJoin(tags, eq(projectTags.tagId, tags.id))
+      .where(eq(projectTags.projectId, projectId));
+
+    const tagsArray = projectTagsResult
+      .map((row) => row.tagName)
+      .filter((tag): tag is string => Boolean(tag));
+
+    // Check follow status for creator
+    let creatorIsFollowing = false;
+    if (currentUserId && foundProject.creatorId && currentUserId !== foundProject.creatorId) {
+      const creatorFollowCheck = await db
+        .select()
+        .from(follows)
+        .where(
+          and(
+            eq(follows.followerId, currentUserId),
+            eq(follows.followingId, foundProject.creatorId)
+          )
+        );
+      creatorIsFollowing = creatorFollowCheck.length > 0;
+    }
+
+    // Check follow status for collaborator
+    let collaboratorIsFollowing = false;
+    if (
+      currentUserId &&
+      foundProject.collaboratorId &&
+      currentUserId !== foundProject.collaboratorId
+    ) {
+      const collaboratorFollowCheck = await db
+        .select()
+        .from(follows)
+        .where(
+          and(
+            eq(follows.followerId, currentUserId),
+            eq(follows.followingId, foundProject.collaboratorId)
+          )
+        );
+      collaboratorIsFollowing = collaboratorFollowCheck.length > 0;
+    }
+
+    // Get follow counts for creator
+    let creatorFollowersCount = { count: 0 };
+    let creatorFollowingCount = { count: 0 };
+    if (foundProject.creatorId) {
+      [creatorFollowersCount] = await db
+        .select({ count: sql<number>`COUNT(*)` })
+        .from(follows)
+        .where(eq(follows.followingId, foundProject.creatorId));
+
+      [creatorFollowingCount] = await db
+        .select({ count: sql<number>`COUNT(*)` })
+        .from(follows)
+        .where(eq(follows.followerId, foundProject.creatorId));
+    }
+
+    // Get follow counts for collaborator (if exists)
+    let collaboratorFollowersCount = { count: 0 };
+    let collaboratorFollowingCount = { count: 0 };
+    if (foundProject.collaboratorId) {
+      [collaboratorFollowersCount] = await db
+        .select({ count: sql<number>`COUNT(*)` })
+        .from(follows)
+        .where(eq(follows.followingId, foundProject.collaboratorId));
+
+      [collaboratorFollowingCount] = await db
+        .select({ count: sql<number>`COUNT(*)` })
+        .from(follows)
+        .where(eq(follows.followerId, foundProject.collaboratorId));
+    }
+
+    // Check if current user liked this project
+    let isLiked = false;
+    if (currentUserId) {
+      const likeCheck = await db
+        .select()
+        .from(projectLikes)
+        .where(
+          and(
+            eq(projectLikes.projectId, projectId),
+            eq(projectLikes.userId, currentUserId)
+          )
+        );
+      isLiked = likeCheck.length > 0;
+    }
+
+    return {
+      ...foundProject,
+      tags: tagsArray,
+      likeCount: Number(foundProject.likesCount || 0),
+      isLiked,
+      creator: {
+        id: foundProject.creatorId,
+        name: foundProject.creatorName,
+        image: foundProject.creatorImage,
+        location: foundProject.creatorLocation,
+        role: foundProject.creatorRole,
+        isFollowing: creatorIsFollowing,
+        followersCount: Number(creatorFollowersCount?.count || 0),
+        followingCount: Number(creatorFollowingCount?.count || 0),
+      },
+      collaborator: foundProject.collaboratorId
+        ? {
+            id: foundProject.collaboratorId,
+            name: foundProject.collaboratorName,
+            image: foundProject.collaboratorImage,
+            location: foundProject.collaboratorLocation,
+            role: foundProject.collaboratorRole,
+            isFollowing: collaboratorIsFollowing,
+            followersCount: Number(collaboratorFollowersCount?.count || 0),
+            followingCount: Number(collaboratorFollowingCount?.count || 0),
+          }
+        : null,
+    };
   } catch (error) {
     console.log(
       "An error occurred trying to get project by id with stats",

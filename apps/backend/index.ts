@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import uploadProjectRouter from "@/routes/upload-project";
+import uploadMashupProjectRouter from "@/routes/upload-mashup-project";
 import updateProjectRouter from "@/routes/update-project";
 import onboardingRouter from "@/routes/onboarding";
 import testRateLimitRouter from "@/routes/test-rate-limit";
@@ -17,6 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 app.use("/upload-project", uploadProjectRouter);
+app.use("/upload-mashup-project", uploadMashupProjectRouter);
 app.use("/update-project", updateProjectRouter);
 app.use("/onboarding", onboardingRouter);
 app.use("/test-rate-limit", testRateLimitRouter);

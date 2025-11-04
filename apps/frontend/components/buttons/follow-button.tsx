@@ -11,10 +11,12 @@ export default function FollowButton({
   userId,
   isFollowing: initialIsFollowing,
   className,
+  onFollowChange,
 }: {
   userId: string;
   isFollowing: boolean;
   className?: string;
+  onFollowChange?: (isFollowing: boolean) => void;
 }) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
@@ -29,6 +31,10 @@ export default function FollowButton({
           toast.error(result.error);
         } else {
           toast.success(result.success || "Action completed successfully");
+          // Call callback if provided
+          if (onFollowChange) {
+            onFollowChange(!initialIsFollowing);
+          }
           // Refresh the page to update follow status
           router.refresh();
         }

@@ -190,6 +190,20 @@
       "when": 1762008170384,
       "tag": "0026_nostalgic_glorian",
       "breakpoints": true
+    },
+    {
+      "idx": 27,
+      "version": "7",
+      "when": 1762249034019,
+      "tag": "0027_dazzling_dracula",
+      "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "7",
+      "when": 1762249158293,
+      "tag": "0028_minor_lake",
+      "breakpoints": true
     }
   ]
 }

@@ -2,9 +2,7 @@ import Link from "next/link";
 import { Button } from "./ui/button";
 import DeleteProjectAlert from "./buttons/delete-project-alert";
 import Image from "next/image";
-import { getPreviewMedia } from "@/lib/utils";
-import { isVideo } from "@/lib/utils";
-import { Sparkles, Eye, ExternalLink, Edit, Trash2 } from "lucide-react";
+import { Sparkles, Eye, ExternalLink, Edit } from "lucide-react";
 
 export default function ProjectCard({
   project,
@@ -17,29 +15,21 @@ export default function ProjectCard({
   collaboratorName?: string;
   isOwnProfile?: boolean;
 }) {
-  const previewMedia = getPreviewMedia(project.media);
-  const isPreviewVideo = previewMedia ? isVideo(previewMedia) : false;
+  // Use coverImage if available, otherwise fall back to first media item
+  const coverImage = project.coverImage || (project.media && project.media.length > 0 ? project.media[0] : null);
   const isMashup = project.isMashup && creatorName && collaboratorName;
 
   return (
     <div className="group w-full">
       <div className="h-full bg-white rounded-2xl border border-gray-200 overflow-hidden">
         <div className="aspect-video relative bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
-          {previewMedia && !isPreviewVideo ? (
+          {coverImage ? (
             <Image
-              src={previewMedia}
+              src={coverImage}
               alt={project.name}
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            />
-          ) : previewMedia ? (
-            <video
-              src={previewMedia}
-              className="w-full h-full object-cover"
-              muted
-              loop
-              playsInline
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-gray-400 bg-gradient-to-br from-gray-50 to-gray-100">

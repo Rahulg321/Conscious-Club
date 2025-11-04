@@ -13,7 +13,7 @@ const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
     fileSize: 200 * 1024 * 1024, // 200MB max file size
-    files: 4, // Max 4 files
+    files: 5, // Max 5 files (4 media + 1 cover image)
   },
 });
 
@@ -38,6 +38,24 @@ const mediaFileSchema = z
     }
     return file.size <= 20 * 1024 * 1024; // 20MB for images
   }, "File size exceeds the maximum allowed size (20MB for images, 200MB for videos)");
+
+const coverImageFileSchema = z
+  .object({
+    fieldname: z.string(),
+    originalname: z.string(),
+    encoding: z.string(),
+    mimetype: z.string(),
+    buffer: z.instanceof(Buffer),
+    size: z.number(),
+  })
+  .refine((file) => {
+    const imageTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+    return imageTypes.includes(file.mimetype);
+  }, "Cover image must be JPEG, JPG, PNG, or WebP")
+  .refine(
+    (file) => file.size <= 20 * 1024 * 1024,
+    "Cover image size must be less than 20MB"
+  );
 
 const router = Router();
 
@@ -94,7 +112,10 @@ router.put(
   "/:projectId",
   authenticateToken,
   updateProjectRateLimit,
-  upload.array("media", 4),
+  upload.fields([
+    { name: "coverImage", maxCount: 1 },
+    { name: "media", maxCount: 4 },
+  ]),
   async (req: Request, res: Response) => {
     const { projectId } = req.params;
 
@@ -139,10 +160,23 @@ router.put(
         dedicationReason,
       } = req.body;
 
-      const mediaFiles = req.files as Express.Multer.File[];
+      const files = req.files as {
+        coverImage?: Express.Multer.File[];
+        media?: Express.Multer.File[];
+      };
+
+      const coverImageFile = files?.coverImage?.[0];
+      const mediaFiles = files?.media || [];
 
       console.log("Received update request:", {
         projectId,
+        coverImage: coverImageFile
+          ? {
+              originalname: coverImageFile.originalname,
+              size: coverImageFile.size,
+              mimetype: coverImageFile.mimetype,
+            }
+          : null,
         mediaFilesCount: mediaFiles?.length || 0,
         mediaFiles:
           mediaFiles?.map((f) => ({
@@ -157,14 +191,16 @@ router.put(
         },
       });
 
-      // Validate the data
+      // Validate the data - coverImage is optional for updates
       const editValidationSchema = projectUploadSchema.extend({
+        coverImage: coverImageFileSchema.optional(),
         media: z
           .array(mediaFileSchema)
           .max(4, "You can upload up to 4 media files"),
       });
 
       const validatedData = editValidationSchema.safeParse({
+        coverImage: coverImageFile || undefined,
         media: mediaFiles || [],
         projectName,
         projectDescription,
@@ -190,6 +226,37 @@ router.put(
           error: "You can only have up to 4 media files",
           code: "MEDIA_LIMIT_EXCEEDED",
         });
+      }
+
+      // Handle cover image upload if provided
+      let coverImageUrl: string | undefined = undefined;
+      if (validatedData.data.coverImage) {
+        try {
+          console.log(
+            "Uploading cover image:",
+            validatedData.data.coverImage.originalname
+          );
+          const uploadedUrl = await uploadFile(
+            validatedData.data.coverImage.buffer,
+            validatedData.data.coverImage.originalname
+          );
+          if (uploadedUrl) {
+            coverImageUrl = uploadedUrl;
+            console.log("Cover image uploaded successfully:", coverImageUrl);
+          } else {
+            console.error("Failed to upload cover image");
+            return res.status(500).json({
+              error: "Failed to upload cover image to cloud storage",
+              code: "COVER_IMAGE_UPLOAD_FAILED",
+            });
+          }
+        } catch (error) {
+          console.error("Error uploading cover image:", error);
+          return res.status(500).json({
+            error: "Failed to upload cover image to cloud storage",
+            code: "COVER_IMAGE_UPLOAD_ERROR",
+          });
+        }
       }
 
       // Handle media files - upload all files
@@ -233,7 +300,18 @@ router.put(
       }
 
       // Update project in database
-      const projectData = {
+      const projectData: {
+        name: string;
+        link: string | null;
+        description: string;
+        coverImage?: string;
+        media: string[];
+        dedicatedToPerson: string | null;
+        dedicatedToBrand: string | null;
+        dedicatedToCause: string | null;
+        dedicationReason: string | null;
+        updatedAt: Date;
+      } = {
         name: validatedData.data.projectName,
         link: validatedData.data.projectLink || null,
         description: validatedData.data.projectDescription,
@@ -244,6 +322,11 @@ router.put(
         dedicationReason: validatedData.data.dedicationReason || null,
         updatedAt: new Date(),
       };
+
+      // Only update coverImage if a new one was provided
+      if (coverImageUrl) {
+        projectData.coverImage = coverImageUrl;
+      }
 
       const [updatedProject] = await db
         .update(project)

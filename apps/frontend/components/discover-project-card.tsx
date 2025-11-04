@@ -46,29 +46,44 @@ export default function DiscoverProjectCard({
   const isMashup = creatorName && collaboratorName;
 
   return (
-    <div className="group bg-card rounded-lg border border-border overflow-hidden relative cursor-pointer" onClick={openProject}>
+    <div
+      className="group bg-card rounded-lg border border-border overflow-hidden relative cursor-pointer"
+      onClick={openProject}
+    >
       <div className="aspect-video bg-muted overflow-hidden relative">
-        <Image src={projectCoverImage} alt={projectName} fill className="object-contain" />
+        <Image
+          src={projectCoverImage}
+          alt={projectName}
+          fill
+          className="object-contain"
+        />
       </div>
       <div className="p-4">
         <div className="flex items-start justify-between mb-2">
-          <h4 className="font-medium text-card-foreground line-clamp-1 flex-1">{projectName}</h4>
+          <h4 className="font-medium text-card-foreground line-clamp-1 flex-1">
+            {projectName}
+          </h4>
           <div onClick={onLikeButtonClick}>
-            <LikeButton projectId={projectId} initialLikeCount={likeCount} initialIsLiked={isLiked} />
+            <LikeButton
+              projectId={projectId}
+              initialLikeCount={likeCount}
+              initialIsLiked={isLiked}
+            />
           </div>
         </div>
         {isMashup && (
           <div className="mb-2 flex items-center gap-1.5 text-sm text-muted-foreground">
             <Sparkles className="w-4 h-4 text-purple-500" />
             <span className="font-medium">
-              {creatorName} <span className="text-purple-500">×</span> {collaboratorName}
+              {creatorName} <span className="text-purple-500">×</span>{" "}
+              {collaboratorName}
             </span>
           </div>
         )}
-        <p className="text-sm text-muted-foreground line-clamp-2">{projectDescription}</p>
+        <p className="text-sm text-muted-foreground line-clamp-2">
+          {projectDescription}
+        </p>
       </div>
-      {/* <BorderBeam duration={6} size={400} className="from-transparent via-red-500 to-transparent" />
-      <BorderBeam duration={6} delay={3} size={400} borderWidth={2} className="from-transparent via-blue-500 to-transparent" /> */}
     </div>
   );
 }
