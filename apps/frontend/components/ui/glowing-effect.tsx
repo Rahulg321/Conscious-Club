@@ -191,8 +191,4 @@ const GlowingEffect = memo(
 
 GlowingEffect.displayName = "GlowingEffect";
 
-export default function GlowingEffectComponent({
-  ...props
-}: GlowingEffectProps) {
-  return <GlowingEffectComponent {...props} />;
-}
+export { GlowingEffect };

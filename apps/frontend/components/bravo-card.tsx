@@ -20,8 +20,7 @@ import { Button } from "@/components/ui/button";
 import { pinBravo } from "@/lib/actions/pin-bravo-action";
 import { toast } from "sonner";
 import { useTransition } from "react";
-import GlowingEffectComponent from "./ui/glowing-effect";
-
+import { GlowingEffect } from "./ui/glowing-effect";
 type BravoCardProps = {
   className: string;
   id: string;
@@ -130,7 +129,8 @@ export function BravoCard({
       key={id}
       className="relative h-full rounded-2xl border p-2 md:rounded-3xl md:p-3"
     >
-      <GlowingEffectComponent
+      {/* @ts-expect-error GlowingEffect JSX type issue */}
+      <GlowingEffect
         blur={0}
         borderWidth={3}
         spread={80}
