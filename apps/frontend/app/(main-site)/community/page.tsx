@@ -141,7 +141,7 @@ async function ProjectCount({
 
   return (
     <span className="text-gray-500">
-      {totalProjects} {totalProjects === 1 ? "project" : "projects"}
+      {totalProjects} {totalProjects === 1 ? "creation" : "creations"}
     </span>
   );
 }

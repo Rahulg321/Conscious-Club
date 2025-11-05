@@ -1,8 +1,13 @@
 import { auth } from "@/auth";
-import { getAllTags, getUserFollowCounts, getUserProjects, getUserMashupProjects } from "@/lib/queries";
+import {
+  getAllTags,
+  getUserFollowCounts,
+  getUserProjects,
+  getUserMashupProjects,
+} from "@/lib/queries";
 import ProjectUploadDialog from "@/components/dialogs/project-upload-dialog";
 import { Button } from "@/components/ui/button";
-import { Edit, Heart, Loader2, Plus, Share, Sparkles } from "lucide-react";
+import { Loader2, Plus, Sparkles, MapPin } from "lucide-react";
 import { redirect } from "next/navigation";
 import React, { Suspense } from "react";
 import Image from "next/image";
@@ -16,7 +21,10 @@ import { Session } from "next-auth";
 import { isFollowing } from "@/lib/actions/follow-action";
 import FollowButton from "@/components/buttons/follow-button";
 
-export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+  searchParams,
+}: Props): Promise<Metadata> {
   const { userId } = await params;
 
   const profileUser = await getCachedUserById(userId);
@@ -51,25 +59,74 @@ const ProfilePage = async ({ params }: Props) => {
   // Get follow status if viewing someone else's profile
   const isUserFollowing = isOwnProfile ? false : await isFollowing(userId);
 
-  type Discipline = "Digital" | "Visuals" | "Writing" | "Performance" | "Motion";
-  const disciplineColor: Record<Discipline, { color: string; border: string; text: string }> = {
-    Digital: { color: "bg-blue-300", border: "border-blue-300", text: "text-blue-500" },
-    Visuals: { color: "bg-[#cdff98]", border: "border-[#cdff98]", text: "text-[#42354a]" },
-    Writing: { color: "bg-yellow-200", border: "border-yellow-200", text: "text-yellow-500" },
-    Performance: { color: "bg-orange-200", border: "border-orange-200", text: "text-orange-500" },
-    Motion: { color: "bg-purple-300", border: "border-purple-300", text: "text-purple-500" },
+  type Discipline =
+    | "Digital"
+    | "Visuals"
+    | "Writing"
+    | "Performance"
+    | "Motion";
+  const disciplineColor: Record<
+    Discipline,
+    { color: string; border: string; text: string }
+  > = {
+    Digital: {
+      color: "bg-blue-300",
+      border: "border-blue-300",
+      text: "text-blue-500",
+    },
+    Visuals: {
+      color: "bg-[#cdff98]",
+      border: "border-[#cdff98]",
+      text: "text-[#42354a]",
+    },
+    Writing: {
+      color: "bg-yellow-200",
+      border: "border-yellow-200",
+      text: "text-yellow-500",
+    },
+    Performance: {
+      color: "bg-orange-200",
+      border: "border-orange-200",
+      text: "text-orange-500",
+    },
+    Motion: {
+      color: "bg-purple-300",
+      border: "border-purple-300",
+      text: "text-purple-500",
+    },
   };
 
   const isValidDiscipline = (d: unknown): d is Discipline =>
-    typeof d === "string" && ["Digital", "Visuals", "Writing", "Performance", "Motion"].includes(d as Discipline);
+    typeof d === "string" &&
+    ["Digital", "Visuals", "Writing", "Performance", "Motion"].includes(
+      d as Discipline
+    );
 
-  const disciplineKey: Discipline = isValidDiscipline(currentUser.discipline) ? (currentUser.discipline as Discipline) : "Digital";
+  const disciplineKey: Discipline = isValidDiscipline(currentUser.discipline)
+    ? (currentUser.discipline as Discipline)
+    : "Digital";
   return (
     <div>
       <div className="px-4 md:px-8 py-6 md:py-8">
         <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-6 gap-4">
-          <div className="flex flex-col md:flex-row md:items-start gap-4 md:gap-6">
-            <div className="relative self-center md:self-start">
+          <div className="flex flex-col  md:items-start gap-4 md:gap-2 w-full border rounded-lg pb-4 px-4 pt-2">
+            <div className="flex items-center justify-end w-full">
+              {isOwnProfile ? (
+                <ProfileEditDialog
+                  userId={userId}
+                  name={currentUser.name || ""}
+                  bio={currentUser.bio || ""}
+                  location={currentUser.location || ""}
+                />
+              ) : (
+                <FollowButton
+                  userId={userId}
+                  isFollowing={isUserFollowing}
+                  className="flex items-center gap-2"
+                />
+              )}
+            </div>
+            <div className="relative self-center ">
               <div className="w-20 h-20 md:w-24 md:h-24 rounded-full border-4 border-gray-100 shadow-lg relative">
                 <Image
                   src={currentUser.image || "/user-placeholder.png"}
@@ -85,9 +142,21 @@ const ProfilePage = async ({ params }: Props) => {
               </div>
             </div>
 
-            <div className="text-center md:text-left md:pt-4">
-              <h2 className="text-xl md:text-2xl font-semibold text-[#171c21] mb-1">{currentUser.name || ""}</h2>
-              <p className="text-[#666a6e] mb-4">{currentUser.location || ""}</p>
+            <div className="text-center md:text-left w-full flex flex-col items-center justify-center">
+              <h2 className="text-xl md:text-2xl font-semibold text-[#171c21] mb-1 flex items-center justify-center">
+                {currentUser.name || ""}
+              </h2>
+              <div className="text-[#666a6e] mb-2 flex items-center justify-center">
+                <MapPin className="w-4 h-4" /> {currentUser.location || ""}
+              </div>
+              <div className="flex flex-wrap gap-2 justify-center md:justify-start mb-4">
+                <span className="px-3 py-1 flex items-center justify-center bg-[#f9fafb] text-[#666a6e] text-sm font-medium rounded-full">
+                  {followers} followers
+                </span>
+                <span className="px-3 py-1 flex items-center justify-center bg-[#f9fafb] text-[#666a6e] text-sm font-medium rounded-full">
+                  {following} following
+                </span>
+              </div>
 
               <div className="flex flex-wrap gap-2 justify-center md:justify-start">
                 <span
@@ -102,35 +171,19 @@ const ProfilePage = async ({ params }: Props) => {
                     {currentUser.role}
                   </span>
                 )}
-                <span className="px-3 py-1 flex items-center justify-center bg-[#f9fafb] text-[#666a6e] text-sm font-medium rounded-full border border-[#e2e3e6]">
-                  {followers} followers
-                </span>
-                <span className="px-3 py-1 flex items-center justify-center bg-[#f9fafb] text-[#666a6e] text-sm font-medium rounded-full border border-[#e2e3e6]">
-                  {following} following
-                </span>
               </div>
             </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            {isOwnProfile ? (
-              <>
-                <ProfileEditDialog userId={userId} name={currentUser.name || ""} bio={currentUser.bio || ""} location={currentUser.location || ""} />
-                {/* <Button variant="outline" className="">
-                  <Share /> Share
-                </Button>
-                 */}
-              </>
-            ) : (
-              <FollowButton userId={userId} isFollowing={isUserFollowing} className="flex items-center gap-2" />
-            )}
           </div>
         </div>
 
         <div className="mb-8">
           <h3 className="text-lg font-semibold text-[#171c21] mb-3">About</h3>
 
-          {currentUser.bio ? <p>{currentUser.bio}</p> : <p>Bio Not Available Yet</p>}
+          {currentUser.bio ? (
+            <p>{currentUser.bio}</p>
+          ) : (
+            <p>Bio Not Available Yet</p>
+          )}
         </div>
         <div className="text-center">
           <Suspense
@@ -157,7 +210,11 @@ const ProfilePage = async ({ params }: Props) => {
               </div>
             }
           >
-            <DisplayUserMashupProjects profileUserId={userId} currentUserId={userSession.user.id} isOwnProfile={isOwnProfile} />
+            <DisplayUserMashupProjects
+              profileUserId={userId}
+              currentUserId={userSession.user.id}
+              isOwnProfile={isOwnProfile}
+            />
           </Suspense>
         </div>
       </div>
@@ -197,13 +254,21 @@ async function DisplayUserProjectWork({
           <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
             <Plus className="w-8 h-8 text-gray-400" />
           </div>
-          <h4 className="text-lg font-medium text-[#171c21] mb-2">No Creations yet</h4>
-          <p className="text-[#667085] mb-4">Upload your first project to showcase your work</p>
+          <h4 className="text-lg font-medium text-[#171c21] mb-2">
+            No Creations yet
+          </h4>
+          <p className="text-[#667085] mb-4">
+            Upload your first project to showcase your work
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((project) => (
-            <ProjectCard key={project.id} project={project} isOwnProfile={isOwnProfile} />
+            <ProjectCard
+              key={project.id}
+              project={project}
+              isOwnProfile={isOwnProfile}
+            />
           ))}
         </div>
       )}
@@ -232,8 +297,12 @@ async function DisplayUserMashupProjects({
           <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full flex items-center justify-center">
             <Sparkles className="w-8 h-8 text-purple-600" />
           </div>
-          <h4 className="text-lg font-medium text-[#171c21] mb-2">No Mashups yet</h4>
-          <p className="text-[#667085] mb-4">Collaborate with other users to create amazing Mashups</p>
+          <h4 className="text-lg font-medium text-[#171c21] mb-2">
+            No Mashups yet
+          </h4>
+          <p className="text-[#667085] mb-4">
+            Collaborate with other users to create amazing Mashups
+          </p>
         </div>
       </div>
     );
