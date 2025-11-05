@@ -58,6 +58,43 @@ export const ProjectUploadStep = ({
     }
   }, [formData.coverImage]);
 
+  // Sync media previews with form data
+  useEffect(() => {
+    const currentMediaFiles = formData.projectMedia || [];
+
+    // If formData.projectMedia is empty, clear previews
+    if (currentMediaFiles.length === 0) {
+      setMediaPreviews((prev) => {
+        prev.forEach((preview) => URL.revokeObjectURL(preview.url));
+        return [];
+      });
+      return;
+    }
+
+    // Update previews based on current media files
+    setMediaPreviews((prev) => {
+      const previewFiles = prev.map((p) => p.file);
+      const filesMatch =
+        previewFiles.length === currentMediaFiles.length &&
+        previewFiles.every((file, index) => file === currentMediaFiles[index]);
+
+      if (filesMatch) {
+        // Files match, no update needed
+        return prev;
+      }
+
+      // Revoke old preview URLs
+      prev.forEach((preview) => URL.revokeObjectURL(preview.url));
+
+      // Create new previews
+      return currentMediaFiles.map((file) => ({
+        url: URL.createObjectURL(file),
+        type: file.type.startsWith("video/") ? "video" : "image",
+        file,
+      }));
+    });
+  }, [formData.projectMedia]);
+
   // Revoke object URLs on unmount
   useEffect(() => {
     return () => {
@@ -216,7 +253,8 @@ export const ProjectUploadStep = ({
       <div className="text-center">
         <p className="text-sm text-muted-foreground mb-6">
           This step is optional. You can skip it and add creations later from
-          your profile.
+          your profile. If you start filling any project field, all required
+          fields (cover image, title, and caption) must be completed.
         </p>
       </div>
 
@@ -224,7 +262,8 @@ export const ProjectUploadStep = ({
       <div className="space-y-2">
         <Label className="text-sm font-medium">Cover Image</Label>
         <p className="text-xs text-muted-foreground mt-0 p-0">
-          Upload a cover image for your project (required). Max 20MB.
+          Upload a cover image for your project (required if any project field
+          is filled). Max 20MB.
         </p>
         <div className="space-y-2 mt-2">
           <input
@@ -377,7 +416,10 @@ export const ProjectUploadStep = ({
       {/* Project Name */}
       <div className="space-y-2">
         <Label htmlFor="projectName" className="text-sm font-medium">
-          Title
+          Title{" "}
+          <span className="text-muted-foreground text-xs">
+            (required if any project field is filled)
+          </span>
         </Label>
         <Input
           id="projectName"
@@ -391,7 +433,10 @@ export const ProjectUploadStep = ({
       {/* Project Description */}
       <div className="space-y-2">
         <Label htmlFor="projectDescription" className="text-sm font-medium">
-          Caption
+          Caption{" "}
+          <span className="text-muted-foreground text-xs">
+            (required if any project field is filled)
+          </span>
         </Label>
         <Textarea
           id="projectDescription"

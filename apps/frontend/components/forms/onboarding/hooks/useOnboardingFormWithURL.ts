@@ -104,8 +104,38 @@ export const useOnboardingFormWithURL = () => {
   };
 
   const validateStep3 = (data: OnboardingFormData): string[] => {
-    // Step 3 is optional for project upload, so no validation needed
-    return [];
+    const errors: string[] = [];
+
+    // Check if any project field is filled
+    const hasAnyProjectField =
+      data.coverImage !== null ||
+      (data.projectMedia && data.projectMedia.length > 0) ||
+      (data.projectName && data.projectName.trim() !== "") ||
+      (data.projectDescription && data.projectDescription.trim() !== "") ||
+      (data.projectLink && data.projectLink.trim() !== "") ||
+      (data.dedicatedToPerson && data.dedicatedToPerson.trim() !== "") ||
+      (data.dedicatedToBrand && data.dedicatedToBrand.trim() !== "") ||
+      (data.dedicatedToCause && data.dedicatedToCause.trim() !== "") ||
+      (data.dedicationReason && data.dedicationReason.trim() !== "");
+
+    // If any project field is filled, require all required fields
+    if (hasAnyProjectField) {
+      if (!data.coverImage) {
+        errors.push("Cover image is required when uploading a project");
+      }
+      if (!data.projectName || data.projectName.trim() === "") {
+        errors.push("Project title is required when uploading a project");
+      } else if (data.projectName.trim().length < 3) {
+        errors.push("Project title must be at least 3 characters");
+      }
+      if (!data.projectDescription || data.projectDescription.trim() === "") {
+        errors.push("Project caption is required when uploading a project");
+      } else if (data.projectDescription.trim().length < 10) {
+        errors.push("Project caption must be at least 10 characters");
+      }
+    }
+
+    return errors;
   };
 
   const validateCurrentStep = (): boolean => {
@@ -276,6 +306,10 @@ export const useOnboardingFormWithURL = () => {
         if (errorCode === "VALIDATION_ERROR") {
           userFriendlyMessage = "Validation Error";
           userFriendlyDescription = "Please check your form data and try again";
+        } else if (errorCode === "ALL_OR_NOTHING_VALIDATION_ERROR") {
+          userFriendlyMessage = "Incomplete Project Data";
+          userFriendlyDescription =
+            "If you start filling any project field, all required fields (cover image, title, and caption) must be completed";
         } else if (errorCode === "AUTH_ERROR") {
           userFriendlyMessage = "Authentication Error";
           userFriendlyDescription = "Please log in again and try again";

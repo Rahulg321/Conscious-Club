@@ -155,6 +155,40 @@ router.post(
           message: validatedData.error.message,
         });
 
+        // Check if this is an all-or-nothing validation error
+        const isAllOrNothingError = validatedData.error.issues.some(
+          (issue) =>
+            issue.code === "custom" &&
+            issue.message?.includes("If any project field is filled")
+        );
+
+        if (isAllOrNothingError) {
+          // Check which required fields are missing
+          const missingFields: string[] = [];
+
+          // Check if cover image is missing
+          if (!coverImageFile) {
+            missingFields.push("cover image");
+          }
+
+          // Check if project name is missing or too short
+          if (!projectName || projectName.trim().length < 3) {
+            missingFields.push("project title (min 3 characters)");
+          }
+
+          // Check if project description is missing or too short
+          if (!projectDescription || projectDescription.trim().length < 10) {
+            missingFields.push("project caption (min 10 characters)");
+          }
+
+          return res.status(400).json({
+            error: "Incomplete project data",
+            details: `If you start filling any project field, all required fields must be completed. Missing: ${missingFields.join(", ")}`,
+            code: "ALL_OR_NOTHING_VALIDATION_ERROR",
+            fieldErrors: validatedData.error.issues,
+          });
+        }
+
         // Create more specific error messages for common validation issues
         const validationErrors = validatedData.error.issues.map((issue) => {
           const field = issue.path.join(".");
