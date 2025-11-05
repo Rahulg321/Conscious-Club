@@ -9,7 +9,8 @@ const initialFormData: OnboardingFormData = {
   profilePicture: null,
   name: "",
   gender: "",
-  location: "",
+  city: "",
+  country: "",
   socialMediaUrl: "",
   dateOfBirth: "",
   discipline: "",
@@ -68,8 +69,11 @@ export const useOnboardingFormWithURL = () => {
     if (!data.gender) {
       errors.push("Please select your gender");
     }
-    if (!data.location.trim()) {
-      errors.push("Location is required");
+    if (!data.city.trim()) {
+      errors.push("City is required");
+    }
+    if (!data.country.trim()) {
+      errors.push("Country is required");
     }
     if (!data.dateOfBirth) {
       errors.push("Date of birth is required");

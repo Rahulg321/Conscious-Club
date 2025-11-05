@@ -3,7 +3,8 @@ export interface OnboardingFormData {
   profilePicture: File | null;
   name: string;
   gender: string;
-  location: string;
+  city: string;
+  country: string;
   socialMediaUrl: string;
   dateOfBirth: string;
   discipline: string;
@@ -36,7 +37,8 @@ export type UserProfile = {
   image: string | null;
   bannerImage: string | null;
   type: "creator" | null;
-  location: string | null;
+  city: string | null;
+  country: string | null;
   discipline: string | null;
   role: string | null;
   createdAt: Date;

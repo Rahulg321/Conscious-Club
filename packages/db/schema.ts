@@ -38,6 +38,8 @@ export const user = pgTable("user", {
   dateOfBirth: timestamp("dateOfBirth", { mode: "date" }),
   gender: genderType("gender"),
   socialUrl: text("socialUrl"),
+  city: text("city"),
+  country: text("country"),
   location: text("location"),
   discipline: text("discipline"),
   role: text("role"),

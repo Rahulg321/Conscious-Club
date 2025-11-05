@@ -56,7 +56,8 @@ router.post(
       const {
         name,
         gender,
-        location,
+        city,
+        country,
         socialMediaUrl,
         dateOfBirth,
         userRole,
@@ -74,7 +75,8 @@ router.post(
       console.log("📝 [ONBOARDING] Form data received:", {
         name,
         gender,
-        location,
+        city,
+        country,
         socialMediaUrl,
         dateOfBirth,
         userRole,
@@ -126,7 +128,8 @@ router.post(
       const validationData = {
         name,
         gender,
-        location,
+        city,
+        country,
         socialMediaUrl: socialMediaUrl || undefined,
         dateOfBirth,
         userRole,
@@ -197,8 +200,10 @@ router.post(
               return "Name is required and must be at least 2 characters";
             case "gender":
               return "Please select your gender";
-            case "location":
-              return "Location is required and must be at least 2 characters";
+            case "city":
+              return "City is required and must be at least 2 characters";
+            case "country":
+              return "Country is required and must be at least 2 characters";
             case "dateOfBirth":
               return "Date of birth is required and you must be at least 13 years old";
             case "discipline":
@@ -275,7 +280,8 @@ router.post(
         const userUpdateData: any = {
           name: validatedData.data.name,
           gender: validatedData.data.gender,
-          location: validatedData.data.location,
+          city: validatedData.data.city,
+          country: validatedData.data.country,
           socialUrl: validatedData.data.socialMediaUrl || null,
           dateOfBirth: new Date(validatedData.data.dateOfBirth),
           type: validatedData.data.userRole,

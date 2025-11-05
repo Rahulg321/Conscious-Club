@@ -5,6 +5,7 @@ import {
   getFilteredMashupProjects,
 } from "@/lib/queries";
 import ProjectTagsFilter from "@/components/project-tag-filters";
+import ProjectDedicationFilters from "@/components/project-dedication-filters";
 import ProjectSearchFilter from "@/components/project-search-filter";
 import ProjectPagination from "@/components/project-pagination";
 import ProjectProfileTabs from "@/components/project-profile-tabs";
@@ -32,13 +33,30 @@ export default async function CommunityPage({
 
   if (!userSession) redirect("/login");
   if (!userSession.user.onboardingCompleted) redirect("/onboarding");
-  const { page, query, tags, type } = await searchParams;
+  const {
+    page,
+    query,
+    tags,
+    type,
+    dedicatedToPerson,
+    dedicatedToBrand,
+    dedicatedToCause,
+    dedicationReason,
+  } = await searchParams;
 
   const projectSearchQuery = query as string;
   const currentPage = Number(page) || 1;
 
   const showProfiles = type && type === "profiles" ? true : false;
   const showMashups = type && type === "mashups" ? true : false;
+
+  // Extract dedication filter parameters
+  const dedicationFilters = {
+    dedicatedToPerson: dedicatedToPerson as string | undefined,
+    dedicatedToBrand: dedicatedToBrand as string | undefined,
+    dedicatedToCause: dedicatedToCause as string | undefined,
+    dedicationReason: dedicationReason as string | undefined,
+  };
 
   const selectedTags =
     typeof tags === "string"
@@ -68,6 +86,12 @@ export default async function CommunityPage({
         <ProjectTagsFilter />
       </Suspense>
 
+      {!showProfiles && (
+        <Suspense fallback={<div>Loading...</div>}>
+          <ProjectDedicationFilters />
+        </Suspense>
+      )}
+
       <main className="max-w-7xl mx-auto px-6 block-space">
         <div className="flex items-center justify-between mb-8">
           <Suspense
@@ -76,11 +100,15 @@ export default async function CommunityPage({
             {showProfiles ? (
               <ProfileCount personSearchQuery={projectSearchQuery || ""} />
             ) : showMashups ? (
-              <MashupCount projectSearchQuery={projectSearchQuery || ""} />
+              <MashupCount
+                projectSearchQuery={projectSearchQuery || ""}
+                dedicationFilters={dedicationFilters}
+              />
             ) : (
               <ProjectCount
                 tags={selectedTags}
                 projectSearchQuery={projectSearchQuery || ""}
+                dedicationFilters={dedicationFilters}
               />
             )}
           </Suspense>
@@ -124,6 +152,7 @@ export default async function CommunityPage({
               offset={offset}
               projectSearchQuery={projectSearchQuery || ""}
               userId={userSession.user.id}
+              dedicationFilters={dedicationFilters}
             />
           </Suspense>
         ) : (
@@ -144,6 +173,8 @@ export default async function CommunityPage({
               limit={limit}
               offset={offset}
               projectSearchQuery={projectSearchQuery || ""}
+              userId={userSession.user.id}
+              dedicationFilters={dedicationFilters}
             />
           </Suspense>
         )}
@@ -156,15 +187,24 @@ export default async function CommunityPage({
 async function ProjectCount({
   tags,
   projectSearchQuery,
+  dedicationFilters,
 }: {
   tags: string[] | string | undefined;
   projectSearchQuery: string;
+  dedicationFilters: {
+    dedicatedToPerson?: string;
+    dedicatedToBrand?: string;
+    dedicatedToCause?: string;
+    dedicationReason?: string;
+  };
 }) {
   const { totalProjects } = await getFilteredProjects(
     tags,
     projectSearchQuery,
     0,
-    1
+    1,
+    undefined,
+    dedicationFilters
   );
 
   return (
@@ -190,13 +230,22 @@ async function ProfileCount({
 
 async function MashupCount({
   projectSearchQuery,
+  dedicationFilters,
 }: {
   projectSearchQuery: string;
+  dedicationFilters: {
+    dedicatedToPerson?: string;
+    dedicatedToBrand?: string;
+    dedicatedToCause?: string;
+    dedicationReason?: string;
+  };
 }) {
   const { totalMashups } = await getFilteredMashupProjects(
     projectSearchQuery,
     0,
-    1
+    1,
+    undefined,
+    dedicationFilters
   );
 
   return (
@@ -211,17 +260,28 @@ async function FetchAndDisplayProjects({
   limit,
   tags,
   offset,
+  userId,
+  dedicationFilters,
 }: {
   projectSearchQuery: string | undefined;
   limit: number;
   tags: string[] | string | undefined;
   offset: number;
+  userId: string;
+  dedicationFilters: {
+    dedicatedToPerson?: string;
+    dedicatedToBrand?: string;
+    dedicatedToCause?: string;
+    dedicationReason?: string;
+  };
 }) {
   const { projects, totalPages } = await getFilteredProjects(
     tags,
     projectSearchQuery,
     offset,
-    limit
+    limit,
+    userId,
+    dedicationFilters
   );
 
   return (
@@ -240,6 +300,10 @@ async function FetchAndDisplayProjects({
               projectDescription={project.description}
               likeCount={project.likeCount}
               isLiked={project.isLiked}
+              dedicatedToPerson={project.dedicatedToPerson}
+              dedicatedToBrand={project.dedicatedToBrand}
+              dedicatedToCause={project.dedicatedToCause}
+              dedicationReason={project.dedicationReason}
             />
           );
         })}
@@ -292,14 +356,27 @@ async function FetchAndDisplayMashupProjects({
   limit,
   offset,
   userId,
+  dedicationFilters,
 }: {
   projectSearchQuery: string | undefined;
   limit: number;
   offset: number;
   userId: string;
+  dedicationFilters: {
+    dedicatedToPerson?: string;
+    dedicatedToBrand?: string;
+    dedicatedToCause?: string;
+    dedicationReason?: string;
+  };
 }) {
   const { mashupProjects, totalPages, totalMashups } =
-    await getFilteredMashupProjects(projectSearchQuery, offset, limit, userId);
+    await getFilteredMashupProjects(
+      projectSearchQuery,
+      offset,
+      limit,
+      userId,
+      dedicationFilters
+    );
 
   return (
     <div>
@@ -324,6 +401,10 @@ async function FetchAndDisplayMashupProjects({
               isLiked={mashup.isLiked}
               creatorName={creatorName}
               collaboratorName={collaboratorName}
+              dedicatedToPerson={mashup.dedicatedToPerson}
+              dedicatedToBrand={mashup.dedicatedToBrand}
+              dedicatedToCause={mashup.dedicatedToCause}
+              dedicationReason={mashup.dedicationReason}
             />
           );
         })}

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Button } from "./ui/button";
 import DeleteProjectAlert from "./buttons/delete-project-alert";
 import Image from "next/image";
-import { Sparkles, Eye, ExternalLink, Edit, User } from "lucide-react";
+import { Sparkles, Eye, ExternalLink, Edit, User, Heart, Building2, Flag, MessageSquare } from "lucide-react";
 
 type UserInfo = {
   id?: string;
@@ -226,6 +226,64 @@ export default function ProjectCard({
           <p className="text-sm text-gray-600 line-clamp-2 leading-relaxed min-h-[2.5rem]">
             {project.description}
           </p>
+
+          {/* Dedication Section */}
+          {(project.dedicatedToPerson ||
+            project.dedicatedToBrand ||
+            project.dedicatedToCause ||
+            project.dedicationReason) && (
+            <div className="pt-2 border-t border-gray-100 space-y-2">
+              <div className="text-xs font-medium text-gray-500 mb-2">
+                Dedicated To
+              </div>
+              <div className="space-y-1.5">
+                {project.dedicatedToPerson && (
+                  <div className="flex items-start gap-2 text-xs">
+                    <Heart className="w-3.5 h-3.5 text-pink-500 mt-0.5 flex-shrink-0" />
+                    <div className="flex-1">
+                      <span className="text-gray-500">Person: </span>
+                      <span className="text-gray-900 font-medium">
+                        {project.dedicatedToPerson}
+                      </span>
+                    </div>
+                  </div>
+                )}
+                {project.dedicatedToBrand && (
+                  <div className="flex items-start gap-2 text-xs">
+                    <Building2 className="w-3.5 h-3.5 text-blue-500 mt-0.5 flex-shrink-0" />
+                    <div className="flex-1">
+                      <span className="text-gray-500">Brand: </span>
+                      <span className="text-gray-900 font-medium">
+                        {project.dedicatedToBrand}
+                      </span>
+                    </div>
+                  </div>
+                )}
+                {project.dedicatedToCause && (
+                  <div className="flex items-start gap-2 text-xs">
+                    <Flag className="w-3.5 h-3.5 text-green-500 mt-0.5 flex-shrink-0" />
+                    <div className="flex-1">
+                      <span className="text-gray-500">Cause: </span>
+                      <span className="text-gray-900 font-medium">
+                        {project.dedicatedToCause}
+                      </span>
+                    </div>
+                  </div>
+                )}
+                {project.dedicationReason && (
+                  <div className="flex items-start gap-2 text-xs pt-1">
+                    <MessageSquare className="w-3.5 h-3.5 text-purple-500 mt-0.5 flex-shrink-0" />
+                    <div className="flex-1">
+                      <span className="text-gray-500">Reason: </span>
+                      <span className="text-gray-700 italic">
+                        {project.dedicationReason}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           <div className="flex items-center justify-end gap-2 pt-2">
             <Button

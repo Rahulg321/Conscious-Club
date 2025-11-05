@@ -32,12 +32,14 @@ export default function ProfileEditDialog({
   userId,
   name,
   bio,
-  location,
+  city,
+  country,
 }: {
   userId: string;
   name?: string;
   bio?: string;
-  location?: string;
+  city?: string;
+  country?: string;
 }) {
   const [open, setOpen] = React.useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
@@ -62,7 +64,8 @@ export default function ProfileEditDialog({
             userId={userId}
             name={name}
             bio={bio}
-            location={location}
+            city={city}
+            country={country}
             setDialogOpen={setOpen}
           />
         </DialogContent>
@@ -89,7 +92,8 @@ export default function ProfileEditDialog({
           userId={userId}
           name={name}
           bio={bio}
-          location={location}
+          city={city}
+          country={country}
           setDialogOpen={setOpen}
         />
         <DrawerFooter className="pt-2">

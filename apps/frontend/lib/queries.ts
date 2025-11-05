@@ -284,13 +284,20 @@ export async function getUserMashupProjects(userId: string) {
  * @param offset - The offset for pagination
  * @param limit - The limit for pagination
  * @param userId - The current user ID to check like status
+ * @param dedicationFilters - Optional filters for dedication fields
  * @returns The filtered mashup projects with pagination info
  */
 export async function getFilteredMashupProjects(
   query?: string,
   offset?: number,
   limit?: number,
-  userId?: string
+  userId?: string,
+  dedicationFilters?: {
+    dedicatedToPerson?: string;
+    dedicatedToBrand?: string;
+    dedicatedToCause?: string;
+    dedicationReason?: string;
+  }
 ) {
   try {
     // Create aliases for creator and collaborator users
@@ -304,14 +311,34 @@ export async function getFilteredMashupProjects(
         ilike(project.name, `%${query}%`),
         ilike(project.description, `%${query}%`),
         ilike(project.link, `%${query}%`),
-        ilike(project.dedicatedToPerson, `%${query}%`),
-        ilike(project.dedicatedToBrand, `%${query}%`),
-        ilike(project.dedicatedToCause, `%${query}%`),
-        ilike(project.dedicationReason, `%${query}%`),
         ilike(creator.name, `%${query}%`),
         ilike(collaborator.name, `%${query}%`)
       );
       if (searchOr) conditions.push(searchOr);
+    }
+
+    // Apply dedication filters if provided
+    if (dedicationFilters) {
+      if (dedicationFilters.dedicatedToPerson) {
+        conditions.push(
+          ilike(project.dedicatedToPerson, `%${dedicationFilters.dedicatedToPerson}%`)
+        );
+      }
+      if (dedicationFilters.dedicatedToBrand) {
+        conditions.push(
+          ilike(project.dedicatedToBrand, `%${dedicationFilters.dedicatedToBrand}%`)
+        );
+      }
+      if (dedicationFilters.dedicatedToCause) {
+        conditions.push(
+          ilike(project.dedicatedToCause, `%${dedicationFilters.dedicatedToCause}%`)
+        );
+      }
+      if (dedicationFilters.dedicationReason) {
+        conditions.push(
+          ilike(project.dedicationReason, `%${dedicationFilters.dedicationReason}%`)
+        );
+      }
     }
 
     const whereClause =
@@ -331,6 +358,10 @@ export async function getFilteredMashupProjects(
         projectCollaboratorId: project.collaboratorId,
         createdAt: project.createdAt,
         updatedAt: project.updatedAt,
+        dedicatedToPerson: project.dedicatedToPerson,
+        dedicatedToBrand: project.dedicatedToBrand,
+        dedicatedToCause: project.dedicatedToCause,
+        dedicationReason: project.dedicationReason,
         creatorId: creator.id,
         creatorName: creator.name,
         creatorImage: creator.image,
@@ -477,6 +508,7 @@ export async function getAllProjectsWithTagsGrouped() {
  * @param offset - The offset for pagination
  * @param limit - The limit for pagination
  * @param userId - The current user ID to check like status
+ * @param dedicationFilters - Optional filters for dedication fields
  * @returns The filtered projects with pagination info
  */
 export async function getFilteredProjects(
@@ -484,7 +516,13 @@ export async function getFilteredProjects(
   query?: string,
   offset?: number,
   limit?: number,
-  userId?: string
+  userId?: string,
+  dedicationFilters?: {
+    dedicatedToPerson?: string;
+    dedicatedToBrand?: string;
+    dedicatedToCause?: string;
+    dedicationReason?: string;
+  }
 ) {
   try {
     // Normalize filterTags to an array of role name strings
@@ -506,10 +544,6 @@ export async function getFilteredProjects(
           ilike(project.name, `%${query}%`),
           ilike(project.description, `%${query}%`),
           ilike(project.link, `%${query}%`),
-          ilike(project.dedicatedToPerson, `%${query}%`),
-          ilike(project.dedicatedToBrand, `%${query}%`),
-          ilike(project.dedicatedToCause, `%${query}%`),
-          ilike(project.dedicationReason, `%${query}%`),
           ilike(project.tag, `%${query}%`)
         )
       );
@@ -518,6 +552,30 @@ export async function getFilteredProjects(
     // Filter by tag (role) field if tags are provided
     if (roleNameArray.length > 0) {
       conditions.push(inArray(project.tag, roleNameArray));
+    }
+
+    // Apply dedication filters if provided
+    if (dedicationFilters) {
+      if (dedicationFilters.dedicatedToPerson) {
+        conditions.push(
+          ilike(project.dedicatedToPerson, `%${dedicationFilters.dedicatedToPerson}%`)
+        );
+      }
+      if (dedicationFilters.dedicatedToBrand) {
+        conditions.push(
+          ilike(project.dedicatedToBrand, `%${dedicationFilters.dedicatedToBrand}%`)
+        );
+      }
+      if (dedicationFilters.dedicatedToCause) {
+        conditions.push(
+          ilike(project.dedicatedToCause, `%${dedicationFilters.dedicatedToCause}%`)
+        );
+      }
+      if (dedicationFilters.dedicationReason) {
+        conditions.push(
+          ilike(project.dedicationReason, `%${dedicationFilters.dedicationReason}%`)
+        );
+      }
     }
 
     const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
@@ -539,6 +597,10 @@ export async function getFilteredProjects(
         createdAt: project.createdAt,
         updatedAt: project.updatedAt,
         tag: project.tag,
+        dedicatedToPerson: project.dedicatedToPerson,
+        dedicatedToBrand: project.dedicatedToBrand,
+        dedicatedToCause: project.dedicatedToCause,
+        dedicationReason: project.dedicationReason,
         creatorId: creator.id,
         creatorName: creator.name,
         creatorImage: creator.image,
@@ -580,6 +642,10 @@ export async function getFilteredProjects(
       updatedAt: row.updatedAt,
       tag: row.tag,
       tags: row.tag ? [row.tag] : [], // Keep tags array for backward compatibility
+      dedicatedToPerson: row.dedicatedToPerson,
+      dedicatedToBrand: row.dedicatedToBrand,
+      dedicatedToCause: row.dedicatedToCause,
+      dedicationReason: row.dedicationReason,
       creatorId: row.creatorId,
       creatorName: row.creatorName,
       creatorImage: row.creatorImage,

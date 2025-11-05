@@ -47,7 +47,8 @@ export async function EditUserProfile(values: EditProfileSchemaType) {
       .set({
         name: validatedData.data.name,
         bio: validatedData.data.bio,
-        location: validatedData.data.location,
+        city: validatedData.data.city,
+        country: validatedData.data.country,
       })
       .where(eq(user.id, userSession.user.id))
       .returning();

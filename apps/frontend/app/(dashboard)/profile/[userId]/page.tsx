@@ -32,7 +32,7 @@ export async function generateMetadata({
 
   return {
     title: `Profile ${profileUser?.name || "User"}`,
-    description: `${profileUser?.name} ${profileUser?.role} ${profileUser?.discipline} ${profileUser?.location}`,
+    description: `${profileUser?.name} ${profileUser?.role} ${profileUser?.discipline} ${profileUser?.city || ""} ${profileUser?.country || ""}`,
   };
 }
 
@@ -117,7 +117,8 @@ const ProfilePage = async ({ params }: Props) => {
                   userId={userId}
                   name={currentUser.name || ""}
                   bio={currentUser.bio || ""}
-                  location={currentUser.location || ""}
+                  city={currentUser.city || ""}
+                  country={currentUser.country || ""}
                 />
               ) : (
                 <div className="flex items-center gap-2">
@@ -155,7 +156,10 @@ const ProfilePage = async ({ params }: Props) => {
                 {currentUser.name || ""}
               </h2>
               <div className="text-[#666a6e] mb-2 flex items-center justify-center">
-                <MapPin className="w-4 h-4" /> {currentUser.location || ""}
+                <MapPin className="w-4 h-4" />{" "}
+                {[currentUser.city, currentUser.country]
+                  .filter(Boolean)
+                  .join(", ") || ""}
               </div>
               <div className="flex flex-wrap gap-2 justify-center md:justify-start mb-4">
                 <span className="px-3 py-1 flex items-center justify-center bg-[#f9fafb] text-[#666a6e] text-sm font-medium rounded-full">

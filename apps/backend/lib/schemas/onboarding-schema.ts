@@ -35,11 +35,16 @@ export const onboardingSchema = z
         message: "Please select your gender",
       }
     ),
-    location: z
+    city: z
       .string()
-      .min(1, "Location is required")
-      .min(2, "Location must be at least 2 characters")
-      .max(100, "Location must be less than 100 characters"),
+      .min(1, "City is required")
+      .min(2, "City must be at least 2 characters")
+      .max(100, "City must be less than 100 characters"),
+    country: z
+      .string()
+      .min(1, "Country is required")
+      .min(2, "Country must be at least 2 characters")
+      .max(100, "Country must be less than 100 characters"),
     socialMediaUrl: z
       .string()
       .optional()

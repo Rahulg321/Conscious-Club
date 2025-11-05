@@ -3,7 +3,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { GENDER_OPTIONS } from "../../config";
 import { OnboardingFormData } from "../../types";
-import AddressInputField from "@/components/address-input-field";
+import CityInputField from "@/components/city-input-field";
+import CountryInputField from "@/components/country-input-field";
 
 interface ProfileCompletionStepProps {
   formData: OnboardingFormData;
@@ -87,14 +88,25 @@ export const ProfileCompletionStep = ({
         </div>
       </div>
 
-      {/* Location Field */}
+      {/* City Field */}
       <div className="space-y-2">
-        <Label htmlFor="location">Location</Label>
-        <AddressInputField
-          id="location"
-          value={formData.location}
-          onChange={(value) => updateFormData("location", value)}
-          placeholder="Enter your location (city, country)"
+        <Label htmlFor="city">City</Label>
+        <CityInputField
+          id="city"
+          value={formData.city}
+          onChange={(value) => updateFormData("city", value)}
+          placeholder="Enter your city"
+        />
+      </div>
+
+      {/* Country Field */}
+      <div className="space-y-2">
+        <Label htmlFor="country">Country</Label>
+        <CountryInputField
+          id="country"
+          value={formData.country}
+          onChange={(value) => updateFormData("country", value)}
+          placeholder="Enter your country"
         />
       </div>
 

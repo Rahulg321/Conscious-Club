@@ -26,20 +26,24 @@ import {
 } from "@/lib/schemas/edit-profile-schema";
 import { EditUserProfile } from "@/lib/actions/edit-profile";
 import { Loader2 } from "lucide-react";
+import CityInputField from "@/components/city-input-field";
+import CountryInputField from "@/components/country-input-field";
 
 function EditProfileForm({
   className,
   userId,
   name,
   bio,
-  location,
+  city,
+  country,
   setDialogOpen,
 }: {
   className?: string;
   userId: string;
   name?: string;
   bio?: string;
-  location?: string;
+  city?: string;
+  country?: string;
   setDialogOpen: (open: boolean) => void;
 }) {
   const router = useRouter();
@@ -50,7 +54,8 @@ function EditProfileForm({
     defaultValues: {
       name: name || "",
       bio: bio || "",
-      location: location || "",
+      city: city || "",
+      country: country || "",
     },
   });
 
@@ -111,12 +116,34 @@ function EditProfileForm({
 
         <FormField
           control={form.control}
-          name="location"
+          name="city"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Location</FormLabel>
+              <FormLabel>City</FormLabel>
               <FormControl>
-                <Input placeholder="City, Country" {...field} />
+                <CityInputField
+                  value={field.value}
+                  onChange={field.onChange}
+                  placeholder="Enter your city"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="country"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Country</FormLabel>
+              <FormControl>
+                <CountryInputField
+                  value={field.value}
+                  onChange={field.onChange}
+                  placeholder="Enter your country"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

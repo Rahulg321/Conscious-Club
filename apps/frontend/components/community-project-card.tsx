@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import LikeButton from "./like-button";
 import { TAG_COLORS } from "@/lib/tag-colors";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Heart, Building2, Flag, MessageSquare } from "lucide-react";
 
 export default function CommunityProjectCard({
   projectId,
@@ -16,6 +16,10 @@ export default function CommunityProjectCard({
   isLiked = false,
   creatorName,
   collaboratorName,
+  dedicatedToPerson,
+  dedicatedToBrand,
+  dedicatedToCause,
+  dedicationReason,
 }: {
   projectId: string;
   projectCoverImage: string;
@@ -26,6 +30,10 @@ export default function CommunityProjectCard({
   isLiked?: boolean;
   creatorName?: string;
   collaboratorName?: string;
+  dedicatedToPerson?: string | null;
+  dedicatedToBrand?: string | null;
+  dedicatedToCause?: string | null;
+  dedicationReason?: string | null;
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -92,6 +100,64 @@ export default function CommunityProjectCard({
         <p className="text-sm text-muted-foreground line-clamp-2">
           {projectDescription}
         </p>
+
+        {/* Dedication Section */}
+        {(dedicatedToPerson ||
+          dedicatedToBrand ||
+          dedicatedToCause ||
+          dedicationReason) && (
+          <div className="mt-3 pt-3 border-t border-border space-y-1.5">
+            <div className="text-xs font-medium text-muted-foreground mb-1.5">
+              Dedicated To
+            </div>
+            <div className="space-y-1">
+              {dedicatedToPerson && (
+                <div className="flex items-start gap-1.5 text-xs">
+                  <Heart className="w-3 h-3 text-pink-500 mt-0.5 flex-shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <span className="text-muted-foreground">Person: </span>
+                    <span className="text-card-foreground font-medium truncate">
+                      {dedicatedToPerson}
+                    </span>
+                  </div>
+                </div>
+              )}
+              {dedicatedToBrand && (
+                <div className="flex items-start gap-1.5 text-xs">
+                  <Building2 className="w-3 h-3 text-blue-500 mt-0.5 flex-shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <span className="text-muted-foreground">Brand: </span>
+                    <span className="text-card-foreground font-medium truncate">
+                      {dedicatedToBrand}
+                    </span>
+                  </div>
+                </div>
+              )}
+              {dedicatedToCause && (
+                <div className="flex items-start gap-1.5 text-xs">
+                  <Flag className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <span className="text-muted-foreground">Cause: </span>
+                    <span className="text-card-foreground font-medium truncate">
+                      {dedicatedToCause}
+                    </span>
+                  </div>
+                </div>
+              )}
+              {dedicationReason && (
+                <div className="flex items-start gap-1.5 text-xs pt-0.5">
+                  <MessageSquare className="w-3 h-3 text-purple-500 mt-0.5 flex-shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <span className="text-muted-foreground">Reason: </span>
+                    <span className="text-card-foreground italic line-clamp-1">
+                      {dedicationReason}
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
