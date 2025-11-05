@@ -78,11 +78,14 @@ export default function ProfileCard({
               {userProfile.name || "User"}
             </h2>
           </div>
-
-          {(userProfile.location || "").length > 0 && (
-            <div className="flex items-center gap-1 text-gray-600">
-              <MapPin className="w-3.5 h-3.5" />
-              <span className="text-xs">{userProfile.location}</span>
+          {(userProfile.city || userProfile.country) && (
+            <div className="flex items-center gap-1 text-xs text-gray-500">
+              <MapPin className="w-3 h-3" />
+              <span>
+                {[userProfile.city, userProfile.country]
+                  .filter(Boolean)
+                  .join(", ")}
+              </span>
             </div>
           )}
         </div>
