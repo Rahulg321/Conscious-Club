@@ -36,13 +36,7 @@ export function SidebarNavLinks({ userId }: { userId: string }) {
       activeColor:
         "!bg-[#FFECCC] !text-yellow-700 data-[active=true]:!bg-[#FFECCC] data-[active=true]:!text-yellow-700",
     },
-    {
-      label: "Support and FAQ",
-      href: "/support",
-      leading: <FaHeadphones className="size-4" />,
-      activeColor:
-        "!bg-[#D7E9FF] !text-blue-700 data-[active=true]:!bg-[#D7E9FF] data-[active=true]:!text-blue-700",
-    },
+
     {
       label: "Bravos",
       href: "/bravos",
