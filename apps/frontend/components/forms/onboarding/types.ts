@@ -13,6 +13,7 @@ export interface OnboardingFormData {
   projectDescription: string;
   projectMedia: File[];
   projectLink: string;
+  coverImage: File | null;
   dedicatedToPerson: string;
   dedicatedToBrand: string;
   dedicatedToCause: string;

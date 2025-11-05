@@ -249,6 +249,18 @@ async function FetchAndDisplayProjects({
               projectDescription={project.description}
               likeCount={project.likeCount}
               isLiked={project.isLiked}
+              creatorName={project.creatorName || undefined}
+              creatorInfo={
+                project.creatorId
+                  ? {
+                      id: project.creatorId,
+                      name: project.creatorName,
+                      image: project.creatorImage,
+                      location: project.creatorLocation,
+                      role: project.creatorRole,
+                    }
+                  : undefined
+              }
             />
           );
         })}
@@ -317,10 +329,6 @@ async function FetchAndDisplayMashupProjects({
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {mashupProjects?.map((mashup) => {
-          // Show both creator and collaborator names
-          const creatorName = mashup.creatorName || "Unknown";
-          const collaboratorName = mashup.collaboratorName || "Unknown";
-
           // Get first media item for preview
           const firstMedia =
             (mashup.media && mashup.media.length > 0
@@ -337,8 +345,30 @@ async function FetchAndDisplayMashupProjects({
               projectDescription={mashup.description}
               likeCount={mashup.likeCount}
               isLiked={mashup.isLiked}
-              creatorName={creatorName}
-              collaboratorName={collaboratorName}
+              creatorName={mashup.creatorName || undefined}
+              collaboratorName={mashup.collaboratorName || undefined}
+              creatorInfo={
+                mashup.creatorId
+                  ? {
+                      id: mashup.creatorId,
+                      name: mashup.creatorName,
+                      image: mashup.creatorImage,
+                      location: mashup.creatorLocation,
+                      role: mashup.creatorRole,
+                    }
+                  : undefined
+              }
+              collaboratorInfo={
+                mashup.collaboratorId
+                  ? {
+                      id: mashup.collaboratorId,
+                      name: mashup.collaboratorName,
+                      image: mashup.collaboratorImage,
+                      location: mashup.collaboratorLocation,
+                      role: mashup.collaboratorRole,
+                    }
+                  : undefined
+              }
             />
           );
         })}

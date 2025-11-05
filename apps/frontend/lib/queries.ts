@@ -251,8 +251,14 @@ export async function getUserMashupProjects(userId: string) {
         project: project,
         creatorName: creator.name,
         creatorImage: creator.image,
+        creatorId: creator.id,
+        creatorDiscipline: creator.discipline,
+        creatorRole: creator.role,
         collaboratorName: collaborator.name,
         collaboratorImage: collaborator.image,
+        collaboratorId: collaborator.id,
+        collaboratorDiscipline: collaborator.discipline,
+        collaboratorRole: collaborator.role,
       })
       .from(project)
       .leftJoin(creator, eq(project.userId, creator.id))
@@ -322,13 +328,19 @@ export async function getFilteredMashupProjects(
         media: project.media,
         logoImage: project.logoImage,
         userId: project.userId,
-        collaboratorId: project.collaboratorId,
+        projectCollaboratorId: project.collaboratorId,
         createdAt: project.createdAt,
         updatedAt: project.updatedAt,
+        creatorId: creator.id,
         creatorName: creator.name,
         creatorImage: creator.image,
+        creatorLocation: creator.location,
+        creatorRole: creator.role,
+        collaboratorId: collaborator.id,
         collaboratorName: collaborator.name,
         collaboratorImage: collaborator.image,
+        collaboratorLocation: collaborator.location,
+        collaboratorRole: collaborator.role,
         likeCount: sql<number>`COALESCE((${sql`SELECT COUNT(*) FROM ${projectLikes} WHERE ${projectLikes.projectId} = ${project.id}`}), 0)`,
         commentsCount: sql<number>`COALESCE((${sql`SELECT COUNT(*) FROM ${projectComments} WHERE ${projectComments.projectId} = ${project.id}`}), 0)`,
         isLiked: userId
@@ -510,7 +522,10 @@ export async function getFilteredProjects(
 
     const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
-    // Get filtered projects with their tag and like counts
+    // Create alias for creator user
+    const creator = alias(user, "creator");
+
+    // Get filtered projects with their tag and like counts, including creator info
     const filteredProjects = await db
       .select({
         id: project.id,
@@ -524,6 +539,11 @@ export async function getFilteredProjects(
         createdAt: project.createdAt,
         updatedAt: project.updatedAt,
         tag: project.tag,
+        creatorId: creator.id,
+        creatorName: creator.name,
+        creatorImage: creator.image,
+        creatorLocation: creator.location,
+        creatorRole: creator.role,
         likeCount: sql<number>`COALESCE((${sql`SELECT COUNT(*) FROM ${projectLikes} WHERE ${projectLikes.projectId} = ${project.id}`}), 0)`,
         commentsCount: sql<number>`COALESCE((${sql`SELECT COUNT(*) FROM ${projectComments} WHERE ${projectComments.projectId} = ${project.id}`}), 0)`,
         isLiked: userId
@@ -531,6 +551,7 @@ export async function getFilteredProjects(
           : sql<boolean>`false`,
       })
       .from(project)
+      .leftJoin(creator, eq(project.userId, creator.id))
       .where(whereClause)
       .orderBy(desc(project.createdAt))
       .limit(limit ?? 10)
@@ -559,6 +580,11 @@ export async function getFilteredProjects(
       updatedAt: row.updatedAt,
       tag: row.tag,
       tags: row.tag ? [row.tag] : [], // Keep tags array for backward compatibility
+      creatorId: row.creatorId,
+      creatorName: row.creatorName,
+      creatorImage: row.creatorImage,
+      creatorLocation: row.creatorLocation,
+      creatorRole: row.creatorRole,
       likeCount: row.likeCount,
       commentsCount: row.commentsCount,
       isLiked: row.isLiked,

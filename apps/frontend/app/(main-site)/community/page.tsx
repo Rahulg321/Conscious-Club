@@ -1,5 +1,9 @@
 import React, { Suspense } from "react";
-import { getFilteredProjects, getFilteredUserProfiles } from "@/lib/queries";
+import {
+  getFilteredProjects,
+  getFilteredUserProfiles,
+  getFilteredMashupProjects,
+} from "@/lib/queries";
 import ProjectTagsFilter from "@/components/project-tag-filters";
 import ProjectSearchFilter from "@/components/project-search-filter";
 import ProjectPagination from "@/components/project-pagination";
@@ -12,6 +16,7 @@ import ProjectSheet from "../../../components/project-sheet";
 import { Session } from "next-auth";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import { getPreviewMedia } from "@/lib/utils";
 
 export const metadata = {
   title: "Community",
@@ -33,6 +38,7 @@ export default async function CommunityPage({
   const currentPage = Number(page) || 1;
 
   const showProfiles = type && type === "profiles" ? true : false;
+  const showMashups = type && type === "mashups" ? true : false;
 
   const selectedTags =
     typeof tags === "string"
@@ -69,6 +75,8 @@ export default async function CommunityPage({
           >
             {showProfiles ? (
               <ProfileCount personSearchQuery={projectSearchQuery || ""} />
+            ) : showMashups ? (
+              <MashupCount projectSearchQuery={projectSearchQuery || ""} />
             ) : (
               <ProjectCount
                 tags={selectedTags}
@@ -96,6 +104,26 @@ export default async function CommunityPage({
               limit={limit}
               offset={offset}
               userSession={userSession as Session}
+            />
+          </Suspense>
+        ) : showMashups ? (
+          <Suspense
+            fallback={
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <ProjectCardSkeleton />
+                <ProjectCardSkeleton />
+                <ProjectCardSkeleton />
+                <ProjectCardSkeleton />
+                <ProjectCardSkeleton />
+                <ProjectCardSkeleton />
+              </div>
+            }
+          >
+            <FetchAndDisplayMashupProjects
+              limit={limit}
+              offset={offset}
+              projectSearchQuery={projectSearchQuery || ""}
+              userId={userSession.user.id}
             />
           </Suspense>
         ) : (
@@ -156,6 +184,24 @@ async function ProfileCount({
   return (
     <span className="text-gray-500">
       {totalUsers} {totalUsers === 1 ? "profile" : "profiles"}
+    </span>
+  );
+}
+
+async function MashupCount({
+  projectSearchQuery,
+}: {
+  projectSearchQuery: string;
+}) {
+  const { totalMashups } = await getFilteredMashupProjects(
+    projectSearchQuery,
+    0,
+    1
+  );
+
+  return (
+    <span className="text-gray-500">
+      {totalMashups} {totalMashups === 1 ? "mashup" : "mashups"}
     </span>
   );
 }
@@ -234,6 +280,53 @@ async function FetchAndDisplayUserProfiles({
             />
           </div>
         ))}
+      </div>
+
+      <ProjectPagination totalPages={totalPages} />
+    </div>
+  );
+}
+
+async function FetchAndDisplayMashupProjects({
+  projectSearchQuery,
+  limit,
+  offset,
+  userId,
+}: {
+  projectSearchQuery: string | undefined;
+  limit: number;
+  offset: number;
+  userId: string;
+}) {
+  const { mashupProjects, totalPages, totalMashups } =
+    await getFilteredMashupProjects(projectSearchQuery, offset, limit, userId);
+
+  return (
+    <div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {mashupProjects?.map((mashup) => {
+          // Show both creator and collaborator names
+          const creatorName = mashup.creatorName || "Unknown";
+          const collaboratorName = mashup.collaboratorName || "Unknown";
+
+          // Get first media item for preview
+          const firstMedia = getPreviewMedia(mashup.media) || "/placeholder.svg";
+
+          return (
+            <CommunityProjectCard
+              key={mashup.id}
+              projectId={mashup.id}
+              projectCoverImage={firstMedia}
+              projectName={mashup.name}
+              tagName="" // Mashups don't have tags in this view
+              projectDescription={mashup.description}
+              likeCount={mashup.likeCount}
+              isLiked={mashup.isLiked}
+              creatorName={creatorName}
+              collaboratorName={collaboratorName}
+            />
+          );
+        })}
       </div>
 
       <ProjectPagination totalPages={totalPages} />

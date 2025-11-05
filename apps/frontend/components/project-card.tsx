@@ -2,22 +2,86 @@ import Link from "next/link";
 import { Button } from "./ui/button";
 import DeleteProjectAlert from "./buttons/delete-project-alert";
 import Image from "next/image";
-import { Sparkles, Eye, ExternalLink, Edit } from "lucide-react";
+import { Sparkles, Eye, ExternalLink, Edit, User } from "lucide-react";
+
+type UserInfo = {
+  id?: string;
+  name?: string;
+  discipline?: string | null;
+  role?: string | null;
+};
 
 export default function ProjectCard({
   project,
   creatorName,
   collaboratorName,
+  creatorInfo,
+  collaboratorInfo,
   isOwnProfile = false,
 }: {
   project: any;
   creatorName?: string;
   collaboratorName?: string;
+  creatorInfo?: UserInfo;
+  collaboratorInfo?: UserInfo;
   isOwnProfile?: boolean;
 }) {
   // Use coverImage if available, otherwise fall back to first media item
-  const coverImage = project.coverImage || (project.media && project.media.length > 0 ? project.media[0] : null);
+  const coverImage =
+    project.coverImage ||
+    (project.media && project.media.length > 0 ? project.media[0] : null);
   const isMashup = project.isMashup && creatorName && collaboratorName;
+
+  // Discipline color mapping (matching the profile page)
+  type Discipline =
+    | "Digital"
+    | "Visuals"
+    | "Writing"
+    | "Performance"
+    | "Motion";
+  const disciplineColor: Record<
+    Discipline,
+    { color: string; border: string; text: string }
+  > = {
+    Digital: {
+      color: "bg-blue-300",
+      border: "border-blue-300",
+      text: "text-blue-500",
+    },
+    Visuals: {
+      color: "bg-[#cdff98]",
+      border: "border-[#cdff98]",
+      text: "text-[#42354a]",
+    },
+    Writing: {
+      color: "bg-yellow-200",
+      border: "border-yellow-200",
+      text: "text-yellow-500",
+    },
+    Performance: {
+      color: "bg-orange-200",
+      border: "border-orange-200",
+      text: "text-orange-500",
+    },
+    Motion: {
+      color: "bg-purple-300",
+      border: "border-purple-300",
+      text: "text-purple-500",
+    },
+  };
+
+  const isValidDiscipline = (d: unknown): d is Discipline =>
+    typeof d === "string" &&
+    ["Digital", "Visuals", "Writing", "Performance", "Motion"].includes(
+      d as Discipline
+    );
+
+  const getDisciplineColor = (discipline: string | null | undefined) => {
+    const key: Discipline = isValidDiscipline(discipline)
+      ? (discipline as Discipline)
+      : "Digital";
+    return disciplineColor[key];
+  };
 
   return (
     <div className="group w-full">
@@ -57,15 +121,107 @@ export default function ProjectCard({
             {project.name}
           </h4>
 
-          {isMashup && (
-            <div className="flex items-center gap-2 text-sm text-gray-600 bg-purple-50 px-3 py-2 rounded-lg">
-              <Sparkles className="w-4 h-4 text-purple-500" />
-              <span className="font-medium">
-                {creatorName} <span className="text-purple-500 mx-1">×</span>{" "}
-                {collaboratorName}
-              </span>
+          {/* User Information Section */}
+          {isMashup && creatorInfo && collaboratorInfo ? (
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 text-sm text-gray-600 bg-purple-50 px-3 py-2 rounded-lg">
+                <Sparkles className="w-4 h-4 text-purple-500 flex-shrink-0" />
+                <span className="font-medium text-xs">Collaboration</span>
+              </div>
+
+              {/* Creator Info */}
+              <div className="space-y-2">
+                <Link
+                  href={`/profile/${creatorInfo.id || project.userId}`}
+                  className="block hover:bg-gray-50 -mx-2 px-2 py-1.5 rounded-lg transition-colors"
+                >
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <User className="w-3.5 h-3.5 text-gray-400" />
+                    <span className="font-semibold text-sm text-gray-900">
+                      {creatorName || "Creator"}
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5 ml-5">
+                    {creatorInfo.discipline && (
+                      <span
+                        className={`px-2 py-0.5 text-xs font-medium rounded-full ${getDisciplineColor(creatorInfo.discipline).color}`}
+                      >
+                        {creatorInfo.discipline}
+                      </span>
+                    )}
+                    {creatorInfo.role && (
+                      <span
+                        className={`px-2 py-0.5 text-xs font-medium rounded-full border-2 ${getDisciplineColor(creatorInfo.discipline).border} ${getDisciplineColor(creatorInfo.discipline).text}`}
+                      >
+                        {creatorInfo.role}
+                      </span>
+                    )}
+                  </div>
+                </Link>
+              </div>
+
+              {/* Collaborator Info */}
+              <div className="space-y-2">
+                <Link
+                  href={`/profile/${collaboratorInfo.id || project.collaboratorId}`}
+                  className="block hover:bg-gray-50 -mx-2 px-2 py-1.5 rounded-lg transition-colors"
+                >
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <User className="w-3.5 h-3.5 text-gray-400" />
+                    <span className="font-semibold text-sm text-gray-900">
+                      {collaboratorName || "Collaborator"}
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5 ml-5">
+                    {collaboratorInfo.discipline && (
+                      <span
+                        className={`px-2 py-0.5 text-xs font-medium rounded-full ${getDisciplineColor(collaboratorInfo.discipline).color}`}
+                      >
+                        {collaboratorInfo.discipline}
+                      </span>
+                    )}
+                    {collaboratorInfo.role && (
+                      <span
+                        className={`px-2 py-0.5 text-xs font-medium rounded-full border-2 ${getDisciplineColor(collaboratorInfo.discipline).border} ${getDisciplineColor(collaboratorInfo.discipline).text}`}
+                      >
+                        {collaboratorInfo.role}
+                      </span>
+                    )}
+                  </div>
+                </Link>
+              </div>
             </div>
-          )}
+          ) : creatorInfo && !isMashup ? (
+            <div className="space-y-2">
+              <Link
+                href={`/profile/${creatorInfo.id || project.userId}`}
+                className="block hover:bg-gray-50 -mx-2 px-2 py-1.5 rounded-lg transition-colors"
+              >
+                <div className="flex items-center gap-2 mb-1.5">
+                  <User className="w-3.5 h-3.5 text-gray-400" />
+                  <span className="font-semibold text-sm text-gray-900">
+                    {creatorName || "Creator"}
+                  </span>
+                </div>
+                <div className="flex flex-wrap gap-1.5 ml-5">
+                  {creatorInfo.discipline && (
+                    <span
+                      className={`px-2 py-0.5 text-xs font-medium rounded-full ${getDisciplineColor(creatorInfo.discipline).color}`}
+                    >
+                      {creatorInfo.discipline}
+                    </span>
+                  )}
+                  {creatorInfo.role && (
+                    <span
+                      className={`px-2 py-0.5 text-xs font-medium rounded-full border-2 ${getDisciplineColor(creatorInfo.discipline).border} ${getDisciplineColor(creatorInfo.discipline).text}`}
+                    >
+                      {creatorInfo.role}
+                    </span>
+                  )}
+                </div>
+              </Link>
+            </div>
+          ) : null}
 
           <p className="text-sm text-gray-600 line-clamp-2 leading-relaxed min-h-[2.5rem]">
             {project.description}

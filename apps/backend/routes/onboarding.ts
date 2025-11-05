@@ -12,7 +12,11 @@ const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
     fileSize: 200 * 1024 * 1024, // 200MB max file size
-    files: 5, // Max 5 files (1 profile picture + 4 project media)
+    files: 6, // Max 6 files (1 profile picture + 1 cover image + 4 project media)
+  },
+  fileFilter: (req, file, cb) => {
+    // Allow all file types - validation happens in schema
+    cb(null, true);
   },
 });
 
@@ -24,6 +28,7 @@ router.post(
   onboardingRateLimit,
   upload.fields([
     { name: "profilePicture", maxCount: 1 },
+    { name: "coverImage", maxCount: 1 },
     { name: "projectMedia", maxCount: 4 },
   ]),
   async (req: Request, res: Response) => {
@@ -91,6 +96,7 @@ router.post(
       // Get uploaded files
       const files = req.files as { [fieldname: string]: Express.Multer.File[] };
       const profilePictureFile = files?.profilePicture?.[0];
+      const coverImageFile = files?.coverImage?.[0];
       const projectMediaFiles = files?.projectMedia || [];
 
       console.log("📁 [ONBOARDING] Files received:", {
@@ -99,6 +105,13 @@ router.post(
               originalname: profilePictureFile.originalname,
               mimetype: profilePictureFile.mimetype,
               size: profilePictureFile.size,
+            }
+          : null,
+        coverImage: coverImageFile
+          ? {
+              originalname: coverImageFile.originalname,
+              mimetype: coverImageFile.mimetype,
+              size: coverImageFile.size,
             }
           : null,
         projectMediaCount: projectMediaFiles.length,
@@ -123,6 +136,7 @@ router.post(
         projectName: projectName || undefined,
         projectDescription: projectDescription || undefined,
         projectLink: projectLink || undefined,
+        coverImage: coverImageFile ? [coverImageFile] : undefined,
         projectMedia:
           projectMediaFiles.length > 0 ? projectMediaFiles : undefined,
         dedicatedToPerson: dedicatedToPerson || undefined,
@@ -274,6 +288,57 @@ router.post(
       ) {
         console.log("💾 [ONBOARDING] Starting project creation");
 
+        // Upload cover image
+        let coverImageUrl: string | null = null;
+        if (
+          validatedData.data.coverImage &&
+          validatedData.data.coverImage.length > 0
+        ) {
+          console.log("☁️ [ONBOARDING] Uploading cover image");
+          try {
+            const coverFile = validatedData.data.coverImage[0];
+            if (!coverFile) {
+              console.error("❌ [ONBOARDING] Cover image file is undefined");
+              return res.status(400).json({
+                error: "Cover image file is required",
+                details: "Cover image file is missing",
+                code: "COVER_IMAGE_MISSING",
+              });
+            }
+            console.log("📤 [ONBOARDING] Uploading cover image:", {
+              filename: coverFile.originalname,
+              size: coverFile.size,
+              mimetype: coverFile.mimetype,
+            });
+            coverImageUrl = await uploadFile(
+              coverFile.buffer,
+              coverFile.originalname
+            );
+
+            if (!coverImageUrl) {
+              console.error("❌ [ONBOARDING] Cover image upload failed");
+              return res.status(500).json({
+                error: "Failed to upload cover image",
+                details: "Cover image upload returned null",
+                code: "COVER_IMAGE_UPLOAD_ERROR",
+              });
+            }
+
+            console.log("✅ [ONBOARDING] Cover image uploaded successfully:", {
+              coverImageUrl,
+            });
+          } catch (error) {
+            console.error("❌ [ONBOARDING] Error uploading cover image:", {
+              error: error instanceof Error ? error.message : String(error),
+            });
+            return res.status(500).json({
+              error: "Failed to upload cover image",
+              details: error instanceof Error ? error.message : "Unknown error",
+              code: "COVER_IMAGE_UPLOAD_ERROR",
+            });
+          }
+        }
+
         // Upload project media files
         let projectMediaUrls: string[] = [];
         if (
@@ -329,12 +394,13 @@ router.post(
           }
         }
 
-        // Create project if media was uploaded successfully
-        if (projectMediaUrls.length > 0) {
+        // Create project if cover image is provided (required field)
+        if (coverImageUrl) {
           try {
             const projectData = {
               name: validatedData.data.projectName,
               description: validatedData.data.projectDescription,
+              coverImage: coverImageUrl,
               media: projectMediaUrls,
               tag: validatedData.data.role || null,
               link: validatedData.data.projectLink || null,

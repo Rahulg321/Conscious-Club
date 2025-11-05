@@ -20,6 +20,7 @@ import ProfileEditDialog from "@/components/dialogs/profile-edit-dialog";
 import { Session } from "next-auth";
 import { isFollowing } from "@/lib/actions/follow-action";
 import FollowButton from "@/components/buttons/follow-button";
+import MashupDialog from "@/components/dialogs/mashup-dialog";
 
 export async function generateMetadata({
   params,
@@ -119,11 +120,18 @@ const ProfilePage = async ({ params }: Props) => {
                   location={currentUser.location || ""}
                 />
               ) : (
-                <FollowButton
-                  userId={userId}
-                  isFollowing={isUserFollowing}
-                  className="flex items-center gap-2"
-                />
+                <div className="flex items-center gap-2">
+                  <FollowButton
+                    userId={userId}
+                    isFollowing={isUserFollowing}
+                    className="flex items-center gap-2"
+                  />
+                  <MashupDialog
+                    collaboratorId={userId}
+                    collaboratorName={currentUser.name || undefined}
+                    userSession={userSession}
+                  />
+                </div>
               )}
             </div>
             <div className="relative self-center ">
@@ -236,6 +244,7 @@ async function DisplayUserProjectWork({
   isOwnProfile: boolean;
 }) {
   const projects = await getUserProjects(profileUserId);
+  const profileUser = await getCachedUserById(profileUserId);
 
   return (
     <div className="mt-8">
@@ -267,6 +276,13 @@ async function DisplayUserProjectWork({
             <ProjectCard
               key={project.id}
               project={project}
+              creatorName={profileUser?.name || undefined}
+              creatorInfo={{
+                id: profileUser?.id,
+                name: profileUser?.name || undefined,
+                discipline: profileUser?.discipline || null,
+                role: profileUser?.role || null,
+              }}
               isOwnProfile={isOwnProfile}
             />
           ))}
@@ -331,6 +347,18 @@ async function DisplayUserMashupProjects({
               project={project}
               creatorName={creatorName}
               collaboratorName={collaboratorName}
+              creatorInfo={{
+                id: mashup.creatorId || undefined,
+                name: creatorName,
+                discipline: mashup.creatorDiscipline,
+                role: mashup.creatorRole,
+              }}
+              collaboratorInfo={{
+                id: mashup.collaboratorId || undefined,
+                name: collaboratorName,
+                discipline: mashup.collaboratorDiscipline,
+                role: mashup.collaboratorRole,
+              }}
               isOwnProfile={isOwnProfile}
             />
           );

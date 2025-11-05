@@ -19,6 +19,7 @@ const initialFormData: OnboardingFormData = {
   projectDescription: "",
   projectMedia: [],
   projectLink: "",
+  coverImage: null,
   dedicatedToPerson: "",
   dedicatedToBrand: "",
   dedicatedToCause: "",
@@ -79,12 +80,11 @@ export const useOnboardingFormWithURL = () => {
       const age = today.getFullYear() - birthDate.getFullYear();
       const monthDiff = today.getMonth() - birthDate.getMonth();
       const dayDiff = today.getDate() - birthDate.getDate();
-      
+
       // Calculate actual age considering month and day
-      const actualAge = monthDiff < 0 || (monthDiff === 0 && dayDiff < 0) 
-        ? age - 1 
-        : age;
-      
+      const actualAge =
+        monthDiff < 0 || (monthDiff === 0 && dayDiff < 0) ? age - 1 : age;
+
       if (actualAge < 14) {
         errors.push("You must be at least 14 years old to use this platform");
       }
@@ -180,6 +180,9 @@ export const useOnboardingFormWithURL = () => {
                 formDataToSubmit.append("projectMedia", file);
               }
             });
+          } else if (key === "coverImage" && value instanceof File) {
+            // Handle coverImage file
+            formDataToSubmit.append("coverImage", value);
           } else if (value !== null && value !== "" && !Array.isArray(value)) {
             formDataToSubmit.append(key, String(value));
           }

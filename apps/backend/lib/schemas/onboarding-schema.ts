@@ -23,7 +23,6 @@ const mediaFileSchema = z
   }, "File size exceeds the maximum allowed size (20MB for images, 200MB for videos)");
 
 export const onboardingSchema = z.object({
-  // User profile data
   name: z
     .string()
     .min(1, "Name is required")
@@ -100,8 +99,11 @@ export const onboardingSchema = z.object({
     .array(mediaFileSchema)
     .max(4, "You can upload up to 4 media files")
     .optional(),
+  coverImage: z
+    .array(mediaFileSchema)
+    .max(1, "Only one cover image is allowed")
+    .optional(),
 
-  // Dedication fields (optional)
   dedicatedToPerson: z
     .string()
     .max(100, "Person name must be less than 100 characters")

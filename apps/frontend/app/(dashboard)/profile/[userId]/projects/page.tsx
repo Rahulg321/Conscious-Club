@@ -36,26 +36,63 @@ const ProjectsPage = async ({ params }: Props) => {
   if (userSession.user.id !== userId) redirect("/");
 
   const projects = await getUserProjects(userId);
+  const profileUser = await getCachedUserById(userId);
 
   // For mashup projects, fetch collaborator information
   const projectsWithCollaborators = await Promise.all(
     (projects || []).map(async (project) => {
       if (project.isMashup && project.collaboratorId) {
         const [collaborator] = await db
-          .select({ name: user.name })
+          .select({
+            name: user.name,
+            id: user.id,
+            discipline: user.discipline,
+            role: user.role,
+          })
           .from(user)
           .where(eq(user.id, project.collaboratorId));
         const [creator] = await db
-          .select({ name: user.name })
+          .select({
+            name: user.name,
+            id: user.id,
+            discipline: user.discipline,
+            role: user.role,
+          })
           .from(user)
           .where(eq(user.id, project.userId));
         return {
           ...project,
           collaboratorName: collaborator?.name,
+          collaboratorInfo: collaborator
+            ? {
+                id: collaborator.id,
+                name: collaborator.name || undefined,
+                discipline: collaborator.discipline || null,
+                role: collaborator.role || null,
+              }
+            : undefined,
           creatorName: creator?.name,
+          creatorInfo: creator
+            ? {
+                id: creator.id,
+                name: creator.name || undefined,
+                discipline: creator.discipline || null,
+                role: creator.role || null,
+              }
+            : undefined,
         };
       }
-      return project;
+      return {
+        ...project,
+        creatorInfo: profileUser
+          ? {
+              id: profileUser.id,
+              name: profileUser.name || undefined,
+              discipline: profileUser.discipline || null,
+              role: profileUser.role || null,
+            }
+          : undefined,
+      };
     })
   );
 
@@ -107,11 +144,23 @@ const ProjectsPage = async ({ params }: Props) => {
               creatorName={
                 project.isMashup && "creatorName" in project
                   ? project.creatorName || undefined
-                  : undefined
+                  : profileUser?.name || undefined
               }
               collaboratorName={
                 project.isMashup && "collaboratorName" in project
                   ? project.collaboratorName || undefined
+                  : undefined
+              }
+              creatorInfo={
+                project.isMashup && "creatorInfo" in project
+                  ? project.creatorInfo
+                  : "creatorInfo" in project
+                    ? project.creatorInfo
+                    : undefined
+              }
+              collaboratorInfo={
+                project.isMashup && "collaboratorInfo" in project
+                  ? project.collaboratorInfo
                   : undefined
               }
             />
