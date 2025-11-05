@@ -22,6 +22,8 @@ const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
     const decoded = jwt.verify(token, process.env.AUTH_SECRET as string);
     (req as any).user = decoded;
 
+    console.log("successfully authenticated token");
+
     next();
   } catch (error) {
     console.log("An error occurred trying to authenticate token", error);

@@ -12,10 +12,12 @@ import { SidebarUserNav } from "./sidebar-user-nav";
 import CCLogo from "@/public/cc_logo.png";
 import Image from "next/image";
 import { Button } from "./ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 import BearSticker from "@/public/stickers/bear-sticker.png";
 import Link from "next/link";
 import { CardContainer, CardItem } from "@/components/ui/3d-card";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 type AppSidebarProps = {
   user: User | null;
@@ -25,7 +27,51 @@ type AppSidebarProps = {
   } | null;
 };
 
+type PinnedBravoState = {
+  name: string;
+  image: string;
+} | null;
+
 export function AppSidebar({ user, pinnedBravo }: AppSidebarProps) {
+  const pathname = usePathname();
+  const [displayBravo, setDisplayBravo] =
+    useState<PinnedBravoState>(pinnedBravo);
+  const [isLoadingBravo, setIsLoadingBravo] = useState(false);
+
+  useEffect(() => {
+    // Check if we're on a profile page
+    const profileMatch = pathname?.match(/^\/profile\/([^/]+)/);
+
+    if (profileMatch) {
+      const profileUserId = profileMatch[1];
+      const isOwnProfile = user?.id === profileUserId;
+
+      // If viewing someone else's profile, fetch their pinned bravo
+      if (!isOwnProfile && profileUserId) {
+        setIsLoadingBravo(true);
+        fetch(`/api/users/${profileUserId}/pinned-bravo`)
+          .then((res) => res.json())
+          .then((data) => {
+            setDisplayBravo(data.pinnedBravo || null);
+            setIsLoadingBravo(false);
+          })
+          .catch((error) => {
+            console.error("Error fetching profile user's pinned bravo:", error);
+            setDisplayBravo(null);
+            setIsLoadingBravo(false);
+          });
+      } else {
+        // On own profile or not on profile page, use current user's pinned bravo
+        setDisplayBravo(pinnedBravo);
+        setIsLoadingBravo(false);
+      }
+    } else {
+      // Not on a profile page, use current user's pinned bravo
+      setDisplayBravo(pinnedBravo);
+      setIsLoadingBravo(false);
+    }
+  }, [pathname, user?.id, pinnedBravo]);
+
   return (
     <Sidebar className="">
       <SidebarHeader className="p-2 border-b border-[#e2e3e6]">
@@ -48,10 +94,14 @@ export function AppSidebar({ user, pinnedBravo }: AppSidebarProps) {
 
       <SidebarFooter className="mt-auto">
         <div className="flex items-center gap-2 flex-col">
-          {pinnedBravo ? (
+          {isLoadingBravo ? (
+            <div className="relative w-full max-w-[180px] aspect-square flex items-center justify-center">
+              <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
+            </div>
+          ) : displayBravo ? (
             <div className="relative w-full max-w-[180px] aspect-square">
               <Image
-                src={pinnedBravo.image}
+                src={displayBravo.image}
                 alt="Pinned Bravo"
                 fill
                 className="object-contain"
@@ -70,12 +120,6 @@ export function AppSidebar({ user, pinnedBravo }: AppSidebarProps) {
                   </CardItem>
                 </CardContainer>
               </div>
-              {/* <Image
-                src={BearSticker}
-                alt="Bear Sticker"
-                fill
-                className="object-contain"
-              /> */}
             </div>
           )}
           <Button variant="link" asChild className="shrink-0">

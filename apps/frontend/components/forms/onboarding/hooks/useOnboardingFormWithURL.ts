@@ -104,6 +104,8 @@ export const useOnboardingFormWithURL = () => {
   };
 
   const validateStep3 = (data: OnboardingFormData): string[] => {
+    console.log("validating step 3", data);
+
     const errors: string[] = [];
 
     // Check if any project field is filled
@@ -138,7 +140,7 @@ export const useOnboardingFormWithURL = () => {
     return errors;
   };
 
-  const validateCurrentStep = (): boolean => {
+  const validateCurrentStep = (): { isValid: boolean; errors: string[] } => {
     const errors: string[] = [];
 
     switch (currentStep) {
@@ -155,21 +157,22 @@ export const useOnboardingFormWithURL = () => {
 
     if (errors.length > 0) {
       setStepErrors((prev) => ({ ...prev, [currentStep]: errors }));
-      return false;
+      return { isValid: false, errors };
     } else {
       setStepErrors((prev) => {
         const newErrors = { ...prev };
         delete newErrors[currentStep];
         return newErrors;
       });
-      return true;
+      return { isValid: true, errors: [] };
     }
   };
 
   const nextStep = (maxSteps: number) => {
     if (currentStep < maxSteps) {
       // Validate current step before proceeding
-      if (validateCurrentStep()) {
+      const validation = validateCurrentStep();
+      if (validation.isValid) {
         updateStep(currentStep + 1);
       }
     }
@@ -194,6 +197,21 @@ export const useOnboardingFormWithURL = () => {
   const submitOnboarding = async () => {
     isSubmittingTransition(async () => {
       setSubmitError(null);
+
+      // Validate current step before submitting
+      const validation = validateCurrentStep();
+      if (!validation.isValid) {
+        console.log(
+          "❌ [FRONTEND] Validation failed, cannot submit",
+          validation.errors
+        );
+        if (validation.errors.length > 0) {
+          toast.error("Please fix the errors before submitting", {
+            description: validation.errors.join(", "),
+          });
+        }
+        return;
+      }
 
       try {
         // Create FormData for file uploads
@@ -272,6 +290,7 @@ export const useOnboardingFormWithURL = () => {
         console.log("Onboarding submitted successfully:", result);
         toast.success("Successfully completed onboarding!", {
           description: "Redirecting to dashboard...",
+          className: "bg-green-500 text-white",
         });
 
         // Update session and redirect immediately
