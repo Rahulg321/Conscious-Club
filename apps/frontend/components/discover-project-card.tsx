@@ -30,7 +30,6 @@ export default function DiscoverProjectCard({
   const searchParams = useSearchParams();
 
   const openProject = (e: React.MouseEvent) => {
-    // e.preventDefault();
     const params = new URLSearchParams(searchParams?.toString());
     params.set("project", projectId);
     router.push(`/discover?${params.toString()}`);
