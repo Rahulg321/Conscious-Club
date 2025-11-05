@@ -288,7 +288,7 @@ async function FetchAndDisplayProjects({
   );
 
   return (
-    <div>
+    <div className="group-has-[[data-pending]]:animate-pulse">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {projects?.map((project) => {
           // Get first media item for preview (prefer images)
@@ -354,7 +354,7 @@ async function FetchAndDisplayUserProfiles({
 
   return (
     <div>
-      <div className="space-y-4 md:space-y-6">
+      <div className="group-has-[[data-pending]]:animate-pulse space-y-4 md:space-y-6">
         {userProfiles?.map((userProfile) => (
           <div key={userProfile.id}>
             <ProfileCard
@@ -400,7 +400,7 @@ async function FetchAndDisplayMashupProjects({
 
   return (
     <div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="group-has-[[data-pending]]:animate-pulse grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {mashupProjects?.map((mashup) => {
           // Get first media item for preview
           const firstMedia =

@@ -285,7 +285,7 @@ async function FetchAndDisplayProjects({
   );
 
   return (
-    <div>
+    <div className="group-has-[[data-pending]]:animate-pulse">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {projects?.map((project) => {
           return (
@@ -333,7 +333,7 @@ async function FetchAndDisplayUserProfiles({
   );
 
   return (
-    <div>
+    <div className="group-has-[[data-pending]]:animate-pulse">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {userProfiles?.map((userProfile) => (
           <div key={userProfile.id}>
@@ -379,7 +379,7 @@ async function FetchAndDisplayMashupProjects({
     );
 
   return (
-    <div>
+    <div className="group-has-[[data-pending]]:animate-pulse">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {mashupProjects?.map((mashup) => {
           // Show both creator and collaborator names
@@ -387,7 +387,8 @@ async function FetchAndDisplayMashupProjects({
           const collaboratorName = mashup.collaboratorName || "Unknown";
 
           // Get first media item for preview
-          const firstMedia = getPreviewMedia(mashup.media) || "/placeholder.svg";
+          const firstMedia =
+            getPreviewMedia(mashup.media) || "/placeholder.svg";
 
           return (
             <CommunityProjectCard

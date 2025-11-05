@@ -32,7 +32,12 @@ const ProjectProfileTabs = () => {
   };
 
   return (
-    <Tabs value={currentType} onValueChange={handleTabChange} className="">
+    <Tabs
+      value={currentType}
+      onValueChange={handleTabChange}
+      className=""
+      data-pending={isPending ? "" : undefined}
+    >
       <TabsList>
         <TabsTrigger className="cursor-pointer" value="projects">
           Creations

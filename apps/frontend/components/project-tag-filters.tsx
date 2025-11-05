@@ -101,7 +101,10 @@ const ProjectTagsFilter = () => {
   }, [isPending]);
 
   return (
-    <div className="bg-white border-b border-gray-200 px-4 sm:px-6 py-3 sticky top-0 z-30">
+    <div
+      className="bg-white border-b border-gray-200 px-4 sm:px-6 py-3 sticky top-0 z-30"
+      data-pending={isPending ? "" : undefined}
+    >
       <div className="max-w-7xl mx-auto">
         {/* <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2 min-w-0">

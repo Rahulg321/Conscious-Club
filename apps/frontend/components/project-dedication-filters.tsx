@@ -18,26 +18,27 @@ export default function ProjectDedicationFilters() {
   const dedicatedToCauseRef = useRef<HTMLInputElement>(null);
   const dedicationReasonRef = useRef<HTMLInputElement>(null);
 
-  const dedicatedToPerson = searchParams.get("dedicatedToPerson")?.toString() || "";
-  const dedicatedToBrand = searchParams.get("dedicatedToBrand")?.toString() || "";
-  const dedicatedToCause = searchParams.get("dedicatedToCause")?.toString() || "";
-  const dedicationReason = searchParams.get("dedicationReason")?.toString() || "";
+  const dedicatedToPerson =
+    searchParams.get("dedicatedToPerson")?.toString() || "";
+  const dedicatedToBrand =
+    searchParams.get("dedicatedToBrand")?.toString() || "";
+  const dedicatedToCause =
+    searchParams.get("dedicatedToCause")?.toString() || "";
+  const dedicationReason =
+    searchParams.get("dedicationReason")?.toString() || "";
 
-  const updateParam = useDebouncedCallback(
-    (key: string, value: string) => {
-      startTransition(() => {
-        const params = new URLSearchParams(searchParams);
-        if (value.trim()) {
-          params.set(key, value.trim());
-        } else {
-          params.delete(key);
-        }
-        params.set("page", "1"); // Reset to first page when filter changes
-        replace(`${pathname}?${params.toString()}`);
-      });
-    },
-    300
-  );
+  const updateParam = useDebouncedCallback((key: string, value: string) => {
+    startTransition(() => {
+      const params = new URLSearchParams(searchParams);
+      if (value.trim()) {
+        params.set(key, value.trim());
+      } else {
+        params.delete(key);
+      }
+      params.set("page", "1"); // Reset to first page when filter changes
+      replace(`${pathname}?${params.toString()}`);
+    });
+  }, 300);
 
   const handleDedicatedToPersonChange = (value: string) => {
     updateParam("dedicatedToPerson", value);
@@ -56,11 +57,17 @@ export default function ProjectDedicationFilters() {
   };
 
   return (
-    <div className="bg-white border-b border-gray-200 px-4 sm:px-6 py-3">
+    <div
+      className="bg-white border-b border-gray-200 px-4 sm:px-6 py-3"
+      data-pending={isPending ? "" : undefined}
+    >
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-wrap items-end gap-4">
           <div className="flex-1 min-w-[200px]">
-            <Label htmlFor="dedicatedToPerson" className="text-xs text-muted-foreground mb-1 block">
+            <Label
+              htmlFor="dedicatedToPerson"
+              className="text-xs text-muted-foreground mb-1 block"
+            >
               Dedicated to Person
             </Label>
             <div className="relative">
@@ -79,7 +86,10 @@ export default function ProjectDedicationFilters() {
           </div>
 
           <div className="flex-1 min-w-[200px]">
-            <Label htmlFor="dedicatedToBrand" className="text-xs text-muted-foreground mb-1 block">
+            <Label
+              htmlFor="dedicatedToBrand"
+              className="text-xs text-muted-foreground mb-1 block"
+            >
               Dedicated to Brand
             </Label>
             <div className="relative">
@@ -98,7 +108,10 @@ export default function ProjectDedicationFilters() {
           </div>
 
           <div className="flex-1 min-w-[200px]">
-            <Label htmlFor="dedicatedToCause" className="text-xs text-muted-foreground mb-1 block">
+            <Label
+              htmlFor="dedicatedToCause"
+              className="text-xs text-muted-foreground mb-1 block"
+            >
               Dedicated to Cause
             </Label>
             <div className="relative">
@@ -117,7 +130,10 @@ export default function ProjectDedicationFilters() {
           </div>
 
           <div className="flex-1 min-w-[200px]">
-            <Label htmlFor="dedicationReason" className="text-xs text-muted-foreground mb-1 block">
+            <Label
+              htmlFor="dedicationReason"
+              className="text-xs text-muted-foreground mb-1 block"
+            >
               Dedication Reason
             </Label>
             <div className="relative">
@@ -139,4 +155,3 @@ export default function ProjectDedicationFilters() {
     </div>
   );
 }
-
