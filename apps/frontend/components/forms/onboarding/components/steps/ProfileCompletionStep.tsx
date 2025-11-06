@@ -5,6 +5,10 @@ import { GENDER_OPTIONS } from "../../config";
 import { OnboardingFormData } from "../../types";
 import CityInputField from "@/components/city-input-field";
 import CountryInputField from "@/components/country-input-field";
+import {
+  RadioGroup,
+  RadioGroupItem,
+} from "@/components/animate-ui/components/radix/radio-group";
 
 interface ProfileCompletionStepProps {
   formData: OnboardingFormData;
@@ -24,7 +28,7 @@ export const ProfileCompletionStep = ({
   handleFileUpload,
 }: ProfileCompletionStepProps) => {
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <div className="flex items-center space-x-4">
         <div className="relative">
           <div className="h-24 w-24 rounded-full border-4 border-gray-200 overflow-hidden bg-gray-100 flex items-center justify-center">
@@ -67,81 +71,87 @@ export const ProfileCompletionStep = ({
           placeholder="Enter your full name"
         />
       </div>
-
-      {/* Gender Selection */}
       <div className="space-y-3 flex flex-col ">
         <Label>Gender</Label>
         <div className="flex gap-4 items-center ">
-          {GENDER_OPTIONS.map((option) => (
-            <label key={option.value} className="flex items-center space-x-2">
-              <input
-                type="radio"
-                name="gender"
-                value={option.value}
-                checked={formData.gender === option.value}
-                onChange={(e) => updateFormData("gender", e.target.value)}
-                className="text-indigo-600 focus:ring-indigo-500"
-              />
-              <span className="text-sm">{option.label}</span>
-            </label>
-          ))}
+          <RadioGroup className="flex gap-2" value={formData.gender}>
+            {GENDER_OPTIONS.map((option) => (
+              <Label className="flex items-center gap-x-3" key={option.value}>
+                <RadioGroupItem
+                  className="text-indigo-200 focus:ring-indigo-400 focus:ring-1"
+                  value={option.value}
+                  checked={formData.gender === option.value}
+                  onClick={(e) =>
+                    updateFormData("gender", e.currentTarget.value)
+                  }
+                />
+                {option.label}
+              </Label>
+            ))}
+          </RadioGroup>
         </div>
       </div>
 
-      {/* City Field */}
-      <div className="space-y-2">
-        <Label htmlFor="city">City</Label>
-        <CityInputField
-          id="city"
-          value={formData.city}
-          onChange={(value) => updateFormData("city", value)}
-          placeholder="Enter your city"
-        />
+      <div className="flex justify-between gap-4">
+        {/* City Field */}
+
+        <div className="space-y-2 w-full">
+          <Label htmlFor="city">City</Label>
+          <CityInputField
+            id="city"
+            value={formData.city}
+            onChange={(value) => updateFormData("city", value)}
+            placeholder="Enter your city"
+          />
+        </div>
+
+        {/* Country Field */}
+        <div className="space-y-2 w-full">
+          <Label htmlFor="country">Country</Label>
+          <CountryInputField
+            id="country"
+            value={formData.country}
+            onChange={(value) => updateFormData("country", value)}
+            placeholder="Enter your country"
+          />
+        </div>
       </div>
 
-      {/* Country Field */}
-      <div className="space-y-2">
-        <Label htmlFor="country">Country</Label>
-        <CountryInputField
-          id="country"
-          value={formData.country}
-          onChange={(value) => updateFormData("country", value)}
-          placeholder="Enter your country"
-        />
-      </div>
+      <div className="flex justify-between gap-4">
+        <div className="w-full">
+          <Label htmlFor="dateOfBirth" className="mb-2">
+            Date of Birth
+          </Label>
+          <Input
+            id="dateOfBirth"
+            type="date"
+            value={formData.dateOfBirth}
+            onChange={(e) => updateFormData("dateOfBirth", e.target.value)}
+            max={(() => {
+              const today = new Date();
+              const maxDate = new Date(
+                today.getFullYear() - 14,
+                today.getMonth(),
+                today.getDate()
+              );
+              return maxDate.toISOString().split("T")[0];
+            })()}
+            className="w-full"
+          />
+          <p className="text-xs text-muted-foreground">
+            You must be at least 14 years old
+          </p>
+        </div>
 
-      {/* Social Media URL Field */}
-      <div className="space-y-2">
-        <Label htmlFor="socialMediaUrl">Social Media URL (Optional)</Label>
-        <Input
-          id="socialMediaUrl"
-          value={formData.socialMediaUrl}
-          onChange={(e) => updateFormData("socialMediaUrl", e.target.value)}
-          placeholder="https://linkedin.com/in/yourprofile"
-        />
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="dateOfBirth">Date of Birth</Label>
-        <Input
-          id="dateOfBirth"
-          type="date"
-          value={formData.dateOfBirth}
-          onChange={(e) => updateFormData("dateOfBirth", e.target.value)}
-          max={(() => {
-            const today = new Date();
-            const maxDate = new Date(
-              today.getFullYear() - 14,
-              today.getMonth(),
-              today.getDate()
-            );
-            return maxDate.toISOString().split("T")[0];
-          })()}
-          className="w-full"
-        />
-        <p className="text-xs text-muted-foreground">
-          You must be at least 14 years old to use this platform
-        </p>
+        <div className="space-y-2 w-full">
+          <Label htmlFor="socialMediaUrl">Social Media URL (Optional)</Label>
+          <Input
+            id="socialMediaUrl"
+            value={formData.socialMediaUrl}
+            onChange={(e) => updateFormData("socialMediaUrl", e.target.value)}
+            placeholder="https://linkedin.com/in/yourprofile"
+          />
+        </div>
       </div>
     </div>
   );

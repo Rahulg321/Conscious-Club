@@ -21,6 +21,10 @@ import { Session } from "next-auth";
 import { isFollowing } from "@/lib/actions/follow-action";
 import FollowButton from "@/components/buttons/follow-button";
 import MashupDialog from "@/components/dialogs/mashup-dialog";
+import {
+  disciplineColor,
+  DisciplineType,
+} from "@/components/forms/onboarding/config";
 
 export async function generateMetadata({
   params,
@@ -60,51 +64,16 @@ const ProfilePage = async ({ params }: Props) => {
   // Get follow status if viewing someone else's profile
   const isUserFollowing = isOwnProfile ? false : await isFollowing(userId);
 
-  type Discipline =
-    | "Digital"
-    | "Visuals"
-    | "Writing"
-    | "Performance"
-    | "Motion";
-  const disciplineColor: Record<
-    Discipline,
-    { color: string; border: string; text: string }
-  > = {
-    Digital: {
-      color: "bg-blue-300",
-      border: "border-blue-300",
-      text: "text-blue-500",
-    },
-    Visuals: {
-      color: "bg-[#cdff98]",
-      border: "border-[#cdff98]",
-      text: "text-[#42354a]",
-    },
-    Writing: {
-      color: "bg-yellow-200",
-      border: "border-yellow-200",
-      text: "text-yellow-500",
-    },
-    Performance: {
-      color: "bg-orange-200",
-      border: "border-orange-200",
-      text: "text-orange-500",
-    },
-    Motion: {
-      color: "bg-purple-300",
-      border: "border-purple-300",
-      text: "text-purple-500",
-    },
-  };
-
-  const isValidDiscipline = (d: unknown): d is Discipline =>
+  const isValidDiscipline = (d: unknown): d is DisciplineType =>
     typeof d === "string" &&
     ["Digital", "Visuals", "Writing", "Performance", "Motion"].includes(
-      d as Discipline
+      d as DisciplineType
     );
 
-  const disciplineKey: Discipline = isValidDiscipline(currentUser.discipline)
-    ? (currentUser.discipline as Discipline)
+  const disciplineKey: DisciplineType = isValidDiscipline(
+    currentUser.discipline
+  )
+    ? (currentUser.discipline as DisciplineType)
     : "Digital";
   return (
     <div>
@@ -172,13 +141,13 @@ const ProfilePage = async ({ params }: Props) => {
 
               <div className="flex flex-wrap gap-2 justify-center md:justify-start">
                 <span
-                  className={`px-3 py-1 flex items-center justify-center ${disciplineColor[disciplineKey].color} text-sm font-medium rounded-full `}
+                  className={`px-3 py-1 flex items-center justify-center ${disciplineColor[disciplineKey as DisciplineType].color} text-sm font-medium rounded-full `}
                 >
                   {currentUser.discipline || "Digital"}
                 </span>
                 {currentUser.role && (
                   <span
-                    className={`px-3 py-1 flex items-center justify-center border-2 ${disciplineColor[disciplineKey].border} ${disciplineColor[disciplineKey].text} text-sm font-medium rounded-full`}
+                    className={`px-3 py-1 flex items-center justify-center border-2 ${disciplineColor[disciplineKey as DisciplineType].border} ${disciplineColor[disciplineKey as DisciplineType].text} text-sm font-medium rounded-full`}
                   >
                     {currentUser.role}
                   </span>
