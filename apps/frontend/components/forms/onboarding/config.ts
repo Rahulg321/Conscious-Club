@@ -5,17 +5,17 @@ export const getStepsForRole = (userRole: UserRole): OnboardingStep[] => {
   return [
     {
       id: 1,
-      title: "Complete Your Profile",
+      title: "Complete your profile",
       description: "Tell us about yourself",
     },
     {
       id: 2,
-      title: "Choose your role",
+      title: "Define your craft",
       description: "Pick the main discipline that best represents your work",
     },
     {
       id: 3,
-      title: "Add Creation",
+      title: "Add your first creation",
       description: "Bring your magic to the playground⭐️",
     },
   ];
@@ -28,6 +28,43 @@ export const DISCIPLINES = [
   "Performance",
   "Digital",
 ] as const;
+
+export type DisciplineType =
+  | "Digital"
+  | "Visuals"
+  | "Writing"
+  | "Performance"
+  | "Motion";
+export const disciplineColor: Record<
+  DisciplineType,
+  { color: string; border: string; text: string }
+> = {
+  Digital: {
+    color: "bg-blue-300",
+    border: "border-blue-300",
+    text: "text-blue-500",
+  },
+  Visuals: {
+    color: "bg-[#cdff98]",
+    border: "border-[#cdff98]",
+    text: "text-[#42354a]",
+  },
+  Writing: {
+    color: "bg-yellow-200",
+    border: "border-yellow-400",
+    text: "text-yellow-600",
+  },
+  Performance: {
+    color: "bg-orange-200",
+    border: "border-orange-200",
+    text: "text-orange-500",
+  },
+  Motion: {
+    color: "bg-purple-300",
+    border: "border-purple-300",
+    text: "text-purple-500",
+  },
+};
 
 export const DISCIPLINE_TO_ROLES: Record<string, string[]> = {
   Visuals: ["Art & Mixed Media", "Illustration & Graphics", "Photography"],

@@ -99,10 +99,10 @@ export const useOnboardingFormWithURL = () => {
   const validateStep2 = (data: OnboardingFormData): string[] => {
     const errors: string[] = [];
     if (!data.discipline) {
-      errors.push("Please select a discipline");
+      errors.push("Please select your style");
     }
     if (!data.role.trim()) {
-      errors.push("Please enter your role");
+      errors.push("Please select your artform");
     }
     return errors;
   };
