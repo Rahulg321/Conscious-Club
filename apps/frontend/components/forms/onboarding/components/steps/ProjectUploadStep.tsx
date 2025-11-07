@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { X, Plus, PlusCircle, Upload } from "lucide-react";
+import { X, Plus, PlusCircle, Upload, EyeClosed, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,8 @@ interface ProjectUploadStepProps {
     field: keyof OnboardingFormData,
     value: string | boolean | File | File[] | null
   ) => void;
+  submitOnboarding: () => void;
+  isSubmitting: boolean;
 }
 
 interface MediaPreview {
@@ -29,12 +31,15 @@ interface CoverImagePreview {
 }
 
 export const ProjectUploadStep = ({
+  submitOnboarding,
+  isSubmitting,
   formData,
   updateFormData,
 }: ProjectUploadStepProps) => {
   const [mediaPreviews, setMediaPreviews] = useState<MediaPreview[]>([]);
   const [coverImagePreview, setCoverImagePreview] =
     useState<CoverImagePreview | null>(null);
+  const [dedications, setDedications] = useState<boolean>(false);
   const mediaRef = useRef<HTMLInputElement>(null);
   const coverImageRef = useRef<HTMLInputElement>(null);
 
@@ -249,23 +254,31 @@ export const ProjectUploadStep = ({
   };
 
   return (
-    <div className="space-y-6 pb-8">
-      <div className="text-center">
-        <p className="text-sm text-muted-foreground mb-6">
+    <div className="space-y-6">
+      <div
+        className="text-center text-indigo-500 flex items-center justify-end gap-2 cursor-pointer"
+        onClick={() => !isSubmitting && submitOnboarding()}
+      >
+        {isSubmitting ? (
+          <Loader2 className="h-10 w-10 animate-spin" />
+        ) : (
+          "Skip this step and add later"
+        )}
+        {/* <p className="text-sm text-muted-foreground mb-6">
           This step is optional. You can skip it and add creations later from
           your profile. If you start filling any project field, all required
           fields (cover image, title, and caption) must be completed.
-        </p>
+        </p> */}
       </div>
 
       {/* Cover Image Upload */}
       <div className="space-y-2">
-        <Label className="text-sm font-medium">Cover Image</Label>
-        <p className="text-xs text-muted-foreground mt-0 p-0">
-          Upload a cover image for your project (required if any project field
-          is filled). Max 20MB.
-        </p>
-        <div className="space-y-2 mt-2">
+        <Label className="text-sm font-medium">
+          Add a cover photo{" "}
+          <span className="text-xs text-muted-foreground">(Max 20MB)</span>
+        </Label>
+
+        <div className="">
           <input
             ref={coverImageRef}
             type="file"
@@ -299,11 +312,11 @@ export const ProjectUploadStep = ({
               type="button"
               variant="outline"
               onClick={() => coverImageRef.current?.click()}
-              className="w-full"
+              className="w-full text-sm text-indigo-500 hover:text-indigo-600 hover:bg-indigo-50 shadow-md shadow-indigo-100 hover:shadow-none rounded-xl"
               size="sm"
             >
-              <Upload className="mr-2 h-3 w-3" />
-              Select Cover Image
+              <Upload className=" h-2 w-2" />
+              Select Image
             </Button>
           )}
 
@@ -312,7 +325,7 @@ export const ProjectUploadStep = ({
               <img
                 src={coverImagePreview.url}
                 alt="Cover preview"
-                className="w-full h-32 object-contain rounded-md bg-muted"
+                className="w-full h-32 object-cover rounded-md bg-muted"
               />
               <Button
                 type="button"
@@ -336,14 +349,10 @@ export const ProjectUploadStep = ({
       </div>
 
       {/* Project Media Upload */}
-      <div className="space-y-2">
+      <div className="">
         <Label className="text-sm font-medium">Upload Media</Label>
-        <p className="text-xs text-muted-foreground mt-0 p-0">
-          Upload up to 4 images or videos. Videos can be up to 20 seconds and
-          200MB. Images up to 20MB.
-        </p>
 
-        <div className="space-y-2 mt-2">
+        <div className="mt-2">
           <input
             ref={mediaRef}
             type="file"
@@ -358,36 +367,40 @@ export const ProjectUploadStep = ({
               type="button"
               variant="outline"
               onClick={() => mediaRef.current?.click()}
-              className="w-full"
+              className="w-full text-sm text-indigo-500 hover:text-indigo-600 hover:bg-indigo-50 shadow-md shadow-indigo-100 hover:shadow-none rounded-xl"
               size="sm"
             >
               <PlusCircle className="mr-2 h-3 w-3" />
             </Button>
           )}
+          <p className="text-xs text-muted-foreground">
+            Upload up to 4 images or videos. Videos can be up to 20 seconds each
+            and 200MB. Images up to 20MB each.
+          </p>
 
           {formData.projectMedia && formData.projectMedia.length > 0 && (
             <div className="space-y-2">
               <div className="grid grid-cols-2 gap-2">
                 {mediaPreviews.map((preview, index) => (
-                  <div key={index} className="relative rounded-md border p-1">
+                  <div key={index} className="relative rounded-md border">
                     {preview.type === "image" ? (
                       <img
                         src={preview.url}
                         alt={`Media ${index + 1}`}
-                        className="w-full h-24 object-contain rounded-md bg-muted"
+                        className="w-full h-24 object-cover rounded-md bg-muted"
                       />
                     ) : (
                       <video
                         src={preview.url}
-                        className="w-full h-24 object-contain rounded-md bg-muted"
+                        className="w-full h-24 object-cover rounded-md bg-muted"
                         controls
                       />
                     )}
                     <Button
                       type="button"
-                      variant="destructive"
+                      variant="outline"
                       size="sm"
-                      className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0"
+                      className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 border-destructive text-destructive"
                       onClick={() => removeMedia(index)}
                     >
                       <X className="h-3 w-3" />
@@ -401,7 +414,7 @@ export const ProjectUploadStep = ({
                   type="button"
                   variant="outline"
                   onClick={() => mediaRef.current?.click()}
-                  className="w-full"
+                  className="w-full text-sm text-indigo-500 hover:text-indigo-600 hover:bg-indigo-50 shadow-md shadow-indigo-100 hover:shadow-none rounded-xl"
                   size="sm"
                 >
                   <Plus className="mr-2 h-3 w-3" />
@@ -415,106 +428,137 @@ export const ProjectUploadStep = ({
 
       {/* Project Name */}
       <div className="space-y-2">
-        <Label htmlFor="projectName" className="text-sm font-medium">
-          Title{" "}
-          <span className="text-muted-foreground text-xs">
-            (required if any project field is filled)
-          </span>
-        </Label>
+        <div className="text-sm font-medium">
+          Title
+          <span className="text-xs text-red-500 ml-1">*</span>
+        </div>
         <Input
           id="projectName"
           value={formData.projectName}
           onChange={(e) => updateFormData("projectName", e.target.value)}
-          placeholder="Enter project name"
+          placeholder="Enter creation title"
           className="h-9"
         />
       </div>
 
       {/* Project Description */}
       <div className="space-y-2">
-        <Label htmlFor="projectDescription" className="text-sm font-medium">
-          Caption{" "}
-          <span className="text-muted-foreground text-xs">
-            (required if any project field is filled)
-          </span>
-        </Label>
+        <div className="text-sm font-medium">
+          Caption
+          <span className="text-xs text-red-500 ml-1">*</span>
+        </div>
         <Textarea
           id="projectDescription"
           value={formData.projectDescription}
           onChange={(e) => updateFormData("projectDescription", e.target.value)}
-          placeholder="Describe your project..."
-          className="min-h-[80px]"
+          placeholder="..."
+          className=""
         />
       </div>
 
       {/* Dedications Section */}
-      <div className="space-y-3">
-        <div className="">
-          <Label className="text-sm font-medium">Dedications (Optional)</Label>
-          <p className="text-xs text-muted-foreground">
+      {!dedications ? (
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => setDedications(!dedications)}
+          className="w-full text-sm text-indigo-500 hover:text-indigo-600 hover:bg-indigo-50 shadow-md shadow-indigo-100 hover:shadow-none rounded-xl"
+          size="sm"
+        >
+          <Plus className=" h-2 w-2" />
+          Add Dedications (optional)
+        </Button>
+      ) : (
+        <>
+          <div className="space-y-3">
+            <div className="">
+              <Label className="text-sm font-medium text-indigo-500">
+                Dedications
+              </Label>
+              {/* <p className="text-xs text-muted-foreground">
             Would you like to dedicate this to someone? — a person, a brand, or
             a cause?
-          </p>
-        </div>
+          </p> */}
+            </div>
 
-        {/* Dedicated to Person */}
-        <div className="space-y-2">
-          <Label htmlFor="dedicatedToPerson" className="text-sm">
-            A Person
-          </Label>
-          <Input
-            id="dedicatedToPerson"
-            value={formData.dedicatedToPerson}
-            onChange={(e) =>
-              updateFormData("dedicatedToPerson", e.target.value)
-            }
-            placeholder="Enter person's name"
-            className="h-9"
-          />
-        </div>
+            {/* Dedicated to Person */}
+            <div className="flex items-center justify-between gap-4">
+              <div className="space-y-2 w-full">
+                <Label htmlFor="dedicatedToPerson" className="text-sm">
+                  A person
+                </Label>
+                <Input
+                  id="dedicatedToPerson"
+                  value={formData.dedicatedToPerson}
+                  onChange={(e) =>
+                    updateFormData("dedicatedToPerson", e.target.value)
+                  }
+                  placeholder="Enter person's name"
+                  className="h-9"
+                />
+              </div>
 
-        {/* Dedicated to Brand */}
-        <div className="space-y-2">
-          <Label htmlFor="dedicatedToBrand" className="text-sm">
-            A Brand
-          </Label>
-          <Input
-            id="dedicatedToBrand"
-            value={formData.dedicatedToBrand}
-            onChange={(e) => updateFormData("dedicatedToBrand", e.target.value)}
-            placeholder="Enter brand name"
-            className="h-9"
-          />
-        </div>
+              {/* Dedicated to Brand */}
+              <div className="space-y-2 w-full">
+                <Label htmlFor="dedicatedToBrand" className="text-sm">
+                  A brand
+                </Label>
+                <Input
+                  id="dedicatedToBrand"
+                  value={formData.dedicatedToBrand}
+                  onChange={(e) =>
+                    updateFormData("dedicatedToBrand", e.target.value)
+                  }
+                  placeholder="Enter brand name"
+                  className="h-9"
+                />
+              </div>
+            </div>
 
-        {/* Dedicated to Cause */}
-        <div className="space-y-2">
-          <Label htmlFor="dedicatedToCause" className="text-sm">
-            A Cause
-          </Label>
-          <Input
-            id="dedicatedToCause"
-            value={formData.dedicatedToCause}
-            onChange={(e) => updateFormData("dedicatedToCause", e.target.value)}
-            placeholder="Enter cause name"
-            className="h-9"
-          />
-        </div>
+            {/* Dedicated to Cause */}
+            <div className="space-y-2">
+              <Label htmlFor="dedicatedToCause" className="text-sm">
+                A cause
+              </Label>
+              <Input
+                id="dedicatedToCause"
+                value={formData.dedicatedToCause}
+                onChange={(e) =>
+                  updateFormData("dedicatedToCause", e.target.value)
+                }
+                placeholder="Enter cause name"
+                className="h-9"
+              />
+            </div>
 
-        {/* Dedication Reason */}
-        <div className="space-y-2">
-          <Label htmlFor="dedicationReason" className="text-sm">
-            And Why?
-          </Label>
-          <Textarea
-            id="dedicationReason"
-            value={formData.dedicationReason}
-            onChange={(e) => updateFormData("dedicationReason", e.target.value)}
-            placeholder="Tell us why this dedication is meaningful to you..."
-            className="min-h-[60px]"
-          />
-        </div>
-      </div>
+            {/* Dedication Reason */}
+            <div className="space-y-2">
+              <Label htmlFor="dedicationReason" className="text-sm">
+                Drop your reason - we love a backstory!
+              </Label>
+              <Textarea
+                id="dedicationReason"
+                value={formData.dedicationReason}
+                onChange={(e) =>
+                  updateFormData("dedicationReason", e.target.value)
+                }
+                placeholder="..."
+                className="min-h-[60px]"
+              />
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setDedications(!dedications)}
+              className="w-max text-sm text-indigo-500 hover:text-indigo-600 hover:bg-indigo-50 shadow-md shadow-indigo-100 hover:shadow-none rounded-xl"
+              size="sm"
+            >
+              Hide Dedications
+              <EyeClosed className=" h-2 w-2" />
+            </Button>
+          </div>
+        </>
+      )}
     </div>
   );
 };

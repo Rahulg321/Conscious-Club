@@ -25,11 +25,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function OnboardingPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
+export default async function OnboardingPage() {
   const userSession = await auth();
 
   if (!userSession) redirect("/login");
@@ -40,11 +36,9 @@ export default async function OnboardingPage({
     redirect("/dashboard");
   }
 
-  const step = parseInt((await searchParams).step as string, 10) || 1;
-
   return (
     <OnboardingProvider>
-      <OnboardingPageContent step={step} />
+      <OnboardingPageContent />
     </OnboardingProvider>
   );
 }

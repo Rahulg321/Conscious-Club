@@ -35,13 +35,16 @@ export function OnboardingForm() {
   return (
     <div className="pb-16">
       <div className="px-4 py-4 space-y-4 ">
-        <ProgressIndicator steps={steps} currentStep={currentStep} />
+        <ProgressIndicator
+          // steps={steps}
+          currentStep={currentStep}
+        />
         <StepHeader step={currentStepData} />
         <Separator />
       </div>
 
-      <div className="px-4 md:px-8 lg:px-12 py-4 pb-16">
-        <div className="space-y-4">
+      <div className="px-4 md:px-8 lg:px-12 py-2 pb-8">
+        <div className="space-y-2">
           {currentStep === 1 && (
             <ProfileCompletionStep
               formData={formData}
@@ -59,6 +62,8 @@ export function OnboardingForm() {
 
           {currentStep === 3 && (
             <ProjectUploadStep
+              submitOnboarding={submitOnboarding}
+              isSubmitting={isSubmitting}
               formData={formData}
               updateFormData={updateFormData}
             />
@@ -79,7 +84,7 @@ export function OnboardingForm() {
               <div className="rounded-md bg-red-50 p-4">
                 <div className="text-sm text-red-700">
                   <p className="font-medium mb-2">
-                    Please fix the following errors:
+                    Please update the following fields:
                   </p>
                   <ul className="list-disc list-inside space-y-1">
                     {stepErrors[currentStep]?.map((error, index) => (
@@ -92,7 +97,7 @@ export function OnboardingForm() {
         </div>
 
         {/* Navigation buttons */}
-        <div className="flex items-center justify-between pt-6 mt-8 border-t border-gray-200 pb-8">
+        <div className="flex items-center justify-between pt-6 mt-2 border-t border-gray-200">
           <Button
             variant="outline"
             onClick={prevStep}
@@ -107,18 +112,18 @@ export function OnboardingForm() {
             <Button
               onClick={() => nextStep(steps.length)}
               disabled={hasStepErrors}
-              className="flex items-center gap-2 disabled:opacity-50"
+              className="flex items-center gap-2 bg-indigo-500 hover:bg-indigo-600 disabled:opacity-50"
             >
               Next
-              {currentStep < steps.length - 1 && (
-                <ChevronRight className="h-4 w-4" />
+              {currentStep < steps.length && (
+                <ChevronRight className="h-5 w-5" />
               )}
             </Button>
           ) : (
             <Button
               onClick={submitOnboarding}
               disabled={isSubmitting}
-              className="bg-[#877DFE] hover:bg-[#877DFE]/90 disabled:opacity-50"
+              className="bg-indigo-500 hover:bg-indigo-600 disabled:opacity-50"
             >
               {isSubmitting ? "Saving..." : "Save"}
             </Button>

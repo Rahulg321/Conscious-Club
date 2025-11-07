@@ -47,6 +47,14 @@ export default function Header({}: {}) {
     },
   ];
 
+  const trimTextLength = (
+    text: string | null | undefined,
+    length: number = 10
+  ) => {
+    if (!text) return "";
+    return text.length > length ? text.slice(0, length) + "..." : text;
+  };
+
   return (
     <div className="w-full sticky top-0 z-50">
       <Navbar>
@@ -75,7 +83,10 @@ export default function Header({}: {}) {
                       className="rounded-full"
                     />
                     <span className="text-sm font-medium text-gray-700">
-                      {session.user?.name || session.user?.email}
+                      {trimTextLength(
+                        session.user?.name || session.user?.email,
+                        20
+                      )}
                     </span>
                   </button>
                 </DropdownMenuTrigger>

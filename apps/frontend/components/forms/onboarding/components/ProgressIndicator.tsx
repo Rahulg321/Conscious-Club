@@ -1,16 +1,10 @@
-import { OnboardingStep } from "../types";
-
 interface ProgressIndicatorProps {
-  steps: OnboardingStep[];
   currentStep: number;
 }
 
-export const ProgressIndicator = ({
-  steps,
-  currentStep,
-}: ProgressIndicatorProps) => {
-  const totalSteps = steps.length;
-  const progressPercentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
+export const ProgressIndicator = ({ currentStep }: ProgressIndicatorProps) => {
+  const progressPercentage =
+    currentStep === 1 ? 20 : currentStep === 2 ? 65 : 90;
 
   return (
     <div className="w-full mx-auto">
