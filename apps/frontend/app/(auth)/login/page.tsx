@@ -141,7 +141,7 @@ export default async function LoginPage({
       </section>
 
       <aside className="hidden md:block">
-        <TestimonialPanel imageUrl="/onboarding/CC_Onboarding_Register.png" />
+        <TestimonialPanel />
       </aside>
     </main>
   );
