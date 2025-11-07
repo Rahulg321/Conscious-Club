@@ -18,6 +18,9 @@ export const POST = async (
     const { projectId } = await params;
     const { isLiked } = await req.json();
 
+    console.log("is project id", projectId);
+    console.log("is project id", isLiked);
+
     if (typeof isLiked !== "boolean") {
       return NextResponse.json(
         { error: "isLiked must be a boolean" },
