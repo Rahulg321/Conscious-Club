@@ -50,19 +50,21 @@ const HeroSection = () => {
         <FloatingMicVocal />
 
         <div className="py-6 mx-auto px-2 pt-24 sm:px-4 md:px-6 lg:px-8 flex flex-col items-center justify-start md:min-h-[65vh] text-center">
-          <h1 className="font-medium font- text-3xl inter-font sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl mb-1 md:mb-6 max-w-4xl lg:max-w-5xl xl:max-w-6xl leading-[0.8]">
+          <div className="font-medium  text-3xl inter-font sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl mb-1 md:mb-1 max-w-4xl lg:max-w-5xl xl:max-w-6xl md:leading-[0.5]">
             Building the{" "}
             {/* <span className="gradient-text  itc-font text-4xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl italic">Creator economy</span> */}
             <span className="bg-gradient-to-r from-orange-400 via-purple-500  to-red-400 inline-block text-transparent bg-clip-text  itc-font text-4xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl italic">
               Creator economy
             </span>{" "}
+          </div>
+          <div className="font-medium  text-3xl inter-font sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl mb-1 md:mb-6 max-w-4xl lg:max-w-5xl xl:max-w-6xl leading-[0.5]">
             of tomorrow
-          </h1>
+          </div>
 
-          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-muted-foreground font-semibold mb-8 max-w-xl lg:max-w-2xl xl:max-w-3xl leading-relaxed">
+          <div className="text-base sm:text-lg md:text-xl lg:text-2xl text-muted-foreground font-semibold mb-8 max-w-xl lg:max-w-2xl xl:max-w-3xl mt-2">
             Join the platform that connects curious minds and creative talent
             through self- expression, play and rewards
-          </p>
+          </div>
 
           <ShinyButton
             className="cursor-point"

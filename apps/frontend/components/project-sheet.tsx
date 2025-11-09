@@ -178,7 +178,7 @@ export default function ProjectSheet() {
         side="right"
         className="w-full sm:max-w-2xl !p-0 gap-0  flex flex-col"
       >
-        <div className="py-2 border-b">
+        <div className="pb-1 border-b">
           <SheetHeader>
             <SheetTitle />
             {/* {loading || isPending ? (
@@ -202,7 +202,7 @@ export default function ProjectSheet() {
                 </div>
               ) : (
                 project && (
-                  <div className="space-y-4">
+                  <div className="space-y-2">
                     {project.isMashup && project.collaborator ? (
                       // Mashup Project - Show both creator and collaborator
                       <div className="rounded-lg  space-y-4">
@@ -319,7 +319,7 @@ export default function ProjectSheet() {
                       // Single Project - Show creator only
                       <div className="rounded-lg pr-4">
                         <div className="flex items-start gap-3">
-                          <Avatar className="w-12 h-12">
+                          <Avatar className="w-16 h-16">
                             <AvatarImage
                               src={
                                 project.creator.image ||
@@ -333,8 +333,8 @@ export default function ProjectSheet() {
                                 .toUpperCase()}
                             </AvatarFallback>
                           </Avatar>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-start justify-between gap-2">
+                          <div className="flex justify-between my-auto items-center min-w-0">
+                            <div className="flex items-center justify-between gap-2">
                               <div className="flex-1 min-w-0">
                                 <Link
                                   href={`/profile/${project.creator.id}`}
@@ -365,8 +365,9 @@ export default function ProjectSheet() {
                               </div>
                               {currentUserId &&
                                 currentUserId !== project.creator.id && (
-                                  <div className="flex items-center gap-2 flex-shrink-0 mt-1">
+                                  <div className="flex items-center gap-2 flex-shrink-0 ml-3">
                                     <FollowButton
+                                      isIcon={true}
                                       userId={project.creator.id}
                                       isFollowing={creatorFollowStatus}
                                       className="text-xs h-8 bg-indigo-500 hover:bg-indigo-600 text-white"
@@ -374,18 +375,6 @@ export default function ProjectSheet() {
                                         setCreatorFollowStatus(isFollowing)
                                       }
                                     />
-                                    {/* <Button
-                                    variant="outline"
-                                    size="sm"
-                                    className="text-xs h-8"
-                                    onClick={() =>
-                                      router.push(
-                                        `/profile/${project.creator.id}`
-                                      )
-                                    }
-                                  >
-                                    View Profile
-                                  </Button> */}
                                   </div>
                                 )}
                             </div>

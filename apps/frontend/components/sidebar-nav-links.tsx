@@ -45,7 +45,7 @@ export function SidebarNavLinks({ userId }: { userId: string }) {
         "!bg-[#FEDADA] !text-pink-700 data-[active=true]:!bg-[#FEDADA] data-[active=true]:!text-pink-700",
     },
     {
-      label: "Challenges",
+      label: "BravoPlay",
       href: "/challenges",
       leading: <Trophy className="w-4 h-4" />,
       activeColor:

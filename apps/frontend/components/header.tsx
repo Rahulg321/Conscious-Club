@@ -166,14 +166,14 @@ export default function Header({}: {}) {
                 <span className="block">{item.name}</span>
               </a>
             ))}
-            <div className="flex w-full flex-col gap-4">
+            <div className="flex w-full flex-col gap-2">
               {status === "loading" ? (
                 <div className="flex items-center justify-center py-4">
                   <Loader2 className="h-6 w-6 animate-spin text-gray-500" />
                 </div>
               ) : session ? (
                 <>
-                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                  {/* <div className="flex items-center justify-center gap-3 p-3 bg-gray-50 rounded-lg">
                     <Image
                       src={
                         session.user?.image ??
@@ -185,21 +185,21 @@ export default function Header({}: {}) {
                       className="rounded-full"
                     />
                     <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-900">
+                      <div className="text-sm font-medium text-gray-900">
                         {session.user?.name || session.user?.email}
-                      </p>
-                      <p className="text-xs text-gray-500">
+                      </div>
+                      <div className="text-xs text-gray-500">
                         {session.user?.email}
-                      </p>
+                      </div>
                     </div>
-                  </div>
+                  </div> */}
                   <NavbarButton
                     onClick={() => {
                       router.push(`/profile/${session.user?.id}`);
                       setIsMobileMenuOpen(false);
                     }}
                     variant="primary"
-                    className="w-full"
+                    className="w-full flex items-center justify-center"
                   >
                     <User className="mr-2 h-4 w-4" />
                     Profile
@@ -212,8 +212,8 @@ export default function Header({}: {}) {
                       toast.success("Logged out successfully");
                       setIsMobileMenuOpen(false);
                     }}
-                    variant="secondary"
-                    className="w-full text-red-600 hover:text-red-700"
+                    variant="primary"
+                    className="w-full text-red-600 hover:text-red-700 flex items-center justify-center"
                   >
                     <LogOut className="mr-2 h-4 w-4" />
                     Logout

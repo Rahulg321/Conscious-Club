@@ -27,10 +27,12 @@ import MashupProjectUploadForm from "../forms/mashup-project-upload-form";
 import { Session } from "next-auth";
 
 export default function MashupDialog({
+  isIcon = false,
   collaboratorId,
   collaboratorName,
   userSession,
 }: {
+  isIcon?: boolean;
   collaboratorId: string;
   collaboratorName?: string;
   userSession: Session;
@@ -72,8 +74,8 @@ export default function MashupDialog({
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
         <Button variant="outline" className="gap-2">
-          <Shuffle className="h-4 w-4" />
-          <span>Mashup</span>
+          <Shuffle className="h-4 w-4 text-indigo-500" />
+          {isIcon ? "" : <span>Mashup</span>}
         </Button>
       </DrawerTrigger>
       <DrawerContent>

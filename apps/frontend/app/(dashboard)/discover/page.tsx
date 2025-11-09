@@ -6,7 +6,7 @@ import {
   getFilteredMashupProjects,
 } from "@/lib/queries";
 import ProjectTagsFilter from "@/components/project-tag-filters";
-import ProjectDedicationFilters from "@/components/project-dedication-filters";
+// import ProjectDedicationFilters from "@/components/project-dedication-filters";
 import React, { Suspense } from "react";
 import ProjectSearchFilter from "@/components/project-search-filter";
 import DiscoverProjectCard from "@/components/discover-project-card";
@@ -88,14 +88,14 @@ export default async function DiscoverPage({
         <ProjectTagsFilter />
       </Suspense>
 
-      {!showProfiles && (
+      {/* {!showProfiles && (
         <Suspense fallback={<div>Loading...</div>}>
           <ProjectDedicationFilters />
         </Suspense>
-      )}
+      )} */}
 
-      <main className="max-w-7xl mx-auto px-6 py-8">
-        <div className="flex items-center justify-between mb-8">
+      <main className="max-w-7xl mx-auto px-4 py-4">
+        <div className="flex items-center justify-between mb-4">
           <Suspense
             fallback={<span className="text-gray-500">Loading...</span>}
           >
@@ -354,7 +354,7 @@ async function FetchAndDisplayUserProfiles({
 
   return (
     <div>
-      <div className="group-has-[[data-pending]]:animate-pulse space-y-4 md:space-y-6">
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-2 group-has-[[data-pending]]:animate-pulse bg-white p-4 rounded-3xl">
         {userProfiles?.map((userProfile) => (
           <div key={userProfile.id}>
             <ProfileCard

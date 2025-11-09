@@ -9,6 +9,7 @@ import { redirect } from "next/navigation";
 import { BravoCard } from "@/components/bravo-card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { AuroraBackground } from "@/components/aura-bg";
 
 export const metadata = {
   title: "Bravos | ConsciousClub",
@@ -51,57 +52,62 @@ const page = async ({
   );
 
   return (
-    <div className="block-space-mini big-container">
-      <div className="mb-6 flex flex-wrap items-center gap-2">
-        <Button
-          size="sm"
-          variant={!selectedCategory ? "default" : "outline"}
-          asChild
-        >
-          <Link href="/bravos">All</Link>
-        </Button>
-        {categories?.map((category) => {
-          const isActive = selectedCategory === category.slug;
-          const href = `/bravos?category=${category.slug}`;
-          return (
+    <AuroraBackground>
+      <div className="block-space-mini px-4 h-full min-h-screen">
+        {/* <div className="block-space-mini bg-gradient-to-br px-4 from-indigo-100 to-purple-100 h-full min-h-screen"> */}
+
+        <div className="mb-4  space-y-4">
+          <div className="mb-2 flex flex-wrap items-center gap-2 z-50">
             <Button
-              key={category.id}
               size="sm"
-              variant={isActive ? "default" : "outline"}
+              variant={!selectedCategory ? "default" : "outline"}
               asChild
             >
-              <Link href={href}>{category.name}</Link>
+              <Link href="/bravos">All</Link>
             </Button>
-          );
-        })}
-      </div>
-      <div className="mb-8 max-w-2xl space-y-4">
-        {/* <h1 className="text-4xl font-bold">
+            {categories?.map((category) => {
+              const isActive = selectedCategory === category.slug;
+              const href = `/bravos?category=${category.slug}`;
+              return (
+                <Button
+                  key={category.id}
+                  size="sm"
+                  className="cursor-pointer z-100"
+                  variant={isActive ? "default" : "outline"}
+                  asChild
+                >
+                  <Link href={href}>{category.name}</Link>
+                </Button>
+              );
+            })}
+          </div>
+          {/* <h1 className="text-4xl font-bold">
           {categories?.find((category) => category.slug === selectedCategory)
             ?.name || ""}
         </h1> */}
-        <div className="text-gray-600">
-          {selectedCategory && selectedCategoryObj
-            ? selectedCategoryObj.description
-            : "Bravos are the best way to show your support for your favorite projects. You can collect bravos by completing tasks, projects, and more."}
+          <div className="text-gray-600 font-caveat text-3xl w-full">
+            {selectedCategory && selectedCategoryObj
+              ? selectedCategoryObj.description
+              : "Bravos are the best way to show your support for your favorite projects. You can collect bravos by completing tasks, projects, and more."}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+          {bravos?.map((bravo) => (
+            <BravoCard
+              className="w-full"
+              key={bravo.id}
+              id={bravo.id}
+              slug={bravo.slug}
+              name={bravo.name}
+              imageUrl={bravo.image}
+              bravoCategory={bravo.categoryName || ""}
+              isPinned={pinnedBravo?.name === bravo.name}
+            />
+          ))}
         </div>
       </div>
-
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-        {bravos?.map((bravo) => (
-          <BravoCard
-            className="w-full"
-            key={bravo.id}
-            id={bravo.id}
-            slug={bravo.slug}
-            name={bravo.name}
-            imageUrl={bravo.image}
-            bravoCategory={bravo.categoryName || ""}
-            isPinned={pinnedBravo?.name === bravo.name}
-          />
-        ))}
-      </div>
-    </div>
+    </AuroraBackground>
   );
 };
 

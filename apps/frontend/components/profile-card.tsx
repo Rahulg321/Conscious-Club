@@ -13,6 +13,8 @@ import MashupDialog from "./dialogs/mashup-dialog";
 import { Session } from "next-auth";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import FollowButton from "./buttons/follow-button";
+import { filterMaping } from "./forms/onboarding/config";
 
 export default function ProfileCard({
   userProfile,
@@ -57,9 +59,9 @@ export default function ProfileCard({
   };
 
   return (
-    <Card className="w-full mx-auto overflow-hidden border hover:shadow-lg transition-shadow cursor-pointer">
-      <div className="p-5 flex flex-col items-center text-center gap-3">
-        <Avatar className="w-16 h-16">
+    <div className="w-full h-full mx-auto overflow-hidden rounded-3xl transition-shadow cursor-pointer border border-gray-200">
+      <div className="p-5 flex flex-col items-center text-center gap-1">
+        <Avatar className="w-24 h-24 md:w-32 md:h-32">
           <AvatarImage
             src={userProfile.image || "/designer-headshot.png"}
             alt={userProfile.name || "User"}
@@ -69,7 +71,7 @@ export default function ProfileCard({
           </AvatarFallback>
         </Avatar>
 
-        <div className="flex flex-col items-center gap-1">
+        <div className="flex flex-col items-center ">
           <div className="flex items-center gap-2">
             <h2
               className="text-lg font-semibold text-gray-900 cursor-pointer hover:underline"
@@ -78,7 +80,12 @@ export default function ProfileCard({
               {userProfile.name || "User"}
             </h2>
           </div>
-          {(userProfile.city || userProfile.country) && (
+          <div
+            className={`text-sm ${filterMaping.find((item) => item.value === userProfile.role)?.text}`}
+          >
+            {userProfile.role}
+          </div>
+          {/* {(userProfile.city || userProfile.country) && (
             <div className="flex items-center gap-1 text-xs text-gray-500">
               <MapPin className="w-3 h-3" />
               <span>
@@ -87,10 +94,10 @@ export default function ProfileCard({
                   .join(", ")}
               </span>
             </div>
-          )}
+          )} */}
         </div>
 
-        <div className="flex items-center justify-center gap-6 text-xs text-gray-600">
+        {/* <div className="flex items-center justify-center gap-6 text-xs text-gray-600">
           <div className="flex items-center gap-1">
             <Users className="w-4 h-4" />
             <span>{userProfile.followersCount || 0} followers</span>
@@ -99,11 +106,17 @@ export default function ProfileCard({
             <UserCheck className="w-4 h-4" />
             <span>{userProfile.followingCount || 0} following</span>
           </div>
-        </div>
+        </div> */}
 
         {currentUserId && currentUserId !== userProfile.id && (
-          <div className="w-full flex items-center gap-2 mt-1">
-            <Button
+          <div className="flex items-center gap-2 w-max">
+            <FollowButton
+              isIcon={true}
+              userId={userProfile.id}
+              isFollowing={userProfile.isFollowing || false}
+              className="flex items-center gap-2 bg-indigo-500 text-white hover:bg-indigo-600"
+            />
+            {/* <Button
               onClick={handleFollowToggle}
               disabled={isPending}
               variant={userProfile.isFollowing ? "outline" : "default"}
@@ -120,19 +133,18 @@ export default function ProfileCard({
                   {isPending ? "Following..." : "Follow"}
                 </>
               )}
-            </Button>
-            <div>
-              <MashupDialog
-                collaboratorId={userProfile.id}
-                collaboratorName={userProfile.name ?? undefined}
-                userSession={userSession}
-              />
-            </div>
+            </Button> */}
+            <MashupDialog
+              isIcon={true}
+              collaboratorId={userProfile.id}
+              collaboratorName={userProfile.name ?? undefined}
+              userSession={userSession}
+            />
           </div>
         )}
       </div>
 
-      <div className="px-5 pb-5">
+      {/* <div className="px-5 pb-5">
         <div className="grid grid-cols-3 gap-2">
           {userProfile.projects.slice(0, 3).map((item) => {
             // Get first media item (prefer images over videos)
@@ -164,7 +176,7 @@ export default function ProfileCard({
             />
           ))}
         </div>
-      </div>
-    </Card>
+      </div> */}
+    </div>
   );
 }

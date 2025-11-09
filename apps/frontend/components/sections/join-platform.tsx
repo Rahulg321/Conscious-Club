@@ -110,10 +110,10 @@ const JoinPlatform = () => {
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold md:mb-3">
               Why Join Our Platform?
             </h2>
-            <p className="text-base text-muted-foreground max-w-xl">
+            <div className="text-base text-muted-foreground max-w-xl">
               Because we’re the global playground for creativity, fun and
               Bravos.
-            </p>
+            </div>
           </div>
           <div className="boxes space-y-2">
             <div className="box box1">

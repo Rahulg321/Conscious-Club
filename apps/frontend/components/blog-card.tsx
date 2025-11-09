@@ -52,25 +52,25 @@ const BlogCard = ({
 
   return (
     <Link href={`/stories/${slug}`}>
-      <Card className="h-full flex flex-col overflow-hidden cursor-pointer group">
+      <div className="h-max flex flex-col overflow-hidden cursor-pointer group">
         {featuredImage && (
-          <div className="relative w-full h-40 overflow-hidden bg-gray-100">
+          <div className="relative w-full h-40 overflow-hidden rounded-2xl">
             <Image
               src={featuredImage}
               alt={featuredImageAlt || title}
               fill
               className="object-cover"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              // sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           </div>
         )}
 
-        <CardHeader className="p-4 pb-2">
+        <div className="py-4">
           <div className="flex items-center gap-2 mb-1 flex-wrap">
             {categoryName && (
               <Badge
                 variant="secondary"
-                className="bg-primary/10 text-primary text-xs px-2 py-0.5"
+                className="bg-primary/10 text-primary text-xs py-0.5"
               >
                 {categoryName}
               </Badge>
@@ -79,16 +79,16 @@ const BlogCard = ({
           <h3 className="text-lg font-semibold line-clamp-2 leading-tight">
             {title}
           </h3>
-        </CardHeader>
+        </div>
 
-        <CardContent className="px-4 pb-2 flex-1">
-          {excerpt && (
+        {/* <div className="pb-2 flex-1"> */}
+        {/* {excerpt && (
             <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed mb-2">
               {excerpt}
             </p>
-          )}
+          )} */}
 
-          {tags && tags.length > 0 && (
+        {/* {tags && tags.length > 0 && (
             <div className="flex flex-wrap gap-1">
               {tags.slice(0, 2).map((tag) => (
                 <Badge
@@ -106,10 +106,10 @@ const BlogCard = ({
                 </Badge>
               )}
             </div>
-          )}
-        </CardContent>
+          )} */}
+        {/* </div> */}
 
-        <CardFooter className="px-4 py-2 border-t">
+        <div className="">
           <div className="flex items-center justify-between w-full text-xs text-muted-foreground">
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-1">
@@ -130,8 +130,8 @@ const BlogCard = ({
               </div>
             )}
           </div>
-        </CardFooter>
-      </Card>
+        </div>
+      </div>
     </Link>
   );
 };

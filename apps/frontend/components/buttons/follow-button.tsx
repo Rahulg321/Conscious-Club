@@ -8,18 +8,16 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
 export default function FollowButton({
+  isIcon = false,
   userId,
   isFollowing: initialIsFollowing,
   className,
   onFollowChange,
-  hideText = false,
-  hideIcon = false,
 }: {
+  isIcon?: boolean;
   userId: string;
   isFollowing: boolean;
   className?: string;
-  hideText?: boolean;
-  hideIcon?: boolean;
   onFollowChange?: (isFollowing: boolean) => void;
 }) {
   const [isPending, startTransition] = useTransition();
@@ -57,13 +55,15 @@ export default function FollowButton({
     >
       {initialIsFollowing ? (
         <>
-          {!hideIcon && <UserCheck className="w-4 h-4 mr-2" />}
-          {!hideText && (isPending ? "Unfollowing..." : "Unfollow")}
+          {isIcon && (
+            <UserCheck className={`w-4 h-4 ${isIcon ? "" : "mr-2"}`} />
+          )}
+          {isIcon ? "" : isPending ? "Unfollowing..." : "Unfollow"}
         </>
       ) : (
         <>
-          {!hideIcon && <UserPlus className="w-4 h-4 mr-2" />}
-          {!hideText && (isPending ? "Following..." : "Follow")}
+          {isIcon && <UserPlus className={`w-4 h-4 ${isIcon ? "" : "mr-2"}`} />}
+          {isIcon ? "" : isPending ? "Following..." : "Follow"}
         </>
       )}
     </Button>

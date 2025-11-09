@@ -1,9 +1,11 @@
 import React from "react";
-import { getAllChallenges, getCompletedChallenges } from "@/lib/queries";
+// import { getAllChallenges, getCompletedChallenges } from "@/lib/queries";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import { ChallengeCard } from "@/components/challenge-card";
-import { Separator } from "@/components/ui/separator";
+// import { ChallengeCard } from "@/components/challenge-card";
+// import { Separator } from "@/components/ui/separator";
+// import { AuroraText } from "@/components/aura-text";
+import { SparklesText } from "@/components/ui/sparkles-text";
 
 export const metadata = {
   title: "Challenges",
@@ -18,22 +20,23 @@ const page = async () => {
     redirect("/login");
   }
 
-  const challenges = await getAllChallenges();
-  const completedChallenges = await getCompletedChallenges();
+  // const challenges = await getAllChallenges();
+  // const completedChallenges = await getCompletedChallenges();
 
   return (
-    <div className="block-space-mini big-container">
-      <div className="mb-8 text-center max-w-2xl mx-auto space-y-4">
-        <h1 className="text-4xl font-bold">Challenges</h1>
-        <p className="text-gray-600">
+    <div className="bg-[url(/bg-cs.jpeg)] bg-cover bg-center h-screen bg-blur-3xl flex items-center justify-center">
+      <div className="text-9xl md:text-[200px] font-bold p-8 font-caveat bg-white w-full h-full m-16 flex items-center justify-center">
+        <SparklesText className="text-center">Coming Soon</SparklesText>
+      </div>
+
+      {/* <p className="text-gray-600">
           Participate in exciting challenges, showcase your creativity, and
           compete for amazing rewards. Submit your entries and join the
           community!
-        </p>
-      </div>
+        </p> */}
 
       {/* Active Challenges Section */}
-      <div className="mb-12">
+      {/* <div className="mb-12">
         <h2 className="text-2xl font-bold mb-6">Active Challenges</h2>
         {!challenges || challenges.length === 0 ? (
           <div className="text-center py-12 border rounded-lg">
@@ -61,10 +64,10 @@ const page = async () => {
             ))}
           </div>
         )}
-      </div>
+      </div> */}
 
       {/* Completed Challenges History Section */}
-      {completedChallenges && completedChallenges.length > 0 && (
+      {/* {completedChallenges && completedChallenges.length > 0 && (
         <>
           <Separator className="my-12" />
           <div>
@@ -88,7 +91,7 @@ const page = async () => {
             </div>
           </div>
         </>
-      )}
+      )} */}
     </div>
   );
 };

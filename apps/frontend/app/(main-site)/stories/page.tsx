@@ -44,26 +44,25 @@ export default async function BlogPage({
   const offset = (currentPage - 1) * limit;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen ">
       {/* Header with Search */}
       <header className="bg-white border-b border-gray-200 px-6 py-6">
         <div className="max-w-7xl mx-auto">
-          <div className="mb-4">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Our Blog</h1>
-            <p className="text-muted-foreground">
-              Discover insights, tutorials, and stories from our community
-            </p>
+          <div className="mb-4 flex items-center justify-center">
+            <Suspense
+              fallback={
+                <Skeleton className="h-12 w-full max-w-2xl rounded-lg" />
+              }
+            >
+              <BlogSearchFilter />
+            </Suspense>
+            {/* <h1 className="text-3xl font-bold text-gray-900 mb-2">STORIES</h1> */}
           </div>
-          <Suspense
-            fallback={<Skeleton className="h-12 w-full max-w-2xl rounded-lg" />}
-          >
-            <BlogSearchFilter />
-          </Suspense>
         </div>
       </header>
 
       {/* Category Filter */}
-      {categories && categories.length > 0 && (
+      {/* {categories && categories.length > 0 && (
         <Suspense fallback={<div>Loading categories...</div>}>
           <BlogCategoryFilter
             categories={categories.map((c) => ({
@@ -73,10 +72,10 @@ export default async function BlogPage({
             }))}
           />
         </Suspense>
-      )}
+      )} */}
 
       {/* Tag Filter */}
-      {tags && tags.length > 0 && (
+      {/* {tags && tags.length > 0 && (
         <Suspense fallback={<div>Loading tags...</div>}>
           <BlogTagFilter
             tags={tags.map((t) => ({
@@ -86,7 +85,7 @@ export default async function BlogPage({
             }))}
           />
         </Suspense>
-      )}
+      )} */}
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 py-8">
@@ -151,7 +150,7 @@ async function BlogPostCount({
 
   return (
     <h2 className="text-2xl font-semibold text-gray-900">
-      {totalPosts} {totalPosts === 1 ? "Post" : "Posts"}
+      {totalPosts} {totalPosts === 1 ? "Story" : "Stories"}
       {searchQuery && (
         <span className="text-lg font-normal text-muted-foreground ml-2">
           matching "{searchQuery}"
@@ -198,7 +197,7 @@ async function FetchAndDisplayBlogPosts({
 
   return (
     <div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
         {posts.map((post) => (
           <BlogCard
             key={post.id}

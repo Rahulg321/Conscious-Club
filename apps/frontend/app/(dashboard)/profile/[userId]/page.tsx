@@ -33,6 +33,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/animate-ui/components/radix/tabs";
+import { AuroraBackground } from "@/components/aura-bg";
 
 export async function generateMetadata({
   params,
@@ -85,102 +86,111 @@ const ProfilePage = async ({ params }: Props) => {
     : "Digital";
   return (
     <div>
-      <div className="relative px-4 md:px-8 pb-2 md:py-2">
-        <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-2 gap-4">
-          <div className="flex flex-col  md:items-start gap-4 md:gap-2 w-full rounded-lg pb-4 md:px-4 pt-2 relative  border border-gray-100/50 ">
-            {/* <FloatingPaths
+      <div className="relative pl-4 md:pl-8 pb-2 md:pb-2">
+        <AuroraBackground className="rounded-lg">
+          <div className="flex flex-col md:flex-row md:items-start md:justify-start mb-2 gap-4 mr-auto">
+            <div className="flex flex-col  md:items-start gap-4 md:gap-2 w-full rounded-lg pb-4 md:px-4 pt-2   mr-auto">
+              {/* <FloatingPaths
               color={disciplineColor[disciplineKey as DisciplineType].stroke}
-              position={1}
-            />
-            <FloatingPaths
+              position={4}
+            /> */}
+              {/* <FloatingPaths
               color={disciplineColor[disciplineKey as DisciplineType].stroke}
               position={-1}
             /> */}
-            <div className="flex items-center justify-end w-full">
-              {isOwnProfile ? (
-                <ProfileEditDialog
-                  userId={userId}
-                  name={currentUser.name || ""}
-                  bio={currentUser.bio || ""}
-                  city={currentUser.city || ""}
-                  country={currentUser.country || ""}
-                />
-              ) : (
-                <div className="flex items-center gap-2">
-                  <FollowButton
-                    userId={userId}
-                    isFollowing={isUserFollowing}
-                    className="flex items-center gap-2 bg-indigo-500 text-white"
-                  />
-                  <MashupDialog
-                    collaboratorId={userId}
-                    collaboratorName={currentUser.name || undefined}
-                    userSession={userSession}
-                  />
+
+              <div className="flex flex-row  justify-center items-start gap-4 md:gap-8 w-max rounded-lg md:px-8 mr-auto">
+                <div className="relative self-center  ">
+                  <div className="w-36 h-36 md:w-56 md:h-56 rounded-full border-4 border-gray-100 shadow-lg relative">
+                    <Image
+                      src={currentUser.image || "/user-placeholder.png"}
+                      fill
+                      alt={currentUser.name || "User"}
+                      className="object-cover rounded-full"
+                    />
+                    {isOwnProfile && (
+                      <div className="absolute bottom-1 -right-2">
+                        <ProfilePicUploadDialog />
+                      </div>
+                    )}
+                  </div>
                 </div>
-              )}
-            </div>
-            <div className="flex flex-row  justify-center items-start gap-4 md:gap-8 w-max rounded-lg border border-gray-100/40 bg-white/80 md:px-8 z-50">
-              <div className="relative self-center  ">
-                <div className="w-36 h-36 md:w-56 md:h-56 rounded-full border-4 border-gray-100 shadow-lg relative">
-                  <Image
-                    src={currentUser.image || "/user-placeholder.png"}
-                    fill
-                    alt={currentUser.name || "User"}
-                    className="object-cover rounded-full"
-                  />
-                  {isOwnProfile && (
-                    <div className="absolute bottom-1 -right-2">
-                      <ProfilePicUploadDialog />
+
+                <div className="md:text-left my-auto w-full flex flex-col items-start justify-center">
+                  <h2 className="text-xl md:text-4xl font-semibold text-[#171c21] mb-1 flex items-center justify-start w-full gap-2">
+                    <div className="truncate w-full">
+                      {currentUser.name || ""}
                     </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="md:text-left my-auto w-full flex flex-col items-start justify-center">
-                <h2 className="text-xl md:text-4xl font-semibold text-[#171c21] mb-1 flex items-center justify-start">
-                  {currentUser.name || ""}
-                </h2>
-                <div className="text-[#666a6e] mb-2 flex items-center justify-start">
-                  <MapPin className="w-4 h-4" />{" "}
-                  {[currentUser.city, currentUser.country]
-                    .filter(Boolean)
-                    .join(", ") || ""}
-                </div>
-                <div className="flex flex-wrap gap-2 justify-center md:justify-start md:mb-4 mb-2">
-                  <span className="md:px-3 px-1 py-1 flex items-center justify-center bg-[#f9fafb] text-[#666a6e] text-sm font-medium rounded-full">
-                    {followers} followers
-                  </span>
-                  <span className="md:px-3 px-1 py-1 flex items-center justify-center bg-[#f9fafb] text-[#666a6e] text-sm font-medium rounded-full">
-                    {following} following
-                  </span>
-                </div>
-
-                <div className="flex flex-wrap gap-2 justify-center md:justify-start">
-                  <span
-                    className={`px-3  py-1 flex items-center justify-center ${disciplineColor[disciplineKey as DisciplineType].color} text-sm font-medium rounded-full `}
-                  >
-                    {currentUser.discipline || "Digital"}
-                  </span>
-                  {currentUser.role && (
-                    <span
-                      className={`px-3 py-1 flex items-center justify-center border-2 ${disciplineColor[disciplineKey as DisciplineType].border} ${disciplineColor[disciplineKey as DisciplineType].text} text-sm font-medium rounded-full`}
-                    >
-                      {currentUser.role}
+                    <div className="flex items-center justify-end w-max">
+                      {isOwnProfile ? (
+                        <ProfileEditDialog
+                          isIcon={true}
+                          userId={userId}
+                          name={currentUser.name || ""}
+                          bio={currentUser.bio || ""}
+                          city={currentUser.city || ""}
+                          country={currentUser.country || ""}
+                        />
+                      ) : (
+                        <div className="flex items-center gap-2 w-max">
+                          <FollowButton
+                            isIcon={true}
+                            userId={userId}
+                            isFollowing={isUserFollowing}
+                            className="flex items-center gap-2 bg-indigo-500 text-white hover:bg-indigo-600"
+                          />
+                          <MashupDialog
+                            isIcon={true}
+                            collaboratorId={userId}
+                            collaboratorName={currentUser.name || undefined}
+                            userSession={userSession}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </h2>
+                  <div className="text-[#666a6e] mb-2 flex items-center justify-start">
+                    <MapPin className="w-4 h-4" />{" "}
+                    {[currentUser.city, currentUser.country]
+                      .filter(Boolean)
+                      .join(", ") || ""}
+                  </div>
+                  <div className="flex flex-wrap gap-2 justify-center md:justify-start md:mb-4 mb-2">
+                    <span className="md:px-3 px-1 py-1 flex items-center justify-center bg-[#f9fafb] text-[#666a6e] text-sm font-medium rounded-full">
+                      {followers} followers
                     </span>
-                  )}
+                    <span className="md:px-3 px-1 py-1 flex items-center justify-center bg-[#f9fafb] text-[#666a6e] text-sm font-medium rounded-full">
+                      {following} following
+                    </span>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2 justify-center md:justify-start">
+                    <span
+                      className={`px-3  py-1 flex items-center justify-center ${disciplineColor[disciplineKey as DisciplineType].color} text-sm font-medium rounded-full `}
+                    >
+                      {currentUser.discipline || "Digital"}
+                    </span>
+                    {currentUser.role && (
+                      <span
+                        className={`px-3 py-1 flex items-center justify-center border-2 ${disciplineColor[disciplineKey as DisciplineType].border} ${disciplineColor[disciplineKey as DisciplineType].text} text-sm font-medium rounded-full`}
+                      >
+                        {currentUser.role}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className="mb-8">
+        </AuroraBackground>
+
+        <div className="my-4 ">
           <h3 className="text-lg font-semibold text-[#171c21]">About</h3>
 
           {currentUser.bio ? (
-            <p>{currentUser.bio}</p>
+            <div className="!font-caveat text-3xl">{currentUser.bio}</div>
           ) : (
-            <p>Bio Not Available Yet</p>
+            <div className="!font-caveat text-3xl">Bio Not Available Yet</div>
           )}
         </div>
         <div className="w-full px-4">
@@ -249,14 +259,14 @@ async function DisplayUserProjectWork({
 
   return (
     <div className="mt-8">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
-        <div className="flex items-center gap-2">
-          <Button variant="outline" asChild>
+      <div className="flex items-center justify-end w-full mb-6 gap-4">
+        {/* <div className="flex items-center "> */}
+        {/* <Button variant="outline" asChild>
             <Link href={`/profile/${profileUserId}/projects`}>View All</Link>
-          </Button>
+          </Button> */}
 
-          {isOwnProfile && <ProjectUploadDialog userSession={userSession} />}
-        </div>
+        {isOwnProfile && <ProjectUploadDialog userSession={userSession} />}
+        {/* </div> */}
       </div>
 
       {!projects || projects.length === 0 ? (
@@ -279,10 +289,11 @@ async function DisplayUserProjectWork({
               project={project}
               creatorName={profileUser?.name || undefined}
               creatorInfo={{
-                id: profileUser?.id,
-                name: profileUser?.name || undefined,
+                id: profileUser?.id || null,
+                name: profileUser?.name || null,
                 discipline: profileUser?.discipline || null,
                 role: profileUser?.role || null,
+                image: profileUser?.image || null,
               }}
               isOwnProfile={isOwnProfile}
             />
@@ -349,16 +360,18 @@ async function DisplayUserMashupProjects({
               creatorName={creatorName}
               collaboratorName={collaboratorName}
               creatorInfo={{
-                id: mashup.creatorId || undefined,
+                id: mashup.creatorId,
                 name: creatorName,
-                discipline: mashup.creatorDiscipline,
+                discipline: mashup.creatorDiscipline || null,
                 role: mashup.creatorRole,
+                image: mashup.creatorImage,
               }}
               collaboratorInfo={{
-                id: mashup.collaboratorId || undefined,
+                id: mashup.collaboratorId || null,
                 name: collaboratorName,
                 discipline: mashup.collaboratorDiscipline,
                 role: mashup.collaboratorRole,
+                image: mashup.collaboratorImage,
               }}
               isOwnProfile={isOwnProfile}
             />

@@ -28,7 +28,7 @@ const DashboardHeader = () => {
       case "profile":
         return "Profile";
       case "challenges":
-        return "Challenges";
+        return "BravoPlay";
       default:
         return "Dashboard";
     }
@@ -37,11 +37,17 @@ const DashboardHeader = () => {
   const pageTitle = getPageTitle(pathname);
 
   return (
-    <div className="bg-white border-b border-[#e2e3e6] px-4 md:px-8 py-4 md:py-4 flex items-center gap-4">
+    <div className="bg-white border-b border-[#e2e3e6] px-4 md:px-4 py-4  flex items-center gap-4">
       <SidebarTrigger className="md:hidden" />
-      <h1 className="text-xl md:text-2xl font-semibold text-[#171c21]">
-        {pageTitle}
-      </h1>
+      {pageTitle === "Bravos" ? (
+        <h1 className="text-xl md:text-2xl font-semibold font-kirang-haerang text-[#171c21]">
+          {pageTitle}
+        </h1>
+      ) : (
+        <h1 className="md:text-2xl font-caveat text-3xl text-[#171c21]">
+          {pageTitle}
+        </h1>
+      )}
     </div>
   );
 };
