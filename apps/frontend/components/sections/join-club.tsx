@@ -8,7 +8,13 @@ const JoinClubSection = () => {
   return (
     <div className="py-12 px-4 sm:px-6 lg:px-8">
       <div className="relative overflow-hidden cta min-h-[60vh] sm:min-h-[65vh] slg:min-h-[70vh] rounded-2xl sm:rounded-3xl flex items-center justify-center p-6 sm:p-8 lg:p-12 xl:p-16">
-        <Image src={AstroGradient} alt="" fill className="absolute inset-0 object-cover" aria-hidden="true" />
+        <Image
+          src={AstroGradient}
+          alt=""
+          fill
+          className="absolute inset-0 object-cover"
+          aria-hidden="true"
+        />
 
         <div className="relative z-10 max-w-4xl lg:max-w-5xl xl:max-w-6xl mx-auto text-center space-y-6 sm:space-y-8">
           <h1 className="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold tracking-tight leading-tight">

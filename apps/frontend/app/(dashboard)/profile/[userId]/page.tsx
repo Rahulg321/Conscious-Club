@@ -7,7 +7,7 @@ import {
 } from "@/lib/queries";
 import ProjectUploadDialog from "@/components/dialogs/project-upload-dialog";
 import { Button } from "@/components/ui/button";
-import { Loader2, Plus, Sparkles, MapPin } from "lucide-react";
+import { Loader2, Plus, Sparkles, MapPin, Shuffle } from "lucide-react";
 import { redirect } from "next/navigation";
 import React, { Suspense } from "react";
 import Image from "next/image";
@@ -25,6 +25,14 @@ import {
   disciplineColor,
   DisciplineType,
 } from "@/components/forms/onboarding/config";
+// import { FloatingPaths } from "@/components/profile-info-card";
+import {
+  Tabs,
+  TabsContent,
+  // TabsContents,
+  TabsList,
+  TabsTrigger,
+} from "@/components/animate-ui/components/radix/tabs";
 
 export async function generateMetadata({
   params,
@@ -77,9 +85,17 @@ const ProfilePage = async ({ params }: Props) => {
     : "Digital";
   return (
     <div>
-      <div className="px-4 md:px-8 py-6 md:py-8">
-        <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-6 gap-4">
-          <div className="flex flex-col  md:items-start gap-4 md:gap-2 w-full border rounded-lg pb-4 px-4 pt-2">
+      <div className="relative px-4 md:px-8 pb-2 md:py-2">
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-2 gap-4">
+          <div className="flex flex-col  md:items-start gap-4 md:gap-2 w-full rounded-lg pb-4 md:px-4 pt-2 relative  border border-gray-100/50 ">
+            {/* <FloatingPaths
+              color={disciplineColor[disciplineKey as DisciplineType].stroke}
+              position={1}
+            />
+            <FloatingPaths
+              color={disciplineColor[disciplineKey as DisciplineType].stroke}
+              position={-1}
+            /> */}
             <div className="flex items-center justify-end w-full">
               {isOwnProfile ? (
                 <ProfileEditDialog
@@ -94,7 +110,7 @@ const ProfilePage = async ({ params }: Props) => {
                   <FollowButton
                     userId={userId}
                     isFollowing={isUserFollowing}
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 bg-indigo-500 text-white"
                   />
                   <MashupDialog
                     collaboratorId={userId}
@@ -104,61 +120,62 @@ const ProfilePage = async ({ params }: Props) => {
                 </div>
               )}
             </div>
-            <div className="relative self-center ">
-              <div className="w-20 h-20 md:w-24 md:h-24 rounded-full border-4 border-gray-100 shadow-lg relative">
-                <Image
-                  src={currentUser.image || "/user-placeholder.png"}
-                  fill
-                  alt={currentUser.name || "User"}
-                  className="object-cover rounded-full"
-                />
-                {isOwnProfile && (
-                  <div className="absolute bottom-1 -right-2">
-                    <ProfilePicUploadDialog />
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="text-center md:text-left w-full flex flex-col items-center justify-center">
-              <h2 className="text-xl md:text-2xl font-semibold text-[#171c21] mb-1 flex items-center justify-center">
-                {currentUser.name || ""}
-              </h2>
-              <div className="text-[#666a6e] mb-2 flex items-center justify-center">
-                <MapPin className="w-4 h-4" />{" "}
-                {[currentUser.city, currentUser.country]
-                  .filter(Boolean)
-                  .join(", ") || ""}
-              </div>
-              <div className="flex flex-wrap gap-2 justify-center md:justify-start mb-4">
-                <span className="px-3 py-1 flex items-center justify-center bg-[#f9fafb] text-[#666a6e] text-sm font-medium rounded-full">
-                  {followers} followers
-                </span>
-                <span className="px-3 py-1 flex items-center justify-center bg-[#f9fafb] text-[#666a6e] text-sm font-medium rounded-full">
-                  {following} following
-                </span>
+            <div className="flex flex-row  justify-center items-start gap-4 md:gap-8 w-max rounded-lg border border-gray-100/40 bg-white/80 md:px-8 z-50">
+              <div className="relative self-center  ">
+                <div className="w-36 h-36 md:w-56 md:h-56 rounded-full border-4 border-gray-100 shadow-lg relative">
+                  <Image
+                    src={currentUser.image || "/user-placeholder.png"}
+                    fill
+                    alt={currentUser.name || "User"}
+                    className="object-cover rounded-full"
+                  />
+                  {isOwnProfile && (
+                    <div className="absolute bottom-1 -right-2">
+                      <ProfilePicUploadDialog />
+                    </div>
+                  )}
+                </div>
               </div>
 
-              <div className="flex flex-wrap gap-2 justify-center md:justify-start">
-                <span
-                  className={`px-3 py-1 flex items-center justify-center ${disciplineColor[disciplineKey as DisciplineType].color} text-sm font-medium rounded-full `}
-                >
-                  {currentUser.discipline || "Digital"}
-                </span>
-                {currentUser.role && (
-                  <span
-                    className={`px-3 py-1 flex items-center justify-center border-2 ${disciplineColor[disciplineKey as DisciplineType].border} ${disciplineColor[disciplineKey as DisciplineType].text} text-sm font-medium rounded-full`}
-                  >
-                    {currentUser.role}
+              <div className="md:text-left my-auto w-full flex flex-col items-start justify-center">
+                <h2 className="text-xl md:text-4xl font-semibold text-[#171c21] mb-1 flex items-center justify-start">
+                  {currentUser.name || ""}
+                </h2>
+                <div className="text-[#666a6e] mb-2 flex items-center justify-start">
+                  <MapPin className="w-4 h-4" />{" "}
+                  {[currentUser.city, currentUser.country]
+                    .filter(Boolean)
+                    .join(", ") || ""}
+                </div>
+                <div className="flex flex-wrap gap-2 justify-center md:justify-start md:mb-4 mb-2">
+                  <span className="md:px-3 px-1 py-1 flex items-center justify-center bg-[#f9fafb] text-[#666a6e] text-sm font-medium rounded-full">
+                    {followers} followers
                   </span>
-                )}
+                  <span className="md:px-3 px-1 py-1 flex items-center justify-center bg-[#f9fafb] text-[#666a6e] text-sm font-medium rounded-full">
+                    {following} following
+                  </span>
+                </div>
+
+                <div className="flex flex-wrap gap-2 justify-center md:justify-start">
+                  <span
+                    className={`px-3  py-1 flex items-center justify-center ${disciplineColor[disciplineKey as DisciplineType].color} text-sm font-medium rounded-full `}
+                  >
+                    {currentUser.discipline || "Digital"}
+                  </span>
+                  {currentUser.role && (
+                    <span
+                      className={`px-3 py-1 flex items-center justify-center border-2 ${disciplineColor[disciplineKey as DisciplineType].border} ${disciplineColor[disciplineKey as DisciplineType].text} text-sm font-medium rounded-full`}
+                    >
+                      {currentUser.role}
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
           </div>
         </div>
-
         <div className="mb-8">
-          <h3 className="text-lg font-semibold text-[#171c21] mb-3">About</h3>
+          <h3 className="text-lg font-semibold text-[#171c21]">About</h3>
 
           {currentUser.bio ? (
             <p>{currentUser.bio}</p>
@@ -166,37 +183,48 @@ const ProfilePage = async ({ params }: Props) => {
             <p>Bio Not Available Yet</p>
           )}
         </div>
-        <div className="text-center">
-          <Suspense
-            fallback={
-              <div className="flex items-center justify-center py-12">
-                <Loader2 className="size-10 animate-spin" />
+        <div className="w-full px-4">
+          <Tabs defaultValue="creations">
+            <TabsList className="w-full">
+              <TabsTrigger value="creations">Creations</TabsTrigger>
+              <TabsTrigger value="mashups">Mashups</TabsTrigger>
+            </TabsList>
+            <TabsContent value="creations">
+              <div className="w-full">
+                <Suspense
+                  fallback={
+                    <div className="flex items-center justify-center py-12">
+                      <Loader2 className="size-10 animate-spin" />
+                    </div>
+                  }
+                >
+                  <DisplayUserProjectWork
+                    profileUserId={userId}
+                    currentUserId={userSession.user.id}
+                    userSession={userSession}
+                    isOwnProfile={isOwnProfile}
+                  />
+                </Suspense>
               </div>
-            }
-          >
-            <DisplayUserProjectWork
-              profileUserId={userId}
-              currentUserId={userSession.user.id}
-              userSession={userSession}
-              isOwnProfile={isOwnProfile}
-            />
-          </Suspense>
-        </div>
-
-        <div className="text-center mt-12">
-          <Suspense
-            fallback={
-              <div className="flex items-center justify-center py-12">
-                <Loader2 className="size-10 animate-spin" />
+            </TabsContent>
+            <TabsContent value="mashups">
+              <div className="w-full">
+                <Suspense
+                  fallback={
+                    <div className="flex items-center justify-center py-12">
+                      <Loader2 className="size-10 animate-spin" />
+                    </div>
+                  }
+                >
+                  <DisplayUserMashupProjects
+                    profileUserId={userId}
+                    currentUserId={userSession.user.id}
+                    isOwnProfile={isOwnProfile}
+                  />
+                </Suspense>
               </div>
-            }
-          >
-            <DisplayUserMashupProjects
-              profileUserId={userId}
-              currentUserId={userSession.user.id}
-              isOwnProfile={isOwnProfile}
-            />
-          </Suspense>
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </div>
@@ -301,8 +329,8 @@ async function DisplayUserMashupProjects({
     <div className="mt-8">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
         <h3 className="text-xl font-semibold text-[#171c21] flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-purple-600" />
-          Mashup Projects
+          <Shuffle className="w-5 h-5 text-purple-600" />
+          Mashups
         </h3>
       </div>
 

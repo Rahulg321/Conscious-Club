@@ -43,7 +43,7 @@ export default function MashupDialog({
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button variant="outline" size="icon">
-            <Shuffle className="h-4 w-4" />
+            <Shuffle className="h-4 w-4 text-indigo-500" />
           </Button>
         </DialogTrigger>
         <DialogContent className="">

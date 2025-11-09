@@ -619,7 +619,7 @@ function ProjectUploadForm({
             name="dedicatedToPerson"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-sm">A Person</FormLabel>
+                <FormLabel className="text-sm">Person</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Enter person's name"
@@ -637,7 +637,7 @@ function ProjectUploadForm({
             name="dedicatedToBrand"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-sm">A Brand</FormLabel>
+                <FormLabel className="text-sm">Brand</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Enter brand name"
@@ -655,7 +655,7 @@ function ProjectUploadForm({
             name="dedicatedToCause"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-sm">A Cause</FormLabel>
+                <FormLabel className="text-sm">Cause</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Enter cause name"
@@ -673,7 +673,9 @@ function ProjectUploadForm({
             name="dedicationReason"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-sm">And Why?</FormLabel>
+                <FormLabel className="text-sm">
+                  Drop your reason - we love a backstory!
+                </FormLabel>
                 <FormControl>
                   <Textarea
                     placeholder="Tell us why this dedication is meaningful to you..."

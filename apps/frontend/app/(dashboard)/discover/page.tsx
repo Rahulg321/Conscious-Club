@@ -72,7 +72,7 @@ export default async function DiscoverPage({
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-200 px-6 py-4">
+      <header className="bg-white border-b border-gray-200 px-6 py-2">
         <div className="max-w-7xl mx-auto flex items-center gap-4 justify-between">
           <Suspense fallback={<div>Loading.....</div>}>
             <ProjectSearchFilter showProfiles={showProfiles} />
@@ -317,10 +317,10 @@ async function FetchAndDisplayProjects({
                     }
                   : undefined
               }
-              dedicatedToPerson={project.dedicatedToPerson}
-              dedicatedToBrand={project.dedicatedToBrand}
-              dedicatedToCause={project.dedicatedToCause}
-              dedicationReason={project.dedicationReason}
+              // dedicatedToPerson={project.dedicatedToPerson}
+              // dedicatedToBrand={project.dedicatedToBrand}
+              // dedicatedToCause={project.dedicatedToCause}
+              // dedicationReason={project.dedicationReason}
             />
           );
         })}
@@ -442,10 +442,10 @@ async function FetchAndDisplayMashupProjects({
                     }
                   : undefined
               }
-              dedicatedToPerson={mashup.dedicatedToPerson}
-              dedicatedToBrand={mashup.dedicatedToBrand}
-              dedicatedToCause={mashup.dedicatedToCause}
-              dedicationReason={mashup.dedicationReason}
+              // dedicatedToPerson={mashup.dedicatedToPerson}
+              // dedicatedToBrand={mashup.dedicatedToBrand}
+              // dedicatedToCause={mashup.dedicatedToCause}
+              // dedicationReason={mashup.dedicationReason}
             />
           );
         })}

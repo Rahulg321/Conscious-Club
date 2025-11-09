@@ -61,26 +61,25 @@ const ProjectCommentForm = ({
   };
 
   return (
-    <Card className="w-full">
+    <div className="w-full">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <MessageCircle className="h-5 w-5" />
+        <CardTitle className="flex items-center">
+          <MessageCircle className="h-5 w-5 mr-2" />
           Add a Comment
         </CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="">
             <FormField
               control={form.control}
               name="content"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Your Comment</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Share your thoughts about this project..."
-                      className="min-h-[100px] resize-none"
+                      placeholder="..."
+                      className="resize-none"
                       {...field}
                     />
                   </FormControl>
@@ -89,7 +88,11 @@ const ProjectCommentForm = ({
               )}
             />
 
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
+            <Button
+              type="submit"
+              className="w-full bg-indigo-500 hover:bg-indigo-600 text-white mt-4"
+              disabled={isSubmitting}
+            >
               {isSubmitting ? (
                 <div className="flex items-center justify-center gap-2">
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -102,7 +105,7 @@ const ProjectCommentForm = ({
           </form>
         </Form>
       </CardContent>
-    </Card>
+    </div>
   );
 };
 

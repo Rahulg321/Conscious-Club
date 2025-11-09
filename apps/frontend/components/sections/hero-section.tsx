@@ -1,8 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { PenTool, Database, Camera, MicVocal } from "lucide-react";
-import Link from "next/link";
 
 import React, { useRef } from "react";
 
@@ -14,6 +12,7 @@ import { CardContainer, CardItem } from "@/components/ui/3d-card";
 import CircularGallery from "@/components/ui/circular-galary";
 // import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import HeroMarqueeSection from "./hero-marquee-section";
+import { useRouter } from "next/navigation";
 
 // Floating Icon Components
 const FloatingPenTool = () => (
@@ -41,7 +40,7 @@ const FloatingMicVocal = () => (
 
 const HeroSection = () => {
   const container = useRef<HTMLDivElement>(null);
-
+  const router = useRouter();
   return (
     <div ref={container}>
       <div className="relative overflow-hidden z-2">
@@ -65,7 +64,12 @@ const HeroSection = () => {
             through self- expression, play and rewards
           </p>
 
-          <ShinyButton className="cursor-point">Join the Clubb</ShinyButton>
+          <ShinyButton
+            className="cursor-point"
+            onClick={() => router.push("/register")}
+          >
+            Join the Clubb
+          </ShinyButton>
         </div>
       </div>
 

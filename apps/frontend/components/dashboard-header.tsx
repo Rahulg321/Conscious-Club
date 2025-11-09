@@ -9,12 +9,12 @@ const DashboardHeader = () => {
 
   const getPageTitle = (path: string): string => {
     const segments = path.split("/").filter(Boolean);
-
     // Remove the first segment if it's empty or just "/"
     if (segments.length === 0) return "Dashboard";
 
     // Handle main dashboard routes
-    const route = segments[1] || segments[0]; // Get the main route after potential empty segments
+    const route = segments[0]; // Get the main route after potential empty segments
+    // const route = segments[1] || segments[0]; // Get the main route after potential empty segments
 
     switch (route) {
       case "dashboard":
@@ -26,16 +26,9 @@ const DashboardHeader = () => {
       case "support":
         return "Support & FAQ";
       case "profile":
-        // Handle profile routes
-        if (segments.length >= 3) {
-          if (segments[2] === "projects") {
-            if (segments.length >= 4) {
-              return "Project Details";
-            }
-            return "Projects";
-          }
-        }
         return "Profile";
+      case "challenges":
+        return "Challenges";
       default:
         return "Dashboard";
     }
@@ -44,7 +37,7 @@ const DashboardHeader = () => {
   const pageTitle = getPageTitle(pathname);
 
   return (
-    <div className="bg-white border-b border-[#e2e3e6] px-4 md:px-8 py-4 md:py-6 flex items-center gap-4">
+    <div className="bg-white border-b border-[#e2e3e6] px-4 md:px-8 py-4 md:py-4 flex items-center gap-4">
       <SidebarTrigger className="md:hidden" />
       <h1 className="text-xl md:text-2xl font-semibold text-[#171c21]">
         {pageTitle}
