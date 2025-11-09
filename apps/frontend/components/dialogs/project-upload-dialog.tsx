@@ -34,8 +34,12 @@ export default function ProjectUploadDialog({
         <div className="overflow-hidden">
           <div className="relative overflow-hidden">
             <DialogTrigger asChild>
-              <Button variant="default" size={"icon"}>
-                <Plus className="w-4 h-4" />
+              <Button
+                variant="outline"
+                className="gap-2 text-indigo-500 border-indigo-500 hover:bg-indigo-500/10 hover:text-indigo-600"
+              >
+                <Plus className="w-4 h-4 " />
+                Add new creation
               </Button>
             </DialogTrigger>
             <DialogContent className="">
@@ -54,11 +58,15 @@ export default function ProjectUploadDialog({
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger asChild>
-        <Button size={"icon"}>
-          <Plus className="w-4 h-4" />
+      <DialogTrigger asChild>
+        <Button
+          variant="outline"
+          className="gap-2 text-indigo-500 border-indigo-500 hover:bg-indigo-500/10 hover:text-indigo-600"
+        >
+          <Plus className="w-4 h-4 " />
+          Add new creation
         </Button>
-      </DrawerTrigger>
+      </DialogTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left">
           <DrawerTitle>Upload Project</DrawerTitle>

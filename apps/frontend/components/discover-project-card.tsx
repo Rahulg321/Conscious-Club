@@ -61,7 +61,7 @@ export default function DiscoverProjectCard({
   const router = useRouter();
   const searchParams = useSearchParams();
   const color = filterMaping.find((item) => item.value === tagName)?.color;
-  const text = filterMaping.find((item) => item.value === tagName)?.text;
+  // const text = filterMaping.find((item) => item.value === tagName)?.text;
 
   const openProject = (e: React.MouseEvent) => {
     const params = new URLSearchParams(searchParams?.toString());
@@ -176,7 +176,7 @@ export default function DiscoverProjectCard({
               {creatorInfo.name || "Creator"}
             </div>
           </Link>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 text-shadow-2xs">
             {creatorInfo.role && (
               <div
                 className={`text-xs ${filterMaping.find((item) => item.value === creatorInfo.role)?.text}`}

@@ -4,7 +4,7 @@ import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, X } from "lucide-react";
+import { Search, SearchIcon, X } from "lucide-react";
 
 const BlogSearchFilter = () => {
   const router = useRouter();
@@ -43,7 +43,7 @@ const BlogSearchFilter = () => {
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
           type="text"
-          placeholder="Search blog posts by title or excerpt..."
+          placeholder="Search stories by title or excerpt..."
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
           className="pl-10 pr-20"
@@ -61,7 +61,7 @@ const BlogSearchFilter = () => {
             </Button>
           )}
           <Button type="submit" size="sm" className="h-7">
-            Search
+            <SearchIcon className="h-4 w-4" />
           </Button>
         </div>
       </div>
