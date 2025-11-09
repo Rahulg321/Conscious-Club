@@ -535,7 +535,7 @@ function MashupProjectUploadForm({
             name="dedicatedToPerson"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-sm">A Person</FormLabel>
+                <FormLabel className="text-sm">Person</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Enter person's name"
@@ -553,7 +553,7 @@ function MashupProjectUploadForm({
             name="dedicatedToBrand"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-sm">A Brand</FormLabel>
+                <FormLabel className="text-sm">Brand</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Enter brand name"
@@ -571,7 +571,7 @@ function MashupProjectUploadForm({
             name="dedicatedToCause"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-sm">A Cause</FormLabel>
+                <FormLabel className="text-sm">Cause</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Enter cause name"

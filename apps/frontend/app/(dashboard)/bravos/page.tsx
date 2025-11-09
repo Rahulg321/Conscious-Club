@@ -80,11 +80,11 @@ const page = async ({
           {categories?.find((category) => category.slug === selectedCategory)
             ?.name || ""}
         </h1> */}
-        <p className="text-gray-600">
+        <div className="text-gray-600">
           {selectedCategory && selectedCategoryObj
             ? selectedCategoryObj.description
             : "Bravos are the best way to show your support for your favorite projects. You can collect bravos by completing tasks, projects, and more."}
-        </p>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">

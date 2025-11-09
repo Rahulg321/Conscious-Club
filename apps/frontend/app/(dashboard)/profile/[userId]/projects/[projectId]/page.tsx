@@ -3,13 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { getProjectById, getProjectByIdWithStats } from "@/lib/queries";
+import { getProjectByIdWithStats } from "@/lib/queries";
 import {
   Heart,
   MessageCircle,
   Award,
   Edit,
-  Trash2,
   ExternalLink,
   Calendar,
   ArrowLeft,
@@ -131,7 +130,7 @@ async function ProjectPage({ params }: PageProps) {
                         <div
                           className="relative w-full aspect-video rounded-xl overflow-hidden border flex items-center justify-center"
                           style={{
-                            background: "var(--color-muted)",
+                            background: "var(--color-white)",
                             borderColor: "var(--color-border)",
                           }}
                         >

@@ -8,7 +8,7 @@ import { useSession } from "next-auth/react";
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
+  // SheetDescription,
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
@@ -20,14 +20,23 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import LikeButton from "./like-button";
 import FollowButton from "./buttons/follow-button";
 import ProjectCommentForm from "./forms/project-comment-form";
 import ProjectCommentsList from "./project-comments-list";
-import { isVideo } from "@/lib/utils";
-import { Award, MapPin, Users, UserCheck, Sparkles } from "lucide-react";
+import { filterMaping } from "./forms/onboarding/config";
+import { cn, isVideo } from "@/lib/utils";
+import {
+  // Award,
+  MapPin,
+  // Users,
+  // UserCheck,
+  // Sparkles,
+  Shuffle,
+  Gem,
+} from "lucide-react";
 
 type UserInfo = {
   id: string;
@@ -167,26 +176,227 @@ export default function ProjectSheet() {
     <Sheet open={open} onOpenChange={handleOpenChange}>
       <SheetContent
         side="right"
-        className="w-full sm:max-w-2xl p-0 flex flex-col"
+        className="w-full sm:max-w-2xl !p-0 gap-0  flex flex-col"
       >
-        <div className="px-6 pt-6 pb-4 border-b">
+        <div className="py-2 border-b">
           <SheetHeader>
-            <SheetTitle className="text-xl">
-              {loading || isPending ? (
+            <SheetTitle />
+            {/* {loading || isPending ? (
                 <Skeleton className="h-7 w-48" />
               ) : (
                 project?.name || "Project"
-              )}
-            </SheetTitle>
-            <SheetDescription className="line-clamp-2">
-              {error ? (
-                <span className="text-destructive">{error}</span>
-              ) : loading || isPending ? (
-                <Skeleton className="h-4 w-full mt-2" />
+              )} */}
+            <div className="mt-2 px-2">
+              {/* Creator/Collaborator Section */}
+              {loading || isPending ? (
+                <div className="rounded-lg  space-y-2">
+                  <Skeleton className="h-4 w-32 mb-3" />
+                  <div className="flex items-start gap-3">
+                    <Skeleton className="w-12 h-12 rounded-full" />
+                    <div className="flex-1 space-y-2">
+                      <Skeleton className="h-4 w-32" />
+                      <Skeleton className="h-3 w-24" />
+                      <Skeleton className="h-3 w-40" />
+                    </div>
+                  </div>
+                </div>
               ) : (
-                project?.description || "Project details and description"
+                project && (
+                  <div className="space-y-4">
+                    {project.isMashup && project.collaborator ? (
+                      // Mashup Project - Show both creator and collaborator
+                      <div className="rounded-lg  space-y-4">
+                        {/* Creator */}
+                        <div className="flex flex-col md:flex-row gap-1 items-center md:items-start justify-between">
+                          <div className="flex flex-col justify-start  items-start gap-2 w-full">
+                            <div className="flex items-start gap-3 w-full">
+                              <Avatar className="w-12 h-12">
+                                <AvatarImage
+                                  src={
+                                    project.creator.image ||
+                                    "/designer-headshot.png"
+                                  }
+                                  alt={project.creator.name || "Creator"}
+                                />
+                                <AvatarFallback>
+                                  {(project.creator.name || "C")
+                                    .slice(0, 2)
+                                    .toUpperCase()}
+                                </AvatarFallback>
+                              </Avatar>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex flex-col items-start justify-between gap-2">
+                                  <div className="flex-1 min-w-0">
+                                    <Link
+                                      href={`/profile/${project.creator.id}`}
+                                      className="block"
+                                    >
+                                      <h4 className="font-semibold text-sm hover:underline truncate">
+                                        {project.creator.name || "Creator"}
+                                      </h4>
+                                    </Link>
+                                    {project.creator.role && (
+                                      <div
+                                        className={cn(
+                                          "text-xs  truncate",
+                                          `${filterMaping.find((f) => f.value === project.creator.role)?.text}`
+                                        )}
+                                      >
+                                        {project.creator.role}
+                                      </div>
+                                    )}
+                                    {project.creator.location && (
+                                      <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
+                                        <MapPin className="w-3 h-3" />
+                                        <span className="truncate">
+                                          {project.creator.location}
+                                        </span>
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex md:mt-2 items-center gap-2 px-4">
+                            <Shuffle className="h-8 w-8 text-purple-500" />
+                          </div>
+                          {/* Collaborator */}
+                          <div className="flex justify-end items-start gap-3 w-full">
+                            <Avatar className="w-12 h-12">
+                              <AvatarImage
+                                src={
+                                  project.collaborator.image ||
+                                  "/designer-headshot.png"
+                                }
+                                alt={
+                                  project.collaborator.name || "Collaborator"
+                                }
+                              />
+                              <AvatarFallback>
+                                {(project.collaborator.name || "C")
+                                  .slice(0, 2)
+                                  .toUpperCase()}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-start justify-between gap-2">
+                                <div className="flex-1 min-w-0">
+                                  <Link
+                                    href={`/profile/${project.collaborator.id}`}
+                                    className="block"
+                                  >
+                                    <h4 className="font-medium text-sm hover:underline truncate">
+                                      {project.collaborator.name ||
+                                        "Collaborator"}
+                                    </h4>
+                                  </Link>
+                                  {project.collaborator.role && (
+                                    <div
+                                      className={cn(
+                                        "text-xs truncate",
+                                        `${filterMaping.find((f) => f.value === project?.collaborator?.role)?.text}`
+                                      )}
+                                    >
+                                      {project.collaborator.role}
+                                    </div>
+                                  )}
+                                  {project.collaborator.location && (
+                                    <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
+                                      <MapPin className="w-3 h-3" />
+                                      <span className="truncate">
+                                        {project.collaborator.location}
+                                      </span>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      // Single Project - Show creator only
+                      <div className="rounded-lg pr-4">
+                        <div className="flex items-start gap-3">
+                          <Avatar className="w-12 h-12">
+                            <AvatarImage
+                              src={
+                                project.creator.image ||
+                                "/designer-headshot.png"
+                              }
+                              alt={project.creator.name || "Creator"}
+                            />
+                            <AvatarFallback>
+                              {(project.creator.name || "C")
+                                .slice(0, 2)
+                                .toUpperCase()}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-start justify-between gap-2">
+                              <div className="flex-1 min-w-0">
+                                <Link
+                                  href={`/profile/${project.creator.id}`}
+                                  className="block"
+                                >
+                                  <h4 className="font-medium text-sm hover:underline truncate">
+                                    {project.creator.name || "Creator"}
+                                  </h4>
+                                </Link>
+                                {project.creator.role && (
+                                  <div
+                                    className={cn(
+                                      "text-xs truncate",
+                                      `${filterMaping.find((f) => f.value === project.creator.role)?.text}`
+                                    )}
+                                  >
+                                    {project.creator.role}
+                                  </div>
+                                )}
+                                {project.creator.location && (
+                                  <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
+                                    <MapPin className="w-3 h-3" />
+                                    <span className="truncate">
+                                      {project.creator.location}
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+                              {currentUserId &&
+                                currentUserId !== project.creator.id && (
+                                  <div className="flex items-center gap-2 flex-shrink-0 mt-1">
+                                    <FollowButton
+                                      userId={project.creator.id}
+                                      isFollowing={creatorFollowStatus}
+                                      className="text-xs h-8 bg-indigo-500 hover:bg-indigo-600 text-white"
+                                      onFollowChange={(isFollowing) =>
+                                        setCreatorFollowStatus(isFollowing)
+                                      }
+                                    />
+                                    {/* <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="text-xs h-8"
+                                    onClick={() =>
+                                      router.push(
+                                        `/profile/${project.creator.id}`
+                                      )
+                                    }
+                                  >
+                                    View Profile
+                                  </Button> */}
+                                  </div>
+                                )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )
               )}
-            </SheetDescription>
+            </div>
           </SheetHeader>
         </div>
 
@@ -202,7 +412,7 @@ export default function ProjectSheet() {
                     const isMediaVideo = isVideo(mediaUrl);
                     return (
                       <CarouselItem key={index}>
-                        <div className="relative w-full aspect-video rounded-lg overflow-hidden border border-border bg-muted">
+                        <div className="relative w-full aspect-video rounded-lg overflow-hidden border border-border">
                           {isMediaVideo ? (
                             <video
                               src={mediaUrl}
@@ -262,7 +472,27 @@ export default function ProjectSheet() {
               <Skeleton className="h-10 w-24" />
             ) : (
               project && (
-                <div className="flex items-center gap-2">
+                <div className="flex justify-between items-center gap-2">
+                  <div className="w-full">
+                    <div>
+                      {loading || isPending ? (
+                        <Skeleton className="h-7 w-48" />
+                      ) : (
+                        project?.name || "Project"
+                      )}
+                    </div>
+                    <div className="text-sm text-muted-foreground w-3/4">
+                      {error ? (
+                        <span className="text-destructive">{error}</span>
+                      ) : loading || isPending ? (
+                        <Skeleton className="h-4 w-full mt-2" />
+                      ) : (
+                        project?.description ||
+                        "Project details and description"
+                      )}
+                    </div>
+                  </div>
+
                   <LikeButton
                     projectId={project.id}
                     initialLikeCount={likeCount}
@@ -273,297 +503,8 @@ export default function ProjectSheet() {
               )
             )}
 
-            {/* Creator/Collaborator Section */}
-            {loading || isPending ? (
-              <div className="rounded-lg border border-border bg-card p-4 space-y-4">
-                <Skeleton className="h-4 w-32 mb-3" />
-                <div className="flex items-start gap-3">
-                  <Skeleton className="w-12 h-12 rounded-full" />
-                  <div className="flex-1 space-y-2">
-                    <Skeleton className="h-4 w-32" />
-                    <Skeleton className="h-3 w-24" />
-                    <Skeleton className="h-3 w-40" />
-                    <div className="flex gap-4 mt-2">
-                      <Skeleton className="h-3 w-20" />
-                      <Skeleton className="h-3 w-20" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              project && (
-                <div className="space-y-4">
-                  {project.isMashup && project.collaborator ? (
-                    // Mashup Project - Show both creator and collaborator
-                    <div className="rounded-lg border border-border bg-card p-4 space-y-4">
-                      <div className="flex items-center gap-2 mb-3">
-                        <Sparkles className="h-4 w-4 text-purple-500" />
-                        <h3 className="text-sm font-semibold">Collaboration</h3>
-                      </div>
-
-                      {/* Creator */}
-                      <div className="flex items-start gap-3 pb-4 border-b border-border">
-                        <Avatar className="w-12 h-12">
-                          <AvatarImage
-                            src={
-                              project.creator.image || "/designer-headshot.png"
-                            }
-                            alt={project.creator.name || "Creator"}
-                          />
-                          <AvatarFallback>
-                            {(project.creator.name || "C")
-                              .slice(0, 2)
-                              .toUpperCase()}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-start justify-between gap-2">
-                            <div className="flex-1 min-w-0">
-                              <Link
-                                href={`/profile/${project.creator.id}`}
-                                className="block"
-                              >
-                                <h4 className="font-medium text-sm hover:underline truncate">
-                                  {project.creator.name || "Creator"}
-                                </h4>
-                              </Link>
-                              {project.creator.role && (
-                                <p className="text-xs text-muted-foreground truncate">
-                                  {project.creator.role}
-                                </p>
-                              )}
-                              {project.creator.location && (
-                                <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
-                                  <MapPin className="w-3 h-3" />
-                                  <span className="truncate">
-                                    {project.creator.location}
-                                  </span>
-                                </div>
-                              )}
-                              <div className="flex items-center gap-4 text-xs text-muted-foreground mt-2">
-                                <div className="flex items-center gap-1">
-                                  <Users className="w-3 h-3" />
-                                  <span>
-                                    {project.creator.followersCount} followers
-                                  </span>
-                                </div>
-                                <div className="flex items-center gap-1">
-                                  <UserCheck className="w-3 h-3" />
-                                  <span>
-                                    {project.creator.followingCount} following
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                            {currentUserId &&
-                              currentUserId !== project.creator.id && (
-                                <div className="flex items-center gap-2 flex-shrink-0">
-                                  <FollowButton
-                                    userId={project.creator.id}
-                                    isFollowing={creatorFollowStatus}
-                                    className="text-xs h-8"
-                                    onFollowChange={(isFollowing) =>
-                                      setCreatorFollowStatus(isFollowing)
-                                    }
-                                  />
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    className="text-xs h-8"
-                                    onClick={() =>
-                                      router.push(
-                                        `/profile/${project.creator.id}`
-                                      )
-                                    }
-                                  >
-                                    View Profile
-                                  </Button>
-                                </div>
-                              )}
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Collaborator */}
-                      <div className="flex items-start gap-3">
-                        <Avatar className="w-12 h-12">
-                          <AvatarImage
-                            src={
-                              project.collaborator.image ||
-                              "/designer-headshot.png"
-                            }
-                            alt={project.collaborator.name || "Collaborator"}
-                          />
-                          <AvatarFallback>
-                            {(project.collaborator.name || "C")
-                              .slice(0, 2)
-                              .toUpperCase()}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-start justify-between gap-2">
-                            <div className="flex-1 min-w-0">
-                              <Link
-                                href={`/profile/${project.collaborator.id}`}
-                                className="block"
-                              >
-                                <h4 className="font-medium text-sm hover:underline truncate">
-                                  {project.collaborator.name || "Collaborator"}
-                                </h4>
-                              </Link>
-                              {project.collaborator.role && (
-                                <p className="text-xs text-muted-foreground truncate">
-                                  {project.collaborator.role}
-                                </p>
-                              )}
-                              {project.collaborator.location && (
-                                <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
-                                  <MapPin className="w-3 h-3" />
-                                  <span className="truncate">
-                                    {project.collaborator.location}
-                                  </span>
-                                </div>
-                              )}
-                              <div className="flex items-center gap-4 text-xs text-muted-foreground mt-2">
-                                <div className="flex items-center gap-1">
-                                  <Users className="w-3 h-3" />
-                                  <span>
-                                    {project.collaborator.followersCount}{" "}
-                                    followers
-                                  </span>
-                                </div>
-                                <div className="flex items-center gap-1">
-                                  <UserCheck className="w-3 h-3" />
-                                  <span>
-                                    {project.collaborator.followingCount}{" "}
-                                    following
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                            {currentUserId &&
-                              project.collaborator &&
-                              currentUserId !== project.collaborator.id && (
-                                <div className="flex items-center gap-2 flex-shrink-0">
-                                  <FollowButton
-                                    userId={project.collaborator.id}
-                                    isFollowing={collaboratorFollowStatus}
-                                    className="text-xs h-8"
-                                    onFollowChange={(isFollowing) =>
-                                      setCollaboratorFollowStatus(isFollowing)
-                                    }
-                                  />
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    className="text-xs h-8"
-                                    onClick={() =>
-                                      router.push(
-                                        `/profile/${project.collaborator!.id}`
-                                      )
-                                    }
-                                  >
-                                    View Profile
-                                  </Button>
-                                </div>
-                              )}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    // Single Project - Show creator only
-                    <div className="rounded-lg border border-border bg-card p-4">
-                      <h3 className="text-sm font-semibold mb-3">Created by</h3>
-                      <div className="flex items-start gap-3">
-                        <Avatar className="w-12 h-12">
-                          <AvatarImage
-                            src={
-                              project.creator.image || "/designer-headshot.png"
-                            }
-                            alt={project.creator.name || "Creator"}
-                          />
-                          <AvatarFallback>
-                            {(project.creator.name || "C")
-                              .slice(0, 2)
-                              .toUpperCase()}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-start justify-between gap-2">
-                            <div className="flex-1 min-w-0">
-                              <Link
-                                href={`/profile/${project.creator.id}`}
-                                className="block"
-                              >
-                                <h4 className="font-medium text-sm hover:underline truncate">
-                                  {project.creator.name || "Creator"}
-                                </h4>
-                              </Link>
-                              {project.creator.role && (
-                                <p className="text-xs text-muted-foreground truncate">
-                                  {project.creator.role}
-                                </p>
-                              )}
-                              {project.creator.location && (
-                                <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
-                                  <MapPin className="w-3 h-3" />
-                                  <span className="truncate">
-                                    {project.creator.location}
-                                  </span>
-                                </div>
-                              )}
-                              <div className="flex items-center gap-4 text-xs text-muted-foreground mt-2">
-                                <div className="flex items-center gap-1">
-                                  <Users className="w-3 h-3" />
-                                  <span>
-                                    {project.creator.followersCount} followers
-                                  </span>
-                                </div>
-                                <div className="flex items-center gap-1">
-                                  <UserCheck className="w-3 h-3" />
-                                  <span>
-                                    {project.creator.followingCount} following
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                            {currentUserId &&
-                              currentUserId !== project.creator.id && (
-                                <div className="flex items-center gap-2 flex-shrink-0">
-                                  <FollowButton
-                                    userId={project.creator.id}
-                                    isFollowing={creatorFollowStatus}
-                                    className="text-xs h-8"
-                                    onFollowChange={(isFollowing) =>
-                                      setCreatorFollowStatus(isFollowing)
-                                    }
-                                  />
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    className="text-xs h-8"
-                                    onClick={() =>
-                                      router.push(
-                                        `/profile/${project.creator.id}`
-                                      )
-                                    }
-                                  >
-                                    View Profile
-                                  </Button>
-                                </div>
-                              )}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )
-            )}
-
             {/* Description section */}
-            {loading || isPending ? (
+            {/* {loading || isPending ? (
               <div>
                 <Skeleton className="h-4 w-32 mb-2" />
                 <Skeleton className="h-4 w-full mb-2" />
@@ -581,7 +522,7 @@ export default function ProjectSheet() {
                   </p>
                 </div>
               )
-            )}
+            )} */}
 
             {/* Dedications Section */}
             {loading || isPending ? (
@@ -595,10 +536,12 @@ export default function ProjectSheet() {
               </div>
             ) : (
               hasDedications && (
-                <div className="rounded-lg border border-border bg-card p-4">
+                <div className="rounded-lg border border-border p-4">
                   <div className="flex items-center gap-2 mb-3">
-                    <Award className="h-4 w-4 text-primary" />
-                    <h3 className="text-sm font-semibold">Dedications</h3>
+                    <Gem className="h-4 w-4 text-indigo-500" />
+                    <h3 className="text-sm font-semibold italic">
+                      Dedications
+                    </h3>
                   </div>
 
                   <div className="space-y-2 text-sm">
@@ -631,9 +574,7 @@ export default function ProjectSheet() {
 
                     {project.dedicationReason && (
                       <div className="pt-2 border-t border-border">
-                        <span className="font-medium block mb-1">
-                          Why this dedication:
-                        </span>
+                        <span className="font-medium block mb-1">Story:</span>
                         <p className="text-muted-foreground leading-relaxed">
                           {project.dedicationReason}
                         </p>

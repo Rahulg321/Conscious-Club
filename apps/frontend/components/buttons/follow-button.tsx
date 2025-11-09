@@ -12,10 +12,14 @@ export default function FollowButton({
   isFollowing: initialIsFollowing,
   className,
   onFollowChange,
+  hideText = false,
+  hideIcon = false,
 }: {
   userId: string;
   isFollowing: boolean;
   className?: string;
+  hideText?: boolean;
+  hideIcon?: boolean;
   onFollowChange?: (isFollowing: boolean) => void;
 }) {
   const [isPending, startTransition] = useTransition();
@@ -53,13 +57,13 @@ export default function FollowButton({
     >
       {initialIsFollowing ? (
         <>
-          <UserCheck className="w-4 h-4 mr-2" />
-          {isPending ? "Unfollowing..." : "Unfollow"}
+          {!hideIcon && <UserCheck className="w-4 h-4 mr-2" />}
+          {!hideText && (isPending ? "Unfollowing..." : "Unfollow")}
         </>
       ) : (
         <>
-          <UserPlus className="w-4 h-4 mr-2" />
-          {isPending ? "Following..." : "Follow"}
+          {!hideIcon && <UserPlus className="w-4 h-4 mr-2" />}
+          {!hideText && (isPending ? "Following..." : "Follow")}
         </>
       )}
     </Button>

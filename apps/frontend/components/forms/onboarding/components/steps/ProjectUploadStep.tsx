@@ -485,7 +485,7 @@ export const ProjectUploadStep = ({
             <div className="flex items-center justify-between gap-4">
               <div className="space-y-2 w-full">
                 <Label htmlFor="dedicatedToPerson" className="text-sm">
-                  A person
+                  Person
                 </Label>
                 <Input
                   id="dedicatedToPerson"
@@ -501,7 +501,7 @@ export const ProjectUploadStep = ({
               {/* Dedicated to Brand */}
               <div className="space-y-2 w-full">
                 <Label htmlFor="dedicatedToBrand" className="text-sm">
-                  A brand
+                  Brand
                 </Label>
                 <Input
                   id="dedicatedToBrand"
@@ -518,7 +518,7 @@ export const ProjectUploadStep = ({
             {/* Dedicated to Cause */}
             <div className="space-y-2">
               <Label htmlFor="dedicatedToCause" className="text-sm">
-                A cause
+                Cause
               </Label>
               <Input
                 id="dedicatedToCause"

@@ -63,7 +63,7 @@ export function ContactUsForm() {
                   <FormControl>
                     <Input
                       type="text"
-                      placeholder="John"
+                      placeholder="Jane"
                       className="h-11"
                       {...field}
                     />
@@ -106,7 +106,7 @@ export function ContactUsForm() {
                 <FormControl>
                   <Input
                     type="email"
-                    placeholder="john.doe@example.com"
+                    placeholder="jane.doe@example.com"
                     className="h-11"
                     {...field}
                   />
@@ -126,7 +126,7 @@ export function ContactUsForm() {
                 </FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder="Tell us how we can help you..."
+                    placeholder="..."
                     className="min-h-[150px] resize-none"
                     {...field}
                   />

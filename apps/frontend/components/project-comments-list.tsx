@@ -70,8 +70,8 @@ const ProjectCommentsList = ({
 
   if (isPending && comments.length === 0) {
     return (
-      <Card className="w-full">
-        <CardContent className="p-6">
+      <div className="w-full">
+        <div>
           <div className="flex items-center gap-2 mb-4">
             <MessageCircle className="h-5 w-5" />
             <h3 className="text-lg font-semibold">Comments</h3>
@@ -87,28 +87,28 @@ const ProjectCommentsList = ({
               </div>
             ))}
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     );
   }
 
   if (error) {
     return (
-      <Card className="w-full">
-        <CardContent className="p-6">
+      <div className="w-full">
+        <div className="">
           <div className="flex items-center gap-2 mb-4">
             <MessageCircle className="h-5 w-5" />
             <h3 className="text-lg font-semibold">Comments</h3>
           </div>
           <p className="text-sm text-muted-foreground">{error}</p>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     );
   }
 
   return (
-    <Card className="w-full">
-      <CardContent className="p-6">
+    <div className="w-full border-t-1 py-2">
+      <div>
         <div className="flex items-center gap-2 mb-4">
           <MessageCircle className="h-5 w-5" />
           <h3 className="text-lg font-semibold">
@@ -120,7 +120,7 @@ const ProjectCommentsList = ({
         </div>
 
         {comments.length === 0 ? (
-          <div className="text-center py-8">
+          <div className="text-center py-2">
             <MessageCircle className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
             <p className="text-sm text-muted-foreground">
               No comments yet. Be the first to share your thoughts!
@@ -129,7 +129,10 @@ const ProjectCommentsList = ({
         ) : (
           <div className="space-y-4">
             {comments.map((comment) => (
-              <div key={comment.id} className="flex gap-3">
+              <div
+                key={comment.id}
+                className="flex gap-3 border-b border-border p-2"
+              >
                 <Avatar className="w-8 h-8">
                   <AvatarImage
                     src={comment.user.image || undefined}
@@ -155,16 +158,16 @@ const ProjectCommentsList = ({
                       })}
                     </span>
                   </div>
-                  <p className="text-sm text-foreground whitespace-pre-wrap break-words">
+                  <div className="text-sm text-foreground whitespace-pre-wrap break-words ">
                     {comment.content}
-                  </p>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 

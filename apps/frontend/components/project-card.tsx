@@ -2,7 +2,18 @@ import Link from "next/link";
 import { Button } from "./ui/button";
 import DeleteProjectAlert from "./buttons/delete-project-alert";
 import Image from "next/image";
-import { Sparkles, Eye, ExternalLink, Edit, User, Heart, Building2, Flag, MessageSquare } from "lucide-react";
+import {
+  // Sparkles,
+  Eye,
+  ExternalLink,
+  Edit,
+  User,
+  // Heart,
+  // Building2,
+  // Flag,
+  // MessageSquare,
+  Shuffle,
+} from "lucide-react";
 
 type UserInfo = {
   id?: string;
@@ -85,15 +96,15 @@ export default function ProjectCard({
 
   return (
     <div className="group w-full">
-      <div className="h-full bg-white rounded-2xl border border-gray-200 overflow-hidden">
-        <div className="aspect-video relative bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
+      <div className="h-full bg-white rounded-2xl border border-gray-200 overflow-hidden pb-4">
+        <div className="aspect-video relative bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden px-4 py-2 rounded-lg">
           {coverImage ? (
             <Image
               src={coverImage}
               alt={project.name}
               fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              className="object-contain bg-white pt-4 rounded-lg"
+              // sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-gray-400 bg-gradient-to-br from-gray-50 to-gray-100">
@@ -109,14 +120,13 @@ export default function ProjectCard({
           {isMashup && (
             <div className="absolute top-3 left-3">
               <div className="bg-purple-500/90 backdrop-blur-sm text-white px-2 py-1 rounded-lg flex items-center gap-1 text-xs font-medium">
-                <Sparkles className="w-3 h-3" />
-                Mashup
+                <Shuffle className="w-3 h-3" />
               </div>
             </div>
           )}
         </div>
 
-        <div className="p-6 space-y-4">
+        <div className="px-4 py-2 mb-2">
           <h4 className="font-semibold text-lg text-gray-900 line-clamp-1">
             {project.name}
           </h4>
@@ -124,18 +134,18 @@ export default function ProjectCard({
           {/* User Information Section */}
           {isMashup && creatorInfo && collaboratorInfo ? (
             <div className="space-y-3">
-              <div className="flex items-center gap-2 text-sm text-gray-600 bg-purple-50 px-3 py-2 rounded-lg">
+              {/* <div className="flex items-center gap-2 text-sm text-gray-600 bg-purple-50 px-3 py-2 rounded-lg">
                 <Sparkles className="w-4 h-4 text-purple-500 flex-shrink-0" />
                 <span className="font-medium text-xs">Collaboration</span>
-              </div>
+              </div> */}
 
               {/* Creator Info */}
-              <div className="space-y-2">
+              <div className="space-y-1">
                 <Link
                   href={`/profile/${creatorInfo.id || project.userId}`}
-                  className="block hover:bg-gray-50 -mx-2 px-2 py-1.5 rounded-lg transition-colors"
+                  className="block hover:bg-gray-50  px-2 py-1.5 rounded-lg transition-colors"
                 >
-                  <div className="flex items-center gap-2 mb-1.5">
+                  <div className="flex items-center gap-2">
                     <User className="w-3.5 h-3.5 text-gray-400" />
                     <span className="font-semibold text-sm text-gray-900">
                       {creatorName || "Creator"}
@@ -193,7 +203,7 @@ export default function ProjectCard({
             </div>
           ) : creatorInfo && !isMashup ? (
             <div className="space-y-2">
-              <Link
+              {/* <Link
                 href={`/profile/${creatorInfo.id || project.userId}`}
                 className="block hover:bg-gray-50 -mx-2 px-2 py-1.5 rounded-lg transition-colors"
               >
@@ -219,16 +229,16 @@ export default function ProjectCard({
                     </span>
                   )}
                 </div>
-              </Link>
+              </Link> */}
             </div>
           ) : null}
 
-          <p className="text-sm text-gray-600 line-clamp-2 leading-relaxed min-h-[2.5rem]">
+          <p className="text-sm text-gray-600 line-clamp leading-relaxed">
             {project.description}
           </p>
 
           {/* Dedication Section */}
-          {(project.dedicatedToPerson ||
+          {/* {(project.dedicatedToPerson ||
             project.dedicatedToBrand ||
             project.dedicatedToCause ||
             project.dedicationReason) && (
@@ -283,37 +293,36 @@ export default function ProjectCard({
                 )}
               </div>
             </div>
-          )}
-
-          <div className="flex items-center justify-end gap-2 pt-2">
-            <Button
-              variant="outline"
-              size="icon"
-              asChild
-              className="h-9 w-9 border-gray-200 hover:bg-gray-50"
-            >
-              <Link href={`/profile/${project.userId}/projects/${project.id}`}>
-                <ExternalLink className="h-4 w-4" />
-              </Link>
-            </Button>
-            {isOwnProfile && (
-              <>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-9 w-9 border-gray-200 hover:bg-gray-50"
-                  asChild
+          )} */}
+        </div>
+        <div className="flex items-center justify-end gap-2 px-4">
+          <Button
+            variant="outline"
+            size="icon"
+            asChild
+            className="h-9 w-9 border-gray-200 hover:bg-gray-50"
+          >
+            <Link href={`/profile/${project.userId}/projects/${project.id}`}>
+              <ExternalLink className="h-4 w-4" />
+            </Link>
+          </Button>
+          {isOwnProfile && (
+            <>
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-9 w-9 hover:bg-gray-50 text-blue-500 border-blue-500"
+                asChild
+              >
+                <Link
+                  href={`/profile/${project.userId}/projects/${project.id}/edit`}
                 >
-                  <Link
-                    href={`/profile/${project.userId}/projects/${project.id}/edit`}
-                  >
-                    <Edit className="h-4 w-4" />
-                  </Link>
-                </Button>
-                <DeleteProjectAlert projectId={project.id} />
-              </>
-            )}
-          </div>
+                  <Edit className="h-4 w-4" />
+                </Link>
+              </Button>
+              <DeleteProjectAlert projectId={project.id} />
+            </>
+          )}
         </div>
       </div>
     </div>

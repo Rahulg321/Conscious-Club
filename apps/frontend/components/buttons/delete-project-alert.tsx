@@ -41,7 +41,11 @@ const DeleteProjectAlert = ({ projectId }: { projectId: string }) => {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button variant="destructive" size="icon">
+        <Button
+          variant="outline"
+          className="text-destructive border-destructive"
+          size="icon"
+        >
           <Trash2 className="h-4 w-4" />
         </Button>
       </AlertDialogTrigger>

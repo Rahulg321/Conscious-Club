@@ -20,7 +20,7 @@ export const DisciplineRoleStep = ({
       {/* Discipline Selection */}
       <div className="space-y-4">
         <Label className="text-base ">
-          Pick your <span className="text-indigo-500 font-bold">style</span>
+          Pick your<span className="text-indigo-500 font-bold">style</span>
         </Label>
         <div className="flex flex-wrap gap-3">
           {DISCIPLINES.map((discipline: DisciplineType) => (
@@ -46,7 +46,7 @@ export const DisciplineRoleStep = ({
       {formData.discipline && (
         <div className="space-y-4">
           <Label className="text-base">
-            Choose your{" "}
+            Choose your
             <span className="text-indigo-500 font-bold">artform</span>
           </Label>
           <div className="flex flex-wrap gap-3">

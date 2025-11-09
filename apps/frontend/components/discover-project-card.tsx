@@ -5,14 +5,9 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import LikeButton from "./like-button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Sparkles,
-  MapPin,
-  Heart,
-  Building2,
-  Flag,
-  MessageSquare,
-} from "lucide-react";
+import { BorderBeam } from "@/components/ui/border-beam";
+import { MapPin, Shuffle } from "lucide-react";
+import { filterMaping } from "./forms/onboarding/config";
 
 type CreatorInfo = {
   id: string;
@@ -36,15 +31,16 @@ export default function DiscoverProjectCard({
   projectName,
   projectDescription,
   likeCount = 0,
+  tagName,
   isLiked = false,
   creatorName,
   collaboratorName,
   creatorInfo,
   collaboratorInfo,
-  dedicatedToPerson,
-  dedicatedToBrand,
-  dedicatedToCause,
-  dedicationReason,
+  // dedicatedToPerson,
+  // dedicatedToBrand,
+  // dedicatedToCause,
+  // dedicationReason,
 }: {
   projectId: string;
   projectCoverImage: string;
@@ -57,13 +53,15 @@ export default function DiscoverProjectCard({
   collaboratorName?: string;
   creatorInfo?: CreatorInfo;
   collaboratorInfo?: CollaboratorInfo;
-  dedicatedToPerson?: string | null;
-  dedicatedToBrand?: string | null;
-  dedicatedToCause?: string | null;
-  dedicationReason?: string | null;
+  // dedicatedToPerson?: string | null;
+  // dedicatedToBrand?: string | null;
+  // dedicatedToCause?: string | null;
+  // dedicationReason?: string | null;
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const color = filterMaping.find((item) => item.value === tagName)?.color;
+  const text = filterMaping.find((item) => item.value === tagName)?.text;
 
   const openProject = (e: React.MouseEvent) => {
     const params = new URLSearchParams(searchParams?.toString());
@@ -83,18 +81,132 @@ export default function DiscoverProjectCard({
 
   return (
     <div
-      className="group bg-card rounded-lg border border-border overflow-hidden relative cursor-pointer"
+      className="rounded-lg border border-border overflow-hidden relative cursor-pointer py-2 px-4"
       onClick={openProject}
     >
-      <div className="aspect-video bg-muted overflow-hidden relative">
+      {isMashup ? (
+        // Mashup Project - Show both creator and collaborator
+        <div className="mb-3 space-y-2" onClick={onUserInfoClick}>
+          <div className="flex items-center gap-2 pt-4">
+            <Link
+              href={`/profile/${creatorInfo.id}`}
+              className="flex items-center gap-2 hover:opacity-80 transition-opacity flex-1 min-w-0"
+            >
+              <Avatar className="w-6 h-6 flex-shrink-0">
+                <AvatarImage
+                  src={creatorInfo.image || "/designer-headshot.png"}
+                  alt={creatorInfo.name || "Creator"}
+                />
+                <AvatarFallback
+                  className={`border-2 text-xs ${filterMaping.find((item) => item.value === creatorInfo.role)?.border}`}
+                >
+                  {(creatorInfo.name || "C").slice(0, 2).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1 min-w-0">
+                <div className="text-xs font-medium text-card-foreground truncate">
+                  {creatorInfo.name || "Creator"}
+                </div>
+                {creatorInfo.role && (
+                  <div
+                    className={`text-xs ${filterMaping.find((item) => item.value === creatorInfo.role)?.text}`}
+                  >
+                    {creatorInfo.role}
+                  </div>
+                )}
+              </div>
+            </Link>
+            <Shuffle className="w-4 h-4 text-purple-500" />
+            <Link
+              href={`/profile/${collaboratorInfo.id}`}
+              className="flex items-center gap-2 hover:opacity-80 transition-opacity flex-1 min-w-0"
+            >
+              <Avatar className="w-6 h-6 flex-shrink-0">
+                <AvatarImage
+                  src={collaboratorInfo.image || "/designer-headshot.png"}
+                  alt={collaboratorInfo.name || "Collaborator"}
+                />
+                <AvatarFallback className="text-xs">
+                  {(collaboratorInfo.name || "C").slice(0, 2).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1 min-w-0">
+                <div className="text-xs font-medium text-card-foreground truncate">
+                  {collaboratorInfo.name || "Collaborator"}
+                </div>
+                {collaboratorInfo.role && (
+                  <div
+                    className={`text-xs  ${filterMaping.find((item) => item.value === collaboratorInfo.role)?.text}`}
+                  >
+                    {collaboratorInfo.role}
+                  </div>
+                )}
+              </div>
+            </Link>
+          </div>
+          {(creatorInfo.location || collaboratorInfo.location) && (
+            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+              <MapPin className="w-3 h-3" />
+              <span className="truncate">
+                {creatorInfo.location || collaboratorInfo.location}
+              </span>
+            </div>
+          )}
+        </div>
+      ) : creatorInfo ? (
+        // Single Project - Show creator only
+        <div
+          className="py-2 flex flex-row justify-between"
+          onClick={onUserInfoClick}
+        >
+          <Link
+            href={`/profile/${creatorInfo.id}`}
+            className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+          >
+            <Avatar className="w-6 h-6 flex-shrink-0">
+              <AvatarImage
+                src={creatorInfo.image || "/designer-headshot.png"}
+                alt={creatorInfo.name || "Creator"}
+              />
+              <AvatarFallback className="text-xs">
+                {(creatorInfo.name || "C").slice(0, 2).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            <div className="text-xs font-medium text-card-foreground truncate">
+              {creatorInfo.name || "Creator"}
+            </div>
+          </Link>
+          <div className="flex items-center gap-2">
+            {creatorInfo.role && (
+              <div
+                className={`text-xs ${filterMaping.find((item) => item.value === creatorInfo.role)?.text}`}
+              >
+                {creatorInfo.role}
+              </div>
+            )}
+            {creatorInfo.location && (
+              <>
+                {creatorInfo.role && (
+                  <span className="text-muted-foreground">•</span>
+                )}
+                <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                  <MapPin className="w-3 h-3" />
+                  <span className="truncate">{creatorInfo.location}</span>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      ) : null}
+      <div className="aspect-video bg-muted overflow-hidden relative rounded-xl ">
         <Image
           src={projectCoverImage}
           alt={projectName}
           fill
-          className="object-contain"
+          className="object-contain bg-neutral-50"
         />
       </div>
-      <div className="p-4">
+      <div className="py-2">
         <div className="flex items-start justify-between mb-2">
           <h4 className="font-medium text-card-foreground line-clamp-1 flex-1">
             {projectName}
@@ -107,182 +219,11 @@ export default function DiscoverProjectCard({
             />
           </div>
         </div>
-
-        {/* User Information Section */}
-        {isMashup ? (
-          // Mashup Project - Show both creator and collaborator
-          <div className="mb-3 space-y-2" onClick={onUserInfoClick}>
-            <div className="flex items-center gap-1.5 mb-2">
-              <Sparkles className="w-4 h-4 text-purple-500" />
-              <span className="text-xs font-medium text-muted-foreground">
-                Collaboration
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Link
-                href={`/profile/${creatorInfo.id}`}
-                className="flex items-center gap-2 hover:opacity-80 transition-opacity flex-1 min-w-0"
-              >
-                <Avatar className="w-6 h-6 flex-shrink-0">
-                  <AvatarImage
-                    src={creatorInfo.image || "/designer-headshot.png"}
-                    alt={creatorInfo.name || "Creator"}
-                  />
-                  <AvatarFallback className="text-xs">
-                    {(creatorInfo.name || "C").slice(0, 2).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs font-medium text-card-foreground truncate">
-                    {creatorInfo.name || "Creator"}
-                  </p>
-                  {creatorInfo.role && (
-                    <p className="text-xs text-muted-foreground truncate">
-                      {creatorInfo.role}
-                    </p>
-                  )}
-                </div>
-              </Link>
-              <span className="text-purple-500 text-xs">×</span>
-              <Link
-                href={`/profile/${collaboratorInfo.id}`}
-                className="flex items-center gap-2 hover:opacity-80 transition-opacity flex-1 min-w-0"
-              >
-                <Avatar className="w-6 h-6 flex-shrink-0">
-                  <AvatarImage
-                    src={collaboratorInfo.image || "/designer-headshot.png"}
-                    alt={collaboratorInfo.name || "Collaborator"}
-                  />
-                  <AvatarFallback className="text-xs">
-                    {(collaboratorInfo.name || "C").slice(0, 2).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs font-medium text-card-foreground truncate">
-                    {collaboratorInfo.name || "Collaborator"}
-                  </p>
-                  {collaboratorInfo.role && (
-                    <p className="text-xs text-muted-foreground truncate">
-                      {collaboratorInfo.role}
-                    </p>
-                  )}
-                </div>
-              </Link>
-            </div>
-            {(creatorInfo.location || collaboratorInfo.location) && (
-              <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                <MapPin className="w-3 h-3" />
-                <span className="truncate">
-                  {creatorInfo.location || collaboratorInfo.location}
-                </span>
-              </div>
-            )}
-          </div>
-        ) : creatorInfo ? (
-          // Single Project - Show creator only
-          <div className="mb-3" onClick={onUserInfoClick}>
-            <Link
-              href={`/profile/${creatorInfo.id}`}
-              className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-            >
-              <Avatar className="w-6 h-6 flex-shrink-0">
-                <AvatarImage
-                  src={creatorInfo.image || "/designer-headshot.png"}
-                  alt={creatorInfo.name || "Creator"}
-                />
-                <AvatarFallback className="text-xs">
-                  {(creatorInfo.name || "C").slice(0, 2).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-medium text-card-foreground truncate">
-                  {creatorInfo.name || "Creator"}
-                </p>
-                <div className="flex items-center gap-2">
-                  {creatorInfo.role && (
-                    <p className="text-xs text-muted-foreground truncate">
-                      {creatorInfo.role}
-                    </p>
-                  )}
-                  {creatorInfo.location && (
-                    <>
-                      {creatorInfo.role && (
-                        <span className="text-muted-foreground">•</span>
-                      )}
-                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                        <MapPin className="w-3 h-3" />
-                        <span className="truncate">{creatorInfo.location}</span>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>
-            </Link>
-          </div>
-        ) : null}
-
-        <p className="text-sm text-muted-foreground line-clamp-2">
+        <div className="text-sm text-muted-foreground line-clamp-2">
           {projectDescription}
-        </p>
-
-        {/* Dedication Section */}
-        {(dedicatedToPerson ||
-          dedicatedToBrand ||
-          dedicatedToCause ||
-          dedicationReason) && (
-          <div className="mt-3 pt-3 border-t border-border space-y-1.5">
-            <div className="text-xs font-medium text-muted-foreground mb-1.5">
-              Dedicated To
-            </div>
-            <div className="space-y-1">
-              {dedicatedToPerson && (
-                <div className="flex items-start gap-1.5 text-xs">
-                  <Heart className="w-3 h-3 text-pink-500 mt-0.5 flex-shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <span className="text-muted-foreground">Person: </span>
-                    <span className="text-card-foreground font-medium truncate">
-                      {dedicatedToPerson}
-                    </span>
-                  </div>
-                </div>
-              )}
-              {dedicatedToBrand && (
-                <div className="flex items-start gap-1.5 text-xs">
-                  <Building2 className="w-3 h-3 text-blue-500 mt-0.5 flex-shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <span className="text-muted-foreground">Brand: </span>
-                    <span className="text-card-foreground font-medium truncate">
-                      {dedicatedToBrand}
-                    </span>
-                  </div>
-                </div>
-              )}
-              {dedicatedToCause && (
-                <div className="flex items-start gap-1.5 text-xs">
-                  <Flag className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <span className="text-muted-foreground">Cause: </span>
-                    <span className="text-card-foreground font-medium truncate">
-                      {dedicatedToCause}
-                    </span>
-                  </div>
-                </div>
-              )}
-              {dedicationReason && (
-                <div className="flex items-start gap-1.5 text-xs pt-0.5">
-                  <MessageSquare className="w-3 h-3 text-purple-500 mt-0.5 flex-shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <span className="text-muted-foreground">Reason: </span>
-                    <span className="text-card-foreground italic line-clamp-1">
-                      {dedicationReason}
-                    </span>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+        </div>
       </div>
+      <BorderBeam duration={6} size={400} className={color} />
     </div>
   );
 }
