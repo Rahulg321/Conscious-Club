@@ -117,38 +117,36 @@ const ProfilePage = async ({ params }: Props) => {
                 </div>
 
                 <div className="md:text-left my-auto w-full flex flex-col items-start justify-center">
-                  <h2 className="text-xl md:text-4xl font-semibold text-[#171c21] mb-1 flex items-center justify-start w-full gap-2">
+                  <h2 className="text-xl md:text-4xl font-semibold text-[#171c21] mb-2 w-full">
                     <div className="truncate w-full">
                       {currentUser.name || ""}
                     </div>
-                    <div className="flex items-center justify-end w-max">
-                      {isOwnProfile ? (
-                        <ProfileEditDialog
-                          isIcon={true}
-                          userId={userId}
-                          name={currentUser.name || ""}
-                          bio={currentUser.bio || ""}
-                          city={currentUser.city || ""}
-                          country={currentUser.country || ""}
-                        />
-                      ) : (
-                        <div className="flex items-center gap-2 w-max">
-                          <FollowButton
-                            isIcon={true}
-                            userId={userId}
-                            isFollowing={isUserFollowing}
-                            className="flex items-center gap-2 bg-indigo-500 text-white hover:bg-indigo-600"
-                          />
-                          <MashupDialog
-                            isIcon={true}
-                            collaboratorId={userId}
-                            collaboratorName={currentUser.name || undefined}
-                            userSession={userSession}
-                          />
-                        </div>
-                      )}
-                    </div>
                   </h2>
+                  <div className="flex items-center gap-2 mb-2 w-full">
+                    {isOwnProfile ? (
+                      <ProfileEditDialog
+                        userId={userId}
+                        name={currentUser.name || ""}
+                        bio={currentUser.bio || ""}
+                        city={currentUser.city || ""}
+                        country={currentUser.country || ""}
+                      />
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <FollowButton
+                          userId={userId}
+                          isFollowing={isUserFollowing}
+                          className="flex items-center gap-2 bg-indigo-500 text-white hover:bg-indigo-600"
+                        />
+                        <MashupDialog
+                          isIcon={true}
+                          collaboratorId={userId}
+                          collaboratorName={currentUser.name || undefined}
+                          userSession={userSession}
+                        />
+                      </div>
+                    )}
+                  </div>
                   <div className="text-[#666a6e] mb-2 flex items-center justify-start">
                     <MapPin className="w-4 h-4" />{" "}
                     {[currentUser.city, currentUser.country]

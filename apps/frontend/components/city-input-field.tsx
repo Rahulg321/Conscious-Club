@@ -44,6 +44,18 @@ const CityInputField = ({
     []
   );
 
+  const handleValueChange = useCallback(
+    (newValue: string) => {
+      if (onChange) {
+        onChange(newValue);
+      }
+      if (inputRef.current && inputRef.current.value !== newValue) {
+        inputRef.current.value = newValue;
+      }
+    },
+    [onChange]
+  );
+
   const onPlaceChanged = useCallback(() => {
     if (autocompleteRef.current && inputRef.current) {
       const place = autocompleteRef.current.getPlace();
@@ -63,13 +75,12 @@ const CityInputField = ({
           cityName = place.name || "";
         }
         
-        if (onChange && cityName) {
-          onChange(cityName);
+        if (cityName) {
+          handleValueChange(cityName);
         }
-        inputRef.current.value = cityName;
       }
     }
-  }, [onChange]);
+  }, [handleValueChange]);
 
   if (!isLoaded) return <div>Loading...</div>;
   return (
@@ -86,7 +97,8 @@ const CityInputField = ({
           ref={inputRef}
           placeholder={placeholder}
           className={className}
-          defaultValue={value}
+          value={value}
+          onChange={(event) => handleValueChange(event.target.value)}
         />
       </Autocomplete>
     </div>

@@ -1,10 +1,7 @@
 "use client";
 
 import React, { useCallback, useRef, useEffect } from "react";
-import {
-  useJsApiLoader,
-  Autocomplete,
-} from "@react-google-maps/api";
+import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";
 import { Input } from "./ui/input";
 
 interface CountryInputFieldProps {
@@ -44,32 +41,43 @@ const CountryInputField = ({
     []
   );
 
+  const handleValueChange = useCallback(
+    (newValue: string) => {
+      if (onChange) {
+        onChange(newValue);
+      }
+      if (inputRef.current && inputRef.current.value !== newValue) {
+        inputRef.current.value = newValue;
+      }
+    },
+    [onChange]
+  );
+
   const onPlaceChanged = useCallback(() => {
     if (autocompleteRef.current && inputRef.current) {
       const place = autocompleteRef.current.getPlace();
       if (place) {
         // Extract country name from the place result
         let countryName = "";
-        
+
         // Try to get the country name from address_components
         const countryComponent = place.address_components?.find((component) =>
           component.types.includes("country")
         );
-        
+
         if (countryComponent) {
           countryName = countryComponent.long_name;
         } else {
           // Fallback to place name if country component not found
           countryName = place.name || "";
         }
-        
-        if (onChange && countryName) {
-          onChange(countryName);
+
+        if (countryName) {
+          handleValueChange(countryName);
         }
-        inputRef.current.value = countryName;
       }
     }
-  }, [onChange]);
+  }, [handleValueChange]);
 
   if (!isLoaded) return <div>Loading...</div>;
   return (
@@ -86,7 +94,8 @@ const CountryInputField = ({
           ref={inputRef}
           placeholder={placeholder}
           className={className}
-          defaultValue={value}
+          value={value}
+          onChange={(event) => handleValueChange(event.target.value)}
         />
       </Autocomplete>
     </div>
@@ -94,4 +103,3 @@ const CountryInputField = ({
 };
 
 export default CountryInputField;
-

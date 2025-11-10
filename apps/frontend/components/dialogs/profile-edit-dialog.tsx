@@ -34,14 +34,12 @@ export default function ProfileEditDialog({
   bio,
   city,
   country,
-  isIcon = false,
 }: {
   userId: string;
   name?: string;
   bio?: string;
   city?: string;
   country?: string;
-  isIcon?: boolean;
 }) {
   const [open, setOpen] = React.useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
@@ -50,8 +48,8 @@ export default function ProfileEditDialog({
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button variant="outline" className={cn(isIcon && "w-8 h-8")}>
-            <Edit /> {isIcon ? "" : "Edit Profile"}
+          <Button variant="outline" size="icon" className="relative z-10">
+            <Edit />
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
@@ -78,8 +76,8 @@ export default function ProfileEditDialog({
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant="outline" className="">
-          <Edit /> {isIcon ? "" : "Edit Profile"}
+        <Button variant="outline" size="icon" className="relative z-10">
+          <Edit />
         </Button>
       </DrawerTrigger>
       <DrawerContent>
