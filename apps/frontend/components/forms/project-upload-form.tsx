@@ -290,12 +290,12 @@ function ProjectUploadForm({
           name="coverImage"
           render={({ field: { onChange, value, ...field } }) => (
             <FormItem>
-              <FormLabel className="text-sm font-medium">Cover Image</FormLabel>
-              <FormDescription className="text-xs mt-0 p-0">
-                Upload a cover image for your project (required). Max 20MB.
-              </FormDescription>
+              <FormLabel className="text-sm font-medium">
+                Add a cover photo{" "}
+                <span className="text-xs text-muted-foreground">(Max 20MB)</span>
+              </FormLabel>
               <FormControl>
-                <div className="space-y-2 mt-2">
+                <div className="space-y-2">
                   <input
                     {...field}
                     ref={coverImageRef}
@@ -330,11 +330,11 @@ function ProjectUploadForm({
                       type="button"
                       variant="outline"
                       onClick={() => coverImageRef.current?.click()}
-                      className="w-full"
+                      className="w-full text-sm text-indigo-500 hover:text-indigo-600 hover:bg-indigo-50 shadow-md shadow-indigo-100 hover:shadow-none rounded-xl"
                       size="sm"
                     >
-                      <Upload className="mr-2 h-3 w-3" />
-                      Select Cover Image
+                      <Upload className="h-2 w-2" />
+                      Select Image
                     </Button>
                   )}
 
@@ -343,13 +343,13 @@ function ProjectUploadForm({
                       <img
                         src={coverImagePreview.url}
                         alt="Cover preview"
-                        className="w-full h-32 object-contain rounded-md bg-muted"
+                        className="w-full h-32 object-cover rounded-md bg-muted"
                       />
                       <Button
                         type="button"
-                        variant="destructive"
+                        variant="outline"
                         size="sm"
-                        className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0"
+                        className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 border-destructive text-destructive"
                         onClick={() => {
                           URL.revokeObjectURL(coverImagePreview.url);
                           setCoverImagePreview(null);
@@ -375,15 +375,11 @@ function ProjectUploadForm({
           name="media"
           render={({ field: { onChange, value, ...field } }) => (
             <FormItem>
-              <FormLabel className="text-sm font-medium ">
+              <FormLabel className="text-sm font-medium">
                 Upload Media
               </FormLabel>
-              <FormDescription className="text-xs mt-0 p-0 ">
-                Upload up to 4 images or videos. Videos can be up to 20 seconds
-                and 200MB. Images up to 20MB.
-              </FormDescription>
               <FormControl>
-                <div className="space-y-2 mt-2">
+                <div className="space-y-2">
                   <input
                     {...field}
                     ref={mediaRef}
@@ -495,12 +491,16 @@ function ProjectUploadForm({
                       type="button"
                       variant="outline"
                       onClick={() => mediaRef.current?.click()}
-                      className="w-full"
+                      className="w-full text-sm text-indigo-500 hover:text-indigo-600 hover:bg-indigo-50 shadow-md shadow-indigo-100 hover:shadow-none rounded-xl"
                       size="sm"
                     >
                       <PlusCircle className="mr-2 h-3 w-3" />
                     </Button>
                   )}
+                  <p className="text-xs text-muted-foreground">
+                    Upload up to 4 images or videos. Videos can be up to 20 seconds each
+                    and 200MB. Images up to 20MB each.
+                  </p>
 
                   {value && value.length > 0 && (
                     <div className="space-y-2">
@@ -508,26 +508,26 @@ function ProjectUploadForm({
                         {mediaPreviews.map((preview, index) => (
                           <div
                             key={index}
-                            className="relative rounded-md border p-1"
+                            className="relative rounded-md border"
                           >
                             {preview.type === "image" ? (
                               <img
                                 src={preview.url}
                                 alt={`Media ${index + 1}`}
-                                className="w-full h-24 object-contain rounded-md bg-muted"
+                                className="w-full h-24 object-cover rounded-md bg-muted"
                               />
                             ) : (
                               <video
                                 src={preview.url}
-                                className="w-full h-24 object-contain rounded-md bg-muted"
+                                className="w-full h-24 object-cover rounded-md bg-muted"
                                 controls
                               />
                             )}
                             <Button
                               type="button"
-                              variant="destructive"
+                              variant="outline"
                               size="sm"
-                              className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0"
+                              className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 border-destructive text-destructive"
                               onClick={() => {
                                 const newMedia = [...(value || [])];
                                 newMedia.splice(index, 1);
@@ -551,7 +551,7 @@ function ProjectUploadForm({
                           type="button"
                           variant="outline"
                           onClick={() => mediaRef.current?.click()}
-                          className="w-full"
+                          className="w-full text-sm text-indigo-500 hover:text-indigo-600 hover:bg-indigo-50 shadow-md shadow-indigo-100 hover:shadow-none rounded-xl"
                           size="sm"
                         >
                           <Plus className="mr-2 h-3 w-3" />
@@ -605,50 +605,48 @@ function ProjectUploadForm({
 
         <div className="space-y-3">
           <div className="">
-            <FormLabel className="text-sm font-medium">
-              Dedications (Optional)
+            <FormLabel className="text-sm font-medium text-indigo-500">
+              Dedications
             </FormLabel>
-            <FormDescription className="text-xs">
-              Would you like to dedicate this to someone? — a person, a brand,
-              or a cause?
-            </FormDescription>
           </div>
 
-          <FormField
-            control={form.control}
-            name="dedicatedToPerson"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-sm">Person</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Enter person's name"
-                    {...field}
-                    className="h-9"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="flex items-center justify-between gap-4">
+            <FormField
+              control={form.control}
+              name="dedicatedToPerson"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel className="text-sm">Person</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Enter person's name"
+                      {...field}
+                      className="h-9"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <FormField
-            control={form.control}
-            name="dedicatedToBrand"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-sm">Brand</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Enter brand name"
-                    {...field}
-                    className="h-9"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <FormField
+              control={form.control}
+              name="dedicatedToBrand"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel className="text-sm">Brand</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Enter brand name"
+                      {...field}
+                      className="h-9"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
           <FormField
             control={form.control}
@@ -678,7 +676,7 @@ function ProjectUploadForm({
                 </FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder="Tell us why this dedication is meaningful to you..."
+                    placeholder="..."
                     className="min-h-[60px]"
                     {...field}
                   />
