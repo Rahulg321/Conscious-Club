@@ -163,7 +163,7 @@ function ProjectUploadForm({
       try {
         const formData = new FormData();
         formData.append("projectName", data.projectName);
-        formData.append("projectDescription", data.projectDescription);
+        formData.append("projectDescription", data.projectDescription || "");
         formData.append("projectLink", data.projectLink || "");
         formData.append("dedicatedToPerson", data.dedicatedToPerson || "");
         formData.append("dedicatedToBrand", data.dedicatedToBrand || "");
