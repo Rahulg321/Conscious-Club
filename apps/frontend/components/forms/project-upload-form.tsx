@@ -292,7 +292,9 @@ function ProjectUploadForm({
             <FormItem>
               <FormLabel className="text-sm font-medium">
                 Add a cover photo{" "}
-                <span className="text-xs text-muted-foreground">(Max 20MB)</span>
+                <span className="text-xs text-muted-foreground">
+                  (Max 20MB)
+                </span>
               </FormLabel>
               <FormControl>
                 <div className="space-y-2">
@@ -498,8 +500,8 @@ function ProjectUploadForm({
                     </Button>
                   )}
                   <p className="text-xs text-muted-foreground">
-                    Upload up to 4 images or videos. Videos can be up to 20 seconds each
-                    and 200MB. Images up to 20MB each.
+                    Upload up to 4 images or videos. Videos can be up to 20
+                    seconds each and 200MB. Images up to 20MB each.
                   </p>
 
                   {value && value.length > 0 && (
@@ -572,7 +574,9 @@ function ProjectUploadForm({
           name="projectName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-sm font-medium">Title</FormLabel>
+              <FormLabel className="text-sm font-medium">
+                Title <span className="text-xs text-red-500">*</span>
+              </FormLabel>
               <FormControl>
                 <Input
                   placeholder="Enter project name"
