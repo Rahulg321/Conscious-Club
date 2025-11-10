@@ -141,16 +141,13 @@ export const onboardingSchema = z
         (data.dedicatedToCause && data.dedicatedToCause.trim() !== "") ||
         (data.dedicationReason && data.dedicationReason.trim() !== "");
 
-      // If any project field is filled, require all required fields
+      // If any project field is filled, require all required fields (except description which is optional)
       if (hasAnyProjectField) {
         const hasCoverImage = data.coverImage && data.coverImage.length > 0;
         const hasProjectName =
           data.projectName && data.projectName.trim().length >= 3;
-        const hasProjectDescription =
-          data.projectDescription &&
-          data.projectDescription.trim().length >= 10;
 
-        return hasCoverImage && hasProjectName && hasProjectDescription;
+        return hasCoverImage && hasProjectName;
       }
 
       // If no project fields are filled, validation passes
@@ -158,7 +155,7 @@ export const onboardingSchema = z
     },
     {
       message:
-        "If any project field is filled, cover image, project name (min 3 characters), and project description (min 10 characters) are required",
+        "If any project field is filled, cover image and project name (min 3 characters) are required",
       path: ["projectName"], // Set error path to projectName for better UX
     }
   );

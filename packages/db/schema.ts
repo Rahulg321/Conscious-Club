@@ -191,10 +191,10 @@ export const project = pgTable("project", {
   id: uuid("id").primaryKey().notNull().defaultRandom(),
   name: text("name").notNull(),
   link: text("link"),
-  description: text("description").notNull(),
+  description: text("description"),
   coverImage: text("coverImage").notNull(),
   media: text("media").array().notNull(),
-  // Simple string tag for a project; intended to mirror the creator's role at creation time
+
   tag: text("tag"),
   logoImage: text("logoImage"),
   dedicatedToPerson: text("dedicatedToPerson"),

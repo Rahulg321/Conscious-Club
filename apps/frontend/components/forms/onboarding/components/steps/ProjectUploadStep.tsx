@@ -443,10 +443,7 @@ export const ProjectUploadStep = ({
 
       {/* Project Description */}
       <div className="space-y-2">
-        <div className="text-sm font-medium">
-          Caption
-          <span className="text-xs text-red-500 ml-1">*</span>
-        </div>
+        <div className="text-sm font-medium">Caption</div>
         <Textarea
           id="projectDescription"
           value={formData.projectDescription}

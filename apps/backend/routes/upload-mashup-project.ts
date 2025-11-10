@@ -109,7 +109,7 @@ router.post(
         coverImage: coverImageFile,
         media: mediaFiles,
         projectName,
-        projectDescription,
+        projectDescription: projectDescription?.trim() || undefined,
         projectLink,
         dedicatedToPerson: dedicatedToPerson || undefined,
         dedicatedToBrand: dedicatedToBrand || undefined,
@@ -184,7 +184,7 @@ router.post(
         const projectData = {
           name: validatedData.data.projectName,
           link: validatedData.data.projectLink || null,
-          description: validatedData.data.projectDescription,
+          description: validatedData.data.projectDescription?.trim() || null,
           coverImage: coverImageUrl,
           media: mediaUrls,
           tag: creatorRole,

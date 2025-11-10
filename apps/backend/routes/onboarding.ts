@@ -179,10 +179,7 @@ router.post(
             missingFields.push("project title (min 3 characters)");
           }
 
-          // Check if project description is missing or too short
-          if (!projectDescription || projectDescription.trim().length < 10) {
-            missingFields.push("project caption (min 10 characters)");
-          }
+          // Project description is now optional, so we don't check it here
 
           return res.status(400).json({
             error: "Incomplete project data",
@@ -215,7 +212,7 @@ router.post(
             case "projectName":
               return "Project name must be at least 3 characters";
             case "projectDescription":
-              return "Project description must be at least 10 characters";
+              return "Project description must be at least 10 characters if provided";
             case "projectMedia":
               return "Project media files must be valid images or videos";
             default:
@@ -439,7 +436,7 @@ router.post(
           try {
             const projectData = {
               name: validatedData.data.projectName,
-              description: validatedData.data.projectDescription,
+              description: validatedData.data.projectDescription?.trim() || null,
               coverImage: coverImageUrl,
               media: projectMediaUrls,
               tag: validatedData.data.role || null,

@@ -469,7 +469,9 @@ function MashupProjectUploadForm({
           name="projectDescription"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-sm font-medium">Caption</FormLabel>
+              <FormLabel className="text-sm font-medium">
+                Caption (optional)
+              </FormLabel>
               <FormControl>
                 <Textarea
                   placeholder="Describe your project..."

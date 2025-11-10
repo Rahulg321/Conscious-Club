@@ -31,6 +31,13 @@ export const mashupProjectUploadSchema = projectUploadSchema.extend({
     .array(mediaFileSchema)
     .min(1, "At least one media file is required")
     .max(1, "Only one media file is allowed"),
+  projectDescription: z
+    .union([
+      z.string().max(500, "Project description must be less than 500 characters").min(10, "Project description must be at least 10 characters if provided"),
+      z.literal(""),
+      z.undefined(),
+    ])
+    .optional(),
 });
 
 export type MashupProjectUploadData = z.infer<typeof mashupProjectUploadSchema>;

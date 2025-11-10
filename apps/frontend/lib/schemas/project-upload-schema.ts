@@ -67,10 +67,12 @@ export const projectUploadSchema = z.object({
     .min(3, "Project name must be at least 3 characters")
     .max(100, "Project name must be less than 100 characters"),
   projectDescription: z
-    .string()
-    .min(1, "Project description is required")
-    .min(10, "Project description must be at least 10 characters")
-    .max(500, "Project description must be less than 500 characters"),
+    .union([
+      z.string().max(500, "Project description must be less than 500 characters").min(10, "Project description must be at least 10 characters if provided"),
+      z.literal(""),
+      z.undefined(),
+    ])
+    .optional(),
   projectLink: z
     .string()
     .optional()
