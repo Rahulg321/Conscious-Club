@@ -327,7 +327,7 @@ async function FetchAndDisplayProjects({
               }
               projectName={project.name}
               tagName={project.tag || project.tags?.[0] || ""}
-              projectDescription={project.description}
+              projectDescription={project.description || ""}
               likeCount={project.likeCount}
               isLiked={project.isLiked}
               creatorName={project.creatorName || undefined}
@@ -443,7 +443,7 @@ async function FetchAndDisplayMashupProjects({
               projectCoverImage={firstMedia}
               projectName={mashup.name}
               tagName="" // Mashups don't have tags in this view
-              projectDescription={mashup.description}
+              projectDescription={mashup.description || ""}
               likeCount={mashup.likeCount}
               isLiked={mashup.isLiked}
               creatorName={mashup.creatorName || undefined}
