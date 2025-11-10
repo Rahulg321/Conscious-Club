@@ -3,7 +3,14 @@
 import * as React from "react";
 
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   Drawer,
   DrawerClose,
@@ -43,6 +50,12 @@ export default function ProjectUploadDialog({
               </Button>
             </DialogTrigger>
             <DialogContent className="">
+              <DialogHeader>
+                <DialogTitle>Upload Project</DialogTitle>
+                <DialogDescription>
+                  Make changes to your project here.
+                </DialogDescription>
+              </DialogHeader>
               <ScrollArea className="max-h-[600px] pr-4">
                 <ProjectUploadForm
                   setDialogOpen={setOpen}

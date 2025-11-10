@@ -285,6 +285,7 @@ export async function getUserMashupProjects(userId: string) {
  * @param limit - The limit for pagination
  * @param userId - The current user ID to check like status
  * @param dedicationFilters - Optional filters for dedication fields
+ * @param dedicationSearch - Optional single search query to search across all dedication fields
  * @returns The filtered mashup projects with pagination info
  */
 export async function getFilteredMashupProjects(
@@ -297,7 +298,8 @@ export async function getFilteredMashupProjects(
     dedicatedToBrand?: string;
     dedicatedToCause?: string;
     dedicationReason?: string;
-  }
+  },
+  dedicationSearch?: string
 ) {
   try {
     // Create aliases for creator and collaborator users
@@ -317,7 +319,19 @@ export async function getFilteredMashupProjects(
       if (searchOr) conditions.push(searchOr);
     }
 
-    // Apply dedication filters if provided
+    // Apply dedication search (searches across all dedication fields)
+    if (dedicationSearch) {
+      conditions.push(
+        or(
+          ilike(project.dedicatedToPerson, `%${dedicationSearch}%`),
+          ilike(project.dedicatedToBrand, `%${dedicationSearch}%`),
+          ilike(project.dedicatedToCause, `%${dedicationSearch}%`),
+          ilike(project.dedicationReason, `%${dedicationSearch}%`)
+        )!
+      );
+    }
+
+    // Apply dedication filters if provided (for backward compatibility)
     if (dedicationFilters) {
       if (dedicationFilters.dedicatedToPerson) {
         conditions.push(
@@ -509,6 +523,7 @@ export async function getAllProjectsWithTagsGrouped() {
  * @param limit - The limit for pagination
  * @param userId - The current user ID to check like status
  * @param dedicationFilters - Optional filters for dedication fields
+ * @param dedicationSearch - Optional single search query to search across all dedication fields
  * @returns The filtered projects with pagination info
  */
 export async function getFilteredProjects(
@@ -522,7 +537,8 @@ export async function getFilteredProjects(
     dedicatedToBrand?: string;
     dedicatedToCause?: string;
     dedicationReason?: string;
-  }
+  },
+  dedicationSearch?: string
 ) {
   try {
     // Normalize filterTags to an array of role name strings
@@ -554,7 +570,19 @@ export async function getFilteredProjects(
       conditions.push(inArray(project.tag, roleNameArray));
     }
 
-    // Apply dedication filters if provided
+    // Apply dedication search (searches across all dedication fields)
+    if (dedicationSearch) {
+      conditions.push(
+        or(
+          ilike(project.dedicatedToPerson, `%${dedicationSearch}%`),
+          ilike(project.dedicatedToBrand, `%${dedicationSearch}%`),
+          ilike(project.dedicatedToCause, `%${dedicationSearch}%`),
+          ilike(project.dedicationReason, `%${dedicationSearch}%`)
+        )!
+      );
+    }
+
+    // Apply dedication filters if provided (for backward compatibility)
     if (dedicationFilters) {
       if (dedicationFilters.dedicatedToPerson) {
         conditions.push(

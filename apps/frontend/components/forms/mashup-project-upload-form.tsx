@@ -21,7 +21,7 @@ import {
   type MashupProjectUploadFormData,
 } from "@/lib/schemas/mashup-project-upload-schema";
 import { toast } from "sonner";
-import { X, Plus, Upload, PlusCircle } from "lucide-react";
+import { X, Upload } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Session } from "next-auth";
 
@@ -319,8 +319,8 @@ function MashupProjectUploadForm({
                 Upload Media
               </FormLabel>
               <FormDescription className="text-xs mt-0 p-0 ">
-                Upload up to 4 images or videos. Videos can be up to 20 seconds
-                and 200MB. Images up to 20MB.
+                Upload one image or video. Videos can be up to 20 seconds and
+                200MB. Images up to 20MB.
               </FormDescription>
               <FormControl>
                 <div className="space-y-2 mt-2">
@@ -333,43 +333,42 @@ function MashupProjectUploadForm({
                     }}
                     type="file"
                     accept="image/jpeg,image/jpg,image/png,image/webp,video/mp4,video/webm,video/quicktime"
-                    multiple
                     className=""
                     onChange={async (e) => {
-                      const files = Array.from(e.target.files || []);
-                      const currentMedia = value || [];
+                      const file = e.target.files?.[0];
+                      if (!file) return;
 
-                      if (currentMedia.length + files.length > 4) {
-                        toast.error("You can only upload up to 4 media files");
-                        return;
-                      }
-
-                      const validFiles: File[] = [];
-                      for (const file of files) {
-                        if (file.type.startsWith("video/")) {
-                          const isValid = await validateVideoDuration(file);
-                          if (isValid) validFiles.push(file);
-                        } else {
-                          validFiles.push(file);
+                      // Validate video duration if it's a video
+                      if (file.type.startsWith("video/")) {
+                        const isValid = await validateVideoDuration(file);
+                        if (!isValid) {
+                          // Reset input if validation fails
+                          if (mediaRef.current) {
+                            mediaRef.current.value = "";
+                          }
+                          return;
                         }
                       }
 
-                      if (validFiles.length > 0) {
-                        const newMedia = [...currentMedia, ...validFiles];
-                        onChange(newMedia);
-                        const newPreviews: MediaPreview[] = validFiles.map(
-                          (file) => ({
-                            url: URL.createObjectURL(file),
-                            type: file.type.startsWith("video/")
-                              ? "video"
-                              : "image",
-                            file,
-                          })
-                        );
-                        setMediaPreviews((prev) => [...prev, ...newPreviews]);
-                      }
+                      // Clear previous previews
+                      mediaPreviews.forEach((preview) =>
+                        URL.revokeObjectURL(preview.url)
+                      );
 
-                      // Reset input
+                      // Set new file
+                      onChange([file]);
+                      const previewUrl = URL.createObjectURL(file);
+                      setMediaPreviews([
+                        {
+                          url: previewUrl,
+                          type: file.type.startsWith("video/")
+                            ? "video"
+                            : "image",
+                          file,
+                        },
+                      ]);
+
+                      // Reset input to allow selecting the same file again
                       if (mediaRef.current) {
                         mediaRef.current.value = "";
                       }
@@ -400,80 +399,44 @@ function MashupProjectUploadForm({
                       className="w-full"
                       size="sm"
                     >
-                      <PlusCircle className="mr-2 h-3 w-3" />
+                      <Upload className="mr-2 h-3 w-3" />
+                      Select Media
                     </Button>
                   )}
 
-                  {value && value.length > 0 && (
-                    <div className="space-y-2">
-                      <div className="grid grid-cols-2 gap-2">
-                        {mediaPreviews.map((preview, index) => (
-                          <div
-                            key={index}
-                            className="relative rounded-md border p-1"
-                          >
-                            {preview.type === "image" ? (
-                              <img
-                                src={preview.url}
-                                alt={`Media ${index + 1}`}
-                                className="w-full h-24 object-contain rounded-md bg-muted"
-                              />
-                            ) : (
-                              <video
-                                src={preview.url}
-                                className="w-full h-24 object-contain rounded-md bg-muted"
-                                controls
-                              />
-                            )}
-                            <Button
-                              type="button"
-                              variant="destructive"
-                              size="sm"
-                              className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0"
-                              onClick={() => {
-                                const newMedia = [...(value || [])];
-                                newMedia.splice(index, 1);
-                                onChange(newMedia);
-                                URL.revokeObjectURL(preview.url);
-                                const newPreviews = [...mediaPreviews];
-                                newPreviews.splice(index, 1);
-                                setMediaPreviews(newPreviews);
-                              }}
-                            >
-                              <X className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        ))}
-                      </div>
-
-                      {value.length < 4 && (
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            console.log(
-                              "➕ [MASHUP] Add More button clicked, ref:",
-                              mediaRef.current
-                            );
-                            if (mediaRef.current) {
-                              // Use setTimeout to ensure browser treats it as user-initiated
-                              setTimeout(() => {
-                                mediaRef.current?.click();
-                              }, 0);
-                            } else {
-                              console.error(
-                                "❌ [MASHUP] mediaRef.current is null!"
-                              );
-                            }
-                          }}
-                          className="w-full"
-                          size="sm"
-                        >
-                          <Plus className="mr-2 h-3 w-3" />
-                          Add More Media ({value.length}/4)
-                        </Button>
+                  {value && value.length > 0 && mediaPreviews[0] && (
+                    <div className="relative rounded-md border p-1">
+                      {mediaPreviews[0].type === "image" ? (
+                        <img
+                          src={mediaPreviews[0].url}
+                          alt="Media preview"
+                          className="w-full h-24 object-contain rounded-md bg-muted"
+                        />
+                      ) : (
+                        <video
+                          src={mediaPreviews[0].url}
+                          className="w-full h-24 object-contain rounded-md bg-muted"
+                          controls
+                        />
                       )}
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="sm"
+                        className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0"
+                        onClick={() => {
+                          onChange([]);
+                          if (mediaPreviews[0]) {
+                            URL.revokeObjectURL(mediaPreviews[0].url);
+                          }
+                          setMediaPreviews([]);
+                          if (mediaRef.current) {
+                            mediaRef.current.value = "";
+                          }
+                        }}
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
                     </div>
                   )}
                 </div>

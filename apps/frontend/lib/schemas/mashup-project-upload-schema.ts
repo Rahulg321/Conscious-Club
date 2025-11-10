@@ -60,7 +60,7 @@ export const mashupProjectUploadSchema = z.object({
   media: z
     .array(mediaFileSchema)
     .min(1, "At least one media file is required")
-    .max(4, "You can upload up to 4 media files"),
+    .max(1, "Only one media file is allowed"),
   projectName: z
     .string()
     .min(1, "Project name is required")

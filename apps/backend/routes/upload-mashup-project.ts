@@ -12,7 +12,7 @@ const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
     fileSize: 200 * 1024 * 1024, // 200MB max file size
-    files: 5, // Max 5 files (4 media + 1 cover image)
+    files: 2, // Max 2 files (1 media + 1 cover image)
   },
 });
 
@@ -25,7 +25,7 @@ router.post(
   uploadProjectRateLimit,
   upload.fields([
     { name: "coverImage", maxCount: 1 },
-    { name: "media", maxCount: 4 },
+    { name: "media", maxCount: 1 },
   ]),
   async (req: Request, res: Response) => {
     const startTime = Date.now();
