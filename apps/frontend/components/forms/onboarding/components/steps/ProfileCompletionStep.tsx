@@ -3,8 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { GENDER_OPTIONS } from "../../config";
 import { OnboardingFormData } from "../../types";
-import CityInputField from "@/components/city-input-field";
-import CountryInputField from "@/components/country-input-field";
+import CountryCityInput from "@/components/country-city-input";
 import {
   RadioGroup,
   RadioGroupItem,
@@ -92,30 +91,14 @@ export const ProfileCompletionStep = ({
         </div>
       </div>
 
-      <div className="flex justify-between gap-4">
-        {/* City Field */}
-
-        <div className="space-y-2 w-full">
-          <Label htmlFor="city">City</Label>
-          <CityInputField
-            id="city"
-            value={formData.city}
-            onChange={(value) => updateFormData("city", value)}
-            placeholder="Enter your city"
-          />
-        </div>
-
-        {/* Country Field */}
-        <div className="space-y-2 w-full">
-          <Label htmlFor="country">Country</Label>
-          <CountryInputField
-            id="country"
-            value={formData.country}
-            onChange={(value) => updateFormData("country", value)}
-            placeholder="Enter your country"
-          />
-        </div>
-      </div>
+      <CountryCityInput
+        countryValue={formData.country}
+        cityValue={formData.city}
+        onCountryChange={(value) => updateFormData("country", value)}
+        onCityChange={(value) => updateFormData("city", value)}
+        placeholder="Enter city and country (e.g., Paris, France)"
+        id="city-country"
+      />
 
       <div className="flex justify-between gap-4">
         <div className="w-full">
