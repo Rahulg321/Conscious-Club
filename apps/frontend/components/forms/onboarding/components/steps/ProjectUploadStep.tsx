@@ -267,7 +267,7 @@ export const ProjectUploadStep = ({
         {/* <p className="text-sm text-muted-foreground mb-6">
           This step is optional. You can skip it and add creations later from
           your profile. If you start filling any project field, all required
-          fields (cover image, title, and caption) must be completed.
+          fields (cover image and title) must be completed.
         </p> */}
       </div>
 

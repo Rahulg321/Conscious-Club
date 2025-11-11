@@ -137,7 +137,7 @@ router.post(
         role,
         profilePicture: profilePictureFile ? [profilePictureFile] : undefined,
         projectName: projectName || undefined,
-        projectDescription: projectDescription || undefined,
+        projectDescription: projectDescription || "",
         projectLink: projectLink || undefined,
         coverImage: coverImageFile ? [coverImageFile] : undefined,
         projectMedia:
@@ -319,10 +319,7 @@ router.post(
 
       // Handle project creation if project data is provided
       let insertedProject = null;
-      if (
-        validatedData.data.projectName &&
-        validatedData.data.projectDescription
-      ) {
+      if (validatedData.data.projectName) {
         console.log("💾 [ONBOARDING] Starting project creation");
 
         // Upload cover image
@@ -436,7 +433,8 @@ router.post(
           try {
             const projectData = {
               name: validatedData.data.projectName,
-              description: validatedData.data.projectDescription?.trim() || null,
+              description:
+                validatedData.data.projectDescription?.trim() || null,
               coverImage: coverImageUrl,
               media: projectMediaUrls,
               tag: validatedData.data.role || null,

@@ -91,9 +91,13 @@ export const onboardingSchema = z
       .optional(),
     projectDescription: z
       .string()
-      .min(10, "Project description must be at least 10 characters")
       .max(500, "Project description must be less than 500 characters")
-      .optional(),
+      .optional()
+      .refine((val) => {
+        // Allow undefined, empty string, or strings with at least 10 characters
+        if (!val || val.trim().length === 0) return true;
+        return val.trim().length >= 10;
+      }, "Project description must be at least 10 characters if provided"),
     projectLink: z
       .string()
       .optional()
