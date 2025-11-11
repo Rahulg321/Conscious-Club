@@ -52,7 +52,7 @@ export default function ProjectSearchFilter({
       )}
       <Input
         className="h-8 pl-8 w-full "
-        placeholder={"Search"}
+        placeholder={"Search projects, dedications, causes..."}
         onChange={(e) => {
           handleSearch(e.target.value);
         }}

@@ -314,12 +314,16 @@ export async function getFilteredMashupProjects(
         ilike(project.description, `%${query}%`),
         ilike(project.link, `%${query}%`),
         ilike(creator.name, `%${query}%`),
-        ilike(collaborator.name, `%${query}%`)
+        ilike(collaborator.name, `%${query}%`),
+        ilike(project.dedicatedToPerson, `%${query}%`),
+        ilike(project.dedicatedToBrand, `%${query}%`),
+        ilike(project.dedicatedToCause, `%${query}%`),
+        ilike(project.dedicationReason, `%${query}%`)
       );
       if (searchOr) conditions.push(searchOr);
     }
 
-    // Apply dedication search (searches across all dedication fields)
+    // Apply dedication search (searches across all dedication fields) - kept for backward compatibility
     if (dedicationSearch) {
       conditions.push(
         or(
@@ -560,7 +564,11 @@ export async function getFilteredProjects(
           ilike(project.name, `%${query}%`),
           ilike(project.description, `%${query}%`),
           ilike(project.link, `%${query}%`),
-          ilike(project.tag, `%${query}%`)
+          ilike(project.tag, `%${query}%`),
+          ilike(project.dedicatedToPerson, `%${query}%`),
+          ilike(project.dedicatedToBrand, `%${query}%`),
+          ilike(project.dedicatedToCause, `%${query}%`),
+          ilike(project.dedicationReason, `%${query}%`)
         )
       );
     }
@@ -570,7 +578,7 @@ export async function getFilteredProjects(
       conditions.push(inArray(project.tag, roleNameArray));
     }
 
-    // Apply dedication search (searches across all dedication fields)
+    // Apply dedication search (searches across all dedication fields) - kept for backward compatibility
     if (dedicationSearch) {
       conditions.push(
         or(

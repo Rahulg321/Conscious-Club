@@ -9,7 +9,6 @@ import ProjectTagsFilter from "@/components/project-tag-filters";
 // import ProjectDedicationFilters from "@/components/project-dedication-filters";
 import React, { Suspense } from "react";
 import ProjectSearchFilter from "@/components/project-search-filter";
-import DedicationSearchFilter from "@/components/dedication-search-filter";
 import DiscoverProjectCard from "@/components/discover-project-card";
 import ProjectPagination from "@/components/project-pagination";
 import ProjectProfileTabs from "@/components/project-profile-tabs";
@@ -45,7 +44,6 @@ export default async function DiscoverPage({
     dedicatedToBrand,
     dedicatedToCause,
     dedicationReason,
-    dedicationSearch,
   } = await searchParams;
 
   const projectSearchQuery = query as string;
@@ -90,16 +88,6 @@ export default async function DiscoverPage({
         <ProjectTagsFilter />
       </Suspense>
 
-      {!showProfiles && (
-        <Suspense fallback={<div>Loading...</div>}>
-          <div className="bg-white border-b border-gray-200 px-6 py-2">
-            <div className="max-w-7xl mx-auto">
-              <DedicationSearchFilter />
-            </div>
-          </div>
-        </Suspense>
-      )}
-
       {/* {!showProfiles && (
         <Suspense fallback={<div>Loading...</div>}>
           <ProjectDedicationFilters />
@@ -117,14 +105,12 @@ export default async function DiscoverPage({
               <MashupCount
                 projectSearchQuery={projectSearchQuery || ""}
                 dedicationFilters={dedicationFilters}
-                dedicationSearch={(dedicationSearch as string) || undefined}
               />
             ) : (
               <ProjectCount
                 tags={selectedTags}
                 projectSearchQuery={projectSearchQuery || ""}
                 dedicationFilters={dedicationFilters}
-                dedicationSearch={(dedicationSearch as string) || undefined}
               />
             )}
           </Suspense>
@@ -170,7 +156,6 @@ export default async function DiscoverPage({
               projectSearchQuery={projectSearchQuery || ""}
               userId={userSession.user.id}
               dedicationFilters={dedicationFilters}
-              dedicationSearch={(dedicationSearch as string) || undefined}
             />
           </Suspense>
         ) : (
@@ -193,7 +178,6 @@ export default async function DiscoverPage({
               projectSearchQuery={projectSearchQuery || ""}
               userId={userSession.user.id}
               dedicationFilters={dedicationFilters}
-              dedicationSearch={(dedicationSearch as string) || undefined}
             />
           </Suspense>
         )}
@@ -207,7 +191,6 @@ async function ProjectCount({
   tags,
   projectSearchQuery,
   dedicationFilters,
-  dedicationSearch,
 }: {
   tags: string[] | string | undefined;
   projectSearchQuery: string;
@@ -217,7 +200,6 @@ async function ProjectCount({
     dedicatedToCause?: string;
     dedicationReason?: string;
   };
-  dedicationSearch?: string;
 }) {
   const { totalProjects } = await getFilteredProjects(
     tags,
@@ -225,8 +207,7 @@ async function ProjectCount({
     0,
     1,
     undefined,
-    dedicationFilters,
-    dedicationSearch
+    dedicationFilters
   );
 
   return (
@@ -253,7 +234,6 @@ async function ProfileCount({
 async function MashupCount({
   projectSearchQuery,
   dedicationFilters,
-  dedicationSearch,
 }: {
   projectSearchQuery: string;
   dedicationFilters: {
@@ -262,15 +242,13 @@ async function MashupCount({
     dedicatedToCause?: string;
     dedicationReason?: string;
   };
-  dedicationSearch?: string;
 }) {
   const { totalMashups } = await getFilteredMashupProjects(
     projectSearchQuery,
     0,
     1,
     undefined,
-    dedicationFilters,
-    dedicationSearch
+    dedicationFilters
   );
 
   return (
@@ -287,7 +265,6 @@ async function FetchAndDisplayProjects({
   offset,
   userId,
   dedicationFilters,
-  dedicationSearch,
 }: {
   projectSearchQuery: string | undefined;
   limit: number;
@@ -300,7 +277,6 @@ async function FetchAndDisplayProjects({
     dedicatedToCause?: string;
     dedicationReason?: string;
   };
-  dedicationSearch?: string;
 }) {
   const { projects, totalPages, totalProjects } = await getFilteredProjects(
     tags,
@@ -308,8 +284,7 @@ async function FetchAndDisplayProjects({
     offset,
     limit,
     userId,
-    dedicationFilters,
-    dedicationSearch
+    dedicationFilters
   );
 
   return (
@@ -402,7 +377,6 @@ async function FetchAndDisplayMashupProjects({
   offset,
   userId,
   dedicationFilters,
-  dedicationSearch,
 }: {
   projectSearchQuery: string | undefined;
   limit: number;
@@ -414,7 +388,6 @@ async function FetchAndDisplayMashupProjects({
     dedicatedToCause?: string;
     dedicationReason?: string;
   };
-  dedicationSearch?: string;
 }) {
   const { mashupProjects, totalPages, totalMashups } =
     await getFilteredMashupProjects(
@@ -422,8 +395,7 @@ async function FetchAndDisplayMashupProjects({
       offset,
       limit,
       userId,
-      dedicationFilters,
-      dedicationSearch
+      dedicationFilters
     );
 
   return (

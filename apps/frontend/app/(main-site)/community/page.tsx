@@ -5,7 +5,6 @@ import {
   getFilteredMashupProjects,
 } from "@/lib/queries";
 import ProjectTagsFilter from "@/components/project-tag-filters";
-import ProjectDedicationFilters from "@/components/project-dedication-filters";
 import ProjectSearchFilter from "@/components/project-search-filter";
 import ProjectPagination from "@/components/project-pagination";
 import ProjectProfileTabs from "@/components/project-profile-tabs";
@@ -85,12 +84,6 @@ export default async function CommunityPage({
       <Suspense fallback={<div>Loading...</div>}>
         <ProjectTagsFilter />
       </Suspense>
-
-      {!showProfiles && (
-        <Suspense fallback={<div>Loading...</div>}>
-          <ProjectDedicationFilters />
-        </Suspense>
-      )}
 
       <main className="max-w-7xl mx-auto px-6 block-space">
         <div className="flex items-center justify-between mb-8">
