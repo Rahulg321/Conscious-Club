@@ -499,9 +499,8 @@ function ProjectUploadForm({
                       <PlusCircle className="mr-2 h-3 w-3" />
                     </Button>
                   )}
-                  <p className="text-xs text-muted-foreground">
-                    Upload up to 4 images or videos. Videos can be up to 20
-                    seconds each and 200MB. Images up to 20MB each.
+                  <p className="text-xs text-muted-foreground leading-none mt-1">
+                    Add up to 4 files: videos (max 20s / 200 MB each) or images (max 20 MB each)
                   </p>
 
                   {value && value.length > 0 && (

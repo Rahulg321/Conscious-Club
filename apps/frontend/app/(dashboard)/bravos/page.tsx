@@ -88,7 +88,7 @@ const page = async ({
           <div className="text-gray-600 font-caveat text-3xl w-full">
             {selectedCategory && selectedCategoryObj
               ? selectedCategoryObj.description
-              : "Bravos are the best way to show your support for your favorite projects. You can collect bravos by completing tasks, projects, and more."}
+              : "Bravos are CC's currency for celebration and achievement. There are 2 Types: Flex Bravos & Buzz Bravos."}
           </div>
         </div>
 

@@ -191,11 +191,11 @@ const ProfilePage = async ({ params }: Props) => {
             <div className="!font-caveat text-3xl">Bio Not Available Yet</div>
           )}
         </div>
-        <div className="w-full px-4">
+        <div className="w-full px-4 cursor-pointer">
           <Tabs defaultValue="creations">
             <TabsList className="w-full">
-              <TabsTrigger value="creations">Creations</TabsTrigger>
-              <TabsTrigger value="mashups">Mashups</TabsTrigger>
+              <TabsTrigger value="creations" className="cursor-pointer">Creations</TabsTrigger>
+              <TabsTrigger value="mashups" className="cursor-pointer">Mashups</TabsTrigger>
             </TabsList>
             <TabsContent value="creations">
               <div className="w-full">
@@ -269,15 +269,9 @@ async function DisplayUserProjectWork({
 
       {!projects || projects.length === 0 ? (
         <div className="text-center py-12 px-4">
-          <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-            <Plus className="w-8 h-8 text-gray-400" />
-          </div>
           <h4 className="text-lg font-medium text-[#171c21] mb-2">
             No Creations yet
           </h4>
-          <p className="text-[#667085] mb-4">
-            Upload your first project to showcase your work
-          </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
