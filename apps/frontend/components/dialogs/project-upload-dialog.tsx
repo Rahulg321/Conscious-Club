@@ -51,10 +51,10 @@ export default function ProjectUploadDialog({
             </DialogTrigger>
             <DialogContent className="">
               <DialogHeader>
-                <DialogTitle>Upload Project</DialogTitle>
-                <DialogDescription>
+                <DialogTitle>Add new creation</DialogTitle>
+                {/* <DialogDescription>
                   Make changes to your project here.
-                </DialogDescription>
+                </DialogDescription> */}
               </DialogHeader>
               <ScrollArea className="max-h-[600px] pr-4">
                 <ProjectUploadForm
