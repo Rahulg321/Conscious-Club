@@ -87,100 +87,89 @@ const ProfilePage = async ({ params }: Props) => {
   return (
     <div>
       <div className="relative pl-4 md:pl-8 pb-2 md:pb-2">
-        <AuroraBackground className="rounded-lg">
-          <div className="flex flex-col md:flex-row md:items-start md:justify-start mb-2 gap-4 mr-auto">
-            <div className="flex flex-col  md:items-start gap-4 md:gap-2 w-full rounded-lg pb-4 md:px-4 pt-2   mr-auto">
-              {/* <FloatingPaths
-              color={disciplineColor[disciplineKey as DisciplineType].stroke}
-              position={4}
-            /> */}
-              {/* <FloatingPaths
-              color={disciplineColor[disciplineKey as DisciplineType].stroke}
-              position={-1}
-            /> */}
+        <div className="flex flex-col md:flex-row md:items-start md:justify-start mb-2 gap-4 mr-auto">
+          <div className="flex flex-col  md:items-start gap-4 md:gap-2 w-full rounded-lg pb-4 md:px-4 pt-2   mr-auto">
+            <div className="flex flex-row  justify-center items-start gap-4 md:gap-8 w-max rounded-lg md:px-8 mr-auto">
+              <div className="relative self-center  ">
+                <div className="w-36 h-36 md:w-56 md:h-56 rounded-full border-4 border-gray-100 shadow-lg relative">
+                  <Image
+                    src={currentUser.image || "/user-placeholder.png"}
+                    fill
+                    alt={currentUser.name || "User"}
+                    className="object-cover rounded-full"
+                  />
+                  {isOwnProfile && (
+                    <div className="absolute bottom-1 -right-2">
+                      <ProfilePicUploadDialog />
+                    </div>
+                  )}
+                </div>
+              </div>
 
-              <div className="flex flex-row  justify-center items-start gap-4 md:gap-8 w-max rounded-lg md:px-8 mr-auto">
-                <div className="relative self-center  ">
-                  <div className="w-36 h-36 md:w-56 md:h-56 rounded-full border-4 border-gray-100 shadow-lg relative">
-                    <Image
-                      src={currentUser.image || "/user-placeholder.png"}
-                      fill
-                      alt={currentUser.name || "User"}
-                      className="object-cover rounded-full"
-                    />
-                    {isOwnProfile && (
-                      <div className="absolute bottom-1 -right-2">
-                        <ProfilePicUploadDialog />
-                      </div>
-                    )}
+              <div className="md:text-left my-auto w-full flex flex-col items-start justify-center">
+                <h2 className="text-xl md:text-4xl font-semibold text-[#171c21] mb-2 w-full">
+                  <div className="truncate w-full">
+                    {currentUser.name || ""}
                   </div>
+                </h2>
+                <div className="flex items-center gap-2 mb-2 w-full">
+                  {isOwnProfile ? (
+                    <ProfileEditDialog
+                      userId={userId}
+                      name={currentUser.name || ""}
+                      bio={currentUser.bio || ""}
+                      city={currentUser.city || ""}
+                      country={currentUser.country || ""}
+                    />
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <FollowButton
+                        userId={userId}
+                        isFollowing={isUserFollowing}
+                        className="flex items-center gap-2 bg-indigo-500 text-white hover:bg-indigo-600"
+                      />
+                      <MashupDialog
+                        isIcon={true}
+                        collaboratorId={userId}
+                        collaboratorName={currentUser.name || undefined}
+                        userSession={userSession}
+                      />
+                    </div>
+                  )}
+                </div>
+                <div className="text-[#666a6e] mb-2 flex items-center justify-start">
+                  <MapPin className="w-4 h-4" />{" "}
+                  {[currentUser.city, currentUser.country]
+                    .filter(Boolean)
+                    .join(", ") || ""}
+                </div>
+                <div className="flex flex-wrap gap-2 justify-center md:justify-start md:mb-4 mb-2">
+                  <span className="md:px-3 px-1 py-1 flex items-center justify-center bg-[#f9fafb] text-[#666a6e] text-sm font-medium rounded-full">
+                    {followers} followers
+                  </span>
+                  <span className="md:px-3 px-1 py-1 flex items-center justify-center bg-[#f9fafb] text-[#666a6e] text-sm font-medium rounded-full">
+                    {following} following
+                  </span>
                 </div>
 
-                <div className="md:text-left my-auto w-full flex flex-col items-start justify-center">
-                  <h2 className="text-xl md:text-4xl font-semibold text-[#171c21] mb-2 w-full">
-                    <div className="truncate w-full">
-                      {currentUser.name || ""}
-                    </div>
-                  </h2>
-                  <div className="flex items-center gap-2 mb-2 w-full">
-                    {isOwnProfile ? (
-                      <ProfileEditDialog
-                        userId={userId}
-                        name={currentUser.name || ""}
-                        bio={currentUser.bio || ""}
-                        city={currentUser.city || ""}
-                        country={currentUser.country || ""}
-                      />
-                    ) : (
-                      <div className="flex items-center gap-2">
-                        <FollowButton
-                          userId={userId}
-                          isFollowing={isUserFollowing}
-                          className="flex items-center gap-2 bg-indigo-500 text-white hover:bg-indigo-600"
-                        />
-                        <MashupDialog
-                          isIcon={true}
-                          collaboratorId={userId}
-                          collaboratorName={currentUser.name || undefined}
-                          userSession={userSession}
-                        />
-                      </div>
-                    )}
-                  </div>
-                  <div className="text-[#666a6e] mb-2 flex items-center justify-start">
-                    <MapPin className="w-4 h-4" />{" "}
-                    {[currentUser.city, currentUser.country]
-                      .filter(Boolean)
-                      .join(", ") || ""}
-                  </div>
-                  <div className="flex flex-wrap gap-2 justify-center md:justify-start md:mb-4 mb-2">
-                    <span className="md:px-3 px-1 py-1 flex items-center justify-center bg-[#f9fafb] text-[#666a6e] text-sm font-medium rounded-full">
-                      {followers} followers
-                    </span>
-                    <span className="md:px-3 px-1 py-1 flex items-center justify-center bg-[#f9fafb] text-[#666a6e] text-sm font-medium rounded-full">
-                      {following} following
-                    </span>
-                  </div>
-
-                  <div className="flex flex-wrap gap-2 justify-center md:justify-start">
+                <div className="flex flex-wrap gap-2 justify-center md:justify-start">
+                  <span
+                    className={`px-3  py-1 flex items-center justify-center ${disciplineColor[disciplineKey as DisciplineType].color} text-sm font-medium rounded-full `}
+                  >
+                    {currentUser.discipline || "Digital"}
+                  </span>
+                  {currentUser.role && (
                     <span
-                      className={`px-3  py-1 flex items-center justify-center ${disciplineColor[disciplineKey as DisciplineType].color} text-sm font-medium rounded-full `}
+                      className={`px-3 py-1 flex items-center justify-center border-2 ${disciplineColor[disciplineKey as DisciplineType].border} ${disciplineColor[disciplineKey as DisciplineType].text} text-sm font-medium rounded-full`}
                     >
-                      {currentUser.discipline || "Digital"}
+                      {currentUser.role}
                     </span>
-                    {currentUser.role && (
-                      <span
-                        className={`px-3 py-1 flex items-center justify-center border-2 ${disciplineColor[disciplineKey as DisciplineType].border} ${disciplineColor[disciplineKey as DisciplineType].text} text-sm font-medium rounded-full`}
-                      >
-                        {currentUser.role}
-                      </span>
-                    )}
-                  </div>
+                  )}
                 </div>
               </div>
             </div>
           </div>
-        </AuroraBackground>
+        </div>
 
         <div className="my-4 ">
           <h3 className="text-lg font-semibold text-[#171c21]">About</h3>
