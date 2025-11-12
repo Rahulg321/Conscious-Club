@@ -94,7 +94,7 @@ export default async function DiscoverPage({
         </Suspense>
       )} */}
 
-      <main className="max-w-7xl mx-auto px-4 py-4">
+      <main className="max-w-1xl mx-auto px-4 py-4">
         <div className="flex items-center justify-between mb-4">
           <Suspense
             fallback={<span className="text-gray-500">Loading...</span>}
@@ -140,7 +140,7 @@ export default async function DiscoverPage({
         ) : showMashups ? (
           <Suspense
             fallback={
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                 <ProjectCardSkeleton />
                 <ProjectCardSkeleton />
                 <ProjectCardSkeleton />
@@ -161,7 +161,7 @@ export default async function DiscoverPage({
         ) : (
           <Suspense
             fallback={
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                 <ProjectCardSkeleton />
                 <ProjectCardSkeleton />
                 <ProjectCardSkeleton />
@@ -289,7 +289,7 @@ async function FetchAndDisplayProjects({
 
   return (
     <div className="group-has-[[data-pending]]:animate-pulse">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
         {projects?.map((project) => {
           // Get first media item for preview (prefer images)
           const firstMedia = getPreviewMedia(project.media);
@@ -400,7 +400,7 @@ async function FetchAndDisplayMashupProjects({
 
   return (
     <div>
-      <div className="group-has-[[data-pending]]:animate-pulse grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="group-has-[[data-pending]]:animate-pulse grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
         {mashupProjects?.map((mashup) => {
           // Get first media item for preview
           const firstMedia =

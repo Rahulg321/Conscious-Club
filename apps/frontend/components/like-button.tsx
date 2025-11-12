@@ -83,32 +83,38 @@ export default function LikeButton({
   // Show loading state while checking authentication
   if (status === "loading") {
     return (
-      <Button
-        variant="ghost"
-        size="sm"
-        disabled
-        className="flex items-center gap-1 h-8 px-2"
-      >
+      <div className="flex items-center gap-1">
         <Heart className="h-4 w-4 text-gray-300" />
-        <span className="text-sm font-medium">{likeCount}</span>
-      </Button>
+        {likeCount > 0 && (
+          <span className="text-[10px] font-semibold text-muted-foreground">
+            {likeCount}
+          </span>
+        )}
+      </div>
     );
   }
 
   return (
-    <Button
-      variant="ghost"
-      size="sm"
-      onClick={handleLikeToggle}
-      disabled={isLoading}
-      className="flex items-center gap-1 h-8 px-2 hover:bg-red-50 hover:text-red-600 transition-colors"
-    >
-      <Heart
-        className={`h-4 w-4 transition-colors ${
-          isLiked ? "fill-red-500 text-red-500" : "text-gray-500"
-        }`}
-      />
-      <span className="text-sm font-medium">{likeCount}</span>
-    </Button>
+    <div className="flex items-center gap-1">
+      <button
+        onClick={handleLikeToggle}
+        disabled={isLoading}
+        className="transition-transform hover:scale-110 active:scale-95 disabled:opacity-50"
+        aria-label={isLiked ? "Unlike" : "Like"}
+      >
+        <Heart
+          className={`h-4 w-4 transition-all duration-200 ${
+            isLiked
+              ? "fill-red-500 text-red-500 animate-in zoom-in-50"
+              : "text-foreground hover:text-gray-500"
+          }`}
+        />
+      </button>
+      {likeCount > 0 && (
+        <span className="text-[10px] font-semibold text-foreground">
+          {likeCount}
+        </span>
+      )}
+    </div>
   );
 }
