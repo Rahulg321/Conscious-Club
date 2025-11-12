@@ -27,6 +27,8 @@ export const PROTECTED_ROUTES = [
   "/notifications",
   "/profile",
   "/settings",
+
+  "/creative",
 ];
 
 export const PROTECTED_BASE_ROUTES = ["/dashboard", "/admin"];

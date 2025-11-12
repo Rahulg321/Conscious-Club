@@ -1,15 +1,21 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { SidebarTrigger, useSidebar } from "./ui/sidebar";
 import { usePathname } from "next/navigation";
-import { Menu, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
+import { useSession } from "next-auth/react";
 
 const DashboardHeader = () => {
   const pathname = usePathname();
-  const { open, toggleSidebar, isMobile } = useSidebar();
+  const { open, toggleSidebar } = useSidebar();
+  const { data: session } = useSession();
+  const [followCounts, setFollowCounts] = useState<{
+    followers: number;
+    following: number;
+  } | null>(null);
 
   const getPageTitle = (path: string): string => {
     const segments = path.split("/").filter(Boolean);
@@ -30,12 +36,25 @@ const DashboardHeader = () => {
         return "Profile";
       case "challenges":
         return "BravoPlay";
+      case "creative":
+        return "Creative";
       default:
         return "Dashboard";
     }
   };
 
   const pageTitle = getPageTitle(pathname);
+  const isCreativePage = pathname === "/creative";
+
+  // Fetch follow counts when on Creative page
+  useEffect(() => {
+    if (isCreativePage && session?.user?.id) {
+      fetch(`/api/follow/counts?userId=${session.user.id}`)
+        .then((res) => res.json())
+        .then((data) => setFollowCounts(data))
+        .catch((err) => console.error("Error fetching follow counts:", err));
+    }
+  }, [isCreativePage, session?.user?.id]);
 
   return (
     <div className="bg-white/95 backdrop-blur-sm border-b border-gray-200/80 px-4 md:px-6 py-3.5 flex items-center gap-4 sticky top-0 z-20 shadow-sm">
@@ -79,9 +98,18 @@ const DashboardHeader = () => {
         {/* Optional: Add breadcrumb or subtitle here */}
       </div>
 
-      {/* Optional: Add action buttons here */}
+      {/* Right section - Show followers/following on Creative page */}
       <div className="flex items-center gap-2">
-        {/* Add search, notifications, etc. */}
+        {isCreativePage && followCounts && (
+          <div className="flex items-center gap-2">
+            <span className="px-3 py-1 flex items-center justify-center bg-[#f9fafb] text-[#666a6e] text-sm font-medium rounded-full">
+              {followCounts.followers} followers
+            </span>
+            <span className="px-3 py-1 flex items-center justify-center bg-[#f9fafb] text-[#666a6e] text-sm font-medium rounded-full">
+              {followCounts.following} following
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );
