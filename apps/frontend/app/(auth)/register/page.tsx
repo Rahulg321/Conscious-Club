@@ -39,7 +39,7 @@ export default async function RegisterPage() {
   return (
     <main className="min-h-svh grid grid-cols-1 md:grid-cols-2">
       <section className="relative flex items-center justify-center bg-background">
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div></div>}>
           <RegisterAuthCheck />
         </Suspense>
         <div className="absolute left-4 top-4 md:left-8 md:top-8">
