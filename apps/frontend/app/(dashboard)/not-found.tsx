@@ -2,7 +2,7 @@ import { auth } from "@/auth";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Home, Search, FileQuestion } from "lucide-react";
+import { Home, Search, FileQuestion, LogIn } from "lucide-react";
 import BackButton from "./back-button";
 
 export default async function NotFound() {
@@ -42,12 +42,9 @@ export default async function NotFound() {
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
           <Button asChild size="lg" className="w-full sm:w-auto">
-            <Link
-              href={`/profile/${userSession?.user?.id}`}
-              className="flex items-center gap-2"
-            >
+            <Link href="/" className="flex items-center gap-2">
               <Home className="w-5 h-5" />
-              Go to Profile
+              Homepage
             </Link>
           </Button>
 
@@ -57,9 +54,9 @@ export default async function NotFound() {
             size="lg"
             className="w-full sm:w-auto"
           >
-            <Link href="/dashboard" className="flex items-center gap-2">
-              <Search className="w-5 h-5" />
-              Explore Dashboard
+            <Link href="/login" className="flex items-center gap-2">
+              <LogIn className="w-5 h-5" />
+              Login
             </Link>
           </Button>
 

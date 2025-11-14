@@ -7,6 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import CClogo from "@/public/cc-home-logo.png";
 import { Metadata } from "next";
+import React, { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Sign Up | Conscious Club",
@@ -35,13 +36,12 @@ export const metadata: Metadata = {
 };
 
 export default async function RegisterPage() {
-  const userSession = await auth();
-
-  if (userSession) redirect("/profile");
-
   return (
-    <main className="min-h-screen grid grid-cols-1 md:grid-cols-2">
-      <section className="relative flex items-center justify-center bg-white md:bg-[radial-gradient(60%_60%_at_0%_0%,rgba(109,92,255,0.12),transparent_60%),radial-gradient(60%_60%_at_100%_100%,rgba(255,255,255,0.85),transparent_50%)]">
+    <main className="min-h-svh grid grid-cols-1 md:grid-cols-2">
+      <section className="relative flex items-center justify-center bg-background">
+        <Suspense fallback={<div>Loading...</div>}>
+          <RegisterAuthCheck />
+        </Suspense>
         <div className="absolute left-4 top-4 md:left-8 md:top-8">
           <Link href="/">
             <Image src={CClogo} alt="ConsciousClub Logo" />
@@ -50,7 +50,7 @@ export default async function RegisterPage() {
 
         <div className="w-full max-w-md px-4 py-12 md:px-8">
           <div className="text-center mb-6">
-            <h1 className="text-balance text-2xl font-semibold tracking-tight">
+            <h1 className="text-balance text-2xl font-semibold tracking-tight text-foreground">
               Create your account
             </h1>
             <p className="mt-2 text-sm text-muted-foreground">
@@ -59,7 +59,9 @@ export default async function RegisterPage() {
           </div>
 
           <ProviderButtons />
-          <RegisterForm />
+          <Suspense>
+            <RegisterForm />
+          </Suspense>
         </div>
       </section>
 
@@ -68,4 +70,12 @@ export default async function RegisterPage() {
       </aside>
     </main>
   );
+}
+
+async function RegisterAuthCheck() {
+  const userSession = await auth();
+
+  if (userSession) redirect("/profile");
+
+  return null;
 }

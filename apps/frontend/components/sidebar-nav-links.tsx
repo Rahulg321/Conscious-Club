@@ -10,6 +10,7 @@ import {
 import { User, Trophy } from "lucide-react";
 import { FaCompass, FaHeart } from "react-icons/fa";
 import { FaHeadphones } from "react-icons/fa";
+import { useSession } from "next-auth/react";
 
 type NavLink = {
   label: string;
@@ -18,7 +19,10 @@ type NavLink = {
   activeColor: string;
 };
 
-export function SidebarNavLinks({ userId }: { userId: string }) {
+export function SidebarNavLinks() {
+  const { data: userSession } = useSession();
+  const userId = userSession?.user.id ?? "";
+
   const pathname = usePathname();
 
   const navLinks: NavLink[] = [

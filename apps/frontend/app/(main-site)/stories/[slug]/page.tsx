@@ -57,6 +57,40 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 const BlogPostPage = async ({ params }: Props) => {
+  return (
+    <div className="min-h-svh bg-background">
+      <div className="bg-card border-b border-border">
+        <div className="max-w-4xl mx-auto px-6 py-4">
+          <Link href="/stories">
+            <Button variant="ghost" size="sm">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Stories
+            </Button>
+          </Link>
+        </div>
+      </div>
+
+      <Suspense
+        fallback={
+          <div className="max-w-4xl mx-auto px-6 py-8">
+            <div className="bg-card rounded-lg shadow-sm p-8">
+              <div className="animate-pulse space-y-4">
+                <div className="h-12 bg-muted rounded w-3/4"></div>
+                <div className="h-6 bg-muted rounded w-1/2"></div>
+                <div className="h-4 bg-muted rounded w-full"></div>
+                <div className="h-4 bg-muted rounded w-5/6"></div>
+              </div>
+            </div>
+          </div>
+        }
+      >
+        <BlogPostContent params={params} />
+      </Suspense>
+    </div>
+  );
+};
+
+async function BlogPostContent({ params }: Props) {
   const { slug } = await params;
   const post = await getBlogPostBySlug(slug);
 
@@ -74,18 +108,7 @@ const BlogPostPage = async ({ params }: Props) => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="bg-card border-b border-border">
-        <div className="max-w-4xl mx-auto px-6 py-4">
-          <Link href="/stories">
-            <Button variant="ghost" size="sm">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Stories
-            </Button>
-          </Link>
-        </div>
-      </div>
-
+    <>
       {/* Featured Image */}
       {post.featuredImage && (
         <div className="relative w-full h-[400px] bg-muted">
@@ -190,8 +213,8 @@ const BlogPostPage = async ({ params }: Props) => {
           )}
         </div>
       </article>
-    </div>
+    </>
   );
-};
+}
 
 export default BlogPostPage;

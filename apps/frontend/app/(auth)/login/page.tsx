@@ -7,7 +7,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import CClogo from "@/public/cc-home-logo.png";
-
+import React, { Suspense } from "react";
 export const metadata: Metadata = {
   title: "Sign In | Conscious Club",
   description:
@@ -33,11 +33,55 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function LoginPage({
-  searchParams,
-}: {
+type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
+};
+
+export default async function LoginPage({ searchParams }: Props) {
+  return (
+    <main className="min-h-svh grid grid-cols-1 md:grid-cols-2">
+      <section className="relative flex items-center justify-center bg-white ">
+        <Suspense fallback={<div>Loading...</div>}>
+          <UserAuthProfile searchParams={searchParams} />
+        </Suspense>
+        <div className="absolute left-4 top-4 md:left-8 md:top-8">
+          <Link href="/">
+            <Image src={CClogo} alt="ConsciousClub Logo" />
+          </Link>
+        </div>
+
+        <div className="w-full max-w-md px-4 py-12 md:px-8">
+          <div className="text-center mb-6">
+            <h1 className="text-balance text-2xl font-semibold tracking-tight">
+              Welcome back
+            </h1>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Please enter your details to sign in.
+            </p>
+          </div>
+
+          <ProviderButtons />
+          <div className="my-6 flex items-center gap-3">
+            <div className="flex-grow border-t border-muted" />
+            <span className="text-xs text-muted-foreground font-medium">
+              or
+            </span>
+            <div className="flex-grow border-t border-muted" />
+          </div>
+          <Suspense>
+            <LoginForm />
+          </Suspense>
+        </div>
+      </section>
+
+      <aside className="hidden md:block">
+        <TestimonialPanel />
+      </aside>
+    </main>
+  );
+}
+
+async function UserAuthProfile({ searchParams }: Props) {
   const error = (await searchParams).error;
 
   const userSession = await auth();
@@ -89,60 +133,26 @@ export default async function LoginPage({
   const errorInfo = getErrorMessage(error);
 
   return (
-    <main className="min-h-svh grid grid-cols-1 md:grid-cols-2">
-      {/* Left: Auth panel with soft light gradient */}
-      <section className="relative flex items-center justify-center bg-white ">
-        <div className="absolute left-4 top-4 md:left-8 md:top-8">
-          <Link href="/">
-            <Image src={CClogo} alt="ConsciousClub Logo" />
-          </Link>
-        </div>
-
-        <div className="w-full max-w-md px-4 py-12 md:px-8">
-          <div className="text-center mb-6">
-            <h1 className="text-balance text-2xl font-semibold tracking-tight">
-              Welcome back
-            </h1>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Please enter your details to sign in.
-            </p>
+    <div>
+      {/* Error message display */}
+      {errorInfo && (
+        <div
+          className={`mb-6 p-4 rounded-lg border ${
+            errorInfo.type === "warning"
+              ? "bg-yellow-50 border-yellow-200 text-yellow-800"
+              : errorInfo.type === "error"
+                ? "bg-red-50 border-red-200 text-red-800"
+                : "bg-blue-50 border-blue-200 text-blue-800"
+          }`}
+        >
+          <div className="text-sm font-medium mb-1">
+            {errorInfo.type === "warning" && "⚠️ Account Not Linked"}
+            {errorInfo.type === "error" && "❌ Authentication Error"}
+            {errorInfo.type === "info" && "ℹ️ Verification Required"}
           </div>
-
-          {/* Error message display */}
-          {errorInfo && (
-            <div
-              className={`mb-6 p-4 rounded-lg border ${
-                errorInfo.type === "warning"
-                  ? "bg-yellow-50 border-yellow-200 text-yellow-800"
-                  : errorInfo.type === "error"
-                    ? "bg-red-50 border-red-200 text-red-800"
-                    : "bg-blue-50 border-blue-200 text-blue-800"
-              }`}
-            >
-              <div className="text-sm font-medium mb-1">
-                {errorInfo.type === "warning" && "⚠️ Account Not Linked"}
-                {errorInfo.type === "error" && "❌ Authentication Error"}
-                {errorInfo.type === "info" && "ℹ️ Verification Required"}
-              </div>
-              <div className="text-sm">{errorInfo.message}</div>
-            </div>
-          )}
-
-          <ProviderButtons />
-          <div className="my-6 flex items-center gap-3">
-            <div className="flex-grow border-t border-muted" />
-            <span className="text-xs text-muted-foreground font-medium">
-              or
-            </span>
-            <div className="flex-grow border-t border-muted" />
-          </div>
-          <LoginForm />
+          <div className="text-sm">{errorInfo.message}</div>
         </div>
-      </section>
-
-      <aside className="hidden md:block">
-        <TestimonialPanel />
-      </aside>
-    </main>
+      )}
+    </div>
   );
 }

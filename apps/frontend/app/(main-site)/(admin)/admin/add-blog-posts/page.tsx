@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import AddBlogPostsForm from "@/components/forms/add-blog-posts-form";
@@ -9,14 +9,30 @@ import {
   requireAdmin,
 } from "@/lib/queries";
 import AdminBlogPostCard from "@/components/admin-blog-post-card";
-import { ArrowLeft, FileText } from "lucide-react";
+import { ArrowLeft, FileText, Loader2 } from "lucide-react";
 
 export const metadata = {
   title: "Manage Blog Posts - Admin",
   description: "Create, edit, and manage blog posts for your website",
 };
 
-const page = async () => {
+const page = () => {
+  return (
+    <div className="block-space big-container">
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="size-10 animate-spin" />
+          </div>
+        }
+      >
+        <BlogPostsContent />
+      </Suspense>
+    </div>
+  );
+};
+
+async function BlogPostsContent() {
   // This will redirect to login if not authenticated, or to dashboard if not admin
   await requireAdmin();
 
@@ -25,7 +41,7 @@ const page = async () => {
   const blogTags = await getAllBlogTags();
 
   return (
-    <div className="block-space big-container">
+    <>
       {/* Navigation */}
       <div className="mb-6">
         <Button asChild variant="outline" size="sm">
@@ -95,7 +111,7 @@ const page = async () => {
             ))}
           </div>
         ) : (
-          <div className="text-center py-12 px-4 border-2 border-dashed rounded-lg">
+          <div className="text-center py-12 px-4 border-2 border-dashed rounded-lg border-border">
             <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
             <p className="text-muted-foreground mb-2">No blog posts yet</p>
             <p className="text-sm text-muted-foreground">
@@ -104,8 +120,8 @@ const page = async () => {
           </div>
         )}
       </div>
-    </div>
+    </>
   );
-};
+}
 
 export default page;

@@ -1,12 +1,10 @@
 import { auth } from "@/auth";
 import {
-  getAllTags,
   getUserFollowCounts,
   getUserProjects,
   getUserMashupProjects,
 } from "@/lib/queries";
 import ProjectUploadDialog from "@/components/dialogs/project-upload-dialog";
-import { Button } from "@/components/ui/button";
 import { Loader2, Plus, Sparkles, MapPin, Shuffle } from "lucide-react";
 import { redirect } from "next/navigation";
 import React, { Suspense } from "react";
@@ -15,9 +13,7 @@ import ProfilePicUploadDialog from "@/components/dialogs/profile-pic-upload-dial
 import ProjectCard from "@/components/project-card";
 import { Metadata } from "next";
 import { getCachedUserById } from "@/lib/cached-queries";
-import Link from "next/link";
 import ProfileEditDialog from "@/components/dialogs/profile-edit-dialog";
-import { Session } from "next-auth";
 import { isFollowing } from "@/lib/actions/follow-action";
 import FollowButton from "@/components/buttons/follow-button";
 import MashupDialog from "@/components/dialogs/mashup-dialog";
@@ -25,20 +21,20 @@ import {
   disciplineColor,
   DisciplineType,
 } from "@/components/forms/onboarding/config";
-// import { FloatingPaths } from "@/components/profile-info-card";
 import {
   Tabs,
   TabsContent,
-  // TabsContents,
   TabsList,
   TabsTrigger,
 } from "@/components/animate-ui/components/radix/tabs";
-import { AuroraBackground } from "@/components/aura-bg";
+import { notFound } from "next/navigation";
+import ProfileSectionSkeleton from "@/components/skeletons/profile-section-skeleton";
 
-export async function generateMetadata({
-  params,
-  searchParams,
-}: Props): Promise<Metadata> {
+type Props = {
+  params: Promise<{ userId: string }>;
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { userId } = await params;
 
   const profileUser = await getCachedUserById(userId);
@@ -49,137 +45,13 @@ export async function generateMetadata({
   };
 }
 
-type Props = {
-  params: Promise<{ userId: string }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-};
-
 const ProfilePage = async ({ params }: Props) => {
-  const { userId } = await params;
-  const userSession = await auth();
-  if (!userSession) redirect("/login");
-
-  const currentUser = await getCachedUserById(userId);
-  if (!currentUser) redirect("/");
-
-  // Check if viewing own profile
-  const isOwnProfile = userSession.user.id === userId;
-
-  // If viewing own profile, ensure onboarding is completed
-  if (isOwnProfile && !currentUser.onboardingCompleted) redirect("/onboarding");
-
-  const { followers, following } = await getUserFollowCounts(userId);
-
-  // Get follow status if viewing someone else's profile
-  const isUserFollowing = isOwnProfile ? false : await isFollowing(userId);
-
-  const isValidDiscipline = (d: unknown): d is DisciplineType =>
-    typeof d === "string" &&
-    ["Digital", "Visuals", "Writing", "Performance", "Motion"].includes(
-      d as DisciplineType
-    );
-
-  const disciplineKey: DisciplineType = isValidDiscipline(
-    currentUser.discipline
-  )
-    ? (currentUser.discipline as DisciplineType)
-    : "Digital";
   return (
     <div>
+      <Suspense fallback={<ProfileSectionSkeleton />}>
+        <DisplayUserProfileSection params={params} />
+      </Suspense>
       <div className="relative pl-4 md:pl-8 pb-2 md:pb-2">
-        <div className="flex flex-col md:flex-row md:items-start md:justify-start mb-2 gap-4 mr-auto">
-          <div className="flex flex-col  md:items-start gap-4 md:gap-2 w-full rounded-lg pb-4 md:px-4 pt-2   mr-auto">
-            <div className="flex flex-row  justify-center items-start gap-4 md:gap-8 w-max rounded-lg md:px-8 mr-auto">
-              <div className="relative self-center  ">
-                <div className="w-36 h-36 md:w-56 md:h-56 rounded-full border-4 border-gray-100 shadow-lg relative">
-                  <Image
-                    src={currentUser.image || "/user-placeholder.png"}
-                    fill
-                    alt={currentUser.name || "User"}
-                    className="object-cover rounded-full"
-                  />
-                  {isOwnProfile && (
-                    <div className="absolute bottom-1 -right-2">
-                      <ProfilePicUploadDialog />
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="md:text-left my-auto w-full flex flex-col items-start justify-center">
-                <h2 className="text-xl md:text-4xl font-semibold text-[#171c21] mb-2 w-full">
-                  <div className="truncate w-full">
-                    {currentUser.name || ""}
-                  </div>
-                </h2>
-                <div className="flex items-center gap-2 mb-2 w-full">
-                  {isOwnProfile ? (
-                    <ProfileEditDialog
-                      userId={userId}
-                      name={currentUser.name || ""}
-                      bio={currentUser.bio || ""}
-                      city={currentUser.city || ""}
-                      country={currentUser.country || ""}
-                    />
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <FollowButton
-                        userId={userId}
-                        isFollowing={isUserFollowing}
-                        className="flex items-center gap-2 bg-indigo-500 text-white hover:bg-indigo-600"
-                      />
-                      <MashupDialog
-                        isIcon={true}
-                        collaboratorId={userId}
-                        collaboratorName={currentUser.name || undefined}
-                        userSession={userSession}
-                      />
-                    </div>
-                  )}
-                </div>
-                <div className="text-[#666a6e] mb-2 flex items-center justify-start">
-                  <MapPin className="w-4 h-4" />{" "}
-                  {[currentUser.city, currentUser.country]
-                    .filter(Boolean)
-                    .join(", ") || ""}
-                </div>
-                <div className="flex flex-wrap gap-2 justify-center md:justify-start md:mb-4 mb-2">
-                  <span className="md:px-3 px-1 py-1 flex items-center justify-center bg-[#f9fafb] text-[#666a6e] text-sm font-medium rounded-full">
-                    {followers} followers
-                  </span>
-                  <span className="md:px-3 px-1 py-1 flex items-center justify-center bg-[#f9fafb] text-[#666a6e] text-sm font-medium rounded-full">
-                    {following} following
-                  </span>
-                </div>
-
-                <div className="flex flex-wrap gap-2 justify-center md:justify-start">
-                  <span
-                    className={`px-3  py-1 flex items-center justify-center ${disciplineColor[disciplineKey as DisciplineType].color} text-sm font-medium rounded-full `}
-                  >
-                    {currentUser.discipline || "Digital"}
-                  </span>
-                  {currentUser.role && (
-                    <span
-                      className={`px-3 py-1 flex items-center justify-center border-2 ${disciplineColor[disciplineKey as DisciplineType].border} ${disciplineColor[disciplineKey as DisciplineType].text} text-sm font-medium rounded-full`}
-                    >
-                      {currentUser.role}
-                    </span>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="my-4 ">
-          <h3 className="text-lg font-semibold text-[#171c21]">About</h3>
-
-          {currentUser.bio ? (
-            <div className="!font-caveat text-3xl">{currentUser.bio}</div>
-          ) : (
-            <div className="!font-caveat text-3xl">Bio Not Available Yet</div>
-          )}
-        </div>
         <div className="w-full px-4">
           <Tabs defaultValue="creations">
             <TabsList className="w-full">
@@ -195,12 +67,7 @@ const ProfilePage = async ({ params }: Props) => {
                     </div>
                   }
                 >
-                  <DisplayUserProjectWork
-                    profileUserId={userId}
-                    currentUserId={userSession.user.id}
-                    userSession={userSession}
-                    isOwnProfile={isOwnProfile}
-                  />
+                  <DisplayUserProjectWork params={params} />
                 </Suspense>
               </div>
             </TabsContent>
@@ -213,11 +80,7 @@ const ProfilePage = async ({ params }: Props) => {
                     </div>
                   }
                 >
-                  <DisplayUserMashupProjects
-                    profileUserId={userId}
-                    currentUserId={userSession.user.id}
-                    isOwnProfile={isOwnProfile}
-                  />
+                  <DisplayUserMashupProjects params={params} />
                 </Suspense>
               </div>
             </TabsContent>
@@ -230,30 +93,149 @@ const ProfilePage = async ({ params }: Props) => {
 
 export default ProfilePage;
 
-async function DisplayUserProjectWork({
-  profileUserId,
-  currentUserId,
-  userSession,
-  isOwnProfile,
-}: {
-  profileUserId: string;
-  currentUserId: string;
-  userSession: Session;
-  isOwnProfile: boolean;
-}) {
-  const projects = await getUserProjects(profileUserId);
-  const profileUser = await getCachedUserById(profileUserId);
+async function DisplayUserProfileSection({ params }: Props) {
+  const { userId } = await params;
+  const userSession = await auth();
+  if (!userSession) redirect("/login");
+
+  const isOwnProfile = userSession.user.id === userId;
+
+  const currentUser = await getCachedUserById(userId);
+  if (isOwnProfile && !currentUser?.onboardingCompleted)
+    redirect("/onboarding");
+
+  if (!currentUser) {
+    console.log("User not found");
+    return notFound();
+  }
+
+  const { followers, following } = await getUserFollowCounts(userId);
+
+  const isUserFollowing = isOwnProfile ? false : await isFollowing(userId);
+
+  const isValidDiscipline = (d: unknown): d is DisciplineType =>
+    typeof d === "string" &&
+    ["Digital", "Visuals", "Writing", "Performance", "Motion"].includes(
+      d as DisciplineType
+    );
+
+  const disciplineKey: DisciplineType = isValidDiscipline(
+    currentUser.discipline
+  )
+    ? (currentUser.discipline as DisciplineType)
+    : "Digital";
+
+  return (
+    <div>
+      <div className="flex flex-col md:flex-row md:items-start md:justify-start mb-2 gap-4 mr-auto">
+        <div className="flex flex-col  md:items-start gap-4 md:gap-2 w-full rounded-lg pb-4 md:px-4 pt-2   mr-auto">
+          <div className="flex flex-row  justify-center items-start gap-4 md:gap-8 w-max rounded-lg md:px-8 mr-auto">
+            <div className="relative self-center  ">
+              <div className="w-36 h-36 md:w-56 md:h-56 rounded-full border-4 border-gray-100 shadow-lg relative">
+                <Image
+                  src={currentUser.image || "/user-placeholder.png"}
+                  fill
+                  alt={currentUser.name || "User"}
+                  className="object-cover rounded-full"
+                />
+                {isOwnProfile && (
+                  <div className="absolute bottom-1 -right-2">
+                    <ProfilePicUploadDialog />
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="md:text-left my-auto w-full flex flex-col items-start justify-center">
+              <h2 className="text-xl md:text-4xl font-semibold text-[#171c21] mb-2 w-full">
+                <div className="truncate w-full">{currentUser.name || ""}</div>
+              </h2>
+              <div className="flex items-center gap-2 mb-2 w-full">
+                {isOwnProfile ? (
+                  <ProfileEditDialog
+                    userId={userId}
+                    name={currentUser.name || ""}
+                    bio={currentUser.bio || ""}
+                    city={currentUser.city || ""}
+                    country={currentUser.country || ""}
+                  />
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <FollowButton
+                      userId={userId}
+                      isFollowing={isUserFollowing}
+                      className="flex items-center gap-2 bg-indigo-500 text-white hover:bg-indigo-600"
+                    />
+                    <MashupDialog
+                      isIcon={true}
+                      collaboratorId={userId}
+                      collaboratorName={currentUser.name || undefined}
+                      userSession={userSession}
+                    />
+                  </div>
+                )}
+              </div>
+              <div className="text-[#666a6e] mb-2 flex items-center justify-start">
+                <MapPin className="w-4 h-4" />{" "}
+                {[currentUser.city, currentUser.country]
+                  .filter(Boolean)
+                  .join(", ") || ""}
+              </div>
+              <div className="flex flex-wrap gap-2 justify-center md:justify-start md:mb-4 mb-2">
+                <span className="md:px-3 px-1 py-1 flex items-center justify-center bg-[#f9fafb] text-[#666a6e] text-sm font-medium rounded-full">
+                  {followers} followers
+                </span>
+                <span className="md:px-3 px-1 py-1 flex items-center justify-center bg-[#f9fafb] text-[#666a6e] text-sm font-medium rounded-full">
+                  {following} following
+                </span>
+              </div>
+
+              <div className="flex flex-wrap gap-2 justify-center md:justify-start">
+                <span
+                  className={`px-3  py-1 flex items-center justify-center ${disciplineColor[disciplineKey as DisciplineType].color} text-sm font-medium rounded-full `}
+                >
+                  {currentUser.discipline || "Digital"}
+                </span>
+                {currentUser.role && (
+                  <span
+                    className={`px-3 py-1 flex items-center justify-center border-2 ${disciplineColor[disciplineKey as DisciplineType].border} ${disciplineColor[disciplineKey as DisciplineType].text} text-sm font-medium rounded-full`}
+                  >
+                    {currentUser.role}
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="my-4 px-4 md:px-8 lg:px-16">
+        <h3 className="text-lg font-semibold text-[#171c21]">About</h3>
+
+        {currentUser.bio ? (
+          <div className="!font-caveat text-3xl">{currentUser.bio}</div>
+        ) : (
+          <div className="!font-caveat text-3xl">Bio Not Available Yet</div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+async function DisplayUserProjectWork({ params }: Props) {
+  const { userId } = await params;
+  const userSession = await auth();
+  if (!userSession) redirect("/login");
+  const isOwnProfile = userSession.user.id === userId;
+
+  const [projects, profileUser] = await Promise.all([
+    getUserProjects(userId),
+    getCachedUserById(userId),
+  ]);
 
   return (
     <div className="mt-8">
       <div className="flex items-center justify-end w-full mb-6 gap-4">
-        {/* <div className="flex items-center "> */}
-        {/* <Button variant="outline" asChild>
-            <Link href={`/profile/${profileUserId}/projects`}>View All</Link>
-          </Button> */}
-
         {isOwnProfile && <ProjectUploadDialog userSession={userSession} />}
-        {/* </div> */}
       </div>
 
       {!projects || projects.length === 0 ? (
@@ -291,16 +273,13 @@ async function DisplayUserProjectWork({
   );
 }
 
-async function DisplayUserMashupProjects({
-  profileUserId,
-  currentUserId,
-  isOwnProfile,
-}: {
-  profileUserId: string;
-  currentUserId: string;
-  isOwnProfile: boolean;
-}) {
-  const mashupProjects = await getUserMashupProjects(profileUserId);
+async function DisplayUserMashupProjects({ params }: Props) {
+  const { userId } = await params;
+  const userSession = await auth();
+  if (!userSession) redirect("/login");
+  const isOwnProfile = userSession.user.id === userId;
+
+  const mashupProjects = await getUserMashupProjects(userId);
 
   if (!mashupProjects || mashupProjects.length === 0) {
     return (
