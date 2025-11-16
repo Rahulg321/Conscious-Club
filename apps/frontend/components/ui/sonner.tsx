@@ -8,29 +8,36 @@ const Toaster = ({ ...props }: ToasterProps) => {
 
   return (
     <>
-      <style jsx global>{`
-        [data-sonner-toast] {
-          --normal-bg: var(--popover);
-          --normal-border: var(--border);
-        }
-        
-        [data-sonner-toast] [data-title],
-        [data-sonner-toast] [data-description] {
-          color: black !important;
-        }
-        
-        [data-sonner-toast] {
-          color: black !important;
-        }
-        
-        [data-sonner-toast] * {
-          color: black !important;
-        }
-        
-        [data-sonner-toast] [data-icon] {
-          color: black !important;
-        }
-      `}</style>
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          [data-sonner-toast] {
+            --normal-bg: var(--popover);
+            --normal-border: var(--border);
+          }
+          
+          [data-sonner-toast] [data-title],
+          [data-sonner-toast] [data-description] {
+            color: black !important;
+          }
+          
+          [data-sonner-toast] {
+            color: black !important;
+          }
+          
+          [data-sonner-toast] * {
+            color: black !important;
+          }
+          
+          [data-sonner-toast] [data-icon] {
+            color: black !important;
+          }
+          
+          .sonner-toast[data-sonner-toast] [data-title],
+          .sonner-toast[data-sonner-toast] [data-description] {
+            color: black !important;
+          }
+        `
+      }} />
       <Sonner
         theme={theme as ToasterProps["theme"]}
         className="toaster group"
@@ -43,7 +50,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
         }
         toastOptions={{
           classNames: {
-            toast: "!text-black [&>div]:!text-black",
+            toast: "!text-black [&>div]:!text-black [&_*]:!text-black",
             title: "!text-black",
             description: "!text-black",
             actionButton: "!text-black",
