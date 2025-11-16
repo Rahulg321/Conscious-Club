@@ -24,10 +24,14 @@ import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { Separator } from "../ui/separator";
 import { toast } from "sonner";
 import { registerAction } from "@/lib/actions/register-action";
+import { SuccessCard } from "../form-info-cards";
+import { ErrorCard } from "../form-info-cards";
 
 export function RegisterForm() {
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+  const [success, setSuccess] = React.useState<string | null>(null);
+  const [error, setError] = React.useState<string | null>(null);
 
   const [isPending, startTransition] = React.useTransition();
 
@@ -47,8 +51,12 @@ export function RegisterForm() {
         toast.success(
           "Account created, Please check your email for verification"
         );
+        setSuccess("Account created, Please check your email for verification");
+          setError(null);
       } else {
         toast.error(response.message || "error creating account");
+        setError(response.message || "error creating account");
+        setSuccess(null);
       }
     });
   }
@@ -149,6 +157,9 @@ export function RegisterForm() {
               </FormItem>
             )}
           />
+
+          {success && <SuccessCard success={success} />}
+          {error && <ErrorCard urlError={error} />}
 
           <Button type="submit" className="w-full" disabled={isPending}>
             {isPending ? (

@@ -74,8 +74,6 @@ export default async function RegisterPage() {
 
 async function RegisterAuthCheck() {
   const userSession = await auth();
-
   if (userSession) redirect("/profile");
-
   return null;
 }

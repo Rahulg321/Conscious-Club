@@ -24,11 +24,15 @@ import { Separator } from "../ui/separator";
 import { toast } from "sonner";
 import { loginAction } from "@/lib/actions/login-action";
 import { useRouter } from "next/navigation";
+import { SuccessCard } from "../form-info-cards";
+import { ErrorCard } from "../form-info-cards";
 
 export function LoginForm() {
   const [showPassword, setShowPassword] = React.useState(false);
   const router = useRouter();
   const [isPending, startTransition] = React.useTransition();
+  const [success, setSuccess] = React.useState<string | null>(null);
+  const [error, setError] = React.useState<string | null>(null);
 
   const form = useForm<LoginFormSchemaType>({
     resolver: zodResolver(loginFormSchema),
@@ -44,9 +48,13 @@ export function LoginForm() {
       console.log(response);
       if (response.success) {
         toast.success("successfully logged in");
+        setSuccess("successfully logged in");
+        setError(null);
         router.refresh();
       } else {
         toast.error(response.message || "error logging user");
+        setError(response.message || "error logging user");
+        setSuccess(null);
       }
     });
   }
@@ -105,6 +113,9 @@ export function LoginForm() {
               </FormItem>
             )}
           />
+
+          {success && <SuccessCard success={success} />}
+          {error && <ErrorCard urlError={error} />}
 
           <Button type="submit" className="w-full" disabled={isPending}>
             {isPending ? (
