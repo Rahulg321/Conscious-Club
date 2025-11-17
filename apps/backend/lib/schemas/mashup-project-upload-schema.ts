@@ -38,9 +38,11 @@ export const mashupProjectUploadSchema = projectUploadSchema.extend({
         .max(500, "Description must be less than 500 characters")
         .min(10, "Description must be at least 10 characters if provided"),
       z.literal(""),
+      z.null(),
       z.undefined(),
     ])
-    .optional(),
+    .optional()
+    .transform((val) => val || undefined),
 });
 
 export type MashupProjectUploadData = z.infer<typeof mashupProjectUploadSchema>;

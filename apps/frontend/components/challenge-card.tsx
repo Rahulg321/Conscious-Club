@@ -33,6 +33,7 @@ export function ChallengeCard({
   reward,
   isCompleted = false,
 }: ChallengeCardProps) {
+  // Calculate time remaining - use suppressHydrationWarning to avoid mismatch
   const timeRemaining = formatDistanceToNow(new Date(deadline), {
     addSuffix: true,
   });
@@ -65,7 +66,8 @@ export function ChallengeCard({
           </div>
         ) : isDeadlineNear ? (
           <div className="absolute top-2 right-2 rounded bg-red-500 px-2 py-1 text-xs font-semibold text-white">
-            <span className="hidden xs:inline">Ending</span> {timeRemaining}
+            <span className="hidden xs:inline">Ending</span>{" "}
+            <span suppressHydrationWarning>{timeRemaining}</span>
           </div>
         ) : null}
       </div>
@@ -81,7 +83,7 @@ export function ChallengeCard({
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
           <div className="flex items-center gap-1 min-w-[105px]">
             <Calendar className="h-4 w-4 shrink-0" />
-            <span className="truncate">
+            <span className="truncate" suppressHydrationWarning>
               {isCompleted ? "Completed" : timeRemaining}
             </span>
           </div>

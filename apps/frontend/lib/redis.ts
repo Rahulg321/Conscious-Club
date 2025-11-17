@@ -1,18 +1,27 @@
 import { Redis } from "ioredis";
 
-// Validate REDIS_URL environment variable
-if (!process.env.REDIS_URL) {
-  console.error("❌ [REDIS] REDIS_URL environment variable is not set");
-  throw new Error("REDIS_URL environment variable is required for rate limiting");
+// Optional REDIS_URL - gracefully fallback if not available
+let redisClient: Redis | null = null;
+
+if (process.env.REDIS_URL) {
+  redisClient = new Redis(process.env.REDIS_URL);
+} else {
+  console.warn("⚠️ [REDIS] REDIS_URL environment variable is not set - rate limiting will be disabled");
 }
 
-export const redisClient = new Redis(process.env.REDIS_URL);
+export { redisClient };
 
 export async function rateLimit(
   keyBase: string,
   max: number,
   windowMs: number
 ) {
+  // If Redis is not available, allow all requests (no rate limiting)
+  if (!redisClient) {
+    console.warn("⚠️ [REDIS] Rate limiting skipped - Redis client not available");
+    return { ok: true, remaining: max, reset: Date.now() + windowMs };
+  }
+
   const key = `rl:${keyBase}`;
   const count = await redisClient.incr(key);
   if (count === 1) await redisClient.pexpire(key, windowMs);
