@@ -28,9 +28,18 @@ export function SidebarNavLinks({ userId }: { userId: string }) {
   const isCollapsed = state === "collapsed";
 
   const navLinks: NavLink[] = [
-    {
-      label: "Profile",
-      href: `/profile/${userId}`,
+    // {
+    //   label: "Profile",
+    //   href: `/profile/${userId}`,
+    //   icon: <User className="w-5 h-5" />,
+    //   activeGradient: "from-pink-500/10 to-rose-500/10",
+    //   activeBg: "bg-gradient-to-br from-pink-50 to-rose-50",
+    //   activeText: "text-pink-700",
+    //   iconColor: "text-pink-600",
+    // },
+     {
+      label: "Creative",
+      href: `/creative`,
       icon: <User className="w-5 h-5" />,
       activeGradient: "from-pink-500/10 to-rose-500/10",
       activeBg: "bg-gradient-to-br from-pink-50 to-rose-50",
