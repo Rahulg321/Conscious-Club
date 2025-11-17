@@ -48,12 +48,15 @@ export const projectUploadSchema = z.object({
     .max(4, "You can upload up to 4 media files"),
   projectName: z
     .string()
-    .min(1, "Project name is required")
-    .min(3, "Project name must be at least 3 characters")
-    .max(100, "Project name must be less than 100 characters"),
+    .min(1, "Name is required")
+    .min(3, "Name must be at least 3 characters")
+    .max(100, "Name must be less than 100 characters"),
   projectDescription: z
     .union([
-      z.string().max(500, "Project description must be less than 500 characters").min(10, "Project description must be at least 10 characters if provided"),
+      z
+        .string()
+        .max(500, "Description must be less than 500 characters")
+        .min(10, "Description must be at least 10 characters if provided"),
       z.literal(""),
       z.undefined(),
     ])
@@ -67,19 +70,19 @@ export const projectUploadSchema = z.object({
     ),
   dedicatedToPerson: z
     .string()
-    .max(100, "Person name must be less than 100 characters")
+    .max(100, "Name must be less than 100 characters")
     .optional(),
   dedicatedToBrand: z
     .string()
-    .max(100, "Brand name must be less than 100 characters")
+    .max(100, "Name must be less than 100 characters")
     .optional(),
   dedicatedToCause: z
     .string()
-    .max(100, "Cause name must be less than 100 characters")
+    .max(100, "Name must be less than 100 characters")
     .optional(),
   dedicationReason: z
     .string()
-    .max(200, "Dedication reason must be less than 200 characters")
+    .max(200, "Reason must be less than 200 characters")
     .optional(),
 });
 

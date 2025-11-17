@@ -1,20 +1,37 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { requireAdmin, getAllChallengesAdmin } from "@/lib/queries";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import AdminChallengeCard from "@/components/admin-challenge-card";
+import { Loader2 } from "lucide-react";
 
 export const metadata = {
   title: "Admin Challenges",
   description: "Admin challenges page",
 };
 
-export default async function AdminChallengesPage() {
+export default function AdminChallengesPage() {
+  return (
+    <div className="block-space big-container">
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="size-10 animate-spin" />
+          </div>
+        }
+      >
+        <AdminChallengesContent />
+      </Suspense>
+    </div>
+  );
+}
+
+async function AdminChallengesContent() {
   const session = await requireAdmin();
   const challenges = (await getAllChallengesAdmin()) ?? [];
 
   return (
-    <div className="block-space big-container">
+    <>
       <div className="mb-4 flex flex-wrap items-center gap-2">
         <Button asChild>
           <Link href="/admin">Admin</Link>
@@ -58,6 +75,6 @@ export default async function AdminChallengesPage() {
           ))}
         </div>
       )}
-    </div>
+    </>
   );
 }

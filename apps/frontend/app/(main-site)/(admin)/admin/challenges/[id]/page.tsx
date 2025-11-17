@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import {
   requireAdmin,
   getChallengeById,
@@ -16,7 +16,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Users, Trophy, Clock } from "lucide-react";
+import { Calendar, Users, Trophy, Clock, Loader2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import AdminChallengeEntryCard from "@/components/admin-challenge-entry-card";
 import { Separator } from "@/components/ui/separator";
@@ -27,7 +27,27 @@ export const metadata = {
   description: "View challenge details",
 };
 
-export default async function ChallengeDetailPage({
+export default function ChallengeDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  return (
+    <div className="block-space big-container">
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="size-10 animate-spin" />
+          </div>
+        }
+      >
+        <ChallengeDetailContent params={params} />
+      </Suspense>
+    </div>
+  );
+}
+
+async function ChallengeDetailContent({
   params,
 }: {
   params: Promise<{ id: string }>;
@@ -47,7 +67,7 @@ export default async function ChallengeDetailPage({
   const timeRemaining = formatDistanceToNow(deadline, { addSuffix: true });
 
   return (
-    <div className="block-space big-container">
+    <>
       <div className="mb-4 flex flex-wrap items-center gap-2">
         <Button asChild variant="outline">
           <Link href="/admin/challenges">Back to Challenges</Link>
@@ -244,6 +264,6 @@ export default async function ChallengeDetailPage({
           </Card>
         </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -24,9 +24,53 @@ export default async function BlogPage({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const categories = await getAllBlogCategories();
-  const tags = await getAllBlogTags();
+  return (
+    <div className="min-h-svh bg-background">
+      <div className="bg-card border-b border-border px-6 py-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-4 flex items-center justify-center">
+            <Suspense
+              fallback={
+                <Skeleton className="h-12 w-full max-w-2xl rounded-lg" />
+              }
+            >
+              <BlogSearchFilter />
+            </Suspense>
+          </div>
+        </div>
+      </div>
 
+      {/* Category Filter */}
+      {/* <Suspense fallback={<div>Loading categories...</div>}>
+        <BlogCategoriesFilter />
+      </Suspense> */}
+
+      {/* Tag Filter */}
+      {/* <Suspense fallback={<div>Loading tags...</div>}>
+        <BlogTagsFilter />
+      </Suspense> */}
+
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-6 py-8">
+        <Suspense
+          fallback={
+            <div className="flex items-center justify-between mb-8">
+              <span className="text-muted-foreground">Loading...</span>
+            </div>
+          }
+        >
+          <BlogContent searchParams={searchParams} />
+        </Suspense>
+      </main>
+    </div>
+  );
+}
+
+async function BlogContent({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
   const { page, query, category, tags: tagParams } = await searchParams;
 
   const searchQuery = query as string;
@@ -44,90 +88,77 @@ export default async function BlogPage({
   const offset = (currentPage - 1) * limit;
 
   return (
-    <div className="min-h-screen ">
-      {/* Header with Search */}
-      <header className="bg-white border-b border-gray-200 px-6 py-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="mb-4 flex items-center justify-center">
-            <Suspense
-              fallback={
-                <Skeleton className="h-12 w-full max-w-2xl rounded-lg" />
-              }
-            >
-              <BlogSearchFilter />
-            </Suspense>
-            {/* <h1 className="text-3xl font-bold text-gray-900 mb-2">STORIES</h1> */}
-          </div>
-        </div>
-      </header>
-
-      {/* Category Filter */}
-      {/* {categories && categories.length > 0 && (
-        <Suspense fallback={<div>Loading categories...</div>}>
-          <BlogCategoryFilter
-            categories={categories.map((c) => ({
-              id: c.id,
-              name: c.name,
-              slug: c.slug,
-            }))}
-          />
-        </Suspense>
-      )} */}
-
-      {/* Tag Filter */}
-      {/* {tags && tags.length > 0 && (
-        <Suspense fallback={<div>Loading tags...</div>}>
-          <BlogTagFilter
-            tags={tags.map((t) => ({
-              id: t.id,
-              name: t.name,
-              slug: t.slug,
-            }))}
-          />
-        </Suspense>
-      )} */}
-
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-6 py-8">
-        <div className="flex items-center justify-between mb-8">
-          <Suspense
-            fallback={<span className="text-gray-500">Loading...</span>}
-          >
-            <BlogPostCount
-              categorySlug={categorySlug}
-              tagSlugs={selectedTags}
-              searchQuery={searchQuery || ""}
-            />
-          </Suspense>
-        </div>
-
+    <>
+      <div className="flex items-center justify-between mb-8">
         <Suspense
-          fallback={
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {Array.from({ length: 6 }).map((_, index) => (
-                <Card key={index} className="overflow-hidden">
-                  <Skeleton className="h-48 w-full" />
-                  <div className="p-4 space-y-3">
-                    <Skeleton className="h-6 w-32" />
-                    <Skeleton className="h-5 w-full" />
-                    <Skeleton className="h-4 w-full" />
-                    <Skeleton className="h-4 w-3/4" />
-                  </div>
-                </Card>
-              ))}
-            </div>
-          }
+          fallback={<span className="text-muted-foreground">Loading...</span>}
         >
-          <FetchAndDisplayBlogPosts
+          <BlogPostCount
             categorySlug={categorySlug}
             tagSlugs={selectedTags}
             searchQuery={searchQuery || ""}
-            limit={limit}
-            offset={offset}
           />
         </Suspense>
-      </main>
-    </div>
+      </div>
+
+      <Suspense
+        fallback={
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <Card key={index} className="overflow-hidden">
+                <Skeleton className="h-48 w-full" />
+                <div className="p-4 space-y-3">
+                  <Skeleton className="h-6 w-32" />
+                  <Skeleton className="h-5 w-full" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-3/4" />
+                </div>
+              </Card>
+            ))}
+          </div>
+        }
+      >
+        <FetchAndDisplayBlogPosts
+          categorySlug={categorySlug}
+          tagSlugs={selectedTags}
+          searchQuery={searchQuery || ""}
+          limit={limit}
+          offset={offset}
+        />
+      </Suspense>
+    </>
+  );
+}
+
+async function BlogCategoriesFilter() {
+  const categories = await getAllBlogCategories();
+
+  if (!categories || categories.length === 0) return null;
+
+  return (
+    <BlogCategoryFilter
+      categories={categories.map((c) => ({
+        id: c.id,
+        name: c.name,
+        slug: c.slug,
+      }))}
+    />
+  );
+}
+
+async function BlogTagsFilter() {
+  const tags = await getAllBlogTags();
+
+  if (!tags || tags.length === 0) return null;
+
+  return (
+    <BlogTagFilter
+      tags={tags.map((t) => ({
+        id: t.id,
+        name: t.name,
+        slug: t.slug,
+      }))}
+    />
   );
 }
 
@@ -149,7 +180,7 @@ async function BlogPostCount({
   );
 
   return (
-    <h2 className="text-2xl font-semibold text-gray-900">
+    <h2 className="text-2xl font-semibold text-foreground">
       {totalPosts} {totalPosts === 1 ? "Story" : "Stories"}
       {searchQuery && (
         <span className="text-lg font-normal text-muted-foreground ml-2">
@@ -185,7 +216,7 @@ async function FetchAndDisplayBlogPosts({
     return (
       <div className="text-center py-12">
         <div className="text-6xl mb-4">📝</div>
-        <h3 className="text-xl font-semibold text-gray-900 mb-2">
+        <h3 className="text-xl font-semibold text-foreground mb-2">
           No posts found
         </h3>
         <p className="text-muted-foreground">

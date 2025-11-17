@@ -58,7 +58,7 @@ const NewPasswordFormSection = () => {
       <div className="mt-4 text-center text-sm">
         <Link
           href="/login"
-          className="font-semibold text-gray-800 hover:underline dark:text-zinc-200"
+          className="font-semibold text-foreground hover:underline transition-colors"
         >
           Back to login
         </Link>

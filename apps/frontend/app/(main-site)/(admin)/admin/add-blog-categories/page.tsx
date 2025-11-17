@@ -1,24 +1,40 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import AddBlogCategoriesForm from "@/components/forms/add-blog-categories-form";
 import { getAllBlogCategories, requireAdmin } from "@/lib/queries";
 import AdminBlogCategoryCard from "@/components/admin-blog-category-card";
-import { ArrowLeft, FolderOpen } from "lucide-react";
+import { ArrowLeft, FolderOpen, Loader2 } from "lucide-react";
 
 export const metadata = {
   title: "Manage Blog Categories - Admin",
   description: "Add, edit, and manage blog categories for your blog posts",
 };
 
-const page = async () => {
+const page = () => {
+  return (
+    <div className="block-space big-container">
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="size-10 animate-spin" />
+          </div>
+        }
+      >
+        <BlogCategoriesContent />
+      </Suspense>
+    </div>
+  );
+};
+
+async function BlogCategoriesContent() {
   // This will redirect to login if not authenticated, or to dashboard if not admin
   await requireAdmin();
 
   const blogCategories = await getAllBlogCategories();
 
   return (
-    <div className="block-space big-container">
+    <>
       {/* Navigation */}
       <div className="mb-6">
         <Button asChild variant="outline" size="sm">
@@ -70,7 +86,7 @@ const page = async () => {
             ))}
           </div>
         ) : (
-          <div className="text-center py-12 px-4 border-2 border-dashed rounded-lg">
+          <div className="text-center py-12 px-4 border-2 border-dashed rounded-lg border-border">
             <FolderOpen className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
             <p className="text-muted-foreground mb-2">No blog categories yet</p>
             <p className="text-sm text-muted-foreground">
@@ -79,8 +95,8 @@ const page = async () => {
           </div>
         )}
       </div>
-    </div>
+    </>
   );
-};
+}
 
 export default page;

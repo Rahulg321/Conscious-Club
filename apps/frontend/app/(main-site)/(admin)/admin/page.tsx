@@ -8,26 +8,48 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import AdminBravoCard from "@/components/admin-bravo-card";
-import React from "react";
+import React, { Suspense } from "react";
+import { Loader2 } from "lucide-react";
 
 export const metadata = {
   title: "Admin",
   description: "Admin page",
 };
 
-export default async function AdminPage({
+export default function AdminPage({
   searchParams,
 }: {
-  searchParams: { category?: string | string[] };
+  searchParams: Promise<{ category?: string | string[] }>;
+}) {
+  return (
+    <div className="block-space big-container">
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="size-10 animate-spin" />
+          </div>
+        }
+      >
+        <AdminContent searchParams={searchParams} />
+      </Suspense>
+    </div>
+  );
+}
+
+async function AdminContent({
+  searchParams,
+}: {
+  searchParams: Promise<{ category?: string | string[] }>;
 }) {
   // This will redirect to login if not authenticated, or to dashboard if not admin
   const session = await requireAdmin();
-  const selectedCategory = searchParams?.category;
+  const params = await searchParams;
+  const selectedCategory = params?.category;
   const bravos = (await getAllBravos(selectedCategory)) ?? [];
   const categories = await getAllBravoCategories();
 
   return (
-    <div className="block-space big-container">
+    <>
       <div className="mb-4 flex flex-wrap items-center gap-2">
         <Button asChild>
           <Link href="/">Home</Link>
@@ -101,6 +123,6 @@ export default async function AdminPage({
           ))
         )}
       </div>
-    </div>
+    </>
   );
 }

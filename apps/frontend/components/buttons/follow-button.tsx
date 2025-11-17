@@ -26,6 +26,8 @@ export default function FollowButton({
   const handleFollowToggle = () => {
     startTransition(async () => {
       try {
+        console.log("clicked on follow action");
+
         const action = initialIsFollowing ? unfollowUser : followUser;
         const result = await action(userId);
 

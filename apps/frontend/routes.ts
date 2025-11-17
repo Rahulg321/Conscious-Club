@@ -1,19 +1,19 @@
-/**
- *
- *These are the routes that are used for authentication purposes
- *@type{string}
- */
-export const AUTH_ROUTES = [
+export const PUBLIC_ROUTES = [
+  "/",
   "/login",
-  "/signup",
-  "/auth/reset",
-  "/auth/error",
-  "/auth/new-password",
-  "/auth/verify-email",
-  "/auth/verify-email-token",
-  "/auth/verify-email-token-success",
-  "/auth/verify-email-token-expired",
-  "/auth/verify-email-token-expired-error",
+  "/cookie-policy",
+  "/error",
+  "/register",
+  "/reset-password",
+  "/new-password",
+  "/new-verification",
+  "/onboarding",
+  "/privacy-policy",
+  "/terms-of-service",
+  "/license",
+  "/terms-of-use",
+  "/creator-terms",
+
 ];
 
 /**
@@ -40,8 +40,3 @@ export const PROTECTED_BASE_ROUTES = ["/dashboard", "/admin"];
  */
 export const DEFAULT_LOGIN_REDIRECT = "/";
 export const FIRST_LOGIN_REDIRECT = "/onboarding";
-
-export const PUBLIC_ROUTES = ["/", "/new-password", "/new-verification"];
-
-// export const PUBLIC_ROUTES = [""];
-// export const PUBLIC_ROUTES = [""];

@@ -103,7 +103,7 @@ export function AppSidebar({ user, pinnedBravo }: AppSidebarProps) {
         "transition-all duration-300",
         isCollapsed ? "px-1 py-3" : "px-2 py-3"
       )}>
-        <SidebarNavLinks userId={user?.id ?? ""} />
+        <SidebarNavLinks  />
       </SidebarContent>
 
       <SidebarFooter className={cn(
@@ -193,7 +193,7 @@ export function AppSidebar({ user, pinnedBravo }: AppSidebarProps) {
           )}
         </div>
 
-        {user && <SidebarUserNav user={user} />}
+        {user && <SidebarUserNav  />}
       </SidebarFooter>
     </Sidebar>
   );

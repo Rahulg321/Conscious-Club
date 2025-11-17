@@ -58,7 +58,6 @@ export default function Header({}: {}) {
   return (
     <div className="w-full sticky top-0 z-50">
       <Navbar>
-        {/* Desktop Navigation */}
         <NavBody>
           <NavbarLogo />
           <NavItems items={navItems} />

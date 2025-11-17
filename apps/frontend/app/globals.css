@@ -750,3 +750,38 @@ ul {
     left: 100%;
   }
 }
+
+/* Sonner Toast - Ensure all text is black */
+[data-sonner-toast] {
+  --normal-bg: var(--popover);
+  --normal-border: var(--border);
+}
+
+[data-sonner-toast] [data-title],
+[data-sonner-toast] [data-description] {
+  color: black !important;
+}
+
+[data-sonner-toast] {
+  color: black !important;
+}
+
+[data-sonner-toast] * {
+  color: black !important;
+}
+
+[data-sonner-toast] [data-icon] {
+  color: black !important;
+}
+
+.sonner-toast[data-sonner-toast] [data-title],
+.sonner-toast[data-sonner-toast] [data-description] {
+  color: black !important;
+}
+
+/* Override any nested text elements */
+[data-sonner-toast] p,
+[data-sonner-toast] span,
+[data-sonner-toast] div {
+  color: black !important;
+}

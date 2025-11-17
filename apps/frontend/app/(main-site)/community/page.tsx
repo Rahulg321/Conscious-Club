@@ -23,7 +23,62 @@ export const metadata = {
   description: "Discover projects and people from the community",
 };
 
-export default async function CommunityPage({
+export default function CommunityPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  return (
+    <div className="min-h-svh bg-background">
+      <div className="bg-card border-b border-border px-6 py-4">
+        <div className="max-w-7xl mx-auto flex items-center gap-4 justify-between">
+          <Suspense fallback={<div>Loading.....</div>}>
+            <ProjectSearchFilterWrapper searchParams={searchParams} />
+          </Suspense>
+
+          <div className="flex items-center space-x-6">
+            <ProjectProfileTabs />
+          </div>
+        </div>
+      </div>
+
+      <Suspense fallback={<div>Loading...</div>}>
+        <ProjectTagsFilter />
+      </Suspense>
+
+      <Suspense
+        fallback={
+          <main className="max-w-7xl mx-auto px-6 block-space">
+            <div className="flex items-center justify-between mb-8">
+              <span className="text-muted-foreground">Loading...</span>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <ProjectCardSkeleton />
+              <ProjectCardSkeleton />
+              <ProjectCardSkeleton />
+            </div>
+          </main>
+        }
+      >
+        <CommunityContent searchParams={searchParams} />
+      </Suspense>
+      <ProjectSheet />
+    </div>
+  );
+}
+
+async function ProjectSearchFilterWrapper({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const params = await searchParams;
+  const type = params.type;
+  const showProfiles = type && type === "profiles" ? true : false;
+  return <ProjectSearchFilter showProfiles={showProfiles} />;
+}
+
+async function CommunityContent({
   searchParams,
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -32,6 +87,7 @@ export default async function CommunityPage({
 
   if (!userSession) redirect("/login");
   if (!userSession.user.onboardingCompleted) redirect("/onboarding");
+
   const {
     page,
     query,
@@ -68,112 +124,94 @@ export default async function CommunityPage({
   const offset = (currentPage - 1) * limit;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="border-b border-gray-200 px-6 py-4">
-        <div className="max-w-7xl mx-auto flex items-center gap-4 justify-between">
-          <Suspense fallback={<div>Loading.....</div>}>
-            <ProjectSearchFilter showProfiles={showProfiles} />
-          </Suspense>
-
-          <div className="flex items-center space-x-6">
-            <ProjectProfileTabs />
-          </div>
-        </div>
+    <main className="max-w-7xl mx-auto px-6 block-space">
+      <div className="flex items-center justify-between mb-8">
+        <Suspense
+          fallback={<span className="text-muted-foreground">Loading...</span>}
+        >
+          {showProfiles ? (
+            <ProfileCount personSearchQuery={projectSearchQuery || ""} />
+          ) : showMashups ? (
+            <MashupCount
+              projectSearchQuery={projectSearchQuery || ""}
+              dedicationFilters={dedicationFilters}
+            />
+          ) : (
+            <ProjectCount
+              tags={selectedTags}
+              projectSearchQuery={projectSearchQuery || ""}
+              dedicationFilters={dedicationFilters}
+            />
+          )}
+        </Suspense>
       </div>
 
-      <Suspense fallback={<div>Loading...</div>}>
-        <ProjectTagsFilter />
-      </Suspense>
-
-      <main className="max-w-7xl mx-auto px-6 block-space">
-        <div className="flex items-center justify-between mb-8">
-          <Suspense
-            fallback={<span className="text-gray-500">Loading...</span>}
-          >
-            {showProfiles ? (
-              <ProfileCount personSearchQuery={projectSearchQuery || ""} />
-            ) : showMashups ? (
-              <MashupCount
-                projectSearchQuery={projectSearchQuery || ""}
-                dedicationFilters={dedicationFilters}
-              />
-            ) : (
-              <ProjectCount
-                tags={selectedTags}
-                projectSearchQuery={projectSearchQuery || ""}
-                dedicationFilters={dedicationFilters}
-              />
-            )}
-          </Suspense>
-        </div>
-
-        {showProfiles ? (
-          <Suspense
-            fallback={
-              <div className="space-y-4 md:space-y-6">
-                <ProfileCardSkeleton />
-                <ProfileCardSkeleton />
-                <ProfileCardSkeleton />
-                <ProfileCardSkeleton />
-                <ProfileCardSkeleton />
-                <ProfileCardSkeleton />
-              </div>
-            }
-          >
-            <FetchAndDisplayUserProfiles
-              personSearchQuery={projectSearchQuery || ""}
-              limit={limit}
-              offset={offset}
-              userSession={userSession as Session}
-            />
-          </Suspense>
-        ) : showMashups ? (
-          <Suspense
-            fallback={
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <ProjectCardSkeleton />
-                <ProjectCardSkeleton />
-                <ProjectCardSkeleton />
-                <ProjectCardSkeleton />
-                <ProjectCardSkeleton />
-                <ProjectCardSkeleton />
-              </div>
-            }
-          >
-            <FetchAndDisplayMashupProjects
-              limit={limit}
-              offset={offset}
-              projectSearchQuery={projectSearchQuery || ""}
-              userId={userSession.user.id}
-              dedicationFilters={dedicationFilters}
-            />
-          </Suspense>
-        ) : (
-          <Suspense
-            fallback={
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <ProjectCardSkeleton />
-                <ProjectCardSkeleton />
-                <ProjectCardSkeleton />
-                <ProjectCardSkeleton />
-                <ProjectCardSkeleton />
-                <ProjectCardSkeleton />
-              </div>
-            }
-          >
-            <FetchAndDisplayProjects
-              tags={selectedTags}
-              limit={limit}
-              offset={offset}
-              projectSearchQuery={projectSearchQuery || ""}
-              userId={userSession.user.id}
-              dedicationFilters={dedicationFilters}
-            />
-          </Suspense>
-        )}
-        <ProjectSheet />
-      </main>
-    </div>
+      {showProfiles ? (
+        <Suspense
+          fallback={
+            <div className="space-y-4 md:space-y-6">
+              <ProfileCardSkeleton />
+              <ProfileCardSkeleton />
+              <ProfileCardSkeleton />
+              <ProfileCardSkeleton />
+              <ProfileCardSkeleton />
+              <ProfileCardSkeleton />
+            </div>
+          }
+        >
+          <FetchAndDisplayUserProfiles
+            personSearchQuery={projectSearchQuery || ""}
+            limit={limit}
+            offset={offset}
+            userSession={userSession as Session}
+          />
+        </Suspense>
+      ) : showMashups ? (
+        <Suspense
+          fallback={
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <ProjectCardSkeleton />
+              <ProjectCardSkeleton />
+              <ProjectCardSkeleton />
+              <ProjectCardSkeleton />
+              <ProjectCardSkeleton />
+              <ProjectCardSkeleton />
+            </div>
+          }
+        >
+          <FetchAndDisplayMashupProjects
+            limit={limit}
+            offset={offset}
+            projectSearchQuery={projectSearchQuery || ""}
+            userId={userSession.user.id}
+            dedicationFilters={dedicationFilters}
+          />
+        </Suspense>
+      ) : (
+        <Suspense
+          fallback={
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <ProjectCardSkeleton />
+              <ProjectCardSkeleton />
+              <ProjectCardSkeleton />
+              <ProjectCardSkeleton />
+              <ProjectCardSkeleton />
+              <ProjectCardSkeleton />
+            </div>
+          }
+        >
+          <FetchAndDisplayProjects
+            tags={selectedTags}
+            limit={limit}
+            offset={offset}
+            projectSearchQuery={projectSearchQuery || ""}
+            userId={userSession.user.id}
+            dedicationFilters={dedicationFilters}
+          />
+        </Suspense>
+      )}
+      <ProjectSheet />
+    </main>
   );
 }
 
@@ -201,7 +239,7 @@ async function ProjectCount({
   );
 
   return (
-    <span className="text-gray-500">
+    <span className="text-muted-foreground">
       {totalProjects} {totalProjects === 1 ? "creation" : "creations"}
     </span>
   );
@@ -215,7 +253,7 @@ async function ProfileCount({
   const { totalUsers } = await getFilteredUserProfiles(personSearchQuery, 0, 1);
 
   return (
-    <span className="text-gray-500">
+    <span className="text-muted-foreground">
       {totalUsers} {totalUsers === 1 ? "profile" : "profiles"}
     </span>
   );
@@ -242,7 +280,7 @@ async function MashupCount({
   );
 
   return (
-    <span className="text-gray-500">
+    <span className="text-muted-foreground">
       {totalMashups} {totalMashups === 1 ? "mashup" : "mashups"}
     </span>
   );

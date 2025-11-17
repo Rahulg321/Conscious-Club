@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
@@ -12,6 +12,7 @@ import {
   ExternalLink,
   Calendar,
   ArrowLeft,
+  Loader2,
 } from "lucide-react";
 import { isVideo } from "@/lib/utils";
 import {
@@ -37,22 +38,36 @@ export async function generateMetadata({ params }: PageProps) {
   };
 }
 
-async function ProjectPage({ params }: PageProps) {
+function ProjectPage({ params }: PageProps) {
+  return (
+    <div className="min-h-svh bg-background">
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center min-h-svh">
+            <Loader2 className="size-10 animate-spin" />
+          </div>
+        }
+      >
+        <ProjectContent params={params} />
+      </Suspense>
+    </div>
+  );
+}
+
+async function ProjectContent({ params }: PageProps) {
   const userSession = await auth();
 
   if (!userSession) {
     redirect("/login");
   }
 
-  if (userSession.user.id !== (await params).userId) {
+  const { userId, projectId } = await params;
+
+  if (userSession.user.id !== userId) {
     redirect("/");
   }
 
-  const { userId, projectId } = await params;
-
   const project = await getProjectByIdWithStats(projectId);
-
-  console.log(project);
 
   if (!project) {
     notFound();
@@ -69,18 +84,9 @@ async function ProjectPage({ params }: PageProps) {
     project.dedicatedToCause;
 
   return (
-    <div
-      className="min-h-screen"
-      style={{ background: "var(--color-background)" }}
-    >
+    <>
       {/* Header with navigation */}
-      <div
-        className="sticky top-0 z-10 border-b"
-        style={{
-          background: "var(--color-background)",
-          borderColor: "var(--color-border)",
-        }}
-      >
+      <div className="sticky top-0 z-10 border-b bg-background border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -90,14 +96,8 @@ async function ProjectPage({ params }: PageProps) {
                   Back to Profile
                 </Link>
               </Button>
-              <div
-                className="h-6 w-px"
-                style={{ background: "var(--color-border)" }}
-              />
-              <h1
-                className="text-xl font-semibold truncate"
-                style={{ color: "var(--color-foreground)" }}
-              >
+              <div className="h-6 w-px bg-border" />
+              <h1 className="text-xl font-semibold truncate text-foreground">
                 {project.name}
               </h1>
             </div>
@@ -127,13 +127,7 @@ async function ProjectPage({ params }: PageProps) {
                     const isMediaVideo = isVideo(mediaUrl);
                     return (
                       <CarouselItem key={index}>
-                        <div
-                          className="relative w-full aspect-video rounded-xl overflow-hidden border flex items-center justify-center"
-                          style={{
-                            background: "var(--color-white)",
-                            borderColor: "var(--color-border)",
-                          }}
-                        >
+                        <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-border bg-background flex items-center justify-center">
                           {isMediaVideo ? (
                             <video
                               src={mediaUrl}
@@ -163,20 +157,10 @@ async function ProjectPage({ params }: PageProps) {
               </Carousel>
             </div>
           ) : (
-            <div
-              className="relative w-full max-w-4xl mx-auto aspect-video rounded-xl overflow-hidden border flex items-center justify-center"
-              style={{
-                background: "var(--color-muted)",
-                borderColor: "var(--color-border)",
-                color: "var(--color-muted-foreground)",
-              }}
-            >
+            <div className="relative w-full max-w-4xl mx-auto aspect-video rounded-xl overflow-hidden border border-border bg-muted text-muted-foreground flex items-center justify-center">
               <div className="text-center">
                 <p className="text-lg font-medium">No media available</p>
-                <p
-                  className="text-sm mt-1"
-                  style={{ color: "var(--color-muted-foreground)" }}
-                >
+                <p className="text-sm mt-1 text-muted-foreground">
                   Upload some images or videos to showcase your project
                 </p>
               </div>
@@ -188,56 +172,29 @@ async function ProjectPage({ params }: PageProps) {
           {/* Main content */}
           <div className="xl:col-span-2 space-y-6">
             {/* Project info card */}
-            <div
-              className="rounded-xl border overflow-hidden"
-              style={{
-                background: "var(--color-card)",
-                borderColor: "var(--color-border)",
-              }}
-            >
+            <div className="rounded-xl border border-border bg-card overflow-hidden">
               <div className="p-6 md:p-8">
-                <h1
-                  className="text-3xl md:text-4xl font-bold mb-4 leading-tight"
-                  style={{ color: "var(--color-card-foreground)" }}
-                >
+                <h1 className="text-3xl md:text-4xl font-bold mb-4 leading-tight text-card-foreground">
                   {project.name}
                 </h1>
-                <p
-                  className="text-lg leading-relaxed"
-                  style={{ color: "var(--color-muted-foreground)" }}
-                >
+                <p className="text-lg leading-relaxed text-muted-foreground">
                   {project.description}
                 </p>
               </div>
             </div>
 
             {/* Project details card */}
-            <div
-              className="rounded-xl border overflow-hidden"
-              style={{
-                background: "var(--color-card)",
-                borderColor: "var(--color-border)",
-              }}
-            >
+            <div className="rounded-xl border border-border bg-card overflow-hidden">
               <div className="p-6 md:p-8">
-                <h2
-                  className="text-xl font-semibold mb-6 flex items-center gap-2"
-                  style={{ color: "var(--color-card-foreground)" }}
-                >
-                  <Calendar
-                    className="h-5 w-5"
-                    style={{ color: "var(--color-primary)" }}
-                  />
+                <h2 className="text-xl font-semibold mb-6 flex items-center gap-2 text-card-foreground">
+                  <Calendar className="h-5 w-5 text-primary" />
                   Project Details
                 </h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {project.link && (
                     <div className="space-y-2">
-                      <label
-                        className="text-sm font-medium uppercase tracking-wide"
-                        style={{ color: "var(--color-muted-foreground)" }}
-                      >
+                      <label className="text-sm font-medium uppercase tracking-wide text-muted-foreground">
                         Project Link
                       </label>
                       <div className="flex items-center gap-2">
@@ -245,8 +202,7 @@ async function ProjectPage({ params }: PageProps) {
                           href={project.link}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="underline break-all flex items-center gap-1"
-                          style={{ color: "var(--color-primary)" }}
+                          className="underline break-all flex items-center gap-1 text-primary"
                         >
                           <ExternalLink className="h-4 w-4 flex-shrink-0" />
                           {project.link}
@@ -256,16 +212,10 @@ async function ProjectPage({ params }: PageProps) {
                   )}
 
                   <div className="space-y-2">
-                    <label
-                      className="text-sm font-medium uppercase tracking-wide"
-                      style={{ color: "var(--color-muted-foreground)" }}
-                    >
+                    <label className="text-sm font-medium uppercase tracking-wide text-muted-foreground">
                       Created On
                     </label>
-                    <div
-                      className="font-medium"
-                      style={{ color: "var(--color-card-foreground)" }}
-                    >
+                    <div className="font-medium text-card-foreground">
                       {project.createdAt
                         ? new Date(
                             project.createdAt as unknown as string
@@ -280,44 +230,23 @@ async function ProjectPage({ params }: PageProps) {
                 </div>
 
                 {/* Stats section */}
-                <div
-                  className="mt-8 pt-6 border-t"
-                  style={{ borderColor: "var(--color-border)" }}
-                >
+                <div className="mt-8 pt-6 border-t border-border">
                   <div className="flex items-center gap-8">
                     <div className="flex items-center gap-2">
-                      <Heart
-                        className="h-5 w-5"
-                        style={{ color: "var(--color-destructive)" }}
-                      />
-                      <span
-                        className="font-semibold"
-                        style={{ color: "var(--color-card-foreground)" }}
-                      >
+                      <Heart className="h-5 w-5 text-destructive" />
+                      <span className="font-semibold text-card-foreground">
                         {project.likesCount || 0}
                       </span>
-                      <span
-                        className="text-sm"
-                        style={{ color: "var(--color-muted-foreground)" }}
-                      >
+                      <span className="text-sm text-muted-foreground">
                         {project.likesCount === 1 ? "like" : "likes"}
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <MessageCircle
-                        className="h-5 w-5"
-                        style={{ color: "var(--color-primary)" }}
-                      />
-                      <span
-                        className="font-semibold"
-                        style={{ color: "var(--color-card-foreground)" }}
-                      >
+                      <MessageCircle className="h-5 w-5 text-primary" />
+                      <span className="font-semibold text-card-foreground">
                         {project.commentsCount || 0}
                       </span>
-                      <span
-                        className="text-sm"
-                        style={{ color: "var(--color-muted-foreground)" }}
-                      >
+                      <span className="text-sm text-muted-foreground">
                         {project.commentsCount === 1 ? "comment" : "comments"}
                       </span>
                     </div>
@@ -328,108 +257,57 @@ async function ProjectPage({ params }: PageProps) {
 
             {/* Dedications Section */}
             {hasDedications && (
-              <div
-                className="rounded-xl border overflow-hidden"
-                style={{
-                  background: "var(--color-card)",
-                  borderColor: "var(--color-border)",
-                }}
-              >
+              <div className="rounded-xl border border-border bg-card overflow-hidden">
                 <div className="p-6 md:p-8">
                   <div className="flex items-center gap-3 mb-6">
-                    <div
-                      className="p-2 rounded-lg"
-                      style={{ background: "var(--color-muted)" }}
-                    >
-                      <Award
-                        className="h-6 w-6"
-                        style={{ color: "var(--color-primary)" }}
-                      />
+                    <div className="p-2 rounded-lg bg-muted">
+                      <Award className="h-6 w-6 text-primary" />
                     </div>
-                    <h2
-                      className="text-xl font-semibold"
-                      style={{ color: "var(--color-card-foreground)" }}
-                    >
+                    <h2 className="text-xl font-semibold text-card-foreground">
                       Dedications
                     </h2>
                   </div>
 
                   <div className="space-y-4">
                     {project.dedicatedToPerson && (
-                      <div
-                        className="rounded-lg p-4"
-                        style={{ background: "var(--color-muted)" }}
-                      >
-                        <span
-                          className="font-semibold"
-                          style={{ color: "var(--color-card-foreground)" }}
-                        >
+                      <div className="rounded-lg p-4 bg-muted">
+                        <span className="font-semibold text-card-foreground">
                           Dedicated to:{" "}
                         </span>
-                        <span
-                          style={{ color: "var(--color-muted-foreground)" }}
-                        >
+                        <span className="text-muted-foreground">
                           {project.dedicatedToPerson}
                         </span>
                       </div>
                     )}
 
                     {project.dedicatedToBrand && (
-                      <div
-                        className="rounded-lg p-4"
-                        style={{ background: "var(--color-muted)" }}
-                      >
-                        <span
-                          className="font-semibold"
-                          style={{ color: "var(--color-card-foreground)" }}
-                        >
+                      <div className="rounded-lg p-4 bg-muted">
+                        <span className="font-semibold text-card-foreground">
                           Brand:{" "}
                         </span>
-                        <span
-                          style={{ color: "var(--color-muted-foreground)" }}
-                        >
+                        <span className="text-muted-foreground">
                           {project.dedicatedToBrand}
                         </span>
                       </div>
                     )}
 
                     {project.dedicatedToCause && (
-                      <div
-                        className="rounded-lg p-4"
-                        style={{ background: "var(--color-muted)" }}
-                      >
-                        <span
-                          className="font-semibold"
-                          style={{ color: "var(--color-card-foreground)" }}
-                        >
+                      <div className="rounded-lg p-4 bg-muted">
+                        <span className="font-semibold text-card-foreground">
                           Cause:{" "}
                         </span>
-                        <span
-                          style={{ color: "var(--color-muted-foreground)" }}
-                        >
+                        <span className="text-muted-foreground">
                           {project.dedicatedToCause}
                         </span>
                       </div>
                     )}
 
                     {project.dedicationReason && (
-                      <div
-                        className="rounded-lg p-4 border-t"
-                        style={{
-                          background: "var(--color-muted)",
-                          borderColor: "var(--color-border)",
-                        }}
-                      >
-                        <span
-                          className="font-semibold block mb-2"
-                          style={{ color: "var(--color-card-foreground)" }}
-                        >
+                      <div className="rounded-lg p-4 border-t border-border bg-muted">
+                        <span className="font-semibold block mb-2 text-card-foreground">
                           Why this dedication:
                         </span>
-                        <p
-                          className="leading-relaxed"
-                          style={{ color: "var(--color-muted-foreground)" }}
-                        >
+                        <p className="leading-relaxed text-muted-foreground">
                           {project.dedicationReason}
                         </p>
                       </div>
@@ -443,18 +321,9 @@ async function ProjectPage({ params }: PageProps) {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Action buttons card */}
-            <div
-              className="rounded-xl border overflow-hidden"
-              style={{
-                background: "var(--color-card)",
-                borderColor: "var(--color-border)",
-              }}
-            >
+            <div className="rounded-xl border border-border bg-card overflow-hidden">
               <div className="p-6">
-                <h3
-                  className="text-lg font-semibold mb-4"
-                  style={{ color: "var(--color-card-foreground)" }}
-                >
+                <h3 className="text-lg font-semibold mb-4 text-card-foreground">
                   Actions
                 </h3>
                 <div className="space-y-3">
@@ -499,51 +368,27 @@ async function ProjectPage({ params }: PageProps) {
             </div>
 
             {/* Quick stats card */}
-            <div
-              className="rounded-xl border overflow-hidden"
-              style={{
-                background: "var(--color-card)",
-                borderColor: "var(--color-border)",
-              }}
-            >
+            <div className="rounded-xl border border-border bg-card overflow-hidden">
               <div className="p-6">
-                <h3
-                  className="text-lg font-semibold mb-4"
-                  style={{ color: "var(--color-card-foreground)" }}
-                >
+                <h3 className="text-lg font-semibold mb-4 text-card-foreground">
                   Quick Stats
                 </h3>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <span style={{ color: "var(--color-muted-foreground)" }}>
-                      Likes
-                    </span>
-                    <span
-                      className="font-semibold"
-                      style={{ color: "var(--color-card-foreground)" }}
-                    >
+                    <span className="text-muted-foreground">Likes</span>
+                    <span className="font-semibold text-card-foreground">
                       {project.likesCount || 0}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span style={{ color: "var(--color-muted-foreground)" }}>
-                      Comments
-                    </span>
-                    <span
-                      className="font-semibold"
-                      style={{ color: "var(--color-card-foreground)" }}
-                    >
+                    <span className="text-muted-foreground">Comments</span>
+                    <span className="font-semibold text-card-foreground">
                       {project.commentsCount || 0}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span style={{ color: "var(--color-muted-foreground)" }}>
-                      Media
-                    </span>
-                    <span
-                      className="font-semibold"
-                      style={{ color: "var(--color-card-foreground)" }}
-                    >
+                    <span className="text-muted-foreground">Media</span>
+                    <span className="font-semibold text-card-foreground">
                       {project.media?.length || 0}
                     </span>
                   </div>
@@ -553,7 +398,7 @@ async function ProjectPage({ params }: PageProps) {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

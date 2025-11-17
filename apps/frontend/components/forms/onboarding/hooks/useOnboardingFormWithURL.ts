@@ -1,8 +1,10 @@
-import { useState, useTransition, useEffect } from "react";
+import { useState, useTransition, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { OnboardingFormData } from "../types";
 import { toast } from "sonner";
+
+const STORAGE_KEY = "onboarding_form_data";
 
 const initialFormData: OnboardingFormData = {
   userRole: "creator",
@@ -27,16 +29,229 @@ const initialFormData: OnboardingFormData = {
   dedicationReason: "",
 };
 
+// Helper to serialize form data (excluding File objects)
+const serializeFormData = (data: OnboardingFormData): string => {
+  const serializable: Partial<Record<keyof OnboardingFormData, any>> = {};
+  
+  Object.keys(data).forEach((key) => {
+    const typedKey = key as keyof OnboardingFormData;
+    const value = data[typedKey];
+    
+    // Skip File objects and File arrays
+    if (value instanceof File) {
+      return; // Don't store File objects
+    }
+    if (Array.isArray(value) && value.length > 0 && value[0] instanceof File) {
+      return; // Don't store File arrays
+    }
+    
+    // Store everything else
+    serializable[typedKey] = value;
+  });
+  
+  return JSON.stringify(serializable);
+};
+
+// Helper to deserialize form data
+const deserializeFormData = (json: string | null): Partial<OnboardingFormData> => {
+  if (!json) return {};
+  
+  try {
+    const parsed = JSON.parse(json);
+    return parsed as Partial<OnboardingFormData>;
+  } catch (error) {
+    console.error("Failed to deserialize form data:", error);
+    return {};
+  }
+};
+
+// Helper to map backend field errors to step errors
+const mapBackendErrorsToSteps = (
+  fieldErrors: Array<{ path: (string | number)[]; message: string; code?: string }>,
+  formData: OnboardingFormData
+): Record<number, string[]> => {
+  const stepErrors: Record<number, string[]> = {};
+  
+  // Field to step mapping
+  const fieldToStepMap: Record<string, number> = {
+    name: 1,
+    gender: 1,
+    city: 1,
+    country: 1,
+    dateOfBirth: 1,
+    profilePicture: 1,
+    discipline: 2,
+    role: 2,
+    projectName: 3,
+    projectDescription: 3,
+    projectMedia: 3,
+    coverImage: 3,
+    projectLink: 3,
+    dedicatedToPerson: 3,
+    dedicatedToBrand: 3,
+    dedicatedToCause: 3,
+    dedicationReason: 3,
+  };
+  
+  fieldErrors.forEach((error) => {
+    // Get the first element of the path array (the field name)
+    // Handle nested paths like ["projectMedia", 0] -> "projectMedia"
+    const fieldPath = Array.isArray(error.path) && error.path.length > 0
+      ? String(error.path[0])
+      : "";
+    
+    if (!fieldPath) return;
+    
+    const step = fieldToStepMap[fieldPath];
+    
+    // If we can't map the field to a step, skip it
+    if (!step) return;
+    
+    if (!stepErrors[step]) {
+      stepErrors[step] = [];
+    }
+    
+    // Use the error message from backend, or create a user-friendly one
+    let errorMessage = error.message || "Invalid value";
+    
+    // Handle custom validation errors (like "all or nothing")
+    if (error.code === "custom" && error.message?.includes("If any project field is filled")) {
+      errorMessage = "If you start filling any project field, all required fields (cover image and title) must be completed";
+    } else {
+      // Map specific field errors to user-friendly messages
+      switch (fieldPath) {
+        case "name":
+          if (errorMessage.includes("at least 2") || errorMessage.includes("minimum")) {
+            errorMessage = "Name must be at least 2 characters";
+          } else if (errorMessage.includes("required") || errorMessage.includes("Required")) {
+            errorMessage = "Name is required";
+          }
+          break;
+        case "gender":
+          errorMessage = "Please select your gender";
+          break;
+        case "city":
+          if (errorMessage.includes("at least 2") || errorMessage.includes("minimum")) {
+            errorMessage = "City must be at least 2 characters";
+          } else if (errorMessage.includes("required") || errorMessage.includes("Required")) {
+            errorMessage = "City is required";
+          }
+          break;
+        case "country":
+          if (errorMessage.includes("at least 2") || errorMessage.includes("minimum")) {
+            errorMessage = "Country must be at least 2 characters";
+          } else if (errorMessage.includes("required") || errorMessage.includes("Required")) {
+            errorMessage = "Country is required";
+          }
+          break;
+        case "dateOfBirth":
+          if (errorMessage.includes("13 years") || errorMessage.includes("14 years")) {
+            errorMessage = "You must be at least 13 years old";
+          } else if (errorMessage.includes("required") || errorMessage.includes("Required")) {
+            errorMessage = "Date of birth is required";
+          }
+          break;
+        case "discipline":
+          errorMessage = "Discipline is required for creators";
+          break;
+        case "role":
+          errorMessage = "Role is required for creators";
+          break;
+        case "profilePicture":
+          if (errorMessage.includes("image") || errorMessage.includes("file")) {
+            errorMessage = "Profile picture must be a valid image file (JPEG, PNG, WebP)";
+          } else {
+            errorMessage = "Profile picture is required";
+          }
+          break;
+        case "projectName":
+          if (errorMessage.includes("at least 3") || errorMessage.includes("minimum")) {
+            errorMessage = "Project title must be at least 3 characters";
+          } else if (errorMessage.includes("required") || errorMessage.includes("Required")) {
+            errorMessage = "Project title is required";
+          }
+          break;
+        case "coverImage":
+          errorMessage = "Cover image is required when uploading a project";
+          break;
+        case "projectMedia":
+          if (errorMessage.includes("image") || errorMessage.includes("video") || errorMessage.includes("file")) {
+            errorMessage = "Project media files must be valid images or videos";
+          } else {
+            errorMessage = "Project media is required";
+          }
+          break;
+        case "projectDescription":
+          if (errorMessage.includes("at least 10") || errorMessage.includes("minimum")) {
+            errorMessage = "Project description must be at least 10 characters if provided";
+          }
+          break;
+      }
+    }
+    
+    // Avoid duplicate errors
+    if (!stepErrors[step].includes(errorMessage)) {
+      stepErrors[step].push(errorMessage);
+    }
+  });
+  
+  return stepErrors;
+};
+
 export const useOnboardingFormWithURL = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { data: session, update: updateSession } = useSession();
 
   const currentStep = parseInt(searchParams.get("step") || "1", 10);
-  const [formData, setFormData] = useState<OnboardingFormData>(initialFormData);
+  
+  // Load persisted form data on mount
+  const loadPersistedData = useCallback((): OnboardingFormData => {
+    if (typeof window === "undefined") return initialFormData;
+    
+    const persisted = localStorage.getItem(STORAGE_KEY);
+    if (!persisted) return initialFormData;
+    
+    const persistedData = deserializeFormData(persisted);
+    
+    // Merge with initial data, keeping File objects as null (can't persist them)
+    return {
+      ...initialFormData,
+      ...persistedData,
+      profilePicture: null, // Files can't be persisted
+      coverImage: null, // Files can't be persisted
+      projectMedia: [], // File arrays can't be persisted
+    };
+  }, []);
+  
+  const [formData, setFormData] = useState<OnboardingFormData>(loadPersistedData);
   const [isSubmitting, isSubmittingTransition] = useTransition();
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [stepErrors, setStepErrors] = useState<Record<number, string[]>>({});
+  
+  // Persist form data to localStorage whenever it changes (debounced)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    
+    const timeoutId = setTimeout(() => {
+      try {
+        const serialized = serializeFormData(formData);
+        localStorage.setItem(STORAGE_KEY, serialized);
+      } catch (error) {
+        console.error("Failed to persist form data:", error);
+      }
+    }, 300); // Debounce by 300ms
+    
+    return () => clearTimeout(timeoutId);
+  }, [formData]);
+  
+  // Load persisted data on mount
+  useEffect(() => {
+    const persisted = loadPersistedData();
+    if (persisted !== initialFormData) {
+      setFormData(persisted);
+    }
+  }, [loadPersistedData]);
 
   // Update URL when step changes
   const updateStep = (newStep: number) => {
@@ -336,6 +551,30 @@ export const useOnboardingFormWithURL = () => {
             "Failed to submit onboarding data";
           const errorCode = errorData?.code || "UNKNOWN_ERROR";
 
+          // Parse backend field errors and map them to steps
+          if (errorData?.fieldErrors && Array.isArray(errorData.fieldErrors)) {
+            const mappedStepErrors = mapBackendErrorsToSteps(
+              errorData.fieldErrors,
+              formData
+            );
+            
+            // Update step errors state
+            setStepErrors((prev) => ({
+              ...prev,
+              ...mappedStepErrors,
+            }));
+            
+            // Navigate to the first step with errors
+            const errorSteps = Object.keys(mappedStepErrors).map(Number).sort((a, b) => a - b);
+            if (errorSteps.length > 0) {
+              const firstErrorStep = errorSteps[0];
+              updateStep(firstErrorStep);
+              
+              // Scroll to top to show errors
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }
+          }
+
           throw new Error(
             `Server error (${response.status}): ${errorMessage} [${errorCode}]`
           );
@@ -344,6 +583,12 @@ export const useOnboardingFormWithURL = () => {
         const result = await response.json();
 
         console.log("Onboarding submitted successfully:", result);
+        
+        // Clear persisted form data on successful submission
+        if (typeof window !== "undefined") {
+          localStorage.removeItem(STORAGE_KEY);
+        }
+        
         toast.success("Successfully completed onboarding!", {
           description: "Redirecting to dashboard...",
           className: "bg-green-500 text-white",
@@ -429,6 +674,12 @@ export const useOnboardingFormWithURL = () => {
     setFormData(initialFormData);
     updateStep(1);
     setSubmitError(null);
+    setStepErrors({});
+    
+    // Clear persisted form data
+    if (typeof window !== "undefined") {
+      localStorage.removeItem(STORAGE_KEY);
+    }
   };
 
   return {

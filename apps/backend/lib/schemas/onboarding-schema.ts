@@ -100,18 +100,18 @@ export const onboardingSchema = z
     // Project data (optional for onboarding)
     projectName: z
       .string()
-      .min(3, "Project name must be at least 3 characters")
-      .max(100, "Project name must be less than 100 characters")
+      .min(3, "Name must be at least 3 characters")
+      .max(100, "Name must be less than 100 characters")
       .optional(),
     projectDescription: z
       .string()
-      .max(500, "Project description must be less than 500 characters")
+      .max(500, "Description must be less than 500 characters")
       .optional()
       .refine((val) => {
         // Allow undefined, empty string, or strings with at least 10 characters
         if (!val || val.trim().length === 0) return true;
         return val.trim().length >= 10;
-      }, "Project description must be at least 10 characters if provided"),
+      }, "Description must be at least 10 characters if provided"),
     projectLink: z
       .string()
       .optional()
@@ -130,19 +130,19 @@ export const onboardingSchema = z
 
     dedicatedToPerson: z
       .string()
-      .max(100, "Person name must be less than 100 characters")
+      .max(100, "Name must be less than 100 characters")
       .optional(),
     dedicatedToBrand: z
       .string()
-      .max(100, "Brand name must be less than 100 characters")
+      .max(100, "Name must be less than 100 characters")
       .optional(),
     dedicatedToCause: z
       .string()
-      .max(100, "Cause name must be less than 100 characters")
+      .max(100, "Name must be less than 100 characters")
       .optional(),
     dedicationReason: z
       .string()
-      .max(200, "Dedication reason must be less than 200 characters")
+      .max(200, "Reason must be less than 200 characters")
       .optional(),
   })
   .refine(
@@ -173,7 +173,7 @@ export const onboardingSchema = z
     },
     {
       message:
-        "If any project field is filled, cover image and project name (min 3 characters) are required",
+        "If any creation field is filled, cover image and name (min 3 characters) are required",
       path: ["projectName"], // Set error path to projectName for better UX
     }
   );

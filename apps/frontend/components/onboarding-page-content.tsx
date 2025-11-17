@@ -5,7 +5,7 @@ import { TestimonialPanel } from "@/components/testimonial-panel";
 
 export function OnboardingPageContent() {
   return (
-    <main className="h-screen grid grid-cols-1 md:grid-cols-2 overflow-hidden">
+    <main className="min-h-svh grid grid-cols-1 md:grid-cols-2 overflow-hidden bg-background">
       <section className="relative overflow-y-auto scrollbar-thin">
         <div className="min-h-full">
           <OnboardingForm />
