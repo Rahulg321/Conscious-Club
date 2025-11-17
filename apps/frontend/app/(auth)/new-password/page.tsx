@@ -1,12 +1,11 @@
 import { getPasswordResetTokenByToken } from "@/lib/queries";
 import Link from "next/link";
 import NewPasswordFormSection from "./new-password-form-section";
-import Image from "next/image";
-import CClogo from "@/public/cc-home-logo.png";
 import { TestimonialPanel } from "@/components/testimonial-panel";
 import { Metadata } from "next";
 import React, { Suspense } from "react";
 import { Button } from "@/components/ui/button";
+import { NavbarLogo } from "@/components/ui/navbar";
 
 export const metadata: Metadata = {
   title: "Set New Password | Conscious Club",
@@ -41,9 +40,7 @@ const ResetPasswordPage = async (props: Props) => {
           <PasswordResetContent searchParams={props.searchParams} />
         </Suspense>
         <div className="absolute left-4 top-4 md:left-8 md:top-8">
-          <Link href="/">
-            <Image src={CClogo} alt="ConsciousClub Logo" />
-          </Link>
+          <NavbarLogo />
         </div>
       </section>
 

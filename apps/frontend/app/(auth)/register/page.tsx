@@ -3,11 +3,9 @@ import { RegisterForm } from "@/components/forms/register-form";
 import { ProviderButtons } from "@/components/provider-buttons";
 import { TestimonialPanel } from "@/components/testimonial-panel";
 import { redirect } from "next/navigation";
-import Link from "next/link";
-import Image from "next/image";
-import CClogo from "@/public/cc-home-logo.png";
 import { Metadata } from "next";
 import React, { Suspense } from "react";
+import { NavbarLogo } from "@/components/ui/navbar";
 
 export const metadata: Metadata = {
   title: "Sign Up | Conscious Club",
@@ -43,9 +41,7 @@ export default async function RegisterPage() {
           <RegisterAuthCheck />
         </Suspense>
         <div className="absolute left-4 top-4 md:left-8 md:top-8">
-          <Link href="/">
-            <Image src={CClogo} alt="ConsciousClub Logo" />
-          </Link>
+          <NavbarLogo />
         </div>
 
         <div className="w-full max-w-md px-4 py-12 md:px-8">

@@ -9,9 +9,8 @@ import {
   Link as LinkIcon,
   Settings,
 } from "lucide-react";
-import Image from "next/image";
-import CClogo from "@/public/cc-home-logo.png";
 import { TestimonialPanel } from "@/components/testimonial-panel";
+import { NavbarLogo } from "@/components/ui/navbar";
 
 import { Metadata } from "next";
 
@@ -140,9 +139,7 @@ const ErrorPage = async ({ searchParams }: Props) => {
           <ErrorContent searchParams={searchParams} />
         </Suspense>
         <div className="absolute left-4 top-4 md:left-8 md:top-8">
-          <Link href="/">
-            <Image src={CClogo} alt="ConsciousClub Logo" />
-          </Link>
+          <NavbarLogo />
         </div>
       </section>
 
