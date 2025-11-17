@@ -1,5 +1,10 @@
 import { Metadata } from "next";
 import ResetPasswordClient from "./reset-password-client";
+import { TestimonialPanel } from "@/components/testimonial-panel";
+import Link from "next/link";
+import Image from "next/image";
+import CClogo from "@/public/cc-home-logo.png";
+import React, { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Reset Password | Conscious Club",
@@ -21,5 +26,22 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <ResetPasswordClient />;
+  return (
+    <main className="min-h-svh grid grid-cols-1 md:grid-cols-2">
+      <section className="relative flex items-center justify-center bg-background">
+        <Suspense fallback={<div>Loading...</div>}>
+          <ResetPasswordClient />
+        </Suspense>
+        <div className="absolute left-4 top-4 md:left-8 md:top-8">
+          <Link href="/">
+            <Image src={CClogo} alt="ConsciousClub Logo" />
+          </Link>
+        </div>
+      </section>
+
+      <aside className="hidden md:block">
+        <TestimonialPanel />
+      </aside>
+    </main>
+  );
 }

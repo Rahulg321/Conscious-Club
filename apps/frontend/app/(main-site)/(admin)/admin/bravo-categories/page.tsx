@@ -1,19 +1,36 @@
 import { getAllBravoCategories, requireAdmin } from "@/lib/queries";
-import React from "react";
+import React, { Suspense } from "react";
 import AdminBravoCategoryCard from "@/components/admin-bravo-category-card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { Loader2 } from "lucide-react";
 
 export const metadata = {
   title: "Bravo Categories",
   description: "Bravo Categories page",
 };
 
-const page = async () => {
+const page = () => {
+  return (
+    <div className="block-space big-container">
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="size-10 animate-spin" />
+          </div>
+        }
+      >
+        <BravoCategoriesContent />
+      </Suspense>
+    </div>
+  );
+};
+
+async function BravoCategoriesContent() {
   await requireAdmin();
   const categories = await getAllBravoCategories();
   return (
-    <div className="block-space big-container">
+    <>
       <div>
         <Button asChild>
           <Link href="/admin">Admin page</Link>
@@ -41,8 +58,8 @@ const page = async () => {
           ))
         )}
       </div>
-    </div>
+    </>
   );
-};
+}
 
 export default page;

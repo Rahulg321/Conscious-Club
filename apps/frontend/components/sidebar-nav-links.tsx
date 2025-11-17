@@ -10,6 +10,8 @@ import {
 } from "@/components/ui/sidebar";
 import { User, Trophy, Sparkles } from "lucide-react";
 import { FaCompass, FaHeart } from "react-icons/fa";
+import { FaHeadphones } from "react-icons/fa";
+import { useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
 
 type NavLink = {
@@ -22,7 +24,10 @@ type NavLink = {
   iconColor: string;
 };
 
-export function SidebarNavLinks({ userId }: { userId: string }) {
+export function SidebarNavLinks() {
+  const { data: userSession } = useSession();
+  const userId = userSession?.user.id ?? "";
+
   const pathname = usePathname();
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";

@@ -1,10 +1,10 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { auth } from "@/auth";
 import { redirect, notFound } from "next/navigation";
 import { getProjectByIdWithStats } from "@/lib/queries";
 import ProjectEditForm from "@/components/forms/project-edit-form";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import Link from "next/link";
 
 interface PageProps {
@@ -22,7 +22,23 @@ export async function generateMetadata({ params }: PageProps) {
   };
 }
 
-async function EditProjectPage({ params }: PageProps) {
+function EditProjectPage({ params }: PageProps) {
+  return (
+    <div className="px-4 md:px-8 py-6 max-w-2xl mx-auto">
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="size-10 animate-spin" />
+          </div>
+        }
+      >
+        <EditProjectContent params={params} />
+      </Suspense>
+    </div>
+  );
+}
+
+async function EditProjectContent({ params }: PageProps) {
   const userSession = await auth();
 
   if (!userSession) {
@@ -46,7 +62,7 @@ async function EditProjectPage({ params }: PageProps) {
   }
 
   return (
-    <div className="px-4 md:px-8 py-6 max-w-2xl mx-auto">
+    <>
       <div className="mb-6">
         <div className="flex items-center gap-4 mb-4">
           <Button variant="outline" size="sm" asChild>
@@ -56,16 +72,16 @@ async function EditProjectPage({ params }: PageProps) {
             </Link>
           </Button>
         </div>
-        <h1 className="text-2xl font-bold text-gray-900">Edit Project</h1>
-        <p className="text-gray-600 mt-1">
+        <h1 className="text-2xl font-bold text-foreground">Edit Project</h1>
+        <p className="text-muted-foreground mt-1">
           Update your project details and media
         </p>
       </div>
 
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
+      <div className="bg-card rounded-lg border border-border p-6">
         <ProjectEditForm project={project} userSession={userSession} />
       </div>
-    </div>
+    </>
   );
 }
 

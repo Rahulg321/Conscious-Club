@@ -2,7 +2,6 @@
 
 import { ChevronUp, LoaderIcon, LogOut, User as UserIcon } from "lucide-react";
 import Image from "next/image";
-import type { User } from "next-auth";
 import { signOut, useSession } from "next-auth/react";
 import {
   DropdownMenu,
@@ -21,9 +20,11 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
-export function SidebarUserNav({ user }: { user: User }) {
+export function SidebarUserNav() {
   const router = useRouter();
-  const { status } = useSession();
+
+  const { status, data: userSession } = useSession();
+  const user = userSession?.user;
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
 
@@ -49,7 +50,7 @@ export function SidebarUserNav({ user }: { user: User }) {
             ) : (
               <SidebarMenuButton
                 data-testid="user-nav-button"
-                tooltip={isCollapsed ? user.name || user.email : undefined}
+                tooltip={user != undefined && isCollapsed ? user.name || user.email : ''}
                 className={cn(
                   "data-[state=open]:bg-gradient-to-br data-[state=open]:from-purple-50 data-[state=open]:to-pink-50",
                   "bg-white hover:bg-gray-50",
@@ -65,8 +66,8 @@ export function SidebarUserNav({ user }: { user: User }) {
                 <div className="relative">
                   <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full blur-sm opacity-0 group-hover/user:opacity-30 transition-opacity duration-300" />
                   <Image
-                    src={user.image ?? `https://avatar.vercel.sh/${user.email}`}
-                    alt={user.email ?? "User Avatar"}
+                    src={user != undefined ? user.image ?? `https://avatar.vercel.sh/${user.email}`: ''}
+                    alt={user != undefined ? user.email ?? "User Avatar" :"'"}
                     width={32}
                     height={32}
                     className="rounded-full ring-2 ring-white group-hover/user:ring-purple-200 transition-all duration-300 relative z-10"
@@ -108,8 +109,8 @@ export function SidebarUserNav({ user }: { user: User }) {
             <div className="px-3 py-3 mb-2 border-b border-gray-100">
               <div className="flex items-center gap-3">
                 <Image
-                  src={user.image ?? `https://avatar.vercel.sh/${user.email}`}
-                  alt={user.email ?? "User Avatar"}
+                  src={user != undefined ? user.image ?? `https://avatar.vercel.sh/${user.email}` :''}
+                  alt={user != undefined ? user.email ?? "User Avatar" : ''}
                   width={40}
                   height={40}
                   className="rounded-full ring-2 ring-gray-100"
@@ -128,7 +129,9 @@ export function SidebarUserNav({ user }: { user: User }) {
             <DropdownMenuItem
               className="cursor-pointer rounded-lg px-3 py-2.5 hover:bg-gradient-to-br hover:from-purple-50 hover:to-pink-50 transition-all duration-200 group/item"
               onSelect={() => {
-                router.push(`/profile/${user.id}`);
+                if (user != undefined ? user.id :'') {
+                  router.push(user != undefined?`/profile/${user.id}`:'');
+                }
               }}
             >
               <UserIcon className="w-4 h-4 mr-3 text-gray-500 group-hover/item:text-purple-600 transition-colors" />
@@ -160,7 +163,7 @@ export function SidebarUserNav({ user }: { user: User }) {
               >
                 <LogOut className="w-4 h-4 mr-3 text-gray-500 group-hover/logout:text-red-600 transition-colors" />
                 <span className="font-medium group-hover/logout:text-red-600 transition-colors">
-                  {user.email ? "Logout" : "Login to your account"}
+                  {user != undefined && user.email ? "Logout" : "Login to your account"}
                 </span>
               </button>
             </DropdownMenuItem>
