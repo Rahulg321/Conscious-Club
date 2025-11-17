@@ -1,6 +1,12 @@
 import { Redis } from "ioredis";
 
-export const redisClient = new Redis(process.env.REDIS_URL as string);
+// Validate REDIS_URL environment variable
+if (!process.env.REDIS_URL) {
+  console.error("❌ [REDIS] REDIS_URL environment variable is not set");
+  throw new Error("REDIS_URL environment variable is required for rate limiting");
+}
+
+export const redisClient = new Redis(process.env.REDIS_URL);
 
 export async function rateLimit(
   keyBase: string,

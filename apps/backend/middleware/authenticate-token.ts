@@ -11,9 +11,15 @@ const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
     return;
   }
 
+  // Validate Bearer token format
+  if (!authHeader.startsWith("Bearer ") || authHeader.split(" ").length !== 2) {
+    res.status(401).json({ message: "Invalid authorization header format. Expected 'Bearer <token>'" });
+    return;
+  }
+
   const token = authHeader.split(" ")[1];
 
-  if (!token) {
+  if (!token || token.trim() === "") {
     res.status(401).json({ message: "Authorization token is missing" });
     return;
   }

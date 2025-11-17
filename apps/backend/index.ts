@@ -7,6 +7,30 @@ import onboardingRouter from "@/routes/onboarding";
 import testRateLimitRouter from "@/routes/test-rate-limit";
 import submitChallengeEntryRouter from "@/routes/submit-challenge-entry";
 
+// Validate required environment variables on startup
+const requiredEnvVars = [
+  "AUTH_SECRET",
+  "GCLOUD_PROJECT_ID",
+  "GCLOUD_BUCKET",
+  "GCS_CLIENT_EMAIL",
+  "GCS_PRIVATE_KEY",
+];
+
+const missingEnvVars = requiredEnvVars.filter(
+  (varName) => !process.env[varName]
+);
+
+if (missingEnvVars.length > 0) {
+  console.error("❌ [STARTUP] Missing required environment variables:");
+  missingEnvVars.forEach((varName) => {
+    console.error(`   - ${varName}`);
+  });
+  console.error("\nPlease set these environment variables before starting the server.");
+  process.exit(1);
+}
+
+console.log("✅ [STARTUP] All required environment variables are set");
+
 const app = express();
 
 // Trust proxy for accurate IP addresses (important for rate limiting)

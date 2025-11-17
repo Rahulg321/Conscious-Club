@@ -130,7 +130,7 @@ export default function Header({}: {}) {
                   containerClassName="rounded-full h-12 w-24 cursor-pointer font-bold text-purple-900"
                   highlightColor="#D0FFF9"
                   onClick={() => {
-                    router.push("/login");
+                    router.push("/register");
                   }}
                 >
                   Sign Up
@@ -233,7 +233,7 @@ export default function Header({}: {}) {
                   </NavbarButton>
                   <NavbarButton
                     onClick={() => {
-                      router.push("/login");
+                      router.push("/register");
                       setIsMobileMenuOpen(false);
                     }}
                     variant="secondary"
