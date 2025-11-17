@@ -4,6 +4,7 @@ import { db } from "@repo/db";
 import { project, user as userTable } from "@repo/db/schema";
 import { uploadFile } from "@/lib/cloud-storage";
 import { projectUploadSchema } from "@/lib/schemas/project-upload-schema";
+import { sanitizeProjectData } from "@/lib/sanitize";
 import authenticateToken from "@/middleware/authenticate-token";
 import { uploadProjectRateLimit } from "@/middleware/rate-limit-upload";
 import { eq } from "drizzle-orm";
@@ -48,7 +49,8 @@ router.post(
         });
       }
 
-      // Extract form data
+      // Extract and sanitize form data
+      const sanitizedData = sanitizeProjectData(req.body);
       const {
         projectName,
         projectDescription,
@@ -57,7 +59,7 @@ router.post(
         dedicatedToBrand,
         dedicatedToCause,
         dedicationReason,
-      } = req.body;
+      } = sanitizedData;
 
       console.log("📝 [UPLOAD-PROJECT] Form data received:", {
         projectName,

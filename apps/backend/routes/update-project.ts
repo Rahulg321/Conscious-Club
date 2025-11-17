@@ -4,6 +4,7 @@ import { db } from "@repo/db";
 import { project } from "@repo/db/schema";
 import { uploadFile } from "@/lib/cloud-storage";
 import { projectUploadSchema } from "@/lib/schemas/project-upload-schema";
+import { sanitizeProjectData } from "@/lib/sanitize";
 import authenticateToken from "@/middleware/authenticate-token";
 import { updateProjectRateLimit } from "@/middleware/rate-limit-update-project";
 import { eq, and } from "drizzle-orm";
@@ -149,7 +150,8 @@ router.put(
         });
       }
 
-      // Extract form data
+      // Extract and sanitize form data
+      const sanitizedData = sanitizeProjectData(req.body);
       const {
         projectName,
         projectDescription,
@@ -158,7 +160,7 @@ router.put(
         dedicatedToBrand,
         dedicatedToCause,
         dedicationReason,
-      } = req.body;
+      } = sanitizedData;
 
       const files = req.files as {
         coverImage?: Express.Multer.File[];
@@ -260,7 +262,7 @@ router.put(
       }
 
       // Handle media files - upload all files
-      let mediaUrls: string[] = [];
+      let mediaUrls: string[] | undefined = undefined;
 
       if (validatedData.data.media && validatedData.data.media.length > 0) {
         try {
@@ -276,7 +278,16 @@ router.put(
           });
 
           const urls = await Promise.all(uploadPromises);
-          mediaUrls = urls.filter((url): url is string => url !== null);
+          const uploadedUrls = urls.filter((url): url is string => url !== null);
+
+          if (uploadedUrls.length === 0) {
+            return res.status(500).json({
+              error: "Failed to upload media files to cloud storage",
+              code: "MEDIA_UPLOAD_FAILED",
+            });
+          }
+
+          mediaUrls = uploadedUrls;
 
           console.log(
             `Successfully uploaded ${mediaUrls.length} files:`,
@@ -291,21 +302,13 @@ router.put(
         }
       }
 
-      // Validate that we have at least one media file
-      if (mediaUrls.length === 0) {
-        return res.status(400).json({
-          error: "At least one media file is required",
-          code: "NO_MEDIA_FILES",
-        });
-      }
-
       // Update project in database
       const projectData: {
         name: string;
         link: string | null;
         description: string;
         coverImage?: string;
-        media: string[];
+        media?: string[];
         dedicatedToPerson: string | null;
         dedicatedToBrand: string | null;
         dedicatedToCause: string | null;
@@ -315,7 +318,6 @@ router.put(
         name: validatedData.data.projectName,
         link: validatedData.data.projectLink || null,
         description: validatedData.data.projectDescription,
-        media: mediaUrls,
         dedicatedToPerson: validatedData.data.dedicatedToPerson || null,
         dedicatedToBrand: validatedData.data.dedicatedToBrand || null,
         dedicatedToCause: validatedData.data.dedicatedToCause || null,
@@ -326,6 +328,11 @@ router.put(
       // Only update coverImage if a new one was provided
       if (coverImageUrl) {
         projectData.coverImage = coverImageUrl;
+      }
+
+      // Only update media if new files were uploaded
+      if (mediaUrls) {
+        projectData.media = mediaUrls;
       }
 
       const [updatedProject] = await db
