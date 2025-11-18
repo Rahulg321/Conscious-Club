@@ -80,7 +80,7 @@ export const sendContactFormEmail = async (
 ) => {
   const { data, error } = await resend.emails.send({
     from: "Conscious Club <Contact@consciousclubb.com>",
-    to: ["rg5353070@gmail.com", "info@ravisi.ms", "manavi@ravisi.ms"],
+    to: ["info@ravisi.ms", "manavi@ravisi.ms"],
     replyTo: email,
     subject: `Contact Inquiry by ${firstName} ${lastName} from Conscious Club`,
     react: ContactMessageEmail({
