@@ -12,6 +12,8 @@ import BlogCard from "@/components/blog-card";
 import ProjectPagination from "@/components/project-pagination";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card } from "@/components/ui/card";
+import ComingSoonGif from "@/public/coming-soon.gif";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Blog - Conscious Club",
@@ -25,8 +27,18 @@ export default async function BlogPage({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   return (
-    <div className="min-h-svh bg-background">
-      <div className="bg-card border-b border-border px-6 py-6">
+    <div className="min-h-svh bg-background flex flex-col items-center justify-center py-16">
+      <div className="flex flex-col items-center justify-center">
+        <Image
+          src={ComingSoonGif}
+          alt="Stay Tuned"
+          className="mb-6 rounded-xl shadow-lg"
+        />
+        <h2 className="text-2xl font-bold mb-2 text-foreground">
+          December 2025
+        </h2>
+      </div>
+      {/* <div className="bg-card border-b border-border px-6 py-6">
         <div className="max-w-7xl mx-auto">
           <div className="mb-4 flex items-center justify-center">
             <Suspense
@@ -38,7 +50,7 @@ export default async function BlogPage({
             </Suspense>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Category Filter */}
       {/* <Suspense fallback={<div>Loading categories...</div>}>
@@ -51,7 +63,7 @@ export default async function BlogPage({
       </Suspense> */}
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-6 py-8">
+      {/* <main className="max-w-7xl mx-auto px-6 py-8">
         <Suspense
           fallback={
             <div className="flex items-center justify-between mb-8">
@@ -61,7 +73,7 @@ export default async function BlogPage({
         >
           <BlogContent searchParams={searchParams} />
         </Suspense>
-      </main>
+      </main> */}
     </div>
   );
 }

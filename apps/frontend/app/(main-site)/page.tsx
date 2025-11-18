@@ -7,6 +7,7 @@ import HeroSection from "@/components/sections/hero-section";
 // import SplashCursor from "@/components/ui/splash-cursor";
 import AheadSection from "@/components/sections/ahead-section";
 import SlideshowSection from "@/components/sections/slideshow-section";
+import ComingSoonSection from "@/components/sections/coming-soon-section";
 
 export const metadata: Metadata = {
   title: "ConsciousClubb — Create, Explore, Earn Bravos",
@@ -24,6 +25,7 @@ const HomePage = async () => {
       <AheadSection />
       <FAQSection />
       <SlideshowSection />
+      <ComingSoonSection />
     </div>
   );
 };

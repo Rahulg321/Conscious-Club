@@ -17,7 +17,7 @@ const ExplorersSections = async () => {
         eyebrow="Who is this for?"
         title="Creators"
         image={{
-          src: "creatorIMG_LP.png",
+          src: "CREATOR.png",
           alt: "Explorers app interface with person using phone",
         }}
         features={[
