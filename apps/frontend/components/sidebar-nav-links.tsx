@@ -36,7 +36,7 @@ export function SidebarNavLinks() {
     {
       label: "Profile",
       href: `/profile/${userId}`,
-      icon: <User className="w-5 h-5" />,
+      icon: <User className="w-4 h-4" />,
       activeGradient: "from-pink-500/10 to-rose-500/10",
       activeBg: "bg-gradient-to-br from-pink-50 to-rose-50",
       activeText: "text-pink-700",
@@ -45,7 +45,7 @@ export function SidebarNavLinks() {
     //  {
     //   label: "Creative",
     //   href: `/creative`,
-    //   icon: <User className="w-5 h-5" />,
+    //   icon: <User className="w-4 h-4" />,
     //   activeGradient: "from-pink-500/10 to-rose-500/10",
     //   activeBg: "bg-gradient-to-br from-pink-50 to-rose-50",
     //   activeText: "text-pink-700",
@@ -54,7 +54,7 @@ export function SidebarNavLinks() {
     {
       label: "Discover",
       href: "/discover",
-      icon: <FaCompass className="w-5 h-5" />,
+      icon: <FaCompass className="w-4 h-4" />,
       activeGradient: "from-yellow-500/10 to-orange-500/10",
       activeBg: "bg-gradient-to-br from-yellow-50 to-orange-50",
       activeText: "text-yellow-700",
@@ -63,7 +63,7 @@ export function SidebarNavLinks() {
     {
       label: "Bravos",
       href: "/bravos",
-      icon: <FaHeart className="w-5 h-5" />,
+      icon: <FaHeart className="w-4 h-4" />,
       activeGradient: "from-red-500/10 to-pink-500/10",
       activeBg: "bg-gradient-to-br from-red-50 to-pink-50",
       activeText: "text-red-700",
@@ -72,7 +72,7 @@ export function SidebarNavLinks() {
     {
       label: "BravoPlay",
       href: "/challenges",
-      icon: <Trophy className="w-5 h-5" />,
+      icon: <Trophy className="w-4 h-4" />,
       activeGradient: "from-amber-500/10 to-yellow-500/10",
       activeBg: "bg-gradient-to-br from-amber-50 to-yellow-50",
       activeText: "text-amber-700",
@@ -124,7 +124,7 @@ export function SidebarNavLinks() {
                 {/* Label with smooth fade */}
                 <span
                   className={cn(
-                    "relative z-10 font-medium transition-all duration-300",
+                    "relative z-10 font-medium text-xs transition-all duration-300",
                     isCollapsed && "opacity-0 w-0",
                     !isCollapsed && "opacity-100"
                   )}

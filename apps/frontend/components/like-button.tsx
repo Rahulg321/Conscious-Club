@@ -11,6 +11,7 @@ interface LikeButtonProps {
   initialLikeCount: number;
   initialIsLiked: boolean;
   onLikeToggle?: (projectId: string, isLiked: boolean) => void;
+  hideCount?: boolean;
 }
 
 export default function LikeButton({
@@ -18,6 +19,7 @@ export default function LikeButton({
   initialLikeCount,
   initialIsLiked,
   onLikeToggle,
+  hideCount = false,
 }: LikeButtonProps) {
   const [isLiked, setIsLiked] = useState(initialIsLiked);
   const [likeCount, setLikeCount] = useState(initialLikeCount);
@@ -85,7 +87,7 @@ export default function LikeButton({
     return (
       <div className="flex items-center gap-1">
         <Heart className="h-4 w-4 text-gray-300" />
-        {likeCount > 0 && (
+        {!hideCount && likeCount > 0 && (
           <span className="text-[10px] font-semibold text-muted-foreground">
             {likeCount}
           </span>
@@ -110,7 +112,7 @@ export default function LikeButton({
           }`}
         />
       </button>
-      {likeCount > 0 && (
+      {!hideCount && likeCount > 0 && (
         <span className="text-[10px] font-semibold text-foreground">
           {likeCount}
         </span>

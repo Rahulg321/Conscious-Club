@@ -83,17 +83,16 @@ export function AppSidebar({ user, pinnedBravo }: AppSidebarProps) {
           "flex items-center transition-all duration-300",
           isCollapsed ? "justify-center" : "justify-center"
         )}>
-          <Link className="cursor-pointer group" href="/">
+          <Link className="cursor-pointer" href="/">
             <div className="relative">
               <Image
                 src={CCLogo}
                 alt="ConsciousClub Logo"
                 className={cn(
-                  "transition-all duration-300 group-hover:scale-110 group-hover:rotate-6",
+                  "transition-all duration-300",
                   isCollapsed ? "size-9" : "size-11"
                 )}
               />
-              <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/0 to-pink-500/0 group-hover:from-purple-500/10 group-hover:to-pink-500/10 rounded-full transition-all duration-300" />
             </div>
           </Link>
         </div>

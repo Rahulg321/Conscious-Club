@@ -198,7 +198,7 @@ export default function DiscoverProjectCard({
 
       {/* Image Section - Full width like Instagram */}
       <div
-        className="aspect-square bg-muted overflow-hidden relative cursor-pointer"
+        className="aspect-[3/2] bg-muted overflow-hidden relative cursor-pointer"
         onClick={openProject}
       >
         <Image
@@ -211,23 +211,26 @@ export default function DiscoverProjectCard({
 
       {/* Actions Section - Instagram style */}
       <div className="px-2 pt-1.5 pb-1">
-        <div className="flex items-center justify-between mb-1.5" onClick={onLikeButtonClick}>
-          <LikeButton
-            projectId={projectId}
-            initialLikeCount={likeCount}
-            initialIsLiked={isLiked}
-          />
-        </div>
-
-        {/* Content Section */}
-        <div className="space-y-0.5 cursor-pointer" onClick={openProject}>
-          <h4 className="font-semibold text-foreground text-[11px] line-clamp-1">
+        {/* Title on left, like count and button on right */}
+        <div className="flex items-center justify-between gap-2 mb-1">
+          <h4 className="font-semibold text-foreground text-[11px] line-clamp-1 flex-1 cursor-pointer" onClick={openProject}>
             {projectName}
           </h4>
-          <p className="text-[10px] text-muted-foreground line-clamp-2 leading-snug">
-            {projectDescription}
-          </p>
+          <div className="flex items-center gap-1" onClick={onLikeButtonClick}>
+            <span className="text-[10px] text-muted-foreground font-medium">{likeCount}</span>
+            <LikeButton
+              projectId={projectId}
+              initialLikeCount={likeCount}
+              initialIsLiked={isLiked}
+              hideCount={true}
+            />
+          </div>
         </div>
+
+        {/* Description */}
+        <p className="text-[10px] text-muted-foreground line-clamp-2 leading-snug cursor-pointer" onClick={openProject}>
+          {projectDescription}
+        </p>
       </div>
 
       <BorderBeam duration={6} size={200} className={color} />
