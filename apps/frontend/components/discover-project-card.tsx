@@ -102,12 +102,12 @@ export default function DiscoverProjectCard({
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
-                <div className="text-[11px] font-semibold text-foreground truncate leading-tight">
+                <div className="text-[14px] font-semibold text-foreground truncate leading-tight">
                   {creatorInfo.name || "Creator"}
                 </div>
                 {creatorInfo.role && (
                   <div
-                    className={`text-[9px] ${filterMaping.find((item) => item.value === creatorInfo.role)?.text}`}
+                    className={`text-[11px] ${filterMaping.find((item) => item.value === creatorInfo.role)?.text}`}
                   >
                     {creatorInfo.role}
                   </div>
@@ -129,12 +129,12 @@ export default function DiscoverProjectCard({
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
-                <div className="text-[11px] font-semibold text-foreground truncate leading-tight">
+                <div className="text-[14px] font-semibold text-foreground truncate leading-tight">
                   {collaboratorInfo.name || "Collaborator"}
                 </div>
                 {collaboratorInfo.role && (
                   <div
-                    className={`text-[9px] ${filterMaping.find((item) => item.value === collaboratorInfo.role)?.text}`}
+                    className={`text-[11px] ${filterMaping.find((item) => item.value === collaboratorInfo.role)?.text}`}
                   >
                     {collaboratorInfo.role}
                   </div>
@@ -143,7 +143,7 @@ export default function DiscoverProjectCard({
             </Link>
           </div>
           {(creatorInfo.location || collaboratorInfo.location) && (
-            <div className="flex items-center gap-1 text-[9px] text-muted-foreground">
+            <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
               <MapPin className="w-2.5 h-2.5" />
               <span className="truncate">
                 {creatorInfo.location || collaboratorInfo.location}
@@ -169,10 +169,10 @@ export default function DiscoverProjectCard({
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
-                <div className="text-[11px] font-semibold text-foreground truncate leading-tight">
+                <div className="text-[14px] font-semibold text-foreground truncate leading-tight">
                   {creatorInfo.name || "Creator"}
                 </div>
-                <div className="flex items-center gap-1.5 text-[9px] text-muted-foreground">
+                <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
                   {creatorInfo.role && (
                     <span
                       className={filterMaping.find((item) => item.value === creatorInfo.role)?.text}
@@ -213,7 +213,7 @@ export default function DiscoverProjectCard({
       <div className="px-2 pt-1.5 pb-1">
         {/* Title on left, like count and button on right */}
         <div className="flex items-center justify-between gap-2 mb-1">
-          <h4 className="font-semibold text-foreground text-[11px] line-clamp-1 flex-1 cursor-pointer" onClick={openProject}>
+          <h4 className="font-semibold text-foreground text-[14px] line-clamp-1 flex-1 cursor-pointer" onClick={openProject}>
             {projectName}
           </h4>
           <div className="flex items-center gap-1" onClick={onLikeButtonClick}>

@@ -133,8 +133,8 @@ async function DiscoverContent({
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <main className="max-w-1xl mx-auto px-4 py-4">
-        <div className="flex items-center justify-between mb-4">
+      <main className="max-w-1xl mx-auto px-2 py-2">
+        {/* <div className="flex items-center justify-between mb-4">
           <Suspense
             fallback={<span className="text-gray-500">Loading...</span>}
           >
@@ -145,7 +145,8 @@ async function DiscoverContent({
                 projectSearchQuery={projectSearchQuery || ""}
                 dedicationFilters={dedicationFilters}
               />
-            ) : (
+            ) : 
+            (
               <ProjectCount
                 tags={selectedTags}
                 projectSearchQuery={projectSearchQuery || ""}
@@ -153,7 +154,7 @@ async function DiscoverContent({
               />
             )}
           </Suspense>
-        </div>
+        </div> */}
 
         {showProfiles ? (
           <Suspense
@@ -341,7 +342,8 @@ async function FetchAndDisplayProjects({
               }
               projectName={project.name}
               tagName={project.tag || project.tags?.[0] || ""}
-              projectDescription={project.description || ""}
+              // projectDescription={project.description || ""}
+              projectDescription={""}
               likeCount={project.likeCount}
               isLiked={project.isLiked}
               creatorName={project.creatorName || undefined}
