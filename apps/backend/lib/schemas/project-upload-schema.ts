@@ -58,32 +58,31 @@ export const projectUploadSchema = z.object({
         .max(500, "Description must be less than 500 characters")
         .min(10, "Description must be at least 10 characters if provided"),
       z.literal(""),
+      z.null(),
       z.undefined(),
     ])
-    .optional(),
-  projectLink: z
-    .string()
     .optional()
-    .refine(
-      (val) => !val || z.string().url().safeParse(val).success,
-      "Please enter a valid URL"
-    ),
+    .transform((val) => val || undefined),
+  projectLink: z
+    .union([z.string().url("Please enter a valid URL"), z.literal(""), z.null()])
+    .optional()
+    .transform((val) => val || undefined),
   dedicatedToPerson: z
-    .string()
-    .max(100, "Name must be less than 100 characters")
-    .optional(),
+    .union([z.string().max(100, "Name must be less than 100 characters"), z.literal(""), z.null()])
+    .optional()
+    .transform((val) => val || undefined),
   dedicatedToBrand: z
-    .string()
-    .max(100, "Name must be less than 100 characters")
-    .optional(),
+    .union([z.string().max(100, "Name must be less than 100 characters"), z.literal(""), z.null()])
+    .optional()
+    .transform((val) => val || undefined),
   dedicatedToCause: z
-    .string()
-    .max(100, "Name must be less than 100 characters")
-    .optional(),
+    .union([z.string().max(100, "Name must be less than 100 characters"), z.literal(""), z.null()])
+    .optional()
+    .transform((val) => val || undefined),
   dedicationReason: z
-    .string()
-    .max(200, "Reason must be less than 200 characters")
-    .optional(),
+    .union([z.string().max(200, "Reason must be less than 200 characters"), z.literal(""), z.null()])
+    .optional()
+    .transform((val) => val || undefined),
 });
 
 export type ProjectUploadFormData = z.infer<typeof projectUploadSchema>;

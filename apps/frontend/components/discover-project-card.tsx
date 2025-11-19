@@ -80,63 +80,61 @@ export default function DiscoverProjectCard({
   const isMashup = creatorInfo && collaboratorInfo;
 
   return (
-    <div
-      className="rounded-lg border border-border overflow-hidden relative cursor-pointer py-2 px-4"
-      onClick={openProject}
-    >
+    <div className="rounded-lg border border-border bg-card overflow-hidden relative">
+      {/* Instagram-style Header */}
       {isMashup ? (
         // Mashup Project - Show both creator and collaborator
-        <div className="mb-3 space-y-2" onClick={onUserInfoClick}>
-          <div className="flex items-center gap-2 pt-4">
+        <div className="px-2 py-1.5 border-b border-border" onClick={onUserInfoClick}>
+          <div className="flex items-center justify-between mb-1">
             <Link
               href={`/profile/${creatorInfo.id}`}
-              className="flex items-center gap-2 hover:opacity-80 transition-opacity flex-1 min-w-0"
+              className="flex items-center gap-1.5 hover:opacity-80 transition-opacity flex-1 min-w-0"
             >
-              <Avatar className="w-6 h-6 flex-shrink-0">
+              <Avatar className="w-6 h-6 flex-shrink-0 ring-1 ring-offset-1 ring-offset-background ring-border">
                 <AvatarImage
                   src={creatorInfo.image || "/designer-headshot.png"}
                   alt={creatorInfo.name || "Creator"}
                 />
                 <AvatarFallback
-                  className={`border-2 text-xs ${filterMaping.find((item) => item.value === creatorInfo.role)?.border}`}
+                  className={`text-[10px] font-semibold ${filterMaping.find((item) => item.value === creatorInfo.role)?.border}`}
                 >
                   {(creatorInfo.name || "C").slice(0, 2).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
-                <div className="text-xs font-medium text-card-foreground truncate">
+                <div className="text-[14px] font-semibold text-foreground truncate leading-tight">
                   {creatorInfo.name || "Creator"}
                 </div>
                 {creatorInfo.role && (
                   <div
-                    className={`text-xs ${filterMaping.find((item) => item.value === creatorInfo.role)?.text}`}
+                    className={`text-[11px] ${filterMaping.find((item) => item.value === creatorInfo.role)?.text}`}
                   >
                     {creatorInfo.role}
                   </div>
                 )}
               </div>
             </Link>
-            <Shuffle className="w-4 h-4 text-purple-500" />
+            <Shuffle className="w-3 h-3 text-purple-500 mx-1 flex-shrink-0" />
             <Link
               href={`/profile/${collaboratorInfo.id}`}
-              className="flex items-center gap-2 hover:opacity-80 transition-opacity flex-1 min-w-0"
+              className="flex items-center gap-1.5 hover:opacity-80 transition-opacity flex-1 min-w-0"
             >
-              <Avatar className="w-6 h-6 flex-shrink-0">
+              <Avatar className="w-6 h-6 flex-shrink-0 ring-1 ring-offset-1 ring-offset-background ring-border">
                 <AvatarImage
                   src={collaboratorInfo.image || "/designer-headshot.png"}
                   alt={collaboratorInfo.name || "Collaborator"}
                 />
-                <AvatarFallback className="text-xs">
+                <AvatarFallback className="text-[10px] font-semibold">
                   {(collaboratorInfo.name || "C").slice(0, 2).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
-                <div className="text-xs font-medium text-card-foreground truncate">
+                <div className="text-[14px] font-semibold text-foreground truncate leading-tight">
                   {collaboratorInfo.name || "Collaborator"}
                 </div>
                 {collaboratorInfo.role && (
                   <div
-                    className={`text-xs  ${filterMaping.find((item) => item.value === collaboratorInfo.role)?.text}`}
+                    className={`text-[11px] ${filterMaping.find((item) => item.value === collaboratorInfo.role)?.text}`}
                   >
                     {collaboratorInfo.role}
                   </div>
@@ -145,8 +143,8 @@ export default function DiscoverProjectCard({
             </Link>
           </div>
           {(creatorInfo.location || collaboratorInfo.location) && (
-            <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              <MapPin className="w-3 h-3" />
+            <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
+              <MapPin className="w-2.5 h-2.5" />
               <span className="truncate">
                 {creatorInfo.location || collaboratorInfo.location}
               </span>
@@ -155,75 +153,87 @@ export default function DiscoverProjectCard({
         </div>
       ) : creatorInfo ? (
         // Single Project - Show creator only
-        <div
-          className="py-2 flex flex-row justify-between"
-          onClick={onUserInfoClick}
-        >
-          <Link
-            href={`/profile/${creatorInfo.id}`}
-            className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-          >
-            <Avatar className="w-6 h-6 flex-shrink-0">
-              <AvatarImage
-                src={creatorInfo.image || "/designer-headshot.png"}
-                alt={creatorInfo.name || "Creator"}
-              />
-              <AvatarFallback className="text-xs">
-                {(creatorInfo.name || "C").slice(0, 2).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-            <div className="text-xs font-medium text-card-foreground truncate">
-              {creatorInfo.name || "Creator"}
-            </div>
-          </Link>
-          <div className="flex items-center gap-2 text-shadow-2xs">
-            {creatorInfo.role && (
-              <div
-                className={`text-xs ${filterMaping.find((item) => item.value === creatorInfo.role)?.text}`}
-              >
-                {creatorInfo.role}
-              </div>
-            )}
-            {creatorInfo.location && (
-              <>
-                {creatorInfo.role && (
-                  <span className="text-muted-foreground">•</span>
-                )}
-                <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                  <MapPin className="w-3 h-3" />
-                  <span className="truncate">{creatorInfo.location}</span>
+        <div className="px-2 py-1.5 border-b border-border" onClick={onUserInfoClick}>
+          <div className="flex items-center justify-between">
+            <Link
+              href={`/profile/${creatorInfo.id}`}
+              className="flex items-center gap-1.5 hover:opacity-80 transition-opacity flex-1 min-w-0"
+            >
+              <Avatar className="w-6 h-6 flex-shrink-0 ring-1 ring-offset-1 ring-offset-background ring-border">
+                <AvatarImage
+                  src={creatorInfo.image || "/designer-headshot.png"}
+                  alt={creatorInfo.name || "Creator"}
+                />
+                <AvatarFallback className="text-[10px] font-semibold">
+                  {(creatorInfo.name || "C").slice(0, 2).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1 min-w-0">
+                <div className="text-[14px] font-semibold text-foreground truncate leading-tight">
+                  {creatorInfo.name || "Creator"}
                 </div>
-              </>
-            )}
+                <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                  {creatorInfo.role && (
+                    <span
+                      className={filterMaping.find((item) => item.value === creatorInfo.role)?.text}
+                    >
+                      {creatorInfo.role}
+                    </span>
+                  )}
+                  {creatorInfo.location && (
+                    <>
+                      {creatorInfo.role && <span>•</span>}
+                      <div className="flex items-center gap-0.5">
+                        <MapPin className="w-2.5 h-2.5" />
+                        <span className="truncate">{creatorInfo.location}</span>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            </Link>
           </div>
         </div>
       ) : null}
-      <div className="aspect-video bg-muted overflow-hidden relative rounded-xl ">
+
+      {/* Image Section - Full width like Instagram */}
+      <div
+        className="aspect-[3/2] bg-muted overflow-hidden relative cursor-pointer"
+        onClick={openProject}
+      >
         <Image
           src={projectCoverImage}
           alt={projectName}
           fill
-          className="object-contain bg-neutral-50"
+          className="object-cover"
         />
       </div>
-      <div className="py-2">
-        <div className="flex items-start justify-between mb-2">
-          <h4 className="font-medium text-card-foreground line-clamp-1 flex-1">
+
+      {/* Actions Section - Instagram style */}
+      <div className="px-2 pt-1.5 pb-1">
+        {/* Title on left, like count and button on right */}
+        <div className="flex items-center justify-between gap-2 mb-1">
+          <h4 className="font-semibold text-foreground text-[14px] line-clamp-1 flex-1 cursor-pointer" onClick={openProject}>
             {projectName}
           </h4>
-          <div onClick={onLikeButtonClick}>
+          <div className="flex items-center gap-1" onClick={onLikeButtonClick}>
+            <span className="text-[10px] text-muted-foreground font-medium">{likeCount}</span>
             <LikeButton
               projectId={projectId}
               initialLikeCount={likeCount}
               initialIsLiked={isLiked}
+              hideCount={true}
             />
           </div>
         </div>
-        <div className="text-sm text-muted-foreground line-clamp-2">
+
+        {/* Description */}
+        <p className="text-[10px] text-muted-foreground line-clamp-2 leading-snug cursor-pointer" onClick={openProject}>
           {projectDescription}
-        </div>
+        </p>
       </div>
-      <BorderBeam duration={6} size={400} className={color} />
+
+      <BorderBeam duration={6} size={200} className={color} />
     </div>
   );
 }

@@ -43,6 +43,7 @@ export default function AdminChallengeCard({
 }) {
   const deadlineDate = new Date(deadline);
   const isExpired = deadlineDate < new Date();
+  // Calculate time remaining - will use suppressHydrationWarning on render
   const timeRemaining = formatDistanceToNow(deadlineDate, { addSuffix: true });
 
   return (
@@ -85,7 +86,7 @@ export default function AdminChallengeCard({
         </div>
         <div className="flex items-center justify-between text-xs text-muted-foreground">
           <span>{participantsCount} participants</span>
-          <span>{isExpired ? "Expired" : timeRemaining}</span>
+          <span suppressHydrationWarning>{isExpired ? "Expired" : timeRemaining}</span>
         </div>
         <div className="flex items-center gap-2 pt-2">
           <Button variant="outline" size="sm" asChild className="flex-1">

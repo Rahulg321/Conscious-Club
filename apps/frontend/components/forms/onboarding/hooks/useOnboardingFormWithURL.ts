@@ -347,7 +347,7 @@ export const useOnboardingFormWithURL = () => {
     if (!data.dateOfBirth) {
       errors.push("Date of birth is required");
     } else {
-      // Check if user is at least 14 years old
+      // Check if user is at least 13 years old (matching backend validation)
       const birthDate = new Date(data.dateOfBirth);
       const today = new Date();
       const age = today.getFullYear() - birthDate.getFullYear();
@@ -358,8 +358,8 @@ export const useOnboardingFormWithURL = () => {
       const actualAge =
         monthDiff < 0 || (monthDiff === 0 && dayDiff < 0) ? age - 1 : age;
 
-      if (actualAge < 14) {
-        errors.push("You must be at least 14 years old to use this platform");
+      if (actualAge < 13) {
+        errors.push("You must be at least 13 years old to use this platform");
       }
     }
     return errors;
@@ -481,6 +481,52 @@ export const useOnboardingFormWithURL = () => {
         return;
       }
 
+      // Check if user is authenticated and has access token
+      if (!session?.user) {
+        console.error("❌ [FRONTEND] User not authenticated");
+        toast.error("Authentication Required", {
+          description: "Please log in again to continue",
+        });
+        router.push("/login");
+        return;
+      }
+
+      // Ensure access token is available
+      let accessToken = session.user.accessToken;
+      if (!accessToken) {
+        console.error("❌ [FRONTEND] Access token not found, refreshing session");
+        try {
+          // Try to refresh the session to get the access token
+          const updatedSession = await updateSession();
+
+          console.log("🔄 [FRONTEND] Session refreshed:", {
+            hasSession: !!updatedSession,
+            hasAccessToken: !!(updatedSession as any)?.user?.accessToken,
+          });
+
+          // Get the access token from the updated session
+          accessToken = (updatedSession as any)?.user?.accessToken;
+
+          if (!accessToken) {
+            console.error("❌ [FRONTEND] Access token still not available after refresh");
+            toast.error("Authentication Error", {
+              description: "Please log in again to continue. Your session may have expired.",
+            });
+            router.push("/login");
+            return;
+          }
+
+          console.log("✅ [FRONTEND] Access token retrieved successfully");
+        } catch (error) {
+          console.error("❌ [FRONTEND] Failed to refresh session:", error);
+          toast.error("Authentication Error", {
+            description: "Please log in again to continue",
+          });
+          router.push("/login");
+          return;
+        }
+      }
+
       try {
         // Create FormData for file uploads
         const formDataToSubmit = new FormData();
@@ -510,12 +556,13 @@ export const useOnboardingFormWithURL = () => {
         }
 
         // Make API call to submit onboarding data
+        console.log("📤 [FRONTEND] Submitting onboarding data with access token");
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_SERVER_URL}/onboarding`,
           {
             method: "POST",
             headers: {
-              Authorization: `Bearer ${session?.user?.accessToken}`,
+              Authorization: `Bearer ${accessToken}`,
             },
             body: formDataToSubmit,
           }
@@ -527,6 +574,16 @@ export const useOnboardingFormWithURL = () => {
         });
 
         if (!response.ok) {
+          // Special handling for 401 Unauthorized
+          if (response.status === 401) {
+            console.error("❌ [FRONTEND] 401 Unauthorized - Access token invalid or expired");
+            toast.error("Session Expired", {
+              description: "Your session has expired. Please log in again.",
+            });
+            router.push("/login");
+            return;
+          }
+
           let errorData;
           try {
             errorData = await response.json();

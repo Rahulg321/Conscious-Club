@@ -113,7 +113,7 @@ export const ProfileCompletionStep = ({
             max={(() => {
               const today = new Date();
               const maxDate = new Date(
-                today.getFullYear() - 14,
+                today.getFullYear() - 13,
                 today.getMonth(),
                 today.getDate()
               );
@@ -122,7 +122,7 @@ export const ProfileCompletionStep = ({
             className="w-full"
           />
           <p className="text-xs text-muted-foreground">
-            You must be at least 14 years old
+            You must be at least 13 years old
           </p>
         </div>
 

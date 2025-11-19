@@ -7,15 +7,58 @@ import onboardingRouter from "@/routes/onboarding";
 import testRateLimitRouter from "@/routes/test-rate-limit";
 import submitChallengeEntryRouter from "@/routes/submit-challenge-entry";
 
+// Validate required environment variables on startup
+const requiredEnvVars = [
+  "AUTH_SECRET",
+  "GCLOUD_PROJECT_ID",
+  "GCLOUD_BUCKET",
+  "GCS_CLIENT_EMAIL",
+  "GCS_PRIVATE_KEY",
+];
+
+const missingEnvVars = requiredEnvVars.filter(
+  (varName) => !process.env[varName]
+);
+
+if (missingEnvVars.length > 0) {
+  console.error("❌ [STARTUP] Missing required environment variables:");
+  missingEnvVars.forEach((varName) => {
+    console.error(`   - ${varName}`);
+  });
+  console.error("\nPlease set these environment variables before starting the server.");
+  process.exit(1);
+}
+
+console.log("✅ [STARTUP] All required environment variables are set");
+
 const app = express();
 
 // Trust proxy for accurate IP addresses (important for rate limiting)
 // Set to true if behind a proxy/load balancer (e.g., on Railway, Heroku, etc.)
 app.set("trust proxy", true);
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+// Configure body size limits for file uploads (matching Multer's 200MB limit)
+app.use(express.json({ limit: '200mb' }));
+app.use(express.urlencoded({ extended: true, limit: '200mb' }));
+
+// Configure CORS with allowed origins
+const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'];
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.warn(`⚠️ CORS blocked request from origin: ${origin}`);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 
 app.use("/upload-project", uploadProjectRouter);
 app.use("/upload-mashup-project", uploadMashupProjectRouter);

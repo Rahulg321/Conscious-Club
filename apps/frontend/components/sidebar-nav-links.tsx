@@ -6,17 +6,22 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
-import { User, Trophy } from "lucide-react";
+import { User, Trophy, Sparkles } from "lucide-react";
 import { FaCompass, FaHeart } from "react-icons/fa";
 import { FaHeadphones } from "react-icons/fa";
 import { useSession } from "next-auth/react";
+import { cn } from "@/lib/utils";
 
 type NavLink = {
   label: string;
   href: string;
-  leading?: React.ReactNode;
-  activeColor: string;
+  icon: React.ReactNode;
+  activeGradient: string;
+  activeBg: string;
+  activeText: string;
+  iconColor: string;
 };
 
 export function SidebarNavLinks() {
@@ -24,57 +29,118 @@ export function SidebarNavLinks() {
   const userId = userSession?.user.id ?? "";
 
   const pathname = usePathname();
+  const { state } = useSidebar();
+  const isCollapsed = state === "collapsed";
 
   const navLinks: NavLink[] = [
     {
       label: "Profile",
       href: `/profile/${userId}`,
-      leading: <User className="w-4 h-4" />,
-      activeColor:
-        "!bg-[#FEDADA] !text-pink-700 data-[active=true]:!bg-[#FEDADA] data-[active=true]:!text-pink-700",
+      icon: <User className="w-4 h-4" />,
+      activeGradient: "from-pink-500/10 to-rose-500/10",
+      activeBg: "bg-gradient-to-br from-pink-50 to-rose-50",
+      activeText: "text-pink-700",
+      iconColor: "text-pink-600",
     },
+    //  {
+    //   label: "Creative",
+    //   href: `/creative`,
+    //   icon: <User className="w-4 h-4" />,
+    //   activeGradient: "from-pink-500/10 to-rose-500/10",
+    //   activeBg: "bg-gradient-to-br from-pink-50 to-rose-50",
+    //   activeText: "text-pink-700",
+    //   iconColor: "text-pink-600",
+    // },
     {
       label: "Discover",
       href: "/discover",
-      leading: <FaCompass className="size-4" />,
-      activeColor:
-        "!bg-[#FFECCC] !text-yellow-700 data-[active=true]:!bg-[#FFECCC] data-[active=true]:!text-yellow-700",
+      icon: <FaCompass className="w-4 h-4" />,
+      activeGradient: "from-yellow-500/10 to-orange-500/10",
+      activeBg: "bg-gradient-to-br from-yellow-50 to-orange-50",
+      activeText: "text-yellow-700",
+      iconColor: "text-yellow-600",
     },
-
     {
       label: "Bravos",
       href: "/bravos",
-      leading: <FaHeart className="size-4" />,
-      activeColor:
-        "!bg-[#FEDADA] !text-pink-700 data-[active=true]:!bg-[#FEDADA] data-[active=true]:!text-pink-700",
+      icon: <FaHeart className="w-4 h-4" />,
+      activeGradient: "from-red-500/10 to-pink-500/10",
+      activeBg: "bg-gradient-to-br from-red-50 to-pink-50",
+      activeText: "text-red-700",
+      iconColor: "text-red-600",
     },
     {
       label: "BravoPlay",
       href: "/challenges",
-      leading: <Trophy className="w-4 h-4" />,
-      activeColor:
-        "!bg-[#FFF4CC] !text-amber-700 data-[active=true]:!bg-[#FFF4CC] data-[active=true]:!text-amber-700",
+      icon: <Trophy className="w-4 h-4" />,
+      activeGradient: "from-amber-500/10 to-yellow-500/10",
+      activeBg: "bg-gradient-to-br from-amber-50 to-yellow-50",
+      activeText: "text-amber-700",
+      iconColor: "text-amber-600",
     },
   ];
 
   return (
-    <SidebarMenu>
+    <SidebarMenu className="gap-1.5">
       {navLinks.map((item) => {
         const isActive = pathname.includes(item.href);
         return (
           <SidebarMenuItem key={item.href}>
             <SidebarMenuButton
               isActive={isActive}
-              className={
+              tooltip={isCollapsed ? item.label : undefined}
+              className={cn(
+                "relative overflow-hidden group/navitem",
+                "transition-all duration-300 ease-out",
                 isActive
-                  ? "!text-pink-700 data-[active=true]:!text-pink-700"
-                  : "text-[#666a6e] hover:bg-[#f9fafb]"
-              }
+                  ? cn(
+                      item.activeBg,
+                      item.activeText,
+                      "shadow-sm border border-gray-200/50",
+                      "font-semibold"
+                    )
+                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-100/80 border border-transparent"
+              )}
               asChild
             >
-              <Link href={item.href}>
-                {item.leading}
-                <span>{item.label}</span>
+              <Link href={item.href} className="relative">
+                {/* Animated gradient background on hover */}
+                {!isActive && (
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-500/0 via-pink-500/0 to-purple-500/0 opacity-0 group-hover/navitem:opacity-5 transition-opacity duration-300" />
+                )}
+
+                {/* Icon with color */}
+                <div
+                  className={cn(
+                    "relative z-10 transition-all duration-300",
+                    isActive
+                      ? cn(item.iconColor, "scale-110")
+                      : "text-gray-500 group-hover/navitem:text-gray-700 group-hover/navitem:scale-110"
+                  )}
+                >
+                  {item.icon}
+                </div>
+
+                {/* Label with smooth fade */}
+                <span
+                  className={cn(
+                    "relative z-10 font-medium text-xs transition-all duration-300",
+                    isCollapsed && "opacity-0 w-0",
+                    !isCollapsed && "opacity-100"
+                  )}
+                >
+                  {item.label}
+                </span>
+
+                {/* Active indicator */}
+                {isActive && (
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-gradient-to-b from-purple-500 to-pink-500 rounded-r-full shadow-lg shadow-purple-500/50 animate-in fade-in slide-in-from-left-2 duration-300" />
+                )}
+
+                {/* Sparkle effect on active */}
+                {isActive && !isCollapsed && (
+                  <Sparkles className="absolute right-3 w-3.5 h-3.5 text-yellow-500 opacity-60 animate-pulse" />
+                )}
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

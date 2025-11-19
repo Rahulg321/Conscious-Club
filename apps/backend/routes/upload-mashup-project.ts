@@ -4,6 +4,7 @@ import { db } from "@repo/db";
 import { project, user as userTable } from "@repo/db/schema";
 import { uploadFile } from "@/lib/cloud-storage";
 import { mashupProjectUploadSchema } from "@/lib/schemas/mashup-project-upload-schema";
+import { sanitizeProjectData } from "@/lib/sanitize";
 import authenticateToken from "@/middleware/authenticate-token";
 import { uploadProjectRateLimit } from "@/middleware/rate-limit-upload";
 import { eq } from "drizzle-orm";
@@ -40,6 +41,8 @@ router.post(
         });
       }
 
+      // Extract and sanitize form data
+      const sanitizedData = sanitizeProjectData(req.body);
       const {
         projectName,
         projectDescription,
@@ -48,8 +51,9 @@ router.post(
         dedicatedToBrand,
         dedicatedToCause,
         dedicationReason,
-        collaboratorId,
-      } = req.body as any;
+      } = sanitizedData;
+
+      const collaboratorId = req.body.collaboratorId;
 
       if (!collaboratorId) {
         return res.status(400).json({
