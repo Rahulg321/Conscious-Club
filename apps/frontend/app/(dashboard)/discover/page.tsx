@@ -132,92 +132,97 @@ async function DiscoverContent({
   const offset = (currentPage - 1) * limit;
 
   return (
-    <main className="max-w-7xl mx-auto px-4 py-4">
-      <div className="flex items-center justify-between mb-4">
-        <Suspense fallback={<span className="text-gray-500">Loading...</span>}>
-          {showProfiles ? (
-            <ProfileCount personSearchQuery={projectSearchQuery || ""} />
-          ) : showMashups ? (
-            <MashupCount
-              projectSearchQuery={projectSearchQuery || ""}
-              dedicationFilters={dedicationFilters}
-            />
-          ) : (
-            <ProjectCount
-              tags={selectedTags}
-              projectSearchQuery={projectSearchQuery || ""}
-              dedicationFilters={dedicationFilters}
-            />
-          )}
-        </Suspense>
-      </div>
+    <div className="min-h-screen bg-gray-50">
+      <main className="max-w-1xl mx-auto px-4 py-4">
+        <div className="flex items-center justify-between mb-4">
+          <Suspense
+            fallback={<span className="text-gray-500">Loading...</span>}
+          >
+            {showProfiles ? (
+              <ProfileCount personSearchQuery={projectSearchQuery || ""} />
+            ) : showMashups ? (
+              <MashupCount
+                projectSearchQuery={projectSearchQuery || ""}
+                dedicationFilters={dedicationFilters}
+              />
+            ) : (
+              <ProjectCount
+                tags={selectedTags}
+                projectSearchQuery={projectSearchQuery || ""}
+                dedicationFilters={dedicationFilters}
+              />
+            )}
+          </Suspense>
+        </div>
 
-      {showProfiles ? (
-        <Suspense
-          fallback={
-            <div className="space-y-4 md:space-y-6">
-              <ProfileCardSkeleton />
-              <ProfileCardSkeleton />
-              <ProfileCardSkeleton />
-              <ProfileCardSkeleton />
-              <ProfileCardSkeleton />
-              <ProfileCardSkeleton />
-            </div>
-          }
-        >
-          <FetchAndDisplayUserProfiles
-            personSearchQuery={projectSearchQuery || ""}
-            limit={limit}
-            offset={offset}
-            currentUserId={userSession.user.id}
-            userSession={userSession}
-          />
-        </Suspense>
-      ) : showMashups ? (
-        <Suspense
-          fallback={
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <ProjectCardSkeleton />
-              <ProjectCardSkeleton />
-              <ProjectCardSkeleton />
-              <ProjectCardSkeleton />
-              <ProjectCardSkeleton />
-              <ProjectCardSkeleton />
-            </div>
-          }
-        >
-          <FetchAndDisplayMashupProjects
-            limit={limit}
-            offset={offset}
-            projectSearchQuery={projectSearchQuery || ""}
-            userId={userSession.user.id}
-            dedicationFilters={dedicationFilters}
-          />
-        </Suspense>
-      ) : (
-        <Suspense
-          fallback={
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <ProjectCardSkeleton />
-              <ProjectCardSkeleton />
-              <ProjectCardSkeleton />
-              <ProjectCardSkeleton />
-              <ProjectCardSkeleton />
-              <ProjectCardSkeleton />
-            </div>
-          }
-        >
-          <FetchAndDisplayProjects
-            tags={selectedTags}
-            limit={limit}
-            offset={offset}
-            projectSearchQuery={projectSearchQuery || ""}
-            userId={userSession.user.id}
-            dedicationFilters={dedicationFilters}
-          />
-        </Suspense>
-      )}
-    </main>
+        {showProfiles ? (
+          <Suspense
+            fallback={
+              <div className="space-y-4 md:space-y-6">
+                <ProfileCardSkeleton />
+                <ProfileCardSkeleton />
+                <ProfileCardSkeleton />
+                <ProfileCardSkeleton />
+                <ProfileCardSkeleton />
+                <ProfileCardSkeleton />
+              </div>
+            }
+          >
+            <FetchAndDisplayUserProfiles
+              personSearchQuery={projectSearchQuery || ""}
+              limit={limit}
+              offset={offset}
+              currentUserId={userSession.user.id}
+              userSession={userSession}
+            />
+          </Suspense>
+        ) : showMashups ? (
+          <Suspense
+            fallback={
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                <ProjectCardSkeleton />
+                <ProjectCardSkeleton />
+                <ProjectCardSkeleton />
+                <ProjectCardSkeleton />
+                <ProjectCardSkeleton />
+                <ProjectCardSkeleton />
+              </div>
+            }
+          >
+            <FetchAndDisplayMashupProjects
+              limit={limit}
+              offset={offset}
+              projectSearchQuery={projectSearchQuery || ""}
+              userId={userSession.user.id}
+              dedicationFilters={dedicationFilters}
+            />
+          </Suspense>
+        ) : (
+          <Suspense
+            fallback={
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                <ProjectCardSkeleton />
+                <ProjectCardSkeleton />
+                <ProjectCardSkeleton />
+                <ProjectCardSkeleton />
+                <ProjectCardSkeleton />
+                <ProjectCardSkeleton />
+              </div>
+            }
+          >
+            <FetchAndDisplayProjects
+              tags={selectedTags}
+              limit={limit}
+              offset={offset}
+              projectSearchQuery={projectSearchQuery || ""}
+              userId={userSession.user.id}
+              dedicationFilters={dedicationFilters}
+            />
+          </Suspense>
+        )}
+        <ProjectSheet />
+      </main>
+    </div>
   );
 }
 
@@ -323,7 +328,7 @@ async function FetchAndDisplayProjects({
 
   return (
     <div className="group-has-[[data-pending]]:animate-pulse">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
         {projects?.map((project) => {
           // Get first media item for preview (prefer images)
           const firstMedia = getPreviewMedia(project.media);
@@ -434,7 +439,7 @@ async function FetchAndDisplayMashupProjects({
 
   return (
     <div>
-      <div className="group-has-[[data-pending]]:animate-pulse grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="group-has-[[data-pending]]:animate-pulse grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
         {mashupProjects?.map((mashup) => {
           // Get first media item for preview
           const firstMedia =

@@ -11,7 +11,8 @@ const useMorphingText = (texts: string[]) => {
   const textIndexRef = useRef(0);
   const morphRef = useRef(0);
   const cooldownRef = useRef(0);
-  const timeRef = useRef(new Date());
+  // Initialize to null to avoid hydration mismatch
+  const timeRef = useRef<Date | null>(null);
 
   const text1Ref = useRef<HTMLSpanElement>(null);
   const text2Ref = useRef<HTMLSpanElement>(null);
@@ -67,11 +68,16 @@ const useMorphingText = (texts: string[]) => {
   useEffect(() => {
     let animationFrameId: number;
 
+    // Initialize time ref on first render (client-side only)
+    if (!timeRef.current) {
+      timeRef.current = new Date();
+    }
+
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
 
       const newTime = new Date();
-      const dt = (newTime.getTime() - timeRef.current.getTime()) / 1000;
+      const dt = (newTime.getTime() - (timeRef.current?.getTime() || 0)) / 1000;
       timeRef.current = newTime;
 
       cooldownRef.current -= dt;

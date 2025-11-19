@@ -24,7 +24,11 @@ const CityInputField = ({
 }: CityInputFieldProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
-  const { isLoaded } = useJsApiLoader({
+
+  // Check if Google Maps API key is available
+  const hasApiKey = Boolean(process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY);
+
+  const { isLoaded, loadError } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
     libraries: ["places"],
@@ -82,7 +86,24 @@ const CityInputField = ({
     }
   }, [handleValueChange]);
 
+  // Fallback: Manual input when API key is not available or fails to load
+  if (!hasApiKey || loadError) {
+    return (
+      <div>
+        <Input
+          id={id}
+          ref={inputRef}
+          placeholder={placeholder}
+          className={className}
+          value={value}
+          onChange={(event) => handleValueChange(event.target.value)}
+        />
+      </div>
+    );
+  }
+
   if (!isLoaded) return <div>Loading...</div>;
+
   return (
     <div>
       <Autocomplete

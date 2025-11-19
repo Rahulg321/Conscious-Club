@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React, { Suspense, cache } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
@@ -25,13 +25,18 @@ import {
 import { auth } from "@/auth";
 import DeleteProjectAlert from "@/components/buttons/delete-project-alert";
 
+// Cache the project query to avoid duplicate database calls
+const getCachedProject = cache(async (projectId: string) => {
+  return getProjectByIdWithStats(projectId);
+});
+
 type PageProps = {
   params: Promise<{ userId: string; projectId: string }>;
 };
 
 export async function generateMetadata({ params }: PageProps) {
   const { userId, projectId } = await params;
-  const project = await getProjectByIdWithStats(projectId);
+  const project = await getCachedProject(projectId);
   return {
     title: `${project?.name} - ${userId}`,
     description: `${project?.description} - ${userId}. ${project?.likesCount || 0} likes, ${project?.commentsCount || 0} comments.`,
@@ -67,7 +72,7 @@ async function ProjectContent({ params }: PageProps) {
     redirect("/");
   }
 
-  const project = await getProjectByIdWithStats(projectId);
+  const project = await getCachedProject(projectId);
 
   if (!project) {
     notFound();

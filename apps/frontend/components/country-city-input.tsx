@@ -30,7 +30,10 @@ const CountryCityInput = ({
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const { isLoaded } = useJsApiLoader({
+  // Check if Google Maps API key is available
+  const hasApiKey = Boolean(process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY);
+
+  const { isLoaded, loadError } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
     libraries: ["places"],
@@ -130,13 +133,37 @@ const CountryCityInput = ({
     }
   }, [onCityChange, onCountryChange]);
 
-  if (!isLoaded) {
+  // Fallback: Manual input when API key is not available or fails to load
+  if (!hasApiKey || loadError || !isLoaded) {
     return (
       <div className="space-y-2 w-full">
         <Label htmlFor={id}>{label}</Label>
-        <div className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-muted-foreground">
-          Loading...
-        </div>
+        <Input
+          id={id}
+          ref={inputRef}
+          placeholder={placeholder}
+          className={className}
+          defaultValue={displayValue}
+          onChange={(e) => {
+            const value = e.target.value;
+            // Try to parse "City, Country" format
+            if (value.includes(",")) {
+              const [city, country] = value.split(",").map(s => s.trim());
+              if (city && onCityChange) onCityChange(city);
+              if (country && onCountryChange) onCountryChange(country);
+            } else {
+              // If no comma, treat as city
+              if (onCityChange) onCityChange(value);
+            }
+          }}
+        />
+        <p className="text-xs text-muted-foreground">
+          {!hasApiKey
+            ? "Enter city and country manually (e.g., Paris, France)"
+            : loadError
+            ? "Enter city and country manually (Google Maps unavailable)"
+            : "Loading..."}
+        </p>
       </div>
     );
   }

@@ -43,12 +43,15 @@ export const loginAction = async (values: LoginFormSchemaType) => {
 
   console.log("existingUser", existingUser);
 
-  if (!existingUser || !existingUser.email || !existingUser.password) {
+  if(!existingUser){
+    return { success: false, message: "No such user exists" };
+  }
+  if (!existingUser.email || !existingUser.password) {
     return { success: false, message: "No such user exists" };
   }
 
   if (!existingUser.password) {
-    return { success: false, message: "Invalid method" };
+    return { success: false, message: "Incorrect Credentials" };
   }
 
   if (!existingUser.emailVerified) {

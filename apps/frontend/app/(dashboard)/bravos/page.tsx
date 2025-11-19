@@ -33,7 +33,7 @@ export const metadata = {
 const page = async ({
   searchParams,
 }: {
-  searchParams: { category?: string | string[] };
+  searchParams: Promise<{ category?: string | string[] }>;
 }) => {
   const userSession = await auth();
 
@@ -41,7 +41,8 @@ const page = async ({
     redirect("/login");
   }
 
-  const selectedCategory = searchParams?.category;
+  const params = await searchParams;
+  const selectedCategory = params?.category;
   const bravos = await getAllBravos(selectedCategory);
   const categories = await getAllBravoCategories();
   const pinnedBravo = await getUserPinnedBravoImage(userSession.user.id);

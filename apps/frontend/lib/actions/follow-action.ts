@@ -2,7 +2,7 @@
 
 import { db } from "@repo/db";
 import { follows } from "@repo/db/schema";
-import { eq, and } from "drizzle-orm";
+import { eq, and, count } from "drizzle-orm";
 import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
 import { rateLimit } from "../redis";
@@ -25,7 +25,7 @@ export async function followUser(followingId: string) {
 
     // Rate limiting: 30 follows/unfollows per hour per user, with IP fallback
     const ip = await getClientIp();
-    const { ok, remaining, reset } = await rateLimit(
+    const { ok, reset } = await rateLimit(
       `follow:${followerId}:${ip}`, // Use userId + IP for better tracking
       30, // 30 follows/unfollows per hour
       60 * 60 * 1000 // 1 hour
@@ -94,7 +94,7 @@ export async function unfollowUser(followingId: string) {
 
     // Rate limiting: 30 follows/unfollows per hour per user, with IP fallback
     const ip = await getClientIp();
-    const { ok, remaining, reset } = await rateLimit(
+    const { ok, reset } = await rateLimit(
       `follow:${followerId}:${ip}`, // Use userId + IP for better tracking
       30, // 30 follows/unfollows per hour
       60 * 60 * 1000 // 1 hour
@@ -185,11 +185,11 @@ export async function isFollowing(followingId: string): Promise<boolean> {
 export async function getFollowingCount(userId: string): Promise<number> {
   try {
     const result = await db
-      .select({ count: follows.followerId })
+      .select({ count: count() })
       .from(follows)
       .where(eq(follows.followerId, userId));
 
-    return result.length;
+    return result[0]?.count ?? 0;
   } catch (error) {
     console.error("Error getting following count:", error);
     return 0;
@@ -204,11 +204,11 @@ export async function getFollowingCount(userId: string): Promise<number> {
 export async function getFollowersCount(userId: string): Promise<number> {
   try {
     const result = await db
-      .select({ count: follows.followingId })
+      .select({ count: count() })
       .from(follows)
       .where(eq(follows.followingId, userId));
 
-    return result.length;
+    return result[0]?.count ?? 0;
   } catch (error) {
     console.error("Error getting followers count:", error);
     return 0;

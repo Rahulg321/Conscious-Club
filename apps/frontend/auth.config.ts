@@ -154,9 +154,13 @@ export const authConfig: NextAuthConfig = {
             email: user.email,
             isAdmin: token.isAdmin,
           },
-          process.env.AUTH_SECRET as string
+          process.env.AUTH_SECRET as string,
+          {
+            expiresIn: "7d", // Token expires in 7 days
+          }
         );
         token.accessToken = accessToken;
+        console.log("✅ [AUTH] Created access token for user:", user.email);
         // console.log(
         //   "Created access token for user:",
         //   user.email,

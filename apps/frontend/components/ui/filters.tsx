@@ -2400,12 +2400,15 @@ export function Filters<T = unknown>({
   );
 }
 
+// Counter for generating stable IDs (no hydration mismatch)
+let filterIdCounter = 0;
+
 export const createFilter = <T = unknown,>(
   field: string,
   operator?: string,
   values: T[] = []
 ): Filter<T> => ({
-  id: `${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
+  id: `filter-${++filterIdCounter}`,
   field,
   operator: operator || "is",
   values,
