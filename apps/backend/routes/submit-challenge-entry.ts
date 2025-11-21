@@ -4,9 +4,10 @@ import { db } from "@repo/db";
 import { challengeEntries, challenges } from "@repo/db/schema";
 import { uploadFile } from "@/lib/cloud-storage";
 import { challengeEntrySchema } from "@/lib/schemas/challenge-entry-schema";
+import { sanitizeChallengeCaption } from "@/lib/sanitize";
 import authenticateToken from "@/middleware/authenticate-token";
 import { submitChallengeEntryRateLimit } from "@/middleware/rate-limit-submit-entry";
-import { eq, and } from "drizzle-orm";
+import { eq, and, sql } from "drizzle-orm";
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -46,8 +47,9 @@ router.post(
         });
       }
 
-      // Extract form data
-      const { challengeId, caption } = req.body;
+      // Extract and sanitize form data
+      const { challengeId } = req.body;
+      const caption = sanitizeChallengeCaption(req.body.caption);
 
       console.log("📝 [SUBMIT-CHALLENGE-ENTRY] Form data received:", {
         challengeId,
@@ -240,11 +242,12 @@ router.post(
           });
         }
 
-        // Update participants count
+        // Update participants count atomically using SQL increment
+        // This prevents race conditions from concurrent submissions
         await db
           .update(challenges)
           .set({
-            participantsCount: challenge.participantsCount + 1,
+            participantsCount: sql`${challenges.participantsCount} + 1`,
           })
           .where(eq(challenges.id, challengeId));
 

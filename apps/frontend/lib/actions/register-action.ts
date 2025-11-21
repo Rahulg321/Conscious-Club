@@ -49,12 +49,12 @@ export const registerAction = async (values: RegisterFormSchemaType) => {
         );
 
         if (emailResponse.error) {
-          return { status: "failed" };
+          return { success: false, message: "failed_to_send_email" };
         }
 
         emailSent = true;
 
-        return { status: "sent_email" };
+        return { success: true, message: "sent_email" };
       }
     }
 

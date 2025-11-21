@@ -4,6 +4,7 @@ import { db } from "@repo/db";
 import { user, project } from "@repo/db/schema";
 import { uploadFile } from "@/lib/cloud-storage";
 import { onboardingSchema } from "@/lib/schemas/onboarding-schema";
+import { sanitizeUserData, sanitizeProjectData } from "@/lib/sanitize";
 import authenticateToken from "@/middleware/authenticate-token";
 import { onboardingRateLimit } from "@/middleware/rate-limit-onboarding";
 import { eq } from "drizzle-orm";
@@ -52,17 +53,20 @@ router.post(
         });
       }
 
-      // Extract form data
+      // Extract and sanitize form data
+      const sanitizedUserData = sanitizeUserData(req.body);
+      const sanitizedProjectData = sanitizeProjectData(req.body);
+
       const {
         name,
-        gender,
         city,
         country,
         socialMediaUrl,
-        dateOfBirth,
-        userRole,
         discipline,
         role,
+      } = sanitizedUserData;
+
+      const {
         projectName,
         projectDescription,
         projectLink,
@@ -70,7 +74,10 @@ router.post(
         dedicatedToBrand,
         dedicatedToCause,
         dedicationReason,
-      } = req.body;
+      } = sanitizedProjectData;
+
+      // These don't need sanitization (enum/date values)
+      const { gender, dateOfBirth, userRole } = req.body;
 
       console.log("📝 [ONBOARDING] Form data received:", {
         name,

@@ -13,7 +13,25 @@ export const PUBLIC_ROUTES = [
   "/license",
   "/terms-of-use",
   "/creator-terms",
+
 ];
+
+/**
+ *
+ *These are the routes that are protected and user cant access without being logged in
+ *@type{string}
+ */
+export const PROTECTED_ROUTES = [
+  "/dashboard",
+  "/history",
+  "/notifications",
+  "/profile",
+  "/settings",
+
+  "/creative",
+];
+
+export const PROTECTED_BASE_ROUTES = ["/dashboard", "/admin"];
 
 /**
  *

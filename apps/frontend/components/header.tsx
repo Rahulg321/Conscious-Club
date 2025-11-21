@@ -232,7 +232,7 @@ export default function Header({}: {}) {
                   </NavbarButton>
                   <NavbarButton
                     onClick={() => {
-                      router.push("/login");
+                      router.push("/register");
                       setIsMobileMenuOpen(false);
                     }}
                     variant="secondary"

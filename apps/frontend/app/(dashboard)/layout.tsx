@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { prata, poppins } from "@/app/fonts";
 import "../globals.css";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import AppSidebar from "@/components/app-sidebar";
+import { AppSidebar } from "@/components/app-sidebar";
 import { SessionProvider } from "next-auth/react";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -10,6 +10,8 @@ import DashboardHeader from "@/components/dashboard-header";
 import { baseUrl } from "../sitemap";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import React, { Suspense } from "react";
+import { auth } from "@/auth";
+import { getUserPinnedBravoImage } from "@/lib/queries";
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
@@ -52,13 +54,21 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const userSession = await auth();
+  const pinnedBravo = userSession?.user?.id
+    ? await getUserPinnedBravoImage(userSession.user.id)
+    : null;
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${prata.variable} ${poppins.variable} antialiased`}>
         <SessionProvider>
           <SidebarProvider>
             <div className="flex min-h-screen w-full ">
-              <AppSidebar />
+              <AppSidebar
+                user={userSession?.user || null}
+                pinnedBravo={pinnedBravo}
+              />
 
               <main className="flex-1 min-w-0">
                 <SidebarInset className="">

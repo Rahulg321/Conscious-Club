@@ -58,9 +58,23 @@ export const onboardingSchema = z
       .refine((val) => {
         const date = new Date(val);
         const now = new Date();
-        // Just check if it's a valid date and not in the future
+        // Check if it's a valid date and not in the future
         return date instanceof Date && !isNaN(date.getTime()) && date <= now;
-      }, "Please enter a valid date of birth"),
+      }, "Please enter a valid date of birth")
+      .refine((val) => {
+        const date = new Date(val);
+        const now = new Date();
+        const age = now.getFullYear() - date.getFullYear();
+        const monthDiff = now.getMonth() - date.getMonth();
+        const dayDiff = now.getDate() - date.getDate();
+
+        // Calculate actual age accounting for month and day
+        const actualAge = monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)
+          ? age - 1
+          : age;
+
+        return actualAge >= 13;
+      }, "You must be at least 13 years old to use this platform"),
     userRole: z.enum(["creator"], {
       message: "User role is required",
     }),
